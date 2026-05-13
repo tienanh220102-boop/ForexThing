@@ -1,29 +1,88 @@
 {
-  "GBP/USD|SELL": 1778665333.167377,
-  "USD/JPY|BUY": 1778665333.167377,
-  "USD/CAD|BUY": 1778665333.167377,
-  "EUR/GBP|SELL": 1778665333.167377,
+  "GBP/USD|SELL": 1778693846.700291,
+  "USD/JPY|BUY": 1778693846.700291,
+  "USD/CAD|BUY": 1778693846.700291,
+  "EUR/GBP|SELL": 1778693846.700291,
   "GBP/JPY|SELL": 1778665333.167377,
   "XAU/USD|SELL": 1778665333.167377,
-  "XAG/USD|BUY": 1778665333.167377,
+  "XAG/USD|BUY": 1778693846.700291,
   "UKOIL/USD|BUY": 1778665333.167377,
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "entry_price": 1.1713716983795166,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "SELL",
+      "entry_price": 1.3517167568206787,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "entry_price": 157.85299682617188,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
       "sym": "USD/CHF",
       "signal": "BUY",
-      "entry_price": 0.7819799780845642,
-      "sent_at": 1778666337.361511,
-      "validate_at": 1778673537.361511
+      "entry_price": 0.7821499705314636,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
+      "sym": "AUD/USD",
+      "signal": "BUY",
+      "entry_price": 0.726427435874939,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
+      "sym": "USD/CAD",
+      "signal": "BUY",
+      "entry_price": 1.3702000379562378,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
     },
     {
       "sym": "NZD/USD",
       "signal": "SELL",
-      "entry_price": 0.5930142998695374,
-      "sent_at": 1778666337.361511,
-      "validate_at": 1778673537.361511
+      "entry_price": 0.5937536954879761,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
+      "sym": "EUR/GBP",
+      "signal": "SELL",
+      "entry_price": 0.8662599921226501,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
+      "sym": "EUR/JPY",
+      "signal": "SELL",
+      "entry_price": 184.83999633789062,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
+    },
+    {
+      "sym": "XAG/USD",
+      "signal": "BUY",
+      "entry_price": 89.25,
+      "sent_at": 1778693846.700291,
+      "validate_at": 1778701046.700291
     }
   ],
-  "USD/CHF|BUY": 1778666337.361511,
-  "NZD/USD|SELL": 1778666337.361511
+  "USD/CHF|BUY": 1778693846.700291,
+  "NZD/USD|SELL": 1778693846.700291,
+  "EUR/USD|SELL": 1778693846.700291,
+  "AUD/USD|BUY": 1778693846.700291,
+  "EUR/JPY|SELL": 1778693846.700291
 }
