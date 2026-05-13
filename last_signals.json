@@ -7,5 +7,23 @@
   "XAU/USD|SELL": 1778665333.167377,
   "XAG/USD|BUY": 1778665333.167377,
   "UKOIL/USD|BUY": 1778665333.167377,
-  "USOIL/USD|BUY": 1778665333.167377
+  "USOIL/USD|BUY": 1778665333.167377,
+  "pending_validations": [
+    {
+      "sym": "USD/CHF",
+      "signal": "BUY",
+      "entry_price": 0.7819799780845642,
+      "sent_at": 1778666337.361511,
+      "validate_at": 1778673537.361511
+    },
+    {
+      "sym": "NZD/USD",
+      "signal": "SELL",
+      "entry_price": 0.5930142998695374,
+      "sent_at": 1778666337.361511,
+      "validate_at": 1778673537.361511
+    }
+  ],
+  "USD/CHF|BUY": 1778666337.361511,
+  "NZD/USD|SELL": 1778666337.361511
 }
