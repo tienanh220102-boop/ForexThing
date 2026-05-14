@@ -279,10 +279,7 @@ def intermarket_signal(sym):
 def analyze(sym, yf_sym):
     try:
         df = yf.Ticker(yf_sym).history(period='60d', interval='1h')
-        n_rows = len(df) if df is not None else -1
-        print(f'  [{sym}] yf rows={n_rows}', end=' | ')
         if df is None or len(df) < 60:
-            print(f'FAIL: can du lieu ({n_rows}<60)')
             return None
         closes = list(df['Close'].dropna())
         highs  = list(df['High'].dropna())
@@ -296,7 +293,6 @@ def analyze(sym, yf_sym):
         # [LOC 1] ATR filter: bo qua thi truong qua phang (nhieu > tin hieu)
         atr_val = atr(highs, lows, closes)
         if atr_val < price * 0.00015:
-            print(f'FAIL: ATR qua phang ({atr_val:.6f} < {price*0.00015:.6f})')
             return None
 
         # [HURST] Phat hien regime thi truong
@@ -332,7 +328,6 @@ def analyze(sym, yf_sym):
         # [LOC 3 - FIX 4] RSI-EMA xung dot: backtest 27-43% chinh xac (tệ hơn tung xu)
         # Chi loc khi RSI o muc cuc doan (>=0.5) va trai chieu voi EMA
         if abs(rsi_s) >= 0.5 and ((rsi_s > 0) != (ema_s > 0)):
-            print(f'FAIL: RSI-EMA xung dot (rsi={rsi_s} ema={ema_s})')
             return None
 
         # Composite score: 82% chi bao chinh (trong so dong) + 10% Fourier + 8% Intermarket
@@ -350,7 +345,6 @@ def analyze(sym, yf_sym):
             else:
                 score *= 0.80
         elif regime == 'NEUTRAL':
-            print(f'FAIL: NEUTRAL regime (H={H:.3f})')
             return None
 
         score = float(np.clip(score, -2.0, 2.0))
@@ -359,7 +353,6 @@ def analyze(sym, yf_sym):
         if   score >= 0.50: signal = 'BUY'
         elif score <=-0.50: signal = 'SELL'
         else:
-            print(f'FAIL: score yeu ({score:+.3f})')
             return None
 
         # Tinh Entry / SL / TP voi RR 1:2 (thua 1 thang 2)
