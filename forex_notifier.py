@@ -7,7 +7,7 @@ Thuat toan nang cao:
   - Fourier Cycle Analysis: vi tri song gia (dinh/day chu ky)
   - OLS Dynamic Weights: trong so dong dua tren kha nang du bao thuc te
   - Intermarket: DXY (dollar index) + Oil anh huong chinh xac theo tung cap
-  - Xac nhan 3 moc: +2h / +4h / +24h
+  - Xac nhan 1 moc: +1h (khop voi kieu giu lenh 1 gio)
 """
 import json, os, time
 import numpy as np
@@ -19,9 +19,10 @@ import yfinance as yf
 # ── Cau hinh ──────────────────────────────────────────────────
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN', '')
 TELEGRAM_CHAT  = os.environ.get('TELEGRAM_CHAT',  '')
-COOLDOWN_HOURS = 4
-STATE_FILE     = 'last_signals.json'
-CHECKPOINTS_H  = [2, 4, 24]   # Xac nhan tai +2h, +4h, +24h
+COOLDOWN_HOURS  = 4
+STATE_FILE      = 'last_signals.json'
+CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
+MIN_CONFIDENCE  = 70     # Chi gui tin hieu khi do tin cay >= 70%
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 
 # Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
@@ -437,11 +438,12 @@ def save_state(state):
         json.dump(state, f, indent=2)
 
 # ── Telegram ──────────────────────────────────────────────────
-def send_telegram(msg):
-    url  = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage'
-    resp = requests.post(url, json={
-        'chat_id': TELEGRAM_CHAT, 'text': msg, 'parse_mode': 'HTML'
-    }, timeout=10)
+def send_telegram(msg, reply_to=None):
+    url     = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage'
+    payload = {'chat_id': TELEGRAM_CHAT, 'text': msg, 'parse_mode': 'HTML'}
+    if reply_to:
+        payload['reply_to_message_id'] = reply_to
+    resp = requests.post(url, json=payload, timeout=10)
     return resp.json()
 
 # ── Xac nhan 3 moc ───────────────────────────────────────────
@@ -537,7 +539,7 @@ def run_validations(state, now):
             ]
             msg = '\n'.join(msg_lines)
 
-            result = send_telegram(msg)
+            result = send_telegram(msg, reply_to=v.get('message_id'))
             if result.get('ok'):
                 cp['done'] = True
                 print(f'{verdict} ✓')
@@ -603,6 +605,11 @@ def main():
 
         strength = int(abs(r['score']) * 100)
         conf     = int((0.45 + abs(r['score'])*0.35) * 100)
+
+        if conf < MIN_CONFIDENCE:
+            print(f'  -> Do tin cay {conf}% < {MIN_CONFIDENCE}%, bo qua')
+            time.sleep(0.5)
+            continue
         emoji    = '🟢' if r['signal'] == 'BUY' else '🔴'
         rsi_note = 'Qua ban' if r['rsi']<=35 else ('Qua mua' if r['rsi']>=65 else 'Trung tinh')
         regime_icon = '📈' if r['regime']=='TREND' else ('🔄' if r['regime']=='RANGE' else '〰')
@@ -627,7 +634,7 @@ def main():
             f'📋 {r["aligned"]}/6 dong thuan | {consensus_line}',
             f'⚖ Trong so cao nhat: <b>{top_w.upper()}</b> ({r["weights"][top_w]*100:.0f}%)',
             f'💪 Suc manh: <b>{strength}%</b> | Do tin cay: ~<b>{conf}%</b>',
-            f'🔔 Xac nhan tai: +2h / +4h / +24h',
+            f'🔔 Xac nhan ket qua sau: +1h',
             '',
             '⚠ Phan tich ky thuat, khong phai tu van tai chinh',
             f'⏱ {now_vn.strftime("%d/%m/%Y %H:%M")} (Gio VN)',
@@ -635,6 +642,7 @@ def main():
 
         result = send_telegram(msg)
         if result.get('ok'):
+            msg_id = result.get('result', {}).get('message_id')
             state[key] = now.timestamp()
             if 'pending_validations' not in state:
                 state['pending_validations'] = []
@@ -645,6 +653,7 @@ def main():
                 'sl':          r['sl'],
                 'tp':          r['tp'],
                 'sent_at':     now.timestamp(),
+                'message_id':  msg_id,
                 'checkpoints': [
                     {'hours': h, 'at': now.timestamp()+h*3600, 'done': False}
                     for h in CHECKPOINTS_H
@@ -656,7 +665,7 @@ def main():
                 'consensus':   r['consensus'],
             })
             sent += 1
-            print(f'  -> Telegram OK | Xac nhan: +2h +4h +24h')
+            print(f'  -> Telegram OK | Xac nhan: +1h | conf={conf}%')
         else:
             print(f'  -> Loi Telegram: {result}')
 
