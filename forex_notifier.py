@@ -237,7 +237,7 @@ def fetch_intermarket():
     global _im_cache
     if _im_cache:
         return _im_cache
-    for ticker, key in [('DX=F', 'dxy'), ('CL=F', 'oil')]:
+    for ticker, key in [('UUP', 'dxy'), ('CL=F', 'oil')]:  # UUP = ETF dollar index thay DX=F da delisted
         try:
             df = yf.Ticker(ticker).history(period='5d', interval='1h')
             if df is not None and len(df) >= 20:

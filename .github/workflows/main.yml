@@ -22,7 +22,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install yfinance requests numpy
+        run: pip install "yfinance<1.0" requests numpy
 
       - name: Run Forex Signal Scanner
         env:
