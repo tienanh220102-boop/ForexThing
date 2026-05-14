@@ -14,49 +14,161 @@
       "signal": "BUY",
       "entry_price": 0.7262691855430603,
       "sent_at": 1778712200.458527,
-      "validate_at": 1778719400.458527
+      "checkpoints": [
+        {
+          "hours": 2,
+          "at": 1778719400.458527,
+          "done": true
+        },
+        {
+          "hours": 4,
+          "at": 1778726600.458527,
+          "done": false
+        },
+        {
+          "hours": 24,
+          "at": 1778798600.458527,
+          "done": false
+        }
+      ]
     },
     {
       "sym": "USD/CAD",
       "signal": "BUY",
       "entry_price": 1.3703299760818481,
       "sent_at": 1778712200.458527,
-      "validate_at": 1778719400.458527
+      "checkpoints": [
+        {
+          "hours": 2,
+          "at": 1778719400.458527,
+          "done": true
+        },
+        {
+          "hours": 4,
+          "at": 1778726600.458527,
+          "done": false
+        },
+        {
+          "hours": 24,
+          "at": 1778798600.458527,
+          "done": false
+        }
+      ]
     },
     {
       "sym": "EUR/GBP",
       "signal": "SELL",
       "entry_price": 0.8659600019454956,
       "sent_at": 1778712200.458527,
-      "validate_at": 1778719400.458527
+      "checkpoints": [
+        {
+          "hours": 2,
+          "at": 1778719400.458527,
+          "done": true
+        },
+        {
+          "hours": 4,
+          "at": 1778726600.458527,
+          "done": false
+        },
+        {
+          "hours": 24,
+          "at": 1778798600.458527,
+          "done": false
+        }
+      ]
     },
     {
       "sym": "GBP/JPY",
       "signal": "BUY",
       "entry_price": 213.5070037841797,
       "sent_at": 1778712200.458527,
-      "validate_at": 1778719400.458527
+      "checkpoints": [
+        {
+          "hours": 2,
+          "at": 1778719400.458527,
+          "done": true
+        },
+        {
+          "hours": 4,
+          "at": 1778726600.458527,
+          "done": false
+        },
+        {
+          "hours": 24,
+          "at": 1778798600.458527,
+          "done": false
+        }
+      ]
     },
     {
       "sym": "XAG/USD",
       "signal": "BUY",
       "entry_price": 88.45999908447266,
       "sent_at": 1778712200.458527,
-      "validate_at": 1778719400.458527
+      "checkpoints": [
+        {
+          "hours": 2,
+          "at": 1778719400.458527,
+          "done": true
+        },
+        {
+          "hours": 4,
+          "at": 1778726600.458527,
+          "done": false
+        },
+        {
+          "hours": 24,
+          "at": 1778798600.458527,
+          "done": false
+        }
+      ]
     },
     {
       "sym": "UKOIL/USD",
       "signal": "SELL",
       "entry_price": 105.51000213623047,
       "sent_at": 1778712200.458527,
-      "validate_at": 1778719400.458527
+      "checkpoints": [
+        {
+          "hours": 2,
+          "at": 1778719400.458527,
+          "done": true
+        },
+        {
+          "hours": 4,
+          "at": 1778726600.458527,
+          "done": false
+        },
+        {
+          "hours": 24,
+          "at": 1778798600.458527,
+          "done": false
+        }
+      ]
     },
     {
       "sym": "USOIL/USD",
       "signal": "SELL",
       "entry_price": 100.88999938964844,
       "sent_at": 1778712200.458527,
-      "validate_at": 1778719400.458527
+      "checkpoints": [
+        {
+          "hours": 2,
+          "at": 1778719400.458527,
+          "done": true
+        },
+        {
+          "hours": 4,
+          "at": 1778726600.458527,
+          "done": false
+        },
+        {
+          "hours": 24,
+          "at": 1778798600.458527,
+          "done": false
+        }
+      ]
     }
   ],
   "USD/CHF|BUY": 1778693846.700291,
