@@ -11,7 +11,7 @@ Thuat toan nang cao:
 """
 import json, os, time
 import numpy as np
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import requests
 import yfinance as yf
@@ -22,6 +22,7 @@ TELEGRAM_CHAT  = os.environ.get('TELEGRAM_CHAT',  '')
 COOLDOWN_HOURS = 4
 STATE_FILE     = 'last_signals.json'
 CHECKPOINTS_H  = [2, 4, 24]   # Xac nhan tai +2h, +4h, +24h
+VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 
 SYMBOLS = {
     'EUR/USD': 'EURUSD=X', 'GBP/USD': 'GBPUSD=X', 'USD/JPY': 'USDJPY=X',
@@ -451,7 +452,8 @@ def run_validations(state, now):
             ind_str = (f"RSI{_icon(inds.get('rsi',0))} EMA{_icon(inds.get('ema',0))} "
                       f"MACD{_icon(inds.get('macd',0))} FFT{_icon(inds.get('fft',0))} "
                       f"IM{_icon(inds.get('inter',0))}")
-            sent_dt = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc)
+            sent_dt    = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
+            now_vn_val = now.astimezone(VN_TZ)
 
             msg = '\n'.join([
                 f'{verdict_emoji} <b>Ket qua +{cp["hours"]}h — {verdict}</b>',
@@ -462,8 +464,8 @@ def run_validations(state, now):
                 f'🌊 Regime khi dat: {regime} (Hurst={H:.2f})',
                 f'🔍 {ind_str} | {aligned}/6 dong thuan',
                 '',
-                f'⏱ Dat lenh: {sent_dt.strftime("%d/%m %H:%M")} UTC',
-                f'⏱ Ket qua:  {now.strftime("%d/%m %H:%M")} UTC',
+                f'⏱ Dat lenh: {sent_dt.strftime("%d/%m %H:%M")} (Gio VN)',
+                f'⏱ Ket qua:  {now_vn_val.strftime("%d/%m %H:%M")} (Gio VN)',
             ])
 
             result = send_telegram(msg)
@@ -485,9 +487,10 @@ def main():
         print('TELEGRAM_TOKEN hoac TELEGRAM_CHAT chua duoc dat!')
         return
 
-    now   = datetime.now(timezone.utc)
-    state = load_state()
-    sent  = 0
+    now    = datetime.now(timezone.utc)
+    now_vn = now.astimezone(VN_TZ)
+    state  = load_state()
+    sent   = 0
 
     # Buoc 1: fetch intermarket 1 lan cho ca phien
     print('=== Lay du lieu lien thi truong (DXY, Oil) ===')
@@ -499,7 +502,7 @@ def main():
     run_validations(state, now)
 
     # Buoc 3: quet tin hieu moi
-    print(f'\n=== Forex Scan v3 — {now.strftime("%Y-%m-%d %H:%M UTC")} ===')
+    print(f'\n=== Forex Scan v3 — {now_vn.strftime("%Y-%m-%d %H:%M")} (Gio VN) ===')
 
     for sym, yf_sym in SYMBOLS.items():
         print(f'Phan tich {sym}...', end=' ', flush=True)
@@ -555,7 +558,7 @@ def main():
             f'🔔 Xac nhan tai: +2h / +4h / +24h',
             '',
             '⚠ Phan tich ky thuat, khong phai tu van tai chinh',
-            f'⏱ {now.strftime("%d/%m/%Y %H:%M UTC")}',
+            f'⏱ {now_vn.strftime("%d/%m/%Y %H:%M")} (Gio VN)',
         ])
 
         result = send_telegram(msg)
