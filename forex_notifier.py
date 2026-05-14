@@ -22,7 +22,7 @@ TELEGRAM_CHAT  = os.environ.get('TELEGRAM_CHAT',  '')
 COOLDOWN_HOURS  = 4
 STATE_FILE      = 'last_signals.json'
 CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
-MIN_CONFIDENCE  = 70     # Chi gui tin hieu khi do tin cay >= 70%
+MIN_CONFIDENCE  = 65     # Chi gui tin hieu khi do tin cay >= 65%
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 
 # Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
