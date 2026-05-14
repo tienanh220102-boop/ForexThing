@@ -24,6 +24,23 @@ STATE_FILE     = 'last_signals.json'
 CHECKPOINTS_H  = [2, 4, 24]   # Xac nhan tai +2h, +4h, +24h
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 
+# Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
+# w = [rsi, ema, macd, bb, mom]  |  trend_mult: he so Hurst TREND
+PAIR_PROFILES = {
+    # JPY cross: Momentum manh nhat, TREND lam viec tot (EUR/JPY 78.6% trong TREND)
+    'EUR/JPY': {'w': np.array([0.05, 0.25, 0.30, 0.03, 0.37]), 'trend_mult': 1.05},
+    'GBP/JPY': {'w': np.array([0.05, 0.25, 0.35, 0.03, 0.32]), 'trend_mult': 0.88},
+    'USD/JPY': {'w': np.array([0.05, 0.20, 0.35, 0.03, 0.37]), 'trend_mult': 0.83},
+    # Vang/Bac: Bollinger & RSI quan trong hon (bien dong lon, dao chieu ro)
+    'XAU/USD': {'w': np.array([0.14, 0.20, 0.25, 0.14, 0.27]), 'trend_mult': 1.05},
+    'XAG/USD': {'w': np.array([0.14, 0.20, 0.25, 0.14, 0.27]), 'trend_mult': 1.05},
+    # Dau: Intermarket (oil) la tin hieu chinh, chi bao ky thuat phu
+    'USOIL/USD': {'w': np.array([0.05, 0.20, 0.30, 0.05, 0.40]), 'trend_mult': 0.83},
+    'UKOIL/USD': {'w': np.array([0.05, 0.20, 0.30, 0.05, 0.40]), 'trend_mult': 0.83},
+}
+# Mac dinh cho cac cap con lai (EUR/USD, GBP/USD, AUD/USD, USD/CAD, NZD/USD...)
+_DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult': 0.82}
+
 SYMBOLS = {
     'EUR/USD': 'EURUSD=X', 'GBP/USD': 'GBPUSD=X', 'USD/JPY': 'USDJPY=X',
     'USD/CHF': 'USDCHF=X', 'AUD/USD': 'AUDUSD=X', 'USD/CAD': 'USDCAD=X',
@@ -177,7 +194,8 @@ def dynamic_weights(closes, lookback=40):
     - Indicator nao co tuong quan cao voi return thuc → trong so cao hon
     - Tu dong thich nghi theo dieu kien thi truong
     """
-    default = np.array([0.20, 0.30, 0.30, 0.10, 0.10])
+    # Trong so mac dinh tu backtest 666 tin hieu: MACD>EMA>MOM>>RSI>BB
+    default = np.array([0.08, 0.30, 0.35, 0.03, 0.24])
     c = closes[-120:] if len(closes) > 120 else closes
     if len(c) < 70:
         return default
@@ -286,8 +304,13 @@ def analyze(sym, yf_sym):
         # [INTERMARKET] Tin hieu lien thi truong
         im_s = intermarket_signal(sym)
 
-        # [OLS] Trong so dong theo kha nang du bao thuc te
-        w = dynamic_weights(closes)
+        # [OLS + PROFILE] Blend trong so dong (OLS) voi trong so tung cap (backtest)
+        profile   = PAIR_PROFILES.get(sym, _DEFAULT_PROFILE)
+        w_profile = profile['w']
+        w_ols     = dynamic_weights(closes)   # OLS tu du lieu gan day
+        # 60% OLS (thich nghi thuc te) + 40% profile (neo tu backtest)
+        w = 0.60 * w_ols + 0.40 * w_profile
+        w = w / w.sum()                       # Chuan hoa tong = 1
 
         # Chi bao chinh
         p = price
@@ -301,25 +324,33 @@ def analyze(sym, yf_sym):
         bb_s  = (1.0 if p<lower else -1.0 if p>upper else 0.0)
         mom_s = momentum(closes)
 
-        # Composite score: 80% chi bao chinh (trong so dong) + 10% Fourier + 10% Intermarket
-        base  = rsi_s*w[0] + ema_s*w[1] + mac_s*w[2] + bb_s*w[3] + mom_s*w[4]
-        score = base*0.80 + fft_s*0.10 + im_s*0.10
+        # [LOC 3 - FIX 4] RSI-EMA xung dot: backtest 27-43% chinh xac (tệ hơn tung xu)
+        # Chi loc khi RSI o muc cuc doan (>=0.5) va trai chieu voi EMA
+        if abs(rsi_s) >= 0.5 and ((rsi_s > 0) != (ema_s > 0)):
+            return None
 
-        # [HURST BOOST] Nhan he so theo che do thi truong
+        # Composite score: 82% chi bao chinh (trong so dong) + 10% Fourier + 8% Intermarket
+        base  = rsi_s*w[0] + ema_s*w[1] + mac_s*w[2] + bb_s*w[3] + mom_s*w[4]
+        score = base*0.82 + fft_s*0.10 + im_s*0.08
+
+        # [HURST - DA SUA] Backtest: TREND regime chinh xac 27-48% (tệ hơn ngẫu nhiên)
+        # NEUTRAL regime: 43.1% toan the → bo qua hoan toan
+        trend_mult = profile.get('trend_mult', 0.82)
         if regime == 'TREND':
-            if (score>0 and ema_s>0) or (score<0 and ema_s<0):
-                score *= 1.20   # EMA xac nhan xu huong → manh hon
+            score *= trend_mult  # Phat nhe: xu huong da gia → sap dao chieu
         elif regime == 'RANGE':
             if (score>0 and rsi_s>0) or (score<0 and rsi_s<0):
-                score *= 1.10   # RSI xac nhan dao chieu → manh hon
+                score *= 1.10   # Mean-reversion + RSI xac nhan → hop ly
             else:
-                score *= 0.80   # Trend signal trong range → yeu di
+                score *= 0.80
+        elif regime == 'NEUTRAL':
+            return None         # 43.1% chinh xac < 50% → loai bo
 
         score = float(np.clip(score, -2.0, 2.0))
 
-        # [LOC 2] Nguong cao hon: chi gui tin hieu chat luong cao
-        if   score >= 0.40: signal = 'BUY'
-        elif score <=-0.40: signal = 'SELL'
+        # [LOC 2] Nguong 0.50: backtest cho thay 58.9% chinh xac (vs 45.2% o 0.40)
+        if   score >= 0.50: signal = 'BUY'
+        elif score <=-0.50: signal = 'SELL'
         else: return None
 
         # So chi bao dong thuan (trong 6 chi bao)
