@@ -353,6 +353,20 @@ def analyze(sym, yf_sym):
         elif score <=-0.50: signal = 'SELL'
         else: return None
 
+        # Tinh Entry / SL / TP voi RR 1:2 (thua 1 thang 2)
+        # SL = 1.5x ATR: du cho bien dong binh thuong, tranh bi stop sớm
+        # TP = 3.0x ATR = 2x SL → RR chinh xac 1:2
+        sl_dist = atr_val * 1.5
+        tp_dist = atr_val * 3.0
+        if signal == 'BUY':
+            sl = price - sl_dist
+            tp = price + tp_dist
+        else:
+            sl = price + sl_dist
+            tp = price - tp_dist
+        sl_pct = round(sl_dist / price * 100, 4)
+        tp_pct = round(tp_dist / price * 100, 4)
+
         # So chi bao dong thuan (trong 6 chi bao)
         s_pos = signal == 'BUY'
         aligned = sum([
@@ -368,6 +382,7 @@ def analyze(sym, yf_sym):
         return {
             'sym': sym, 'signal': signal,
             'score': round(score, 3), 'price': price, 'rsi': round(r, 1),
+            'entry': price, 'sl': sl, 'tp': tp, 'sl_pct': sl_pct, 'tp_pct': tp_pct,
             'hurst': round(H, 3), 'regime': regime, 'aligned': aligned,
             'indicators': {
                 'rsi':  rsi_s, 'ema':   ema_s,      'macd': round(mac_s, 2),
@@ -486,18 +501,41 @@ def run_validations(state, now):
             sent_dt    = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
             now_vn_val = now.astimezone(VN_TZ)
 
-            msg = '\n'.join([
+            # Kiem tra TP/SL da bi cham chua (ap sat, vi check theo dinh ky 30 phut)
+            sl_val = v.get('sl')
+            tp_val = v.get('tp')
+            if sl_val and tp_val:
+                tp_hit = (current >= tp_val) if signal == 'BUY' else (current <= tp_val)
+                sl_hit = (current <= sl_val) if signal == 'BUY' else (current >= sl_val)
+                if tp_hit:
+                    tp_sl_line = f'🎉 DA CHAM TP ({fmt_price(sym, tp_val)}) - CHOT LOI!'
+                elif sl_hit:
+                    tp_sl_line = f'💸 DA CHAM SL ({fmt_price(sym, sl_val)}) - DUNG LO!'
+                else:
+                    d_tp = abs(tp_val - current) / entry * 100
+                    d_sl = abs(current - sl_val) / entry * 100
+                    tp_sl_line = (f'TP {fmt_price(sym, tp_val)} (con {d_tp:.3f}%) | '
+                                  f'SL {fmt_price(sym, sl_val)} (con {d_sl:.3f}%)')
+            else:
+                tp_sl_line = ''
+
+            msg_lines = [
                 f'{verdict_emoji} <b>Ket qua +{cp["hours"]}h — {verdict}</b>',
                 '',
                 f'📈 Cap: <b>{sym}</b>',
                 f'📌 {signal} @ {fmt_price(sym, entry)} → {fmt_price(sym, current)}',
                 f'📊 Bien dong: <b>{move_text}</b>',
+            ]
+            if tp_sl_line:
+                msg_lines.append(f'🎯 {tp_sl_line}')
+            msg_lines += [
                 f'🌊 Regime khi dat: {regime} (Hurst={H:.2f})',
                 f'🔍 {ind_str} | {aligned}/6 dong thuan',
                 '',
                 f'⏱ Dat lenh: {sent_dt.strftime("%d/%m %H:%M")} (Gio VN)',
                 f'⏱ Ket qua:  {now_vn_val.strftime("%d/%m %H:%M")} (Gio VN)',
-            ])
+            ]
+            msg = '\n'.join(msg_lines)
 
             result = send_telegram(msg)
             if result.get('ok'):
@@ -579,7 +617,10 @@ def main():
             f'{emoji} <b>Tin hieu FOREX — {r["signal"]}</b>',
             '',
             f'📈 Cap: <b>{sym}</b>',
-            f'💰 Gia: <b>{fmt_price(sym, r["price"])}</b>',
+            f'🎯 Vao lenh: <b>{fmt_price(sym, r["price"])}</b>',
+            f'🛑 SL (Dung lo): <b>{fmt_price(sym, r["sl"])}</b>  (-{r["sl_pct"]:.3f}%)',
+            f'✅ TP (Chot loi): <b>{fmt_price(sym, r["tp"])}</b>  (+{r["tp_pct"]:.3f}%)',
+            f'📐 RR: <b>1 : 2</b>  |  Thua 1 thang 2',
             f'📊 RSI: {r["rsi"]} ({rsi_note})',
             f'{regime_icon} Regime: <b>{r["regime"]}</b> (Hurst={r["hurst"]:.2f})',
             f'🔍 Chi bao: {ind_str}',
@@ -601,6 +642,8 @@ def main():
                 'sym':         sym,
                 'signal':      r['signal'],
                 'entry_price': r['price'],
+                'sl':          r['sl'],
+                'tp':          r['tp'],
                 'sent_at':     now.timestamp(),
                 'checkpoints': [
                     {'hours': h, 'at': now.timestamp()+h*3600, 'done': False}
