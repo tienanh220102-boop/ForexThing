@@ -10,34 +10,6 @@
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
-      "sym": "EUR/GBP",
-      "signal": "SELL",
-      "entry_price": 0.87078,
-      "sl": 0.8720858735020869,
-      "tp": 0.8681682529958263,
-      "sent_at": 1778841052.33607,
-      "message_id": 90,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1778844652.33607,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.13,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": 0.0
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.46,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "NZD/USD",
       "signal": "SELL",
       "entry_price": 0.58499,
