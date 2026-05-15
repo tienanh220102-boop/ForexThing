@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778844652.33607,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -36,10 +36,38 @@
       "hurst": 0.46,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "NZD/USD",
+      "signal": "SELL",
+      "entry_price": 0.58499,
+      "sl": 0.5865580210478931,
+      "tp": 0.5818539579042138,
+      "sent_at": 1778844654.428844,
+      "message_id": 92,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1778848254.428844,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.17,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -0.71
+      },
+      "regime": "TREND",
+      "hurst": 0.635,
+      "aligned": 3,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1778693846.700291,
-  "NZD/USD|SELL": 1778829927.831546,
+  "NZD/USD|SELL": 1778844654.428844,
   "EUR/USD|SELL": 1778693846.700291,
   "AUD/USD|BUY": 1778712200.458527,
   "EUR/JPY|SELL": 1778829927.831546,
@@ -74,6 +102,13 @@
       "correct": true,
       "date": "2026-05-15",
       "regime": "RANGE"
+    },
+    {
+      "sym": "EUR/GBP",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-15",
+      "regime": "NEUTRAL"
     }
   ]
 }
