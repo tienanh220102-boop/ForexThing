@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Forex Signal Notifier v3
-Thuat toan nang cao:
-  - Hurst Exponent: phat hien regime (trend / mean-reversion / random walk)
-  - Fourier Cycle Analysis: vi tri song gia (dinh/day chu ky)
-  - OLS Dynamic Weights: trong so dong dua tren kha nang du bao thuc te
-  - Intermarket: DXY (dollar index) + Oil anh huong chinh xac theo tung cap
-  - Xac nhan 1 moc: +1h (khop voi kieu giu lenh 1 gio)
+Forex Signal Notifier v4 — Vote System
+  - Vote System 3/5: moi chi bao bau phieu, can 3/5 cung chieu
+  - Hurst Exponent: phat hien regime (TREND / RANGE / NEUTRAL)
+  - Intermarket: DXY + Oil anh huong theo tung cap
+  - Twelve Data API (fallback yfinance)
+  - Xac nhan +1h: ket qua, TP/SL, win rate
 """
 import json, os, time
 import numpy as np
@@ -385,10 +384,10 @@ def build_pa_vol(signal, indicators, rsi_val, h1_phase, m15_signal, m15_phase):
     """Tao danh sach bang chung PA/Vol."""
     lines = []
     rsi_v = indicators.get('rsi', 0)
-    if rsi_v < 0:
-        lines.append(f'- H1 RSI={rsi_val:.0f} (vùng mua quá bán)')
-    elif rsi_v > 0:
-        lines.append(f'- H1 RSI={rsi_val:.0f} (vùng bán quá mua)')
+    if rsi_v > 0:   # RSI <= 45: vung qua ban → MUA
+        lines.append(f'- H1 RSI={rsi_val:.0f} (vùng quá bán — hỗ trợ MUA)')
+    elif rsi_v < 0: # RSI >= 55: vung qua mua → BAN
+        lines.append(f'- H1 RSI={rsi_val:.0f} (vùng quá mua — hỗ trợ BÁN)')
     mac = indicators.get('macd', 0)
     if mac < -0.12:
         lines.append('- H1 MACD âm (đã xác nhận)')
@@ -543,15 +542,15 @@ def _icon(v):
 def load_state():
     if os.path.exists(STATE_FILE):
         try:
-            with open(STATE_FILE) as f:
+            with open(STATE_FILE, encoding='utf-8') as f:
                 return json.load(f)
         except Exception:
             pass
     return {}
 
 def save_state(state):
-    with open(STATE_FILE, 'w') as f:
-        json.dump(state, f, indent=2)
+    with open(STATE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)
 
 # ── Telegram ──────────────────────────────────────────────────
 def send_telegram(msg, reply_to=None):
