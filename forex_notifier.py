@@ -275,6 +275,76 @@ def intermarket_signal(sym):
         return -dxy
     return 0.0   # Cross pairs (EUR/GBP...) it bi DXY anh huong
 
+# ── Cong cu nang cap ─────────────────────────────────────────
+def analyze_m15(sym, yf_sym):
+    """Phan tich nhanh khung M15 de xac nhan confluence voi H1."""
+    try:
+        df = yf.Ticker(yf_sym).history(period='5d', interval='15m')
+        if df is None or len(df) < 40:
+            return None
+        closes = list(df['Close'].dropna())
+        if len(closes) < 40:
+            return None
+        p     = closes[-1]
+        r_val = rsi(closes)
+        e20   = ema(closes, 20)
+        mac_s = macd(closes)
+        rsi_s = (1.0 if r_val<=30 else 0.5 if r_val<=40 else
+                 -1.0 if r_val>=70 else -0.5 if r_val>=60 else 0.0)
+        ema_s = 1.0 if p > e20 else -1.0
+        score = rsi_s*0.30 + ema_s*0.40 + mac_s*0.30
+        if score >= 0.25:   return 'BUY'
+        if score <= -0.25:  return 'SELL'
+        return None
+    except Exception:
+        return None
+
+def wyckoff_phase(regime, signal, rsi_val):
+    """Xac dinh pha Wyckoff tu regime va tin hieu."""
+    if regime == 'TREND':
+        if signal == 'BUY':
+            return 'Transition' if rsi_val >= 65 else 'Markup'
+        else:
+            return 'Transition' if rsi_val <= 35 else 'Markdown'
+    if regime == 'RANGE':
+        return 'Accumulation' if signal == 'BUY' else 'Distribution'
+    return 'Neutral'
+
+def confidence_bar(n):
+    """Tao thanh █░ bieu thi confidence (n tu 1-10)."""
+    n = max(1, min(10, n))
+    return '█' * n + '░' * (10 - n)
+
+def build_reason(signal, regime, indicators):
+    """Tao cau ly do ngan gon bang tieng Viet."""
+    parts = []
+    if indicators.get('macd', 0) > 0.2:   parts.append('MACD duong')
+    elif indicators.get('macd', 0) < -0.2: parts.append('MACD am')
+    if indicators.get('ema', 0) > 0.3:    parts.append('EMA len')
+    elif indicators.get('ema', 0) < -0.3:  parts.append('EMA xuong')
+    if indicators.get('fft', 0) > 0.3:    parts.append('Fourier day chu ky')
+    elif indicators.get('fft', 0) < -0.3:  parts.append('Fourier dinh chu ky')
+    if indicators.get('rsi', 0) >= 0.5:   parts.append('RSI qua ban')
+    elif indicators.get('rsi', 0) <= -0.5: parts.append('RSI qua mua')
+    if regime == 'RANGE':  parts.append('thi truong dao dong')
+    return ', '.join(parts) if parts else 'Tin hieu ky thuat tong hop'
+
+def build_pa_vol(signal, indicators, rsi_val, h1_phase, m15_signal, m15_phase):
+    """Tao danh sach bang chung PA/Vol."""
+    lines = []
+    if indicators.get('rsi', 0) <= -0.5:
+        lines.append(f'- H1 no_demand=true (RSI={rsi_val:.0f})')
+    elif indicators.get('rsi', 0) >= 0.5:
+        lines.append(f'- H1 no_supply=true (RSI={rsi_val:.0f})')
+    if indicators.get('macd', 0) < -0.2:
+        lines.append('- H1 macd_bearish=true')
+    elif indicators.get('macd', 0) > 0.2:
+        lines.append('- H1 macd_bullish=true')
+    lines.append(f'- H1 wyckoff_phase={h1_phase}')
+    if m15_signal and m15_signal == signal:
+        lines.append(f'- M15 wyckoff_phase={m15_phase}')
+    return '\n'.join(lines)
+
 # ── Phan tich tin hieu ────────────────────────────────────────
 def analyze(sym, yf_sym):
     try:
@@ -375,6 +445,16 @@ def analyze(sym, yf_sym):
         sl_pct = round(sl_dist / price * 100, 4)
         tp_pct = round(tp_dist / price * 100, 4)
 
+        # Entry zone, TP2, R:R, Wyckoff phase
+        entry_low  = price - atr_val * 0.2
+        entry_high = price + atr_val * 0.2
+        tp2_dist   = atr_val * 4.5
+        tp2        = price + tp2_dist if signal == 'BUY' else price - tp2_dist
+        tp2_pct    = round(tp2_dist / price * 100, 4)
+        rr1        = round(tp_dist / sl_dist, 1)
+        rr2        = round(tp2_dist / sl_dist, 1)
+        phase_name = wyckoff_phase(regime, signal, r)
+
         # So chi bao dong thuan (trong 6 chi bao)
         s_pos = signal == 'BUY'
         aligned = sum([
@@ -391,6 +471,9 @@ def analyze(sym, yf_sym):
             'sym': sym, 'signal': signal,
             'score': round(score, 3), 'price': price, 'rsi': round(r, 1),
             'entry': price, 'sl': sl, 'tp': tp, 'sl_pct': sl_pct, 'tp_pct': tp_pct,
+            'entry_low': entry_low, 'entry_high': entry_high,
+            'tp2': tp2, 'tp2_pct': tp2_pct, 'rr1': rr1, 'rr2': rr2,
+            'phase': phase_name,
             'hurst': round(H, 3), 'regime': regime, 'aligned': aligned,
             'indicators': {
                 'rsi':  rsi_s, 'ema':   ema_s,      'macd': round(mac_s, 2),
@@ -420,9 +503,9 @@ def fetch_current_price(yf_sym):
 
 # ── Format ────────────────────────────────────────────────────
 def fmt_price(sym, price):
-    if 'JPY' in sym:                                  return f'{price:.3f}'
-    if sym in ('XAG/USD',):                           return f'{price:.3f}'
-    if sym in ('XAU/USD','UKOIL/USD','USOIL/USD'):    return f'{price:.2f}'
+    if 'JPY' in sym:                                  return f'{price:,.3f}'
+    if sym in ('XAG/USD',):                           return f'{price:,.3f}'
+    if sym in ('XAU/USD','UKOIL/USD','USOIL/USD'):    return f'{price:,.2f}'
     return f'{price:.5f}'
 
 def _icon(v):
@@ -550,6 +633,13 @@ def run_validations(state, now):
             if result.get('ok'):
                 cp['done'] = True
                 print(f'{verdict} ✓')
+                # Ghi ket qua theo doi win rate
+                state.setdefault('results', []).append({
+                    'sym': sym, 'signal': signal, 'correct': correct,
+                    'date': sent_dt.strftime('%Y-%m-%d'), 'regime': v.get('regime', '?'),
+                })
+                if len(state['results']) > 100:
+                    state['results'] = state['results'][-100:]
             else:
                 print(f'Loi Telegram: {result}')
             time.sleep(1)
@@ -610,42 +700,73 @@ def main():
             time.sleep(0.5)
             continue
 
-        strength = int(abs(r['score']) * 100)
         conf     = int((0.45 + abs(r['score'])*0.35) * 100)
 
         if conf < MIN_CONFIDENCE:
             print(f'  -> Do tin cay {conf}% < {MIN_CONFIDENCE}%, bo qua')
             time.sleep(0.5)
             continue
-        emoji    = '🟢' if r['signal'] == 'BUY' else '🔴'
-        rsi_note = 'Qua ban' if r['rsi']<=35 else ('Qua mua' if r['rsi']>=65 else 'Trung tinh')
-        regime_icon = '📈' if r['regime']=='TREND' else ('🔄' if r['regime']=='RANGE' else '〰')
-        ind_str  = (f"RSI{_icon(inds['rsi'])} EMA{_icon(inds['ema'])} "
-                   f"MACD{_icon(inds['macd'])} FFT{_icon(inds['fft'])} "
-                   f"IM{_icon(inds['inter'])}")
-        consensus_line = ('✔ RSI va EMA cung chieu' if r['consensus']
-                         else '⚠ RSI va EMA trai chieu — can than')
-        top_w = max(r['weights'], key=r['weights'].get)
 
-        msg = '\n'.join([
-            f'{emoji} <b>Tin hieu FOREX — {r["signal"]}</b>',
+        # M15 confluence
+        m15_dir   = analyze_m15(sym, yf_sym)
+        m15_phase = wyckoff_phase(
+            'RANGE' if m15_dir else 'NEUTRAL', m15_dir or r['signal'], r['rsi']
+        )
+        m15_match     = (m15_dir == r['signal'])
+        timeframe_lbl = 'M15 + H1 confluence' if m15_match else 'H1'
+
+        # Confidence 1-10
+        conf_10 = max(1, min(10, round(conf / 10)))
+        if m15_match:
+            conf_10 = min(10, conf_10 + 1)
+        bar = confidence_bar(conf_10)
+
+        # Win rate (Cap 3)
+        results_all = state.get('results', [])
+        wr_line = ''
+        if len(results_all) >= 5:
+            recent_r = results_all[-20:]
+            wr = sum(1 for x in recent_r if x['correct']) / len(recent_r) * 100
+            wr_line = f'📈 Win rate ({len(recent_r)} lenh): {wr:.0f}%'
+
+        emoji     = '🟢' if r['signal'] == 'BUY' else '🔴'
+        direction = 'MUA' if r['signal'] == 'BUY' else 'BAN'
+
+        # Entry zone & invalidation
+        entry_zone = f'{fmt_price(sym, r["entry_low"])} — {fmt_price(sym, r["entry_high"])}'
+        inval_text = (f'Gia len tren {fmt_price(sym, r["sl"])}'
+                      if r['signal'] == 'SELL'
+                      else f'Gia xuong duoi {fmt_price(sym, r["sl"])}')
+
+        reason = build_reason(r['signal'], r['regime'], inds)
+        pa_vol = build_pa_vol(r['signal'], inds, r['rsi'],
+                              r['phase'], m15_dir, m15_phase)
+
+        msg_parts = [
+            f'{emoji} {sym} — {direction} | Confidence {conf_10}/10',
+            bar,
             '',
-            f'📈 Cap: <b>{sym}</b>',
-            f'🎯 Vao lenh: <b>{fmt_price(sym, r["price"])}</b>',
-            f'🛑 SL (Dung lo): <b>{fmt_price(sym, r["sl"])}</b>  (-{r["sl_pct"]:.3f}%)',
-            f'✅ TP (Chot loi): <b>{fmt_price(sym, r["tp"])}</b>  (+{r["tp_pct"]:.3f}%)',
-            f'📐 RR: <b>1 : 2</b>  |  Thua 1 thang 2',
-            f'📊 RSI: {r["rsi"]} ({rsi_note})',
-            f'{regime_icon} Regime: <b>{r["regime"]}</b> (Hurst={r["hurst"]:.2f})',
-            f'🔍 Chi bao: {ind_str}',
-            f'📋 {r["aligned"]}/6 dong thuan | {consensus_line}',
-            f'⚖ Trong so cao nhat: <b>{top_w.upper()}</b> ({r["weights"][top_w]*100:.0f}%)',
-            f'💪 Suc manh: <b>{strength}%</b> | Do tin cay: ~<b>{conf}%</b>',
-            f'🔔 Xac nhan ket qua sau: +1h',
+            f'📍 Entry: {entry_zone}',
+            f'🔴 SL: {fmt_price(sym, r["sl"])}',
+            f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
+            f'🎯 TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]})',
             '',
-            '⚠ Phan tich ky thuat, khong phai tu van tai chinh',
-            f'⏱ {now_vn.strftime("%d/%m/%Y %H:%M")} (Gio VN)',
-        ])
+            f'📊 Context H1: {r["phase"]}',
+            '',
+            '💡 Ly do:',
+            reason,
+            '',
+            '🔍 Bang chung PA/Vol:',
+            pa_vol,
+            '',
+            '⚠️ Vo hieu neu:',
+            inval_text,
+            '',
+        ]
+        if wr_line:
+            msg_parts.append(wr_line)
+        msg_parts.append(f'⏰ {now_vn.strftime("%H:%M %d/%m/%Y")} | {timeframe_lbl}')
+        msg = '\n'.join(msg_parts)
 
         result = send_telegram(msg)
         if result.get('ok'):
