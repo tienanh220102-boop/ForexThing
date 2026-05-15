@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778837043.361124,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -67,6 +67,13 @@
       "correct": true,
       "date": "2026-05-15",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "UKOIL/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-15",
+      "regime": "RANGE"
     }
   ]
 }
