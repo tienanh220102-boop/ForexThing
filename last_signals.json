@@ -6,34 +6,34 @@
   "GBP/JPY|SELL": 1778665333.167377,
   "XAU/USD|SELL": 1778850067.127447,
   "XAG/USD|BUY": 1778712200.458527,
-  "UKOIL/USD|BUY": 1778833443.361124,
+  "UKOIL/USD|BUY": 1778860864.322078,
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
-      "sym": "XAG/USD",
-      "signal": "SELL",
-      "entry_price": 76.56500244140625,
-      "sl": 78.45513595087174,
-      "tp": 72.7847354224753,
-      "sent_at": 1778853666.940891,
-      "message_id": 98,
+      "sym": "UKOIL/USD",
+      "signal": "BUY",
+      "entry_price": 109.5,
+      "sl": 108.05534977665538,
+      "tp": 112.38930044668925,
+      "sent_at": 1778860864.322078,
+      "message_id": 102,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1778857266.940891,
-          "done": true
+          "at": 1778864464.322078,
+          "done": false
         }
       ],
       "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.13,
+        "rsi": -1,
+        "ema": 1,
+        "macd": 0.26,
         "bb": 0,
-        "mom": -0.6,
-        "inter": -1.0
+        "mom": 0.6,
+        "inter": 0.08
       },
       "regime": "RANGE",
-      "hurst": 0.426,
+      "hurst": 0.409,
       "aligned": 3,
       "consensus": true
     }
