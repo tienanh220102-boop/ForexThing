@@ -10,62 +10,6 @@
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
-      "sym": "EUR/JPY",
-      "signal": "SELL",
-      "entry_price": 184.3280029296875,
-      "sl": 184.58975133472111,
-      "tp": 183.8045061196203,
-      "sent_at": 1778850067.127447,
-      "message_id": 95,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1778853667.127447,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.17,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": 0.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.273,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "entry_price": 4554.7998046875,
-      "sl": 4588.7183818181065,
-      "tp": 4486.962650426287,
-      "sent_at": 1778850067.127447,
-      "message_id": 96,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1778853667.127447,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.16,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.71
-      },
-      "regime": "TREND",
-      "hurst": 0.628,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "XAG/USD",
       "signal": "SELL",
       "entry_price": 76.56500244140625,
