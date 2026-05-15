@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778853667.127447,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -49,7 +49,7 @@
         {
           "hours": 1,
           "at": 1778853667.127447,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -151,6 +151,20 @@
       "correct": false,
       "date": "2026-05-15",
       "regime": "RANGE"
+    },
+    {
+      "sym": "EUR/JPY",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-15",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-15",
+      "regime": "TREND"
     }
   ],
   "AUD/USD|SELL": 1778848251.923718,
