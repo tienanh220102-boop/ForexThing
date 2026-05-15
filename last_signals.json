@@ -36,6 +36,34 @@
       "hurst": 0.635,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "AUD/USD",
+      "signal": "SELL",
+      "entry_price": 0.71512,
+      "sl": 0.7171251112307381,
+      "tp": 0.7111097775385238,
+      "sent_at": 1778848251.923718,
+      "message_id": 93,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1778851851.923718,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.13,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -0.71
+      },
+      "regime": "RANGE",
+      "hurst": 0.423,
+      "aligned": 3,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1778693846.700291,
@@ -82,5 +110,6 @@
       "date": "2026-05-15",
       "regime": "NEUTRAL"
     }
-  ]
+  ],
+  "AUD/USD|SELL": 1778848251.923718
 }
