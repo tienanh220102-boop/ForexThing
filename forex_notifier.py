@@ -371,32 +371,32 @@ def confidence_bar(n):
 
 def build_reason(signal, regime, vote_lbls, indicators):
     """Tao cau ly do ngan gon tu cac chi bao dong thuan."""
-    parts = [f'{lbl} xac nhan' for lbl in vote_lbls]
+    parts = [f'{lbl} xác nhận' for lbl in vote_lbls]
     if regime == 'TREND':
-        parts.append('xu huong ro rang')
+        parts.append('xu hướng rõ ràng')
     elif regime == 'RANGE':
-        parts.append('thi truong dao dong')
+        parts.append('thị trường dao động')
     im = indicators.get('inter', 0)
     if abs(im) > 0.15:
-        parts.append('Intermarket ho tro' if (im > 0) == (signal == 'BUY') else 'Intermarket nguoc chieu')
-    return ', '.join(parts) if parts else 'Tin hieu ky thuat tong hop'
+        parts.append('Intermarket hỗ trợ' if (im > 0) == (signal == 'BUY') else 'Intermarket ngược chiều')
+    return ', '.join(parts) if parts else 'Tín hiệu kỹ thuật tổng hợp'
 
 def build_pa_vol(signal, indicators, rsi_val, h1_phase, m15_signal, m15_phase):
     """Tao danh sach bang chung PA/Vol."""
     lines = []
     rsi_v = indicators.get('rsi', 0)
     if rsi_v < 0:
-        lines.append(f'- H1 RSI={rsi_val:.0f} (vung mua qua ban)')
+        lines.append(f'- H1 RSI={rsi_val:.0f} (vùng mua quá bán)')
     elif rsi_v > 0:
-        lines.append(f'- H1 RSI={rsi_val:.0f} (vung ban qua mua)')
+        lines.append(f'- H1 RSI={rsi_val:.0f} (vùng bán quá mua)')
     mac = indicators.get('macd', 0)
     if mac < -0.12:
-        lines.append('- H1 MACD am (da xac nhan)')
+        lines.append('- H1 MACD âm (đã xác nhận)')
     elif mac > 0.12:
-        lines.append('- H1 MACD duong (da xac nhan)')
+        lines.append('- H1 MACD dương (đã xác nhận)')
     bb_v = indicators.get('bb', 0)
     if bb_v != 0:
-        lines.append('- H1 gia cham Bollinger Band (tin hieu manh)')
+        lines.append('- H1 giá chạm Bollinger Band (tín hiệu mạnh)')
     lines.append(f'- H1 Wyckoff: {h1_phase}')
     if m15_signal and m15_signal == signal:
         lines.append(f'- M15 confluence: {m15_phase}')
@@ -603,10 +603,10 @@ def run_validations(state, now):
             correct = diff > 0
 
             verdict_emoji = '✅' if correct else '❌'
-            verdict       = 'DUNG HUONG' if correct else 'SAI HUONG'
+            verdict       = 'ĐÚNG HƯỚNG' if correct else 'SAI HƯỚNG'
             move_text     = (
-                (f'Tang {pct:.3f}%' if signal=='BUY' else f'Giam {pct:.3f}%') if correct
-                else (f'Giam {pct:.3f}%' if signal=='BUY' else f'Tang {pct:.3f}%')
+                (f'Tăng {pct:.3f}%' if signal=='BUY' else f'Giảm {pct:.3f}%') if correct
+                else (f'Giảm {pct:.3f}%' if signal=='BUY' else f'Tăng {pct:.3f}%')
             )
 
             inds    = v.get('indicators', {})
@@ -626,32 +626,32 @@ def run_validations(state, now):
                 tp_hit = (current >= tp_val) if signal == 'BUY' else (current <= tp_val)
                 sl_hit = (current <= sl_val) if signal == 'BUY' else (current >= sl_val)
                 if tp_hit:
-                    tp_sl_line = f'🎉 DA CHAM TP ({fmt_price(sym, tp_val)}) - CHOT LOI!'
+                    tp_sl_line = f'🎉 ĐÃ CHẠM TP ({fmt_price(sym, tp_val)}) — CHỐT LỜI!'
                 elif sl_hit:
-                    tp_sl_line = f'💸 DA CHAM SL ({fmt_price(sym, sl_val)}) - DUNG LO!'
+                    tp_sl_line = f'💸 ĐÃ CHẠM SL ({fmt_price(sym, sl_val)}) — DỪNG LỖ!'
                 else:
                     d_tp = abs(tp_val - current) / entry * 100
                     d_sl = abs(current - sl_val) / entry * 100
-                    tp_sl_line = (f'TP {fmt_price(sym, tp_val)} (con {d_tp:.3f}%) | '
-                                  f'SL {fmt_price(sym, sl_val)} (con {d_sl:.3f}%)')
+                    tp_sl_line = (f'TP {fmt_price(sym, tp_val)} (còn {d_tp:.3f}%) | '
+                                  f'SL {fmt_price(sym, sl_val)} (còn {d_sl:.3f}%)')
             else:
                 tp_sl_line = ''
 
             msg_lines = [
-                f'{verdict_emoji} <b>Ket qua +{cp["hours"]}h — {verdict}</b>',
+                f'{verdict_emoji} <b>Kết quả +{cp["hours"]}h — {verdict}</b>',
                 '',
-                f'📈 Cap: <b>{sym}</b>',
+                f'📈 Cặp: <b>{sym}</b>',
                 f'📌 {signal} @ {fmt_price(sym, entry)} → {fmt_price(sym, current)}',
-                f'📊 Bien dong: <b>{move_text}</b>',
+                f'📊 Biến động: <b>{move_text}</b>',
             ]
             if tp_sl_line:
                 msg_lines.append(f'🎯 {tp_sl_line}')
             msg_lines += [
-                f'🌊 Regime khi dat: {regime} (Hurst={H:.2f})',
-                f'🔍 {ind_str} | {aligned}/6 dong thuan',
+                f'🌊 Regime khi đặt: {regime} (Hurst={H:.2f})',
+                f'🔍 {ind_str} | {aligned}/5 đồng thuận',
                 '',
-                f'⏱ Dat lenh: {sent_dt.strftime("%d/%m %H:%M")} (Gio VN)',
-                f'⏱ Ket qua:  {now_vn_val.strftime("%d/%m %H:%M")} (Gio VN)',
+                f'⏱ Đặt lệnh: {sent_dt.strftime("%d/%m %H:%M")} (Giờ VN)',
+                f'⏱ Kết quả:  {now_vn_val.strftime("%d/%m %H:%M")} (Giờ VN)',
             ]
             msg = '\n'.join(msg_lines)
 
@@ -748,24 +748,24 @@ def main():
         if len(results_all) >= 5:
             recent_r = results_all[-20:]
             wr = sum(1 for x in recent_r if x['correct']) / len(recent_r) * 100
-            wr_line = f'📈 Win rate ({len(recent_r)} lenh gan nhat): {wr:.0f}%'
+            wr_line = f'📈 Win rate ({len(recent_r)} lệnh gần nhất): {wr:.0f}%'
 
         emoji     = '🟢' if r['signal'] == 'BUY' else '🔴'
-        direction = 'MUA' if r['signal'] == 'BUY' else 'BAN'
+        direction = 'MUA' if r['signal'] == 'BUY' else 'BÁN'
 
         # Entry zone & invalidation
         entry_zone = f'{fmt_price(sym, r["entry_low"])} — {fmt_price(sym, r["entry_high"])}'
-        inval_text = (f'Gia len tren {fmt_price(sym, r["sl"])}'
+        inval_text = (f'Giá lên trên {fmt_price(sym, r["sl"])}'
                       if r['signal'] == 'SELL'
-                      else f'Gia xuong duoi {fmt_price(sym, r["sl"])}')
+                      else f'Giá xuống dưới {fmt_price(sym, r["sl"])}')
 
         reason = build_reason(r['signal'], r['regime'], r['vote_lbls'], inds)
         pa_vol = build_pa_vol(r['signal'], inds, r['rsi'],
                               r['phase'], m15_dir, m15_phase)
 
-        vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/5 dong thuan)'
+        vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/5 đồng thuận)'
         msg_parts = [
-            f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cay',
+            f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cậy',
             f'<code>{bar}</code>  {conf_10}/10',
             '',
             f'🗳 {vote_bar}',
@@ -776,13 +776,13 @@ def main():
             f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
             f'🎯 TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]})',
             '',
-            '💡 Ly do:',
+            '💡 Lý do:',
             reason,
             '',
-            '🔍 Bang chung PA/Vol:',
+            '🔍 Bằng chứng PA/Vol:',
             pa_vol,
             '',
-            '⚠️ Vo hieu neu:',
+            '⚠️ Vô hiệu nếu:',
             inval_text,
             '',
         ]
