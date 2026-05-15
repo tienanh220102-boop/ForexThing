@@ -22,7 +22,7 @@ TELEGRAM_CHAT  = os.environ.get('TELEGRAM_CHAT',  '')
 COOLDOWN_HOURS  = 4
 STATE_FILE      = 'last_signals.json'
 CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
-MIN_CONFIDENCE  = 65     # Chi gui tin hieu khi do tin cay >= 65%
+MIN_CONFIDENCE  = 58     # Chi gui tin hieu khi do tin cay >= 58%
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 
 # Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
@@ -40,7 +40,7 @@ PAIR_PROFILES = {
     'UKOIL/USD': {'w': np.array([0.05, 0.20, 0.30, 0.05, 0.40]), 'trend_mult': 0.83},
 }
 # Mac dinh cho cac cap con lai (EUR/USD, GBP/USD, AUD/USD, USD/CAD, NZD/USD...)
-_DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult': 0.82}
+_DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult': 0.92}
 
 SYMBOLS = {
     'EUR/USD': 'EURUSD=X', 'GBP/USD': 'GBPUSD=X', 'USD/JPY': 'USDJPY=X',
@@ -398,10 +398,9 @@ def analyze(sym, yf_sym):
         bb_s  = (1.0 if p<lower else -1.0 if p>upper else 0.0)
         mom_s = momentum(closes)
 
-        # [LOC 3 - FIX 4] RSI-EMA xung dot: backtest 27-43% chinh xac (tệ hơn tung xu)
-        # Chi loc khi RSI o muc cuc doan (>=0.5) va trai chieu voi EMA
-        if abs(rsi_s) >= 0.5 and ((rsi_s > 0) != (ema_s > 0)):
-            print(f'  [D] RSI-EMA xung dot rsi={rsi_s} ema={ema_s:.2f}')
+        # Chi block khi RSI cuc doan that su (<=30 hoac >=70) moi xung dot voi EMA
+        if abs(rsi_s) >= 1.0 and ((rsi_s > 0) != (ema_s > 0)):
+            print(f'  [D] RSI-EMA xung dot cuc doan rsi={rsi_s} ema={ema_s:.2f}')
             return None
 
         # Composite score: 82% chi bao chinh (trong so dong) + 10% Fourier + 8% Intermarket
@@ -419,16 +418,15 @@ def analyze(sym, yf_sym):
             else:
                 score *= 0.80
         elif regime == 'NEUTRAL':
-            print(f'  [D] NEUTRAL H={H:.3f} score={score:+.3f}')
-            return None
+            score *= 0.85   # Giam nhe thay vi loai hoan toan
+            print(f'  [D] NEUTRAL H={H:.3f} → giam score×0.85={score*0.85:+.3f}')
 
         score = float(np.clip(score, -2.0, 2.0))
 
-        # [LOC 2] Nguong 0.50: backtest cho thay 58.9% chinh xac (vs 45.2% o 0.40)
-        if   score >= 0.50: signal = 'BUY'
-        elif score <=-0.50: signal = 'SELL'
+        if   score >= 0.42: signal = 'BUY'
+        elif score <=-0.42: signal = 'SELL'
         else:
-            print(f'  [D] score={score:+.3f} yeu (|score|<0.50) H={H:.3f} regime={regime}')
+            print(f'  [D] score={score:+.3f} yeu (|score|<0.42) H={H:.3f} regime={regime}')
             return None
 
         # Tinh Entry / SL / TP voi RR 1:2 (thua 1 thang 2)
