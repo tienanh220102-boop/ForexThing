@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778833527.831546,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -49,7 +49,7 @@
         {
           "hours": 1,
           "at": 1778833527.831546,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -77,7 +77,7 @@
         {
           "hours": 1,
           "at": 1778833853.436542,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -129,5 +129,28 @@
   "EUR/JPY|SELL": 1778829927.831546,
   "GBP/JPY|BUY": 1778712200.458527,
   "UKOIL/USD|SELL": 1778712200.458527,
-  "USOIL/USD|SELL": 1778712200.458527
+  "USOIL/USD|SELL": 1778712200.458527,
+  "results": [
+    {
+      "sym": "NZD/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-15",
+      "regime": "TREND"
+    },
+    {
+      "sym": "EUR/JPY",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-15",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-15",
+      "regime": "NEUTRAL"
+    }
+  ]
 }
