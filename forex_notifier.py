@@ -459,17 +459,17 @@ def run_validations(state, now):
     remaining = []
 
     for v in pending:
-        # Backward compat: migrate dinh dang cu (chi co validate_at)
-        if 'validate_at' in v and 'checkpoints' not in v:
-            v['checkpoints'] = [
-                {'hours': 2,  'at': v.pop('validate_at'), 'done': False},
-                {'hours': 4,  'at': v.get('sent_at',0)+4*3600,  'done': False},
-                {'hours': 24, 'at': v.get('sent_at',0)+24*3600, 'done': False},
-            ]
+        # Bo qua signal format cu (khong co checkpoints)
+        if 'checkpoints' not in v:
+            continue
 
         any_undone = False
         for cp in v.get('checkpoints', []):
             if cp['done']:
+                continue
+            # Bo qua checkpoint khong con trong CHECKPOINTS_H (don dep gia cu)
+            if cp['hours'] not in CHECKPOINTS_H:
+                cp['done'] = True
                 continue
             any_undone = True
             if now.timestamp() < cp['at']:
