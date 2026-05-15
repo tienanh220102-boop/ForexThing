@@ -17,12 +17,13 @@ import requests
 import yfinance as yf
 
 # ── Cau hinh ──────────────────────────────────────────────────
-TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN', '')
-TELEGRAM_CHAT  = os.environ.get('TELEGRAM_CHAT',  '')
+TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_TOKEN', '')
+TELEGRAM_CHAT    = os.environ.get('TELEGRAM_CHAT',  '')
+TWELVE_DATA_KEY  = os.environ.get('TWELVE_DATA_KEY', '')  # Twelve Data API (free: 800 req/ngay)
 COOLDOWN_HOURS  = 4
 STATE_FILE      = 'last_signals.json'
 CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
-MIN_CONFIDENCE  = 58     # Chi gui tin hieu khi do tin cay >= 58%
+MIN_CONFIDENCE  = 60     # 3/5 phieu = 60% | 4/5 = 75% | 5/5 = 90%
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 
 # Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
@@ -51,6 +52,59 @@ SYMBOLS = {
 }
 
 _im_cache = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
+
+# Symbol mapping cho Twelve Data API
+TWELVE_DATA_SYMBOLS = {
+    'EUR/USD': 'EUR/USD', 'GBP/USD': 'GBP/USD', 'USD/JPY': 'USD/JPY',
+    'USD/CHF': 'USD/CHF', 'AUD/USD': 'AUD/USD', 'USD/CAD': 'USD/CAD',
+    'NZD/USD': 'NZD/USD', 'EUR/GBP': 'EUR/GBP', 'EUR/JPY': 'EUR/JPY',
+    'GBP/JPY': 'GBP/JPY', 'XAU/USD': 'XAU/USD', 'XAG/USD': 'XAG/USD',
+    'UKOIL/USD': 'XBR/USD',   # Brent crude
+    'USOIL/USD': 'XTI/USD',   # WTI crude
+}
+
+def fetch_ohlcv(sym, yf_sym, outputsize=500):
+    """
+    Lay OHLCV H1: uu tien Twelve Data (chat luong cao),
+    fallback yfinance khi chua co API key.
+    Twelve Data free: 800 req/ngay — 14 cap × 48 lan/ngay = 672 req, vua du.
+    """
+    if TWELVE_DATA_KEY:
+        td_sym = TWELVE_DATA_SYMBOLS.get(sym)
+        if td_sym:
+            try:
+                r = requests.get(
+                    'https://api.twelvedata.com/time_series',
+                    params={
+                        'symbol': td_sym, 'interval': '1h',
+                        'outputsize': outputsize, 'apikey': TWELVE_DATA_KEY,
+                    },
+                    timeout=15,
+                )
+                data = r.json()
+                if data.get('status') != 'error' and 'values' in data:
+                    vals = list(reversed(data['values']))  # Newest-first → chronological
+                    if len(vals) >= 60:
+                        closes = [float(v['close']) for v in vals]
+                        highs  = [float(v['high'])  for v in vals]
+                        lows   = [float(v['low'])   for v in vals]
+                        return closes, highs, lows
+                else:
+                    print(f'  Twelve Data: {data.get("message", "unknown error")} ({sym})')
+            except Exception as e:
+                print(f'  Twelve Data loi {sym}: {e}')
+    # Fallback: yfinance
+    try:
+        df = yf.Ticker(yf_sym).history(period='60d', interval='1h')
+        if df is None or len(df) < 60:
+            return None, None, None
+        closes = list(df['Close'].dropna())
+        highs  = list(df['High'].dropna())
+        lows   = list(df['Low'].dropna())
+        return closes, highs, lows
+    except Exception as e:
+        print(f'  yfinance loi {sym}: {e}')
+        return None, None, None
 
 # ── Indicator co ban ─────────────────────────────────────────
 def ema(values, period):
@@ -315,175 +369,149 @@ def confidence_bar(n):
     n = max(1, min(10, n))
     return '█' * n + '░' * (10 - n)
 
-def build_reason(signal, regime, indicators):
-    """Tao cau ly do ngan gon bang tieng Viet."""
-    parts = []
-    if indicators.get('macd', 0) > 0.2:   parts.append('MACD duong')
-    elif indicators.get('macd', 0) < -0.2: parts.append('MACD am')
-    if indicators.get('ema', 0) > 0.3:    parts.append('EMA len')
-    elif indicators.get('ema', 0) < -0.3:  parts.append('EMA xuong')
-    if indicators.get('fft', 0) > 0.3:    parts.append('Fourier day chu ky')
-    elif indicators.get('fft', 0) < -0.3:  parts.append('Fourier dinh chu ky')
-    if indicators.get('rsi', 0) >= 0.5:   parts.append('RSI qua ban')
-    elif indicators.get('rsi', 0) <= -0.5: parts.append('RSI qua mua')
-    if regime == 'RANGE':  parts.append('thi truong dao dong')
+def build_reason(signal, regime, vote_lbls, indicators):
+    """Tao cau ly do ngan gon tu cac chi bao dong thuan."""
+    parts = [f'{lbl} xac nhan' for lbl in vote_lbls]
+    if regime == 'TREND':
+        parts.append('xu huong ro rang')
+    elif regime == 'RANGE':
+        parts.append('thi truong dao dong')
+    im = indicators.get('inter', 0)
+    if abs(im) > 0.15:
+        parts.append('Intermarket ho tro' if (im > 0) == (signal == 'BUY') else 'Intermarket nguoc chieu')
     return ', '.join(parts) if parts else 'Tin hieu ky thuat tong hop'
 
 def build_pa_vol(signal, indicators, rsi_val, h1_phase, m15_signal, m15_phase):
     """Tao danh sach bang chung PA/Vol."""
     lines = []
-    if indicators.get('rsi', 0) <= -0.5:
-        lines.append(f'- H1 no_demand=true (RSI={rsi_val:.0f})')
-    elif indicators.get('rsi', 0) >= 0.5:
-        lines.append(f'- H1 no_supply=true (RSI={rsi_val:.0f})')
-    if indicators.get('macd', 0) < -0.2:
-        lines.append('- H1 macd_bearish=true')
-    elif indicators.get('macd', 0) > 0.2:
-        lines.append('- H1 macd_bullish=true')
-    lines.append(f'- H1 wyckoff_phase={h1_phase}')
+    rsi_v = indicators.get('rsi', 0)
+    if rsi_v < 0:
+        lines.append(f'- H1 RSI={rsi_val:.0f} (vung mua qua ban)')
+    elif rsi_v > 0:
+        lines.append(f'- H1 RSI={rsi_val:.0f} (vung ban qua mua)')
+    mac = indicators.get('macd', 0)
+    if mac < -0.12:
+        lines.append('- H1 MACD am (da xac nhan)')
+    elif mac > 0.12:
+        lines.append('- H1 MACD duong (da xac nhan)')
+    bb_v = indicators.get('bb', 0)
+    if bb_v != 0:
+        lines.append('- H1 gia cham Bollinger Band (tin hieu manh)')
+    lines.append(f'- H1 Wyckoff: {h1_phase}')
     if m15_signal and m15_signal == signal:
-        lines.append(f'- M15 wyckoff_phase={m15_phase}')
+        lines.append(f'- M15 confluence: {m15_phase}')
     return '\n'.join(lines)
 
-# ── Phan tich tin hieu ────────────────────────────────────────
+# ── Phan tich tin hieu (Vote System v4) ──────────────────────
 def analyze(sym, yf_sym):
+    """
+    He thong bieu quyet: moi chi bao bau +1 (MUA) / -1 (BAN) / 0 (trung tinh).
+    Can it nhat 3/5 phieu cung chieu de phat tin hieu.
+    Thay the Composite Score + OLS (qua phuc tap, can du lieu lon).
+    """
     try:
-        df = yf.Ticker(yf_sym).history(period='60d', interval='1h')
-        if df is None or len(df) < 60:
-            print(f'  [D] du lieu qua it: {0 if df is None else len(df)} dong')
+        closes, highs, lows = fetch_ohlcv(sym, yf_sym)
+        if closes is None or len(closes) < 60:
+            print(f'  [D] du lieu qua it hoac loi fetch')
             return None
-        closes = list(df['Close'].dropna())
-        highs  = list(df['High'].dropna())
-        lows   = list(df['Low'].dropna())
         n = min(len(closes), len(highs), len(lows))
         closes, highs, lows = closes[:n], highs[:n], lows[:n]
         if n < 60:
-            print(f'  [D] du lieu sau dropna: {n} dong')
             return None
         price = closes[-1]
 
-        # [LOC 1] ATR filter: bo qua thi truong qua phang (nhieu > tin hieu)
+        # [LOC 1] ATR filter: bo qua thi truong qua phang
         atr_val = atr(highs, lows, closes)
         if atr_val < price * 0.00015:
-            print(f'  [D] ATR={atr_val:.6f} < {price*0.00015:.6f} (loc phang)')
+            print(f'  [D] ATR={atr_val:.6f} loc phang')
             return None
 
-        # [HURST] Phat hien regime thi truong
-        H = hurst_exponent(closes)
+        # [HURST] Phat hien regime (giu lai de context, khong dung lam he so nhan)
+        H      = hurst_exponent(closes)
         regime = 'TREND' if H > 0.55 else ('RANGE' if H < 0.45 else 'NEUTRAL')
-
-        # [FOURIER] Vi tri trong chu ky song gia
-        fft_s = fourier_signal(closes)
 
         # [INTERMARKET] Tin hieu lien thi truong
         im_s = intermarket_signal(sym)
 
-        # [OLS + PROFILE] Blend trong so dong (OLS) voi trong so tung cap (backtest)
-        profile   = PAIR_PROFILES.get(sym, _DEFAULT_PROFILE)
-        w_profile = profile['w']
-        w_ols     = dynamic_weights(closes)   # OLS tu du lieu gan day
-        # 60% OLS (thich nghi thuc te) + 40% profile (neo tu backtest)
-        w = 0.60 * w_ols + 0.40 * w_profile
-        w = w / w.sum()                       # Chuan hoa tong = 1
-
-        # Chi bao chinh
-        p = price
-        r = rsi(closes)
-        rsi_s = (1.0 if r<=30 else 0.5 if r<=40 else -1.0 if r>=70 else -0.5 if r>=60 else 0.0)
-        e20 = ema(closes, 20); e50 = ema(closes, 50)
-        ema_s = (1.0 if p>e20>e50 else -1.0 if p<e20<e50 else
-                 0.4 if p>e20 else -0.4 if p<e20 else 0.0)
+        # --- Chi bao ky thuat ---
+        r_val = rsi(closes)
+        e20   = ema(closes, 20)
+        e50   = ema(closes, 50)
         mac_s = macd(closes)
         upper, _, lower = bollinger(closes)
-        bb_s  = (1.0 if p<lower else -1.0 if p>upper else 0.0)
         mom_s = momentum(closes)
 
-        # Chi block khi RSI cuc doan that su (<=30 hoac >=70) moi xung dot voi EMA
-        if abs(rsi_s) >= 1.0 and ((rsi_s > 0) != (ema_s > 0)):
-            print(f'  [D] RSI-EMA xung dot cuc doan rsi={rsi_s} ema={ema_s:.2f}')
-            return None
+        # --- He thong bieu quyet ---
+        # Moi chi bao bau: +1 (MUA), -1 (BAN), 0 (trung tinh)
+        rsi_v = (1 if r_val <= 45 else -1 if r_val >= 55 else 0)
+        ema_v = (1 if price > e20 > e50 else -1 if price < e20 < e50 else 0)
+        mac_v = (1 if mac_s > 0.12 else -1 if mac_s < -0.12 else 0)
+        bb_v  = (1 if price < lower else -1 if price > upper else 0)
+        mom_v = (1 if mom_s > 0.2 else -1 if mom_s < -0.2 else 0)
 
-        # Composite score: 82% chi bao chinh (trong so dong) + 10% Fourier + 8% Intermarket
-        base  = rsi_s*w[0] + ema_s*w[1] + mac_s*w[2] + bb_s*w[3] + mom_s*w[4]
-        score = base*0.82 + fft_s*0.10 + im_s*0.08
+        votes     = [rsi_v, ema_v, mac_v, bb_v, mom_v]
+        vote_lbls = ['RSI', 'EMA', 'MACD', 'BB', 'Mom']
+        bull_cnt  = sum(v for v in votes if v > 0)
+        bear_cnt  = sum(-v for v in votes if v < 0)
 
-        # [HURST - DA SUA] Backtest: TREND regime chinh xac 27-48% (tệ hơn ngẫu nhiên)
-        # NEUTRAL regime: 43.1% toan the → bo qua hoan toan
-        trend_mult = profile.get('trend_mult', 0.82)
-        if regime == 'TREND':
-            score *= trend_mult  # Phat nhe: xu huong da gia → sap dao chieu
-        elif regime == 'RANGE':
-            if (score>0 and rsi_s>0) or (score<0 and rsi_s<0):
-                score *= 1.10   # Mean-reversion + RSI xac nhan → hop ly
-            else:
-                score *= 0.80
-        elif regime == 'NEUTRAL':
-            score *= 0.85   # Giam nhe thay vi loai hoan toan
-            print(f'  [D] NEUTRAL H={H:.3f} → giam score×0.85={score*0.85:+.3f}')
-
-        score = float(np.clip(score, -2.0, 2.0))
-
-        if   score >= 0.42: signal = 'BUY'
-        elif score <=-0.42: signal = 'SELL'
+        if bull_cnt >= 3:
+            signal     = 'BUY'
+            vote_count = bull_cnt
+        elif bear_cnt >= 3:
+            signal     = 'SELL'
+            vote_count = bear_cnt
         else:
-            print(f'  [D] score={score:+.3f} yeu (|score|<0.42) H={H:.3f} regime={regime}')
+            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du 3/5 phieu')
             return None
 
-        # Tinh Entry / SL / TP voi RR 1:2 (thua 1 thang 2)
-        # SL = 1.5x ATR: du cho bien dong binh thuong, tranh bi stop sớm
-        # TP = 3.0x ATR = 2x SL → RR chinh xac 1:2
-        sl_dist = atr_val * 1.5
-        tp_dist = atr_val * 3.0
+        # Ten cac chi bao dong thuan
+        aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
+                        if (v > 0 and signal == 'BUY') or (v < 0 and signal == 'SELL')]
+
+        # --- Do tin cay ---
+        # Nen tang: 3/5=60%, 4/5=75%, 5/5=90%
+        base_conf = {3: 60, 4: 75, 5: 90}.get(vote_count, 60)
+        # Intermarket cung chieu: +5%; TREND: +5%; RANGE (mean-rev ro hon): +3%
+        im_aligned  = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
+        im_bonus    = 5 if im_aligned else 0
+        regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
+        conf        = min(95, base_conf + im_bonus + regime_bonus)
+
+        # Wyckoff phase
+        phase_name = wyckoff_phase(regime, signal, r_val)
+
+        # SL = 1.5×ATR | TP1 = 3×ATR (RR 1:2) | TP2 = 4.5×ATR (RR 1:3)
+        sl_dist  = atr_val * 1.5
+        tp_dist  = atr_val * 3.0
+        tp2_dist = atr_val * 4.5
         if signal == 'BUY':
-            sl = price - sl_dist
-            tp = price + tp_dist
+            sl = price - sl_dist; tp = price + tp_dist; tp2 = price + tp2_dist
         else:
-            sl = price + sl_dist
-            tp = price - tp_dist
-        sl_pct = round(sl_dist / price * 100, 4)
-        tp_pct = round(tp_dist / price * 100, 4)
+            sl = price + sl_dist; tp = price - tp_dist; tp2 = price - tp2_dist
+        sl_pct  = round(sl_dist  / price * 100, 4)
+        tp_pct  = round(tp_dist  / price * 100, 4)
+        tp2_pct = round(tp2_dist / price * 100, 4)
+        rr1     = round(tp_dist  / sl_dist, 1)
+        rr2     = round(tp2_dist / sl_dist, 1)
 
-        # Entry zone, TP2, R:R, Wyckoff phase
         entry_low  = price - atr_val * 0.2
         entry_high = price + atr_val * 0.2
-        tp2_dist   = atr_val * 4.5
-        tp2        = price + tp2_dist if signal == 'BUY' else price - tp2_dist
-        tp2_pct    = round(tp2_dist / price * 100, 4)
-        rr1        = round(tp_dist / sl_dist, 1)
-        rr2        = round(tp2_dist / sl_dist, 1)
-        phase_name = wyckoff_phase(regime, signal, r)
-
-        # So chi bao dong thuan (trong 6 chi bao)
-        s_pos = signal == 'BUY'
-        aligned = sum([
-            (rsi_s > 0.3) == s_pos,
-            (ema_s > 0.3) == s_pos,
-            (mac_s > 0.1) == s_pos,
-            (bb_s  > 0.5) == s_pos,
-            (mom_s > 0.1) == s_pos,
-            (fft_s > 0.1) == s_pos,
-        ])
-        consensus = (rsi_s>0 and ema_s>0) or (rsi_s<0 and ema_s<0)
 
         return {
-            'sym': sym, 'signal': signal,
-            'score': round(score, 3), 'price': price, 'rsi': round(r, 1),
-            'entry': price, 'sl': sl, 'tp': tp, 'sl_pct': sl_pct, 'tp_pct': tp_pct,
+            'sym': sym, 'signal': signal, 'price': price, 'rsi': round(r_val, 1),
+            'vote_count': vote_count, 'vote_lbls': aligned_lbls,
+            'conf': conf,
+            'sl': sl, 'tp': tp, 'tp2': tp2,
+            'sl_pct': sl_pct, 'tp_pct': tp_pct, 'tp2_pct': tp2_pct,
+            'rr1': rr1, 'rr2': rr2,
             'entry_low': entry_low, 'entry_high': entry_high,
-            'tp2': tp2, 'tp2_pct': tp2_pct, 'rr1': rr1, 'rr2': rr2,
-            'phase': phase_name,
-            'hurst': round(H, 3), 'regime': regime, 'aligned': aligned,
+            'phase': phase_name, 'hurst': round(H, 3), 'regime': regime,
+            'aligned': vote_count,
             'indicators': {
-                'rsi':  rsi_s, 'ema':   ema_s,      'macd': round(mac_s, 2),
-                'bb':   bb_s,  'mom':   round(mom_s, 2),
-                'fft':  round(fft_s, 2), 'inter': round(im_s, 2),
+                'rsi':  rsi_v, 'ema': ema_v, 'macd': round(mac_s, 2),
+                'bb':   bb_v,  'mom': round(mom_s, 2), 'inter': round(im_s, 2),
             },
-            'weights': {
-                'rsi':  round(float(w[0]),2), 'ema':  round(float(w[1]),2),
-                'macd': round(float(w[2]),2), 'bb':   round(float(w[3]),2),
-                'mom':  round(float(w[4]),2),
-            },
-            'consensus': consensus,
+            'consensus': True,   # Luon True khi da qua nguong 3/5
         }
     except Exception as e:
         print(f'  [{sym}] Loi: {e}')
@@ -680,15 +708,11 @@ def main():
             continue
 
         inds = r['indicators']
-        w    = r['weights']
         print(
-            f'{r["signal"]} score={r["score"]:+.3f} | '
+            f'{r["signal"]} {r["vote_count"]}/5 phieu | '
+            f'conf={r["conf"]}% | '
             f'regime={r["regime"]}(H={r["hurst"]:.2f}) | '
-            f'{r["aligned"]}/6 dong thuan'
-        )
-        print(
-            f'  Weights: rsi={w["rsi"]} ema={w["ema"]} macd={w["macd"]} '
-            f'bb={w["bb"]} mom={w["mom"]}'
+            f'dong thuan: {", ".join(r["vote_lbls"])}'
         )
 
         key     = f'{sym}|{r["signal"]}'
@@ -698,8 +722,7 @@ def main():
             time.sleep(0.5)
             continue
 
-        conf     = int((0.45 + abs(r['score'])*0.35) * 100)
-
+        conf = r['conf']
         if conf < MIN_CONFIDENCE:
             print(f'  -> Do tin cay {conf}% < {MIN_CONFIDENCE}%, bo qua')
             time.sleep(0.5)
@@ -713,19 +736,19 @@ def main():
         m15_match     = (m15_dir == r['signal'])
         timeframe_lbl = 'M15 + H1 confluence' if m15_match else 'H1'
 
-        # Confidence 1-10
+        # Confidence bar 1-10
         conf_10 = max(1, min(10, round(conf / 10)))
         if m15_match:
             conf_10 = min(10, conf_10 + 1)
         bar = confidence_bar(conf_10)
 
-        # Win rate (Cap 3)
+        # Win rate (Cap 3) — hien thi khi co >= 5 ket qua
         results_all = state.get('results', [])
         wr_line = ''
         if len(results_all) >= 5:
             recent_r = results_all[-20:]
             wr = sum(1 for x in recent_r if x['correct']) / len(recent_r) * 100
-            wr_line = f'📈 Win rate ({len(recent_r)} lenh): {wr:.0f}%'
+            wr_line = f'📈 Win rate ({len(recent_r)} lenh gan nhat): {wr:.0f}%'
 
         emoji     = '🟢' if r['signal'] == 'BUY' else '🔴'
         direction = 'MUA' if r['signal'] == 'BUY' else 'BAN'
@@ -736,20 +759,22 @@ def main():
                       if r['signal'] == 'SELL'
                       else f'Gia xuong duoi {fmt_price(sym, r["sl"])}')
 
-        reason = build_reason(r['signal'], r['regime'], inds)
+        reason = build_reason(r['signal'], r['regime'], r['vote_lbls'], inds)
         pa_vol = build_pa_vol(r['signal'], inds, r['rsi'],
                               r['phase'], m15_dir, m15_phase)
 
+        vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/5 dong thuan)'
         msg_parts = [
-            f'{emoji} {sym} — {direction} | Confidence {conf_10}/10',
-            bar,
+            f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cay',
+            f'<code>{bar}</code>  {conf_10}/10',
+            '',
+            f'🗳 {vote_bar}',
+            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f})',
             '',
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
             f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
             f'🎯 TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]})',
-            '',
-            f'📊 Context H1: {r["phase"]}',
             '',
             '💡 Ly do:',
             reason,
@@ -791,7 +816,7 @@ def main():
                 'consensus':   r['consensus'],
             })
             sent += 1
-            print(f'  -> Telegram OK | Xac nhan: +1h | conf={conf}%')
+            print(f'  -> Telegram OK | +1h xac nhan | {r["vote_count"]}/5 phieu | conf={conf}%')
         else:
             print(f'  -> Loi Telegram: {result}')
 
