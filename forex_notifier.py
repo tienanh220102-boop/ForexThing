@@ -614,8 +614,8 @@ def run_validations(state, now):
             H       = v.get('hurst', 0.5)
             aligned = v.get('aligned', '?')
             ind_str = (f"RSI{_icon(inds.get('rsi',0))} EMA{_icon(inds.get('ema',0))} "
-                      f"MACD{_icon(inds.get('macd',0))} FFT{_icon(inds.get('fft',0))} "
-                      f"IM{_icon(inds.get('inter',0))}")
+                      f"MACD{_icon(inds.get('macd',0))} BB{_icon(inds.get('bb',0))} "
+                      f"Mom{_icon(inds.get('mom',0))} IM{_icon(inds.get('inter',0))}")
             sent_dt    = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
             now_vn_val = now.astimezone(VN_TZ)
 
