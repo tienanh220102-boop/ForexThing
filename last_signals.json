@@ -10,34 +10,6 @@
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
-      "sym": "AUD/USD",
-      "signal": "SELL",
-      "entry_price": 0.71512,
-      "sl": 0.7171251112307381,
-      "tp": 0.7111097775385238,
-      "sent_at": 1778848251.923718,
-      "message_id": 93,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1778851851.923718,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.13,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.71
-      },
-      "regime": "RANGE",
-      "hurst": 0.423,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "EUR/JPY",
       "signal": "SELL",
       "entry_price": 184.3280029296875,
@@ -90,6 +62,34 @@
       },
       "regime": "TREND",
       "hurst": 0.628,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "XAG/USD",
+      "signal": "SELL",
+      "entry_price": 76.56500244140625,
+      "sl": 78.45513595087174,
+      "tp": 72.7847354224753,
+      "sent_at": 1778853666.940891,
+      "message_id": 98,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1778857266.940891,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.13,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -1.0
+      },
+      "regime": "RANGE",
+      "hurst": 0.426,
       "aligned": 3,
       "consensus": true
     }
@@ -153,5 +153,6 @@
       "regime": "RANGE"
     }
   ],
-  "AUD/USD|SELL": 1778848251.923718
+  "AUD/USD|SELL": 1778848251.923718,
+  "XAG/USD|SELL": 1778853666.940891
 }
