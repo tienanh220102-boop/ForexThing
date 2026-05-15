@@ -10,34 +10,6 @@
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
-      "sym": "NZD/USD",
-      "signal": "SELL",
-      "entry_price": 0.58499,
-      "sl": 0.5865580210478931,
-      "tp": 0.5818539579042138,
-      "sent_at": 1778844654.428844,
-      "message_id": 92,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1778848254.428844,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.17,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.71
-      },
-      "regime": "TREND",
-      "hurst": 0.635,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "AUD/USD",
       "signal": "SELL",
       "entry_price": 0.71512,
@@ -49,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778851851.923718,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -172,6 +144,13 @@
       "correct": true,
       "date": "2026-05-15",
       "regime": "TREND"
+    },
+    {
+      "sym": "AUD/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-15",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1778848251.923718
