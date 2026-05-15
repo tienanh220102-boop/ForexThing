@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778857266.940891,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -109,6 +109,13 @@
       "correct": false,
       "date": "2026-05-15",
       "regime": "TREND"
+    },
+    {
+      "sym": "XAG/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-15",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1778848251.923718,
