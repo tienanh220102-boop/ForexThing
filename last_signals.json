@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778902248.308432,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -34,6 +34,62 @@
       },
       "regime": "RANGE",
       "hurst": 0.371,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "entry_price": 1.33272,
+      "sl": 1.330871910462998,
+      "tp": 1.336416179074004,
+      "sent_at": 1778902253.485998,
+      "message_id": 106,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1778905853.485998,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": 0.18,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": -0.97
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.47,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "entry_price": 4537.8484,
+      "sl": 4519.1044336001205,
+      "tp": 4575.336332799759,
+      "sent_at": 1778902253.485998,
+      "message_id": 107,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1778905853.485998,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": 0.15,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": -0.97
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.465,
       "aligned": 3,
       "consensus": true
     }
@@ -123,9 +179,18 @@
       "correct": false,
       "date": "2026-05-15",
       "regime": "RANGE"
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-16",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1778848251.923718,
   "XAG/USD|SELL": 1778853666.940891,
-  "EUR/USD|BUY": 1778898648.308432
+  "EUR/USD|BUY": 1778898648.308432,
+  "GBP/USD|BUY": 1778902253.485998,
+  "XAU/USD|BUY": 1778902253.485998
 }
