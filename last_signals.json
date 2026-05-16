@@ -64,6 +64,62 @@
       "hurst": 0.192,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "entry_price": 1.16239,
+      "sl": 1.1618195931151722,
+      "tp": 1.1635308137696554,
+      "sent_at": 1778972458.279356,
+      "message_id": 124,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1778976058.279356,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": 0.27,
+        "bb": 1,
+        "mom": -0.2,
+        "inter": -0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.39,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "USD/CAD",
+      "signal": "SELL",
+      "entry_price": 1.37526,
+      "sl": 1.3758568393979986,
+      "tp": 1.3740663212040027,
+      "sent_at": 1778972458.279356,
+      "message_id": 125,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1778976058.279356,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": -0.18,
+        "bb": -1,
+        "mom": 0.2,
+        "inter": 0.4
+      },
+      "regime": "RANGE",
+      "hurst": 0.174,
+      "aligned": 3,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1778693846.700291,
@@ -218,9 +274,10 @@
   ],
   "AUD/USD|SELL": 1778848251.923718,
   "XAG/USD|SELL": 1778853666.940891,
-  "EUR/USD|BUY": 1778913051.958738,
+  "EUR/USD|BUY": 1778972458.279356,
   "GBP/USD|BUY": 1778920247.574108,
   "XAU/USD|BUY": 1778902253.485998,
   "USD/CHF|SELL": 1778950862.949839,
-  "USD/JPY|SELL": 1778968862.131454
+  "USD/JPY|SELL": 1778968862.131454,
+  "USD/CAD|SELL": 1778972458.279356
 }
