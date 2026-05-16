@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778916651.958738,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -140,6 +140,13 @@
     },
     {
       "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-16",
+      "regime": "NEUTRAL"
+    },
+    {
+      "sym": "EUR/USD",
       "signal": "BUY",
       "correct": true,
       "date": "2026-05-16",
