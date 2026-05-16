@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778940059.50452,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -163,6 +163,13 @@
       "sym": "EUR/GBP",
       "signal": "SELL",
       "correct": false,
+      "date": "2026-05-16",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "SELL",
+      "correct": true,
       "date": "2026-05-16",
       "regime": "RANGE"
     }
