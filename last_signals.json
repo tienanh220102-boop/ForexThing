@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1778923847.574108,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -49,7 +49,7 @@
         {
           "hours": 1,
           "at": 1778923847.574108,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -179,6 +179,20 @@
       "correct": true,
       "date": "2026-05-16",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-16",
+      "regime": "NEUTRAL"
+    },
+    {
+      "sym": "EUR/GBP",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-16",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1778848251.923718,
