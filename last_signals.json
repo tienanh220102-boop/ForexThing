@@ -77,7 +77,7 @@
         {
           "hours": 1,
           "at": 1779049848.926697,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -311,6 +311,13 @@
       "signal": "SELL",
       "correct": false,
       "date": "2026-05-17",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-18",
       "regime": "RANGE"
     }
   ],
