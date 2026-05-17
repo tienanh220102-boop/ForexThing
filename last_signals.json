@@ -64,34 +64,6 @@
       "hurst": 0.053,
       "aligned": 3,
       "consensus": true
-    },
-    {
-      "sym": "GBP/USD",
-      "signal": "BUY",
-      "entry_price": 1.33235,
-      "sl": 1.3317021484000942,
-      "tp": 1.3336457031998115,
-      "sent_at": 1779046248.926697,
-      "message_id": 144,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779049848.926697,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": 0.2,
-        "bb": 1,
-        "mom": -0.2,
-        "inter": -0.97
-      },
-      "regime": "RANGE",
-      "hurst": 0.146,
-      "aligned": 3,
-      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1778693846.700291,
