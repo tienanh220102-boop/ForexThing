@@ -10,62 +10,6 @@
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4537.78984,
-      "sl": 4534.5039436254565,
-      "tp": 4544.361632749087,
-      "sent_at": 1778994056.230899,
-      "message_id": 130,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1778997656.230899,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": 0.3,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": -0.97
-      },
-      "regime": "RANGE",
-      "hurst": 0.202,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4537.84506,
-      "sl": 4535.846263968085,
-      "tp": 4541.84265206383,
-      "sent_at": 1779022857.748863,
-      "message_id": 141,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779026457.748863,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": 0.31,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": -0.97
-      },
-      "regime": "RANGE",
-      "hurst": 0.053,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "GBP/USD",
       "signal": "SELL",
       "entry_price": 1.33152,
