@@ -2,7 +2,7 @@
   "GBP/USD|SELL": 1778693846.700291,
   "USD/JPY|BUY": 1778693846.700291,
   "USD/CAD|BUY": 1778712200.458527,
-  "EUR/GBP|SELL": 1778968862.131454,
+  "EUR/GBP|SELL": 1779004857.872497,
   "GBP/JPY|SELL": 1778665333.167377,
   "XAU/USD|SELL": 1778850067.127447,
   "XAG/USD|BUY": 1778712200.458527,
@@ -34,6 +34,34 @@
       },
       "regime": "RANGE",
       "hurst": 0.202,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "EUR/GBP",
+      "signal": "SELL",
+      "entry_price": 0.87225,
+      "sl": 0.8726892752970267,
+      "tp": 0.8713714494059465,
+      "sent_at": 1779004857.872497,
+      "message_id": 133,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779008457.872497,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": -0.29,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": 0.0
+      },
+      "regime": "RANGE",
+      "hurst": 0.228,
       "aligned": 3,
       "consensus": true
     }
