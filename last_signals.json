@@ -1,7 +1,7 @@
 {
   "GBP/USD|SELL": 1779057049.881722,
   "USD/JPY|BUY": 1778693846.700291,
-  "USD/CAD|BUY": 1778712200.458527,
+  "USD/CAD|BUY": 1779060650.882327,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
   "XAU/USD|SELL": 1778850067.127447,
@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1779060649.881722,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -49,7 +49,7 @@
         {
           "hours": 1,
           "at": 1779060649.881722,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -120,11 +120,67 @@
       "hurst": 0.385,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "entry_price": 1.16196,
+      "sl": 1.1626004335851958,
+      "tp": 1.1606791328296084,
+      "sent_at": 1779060650.882327,
+      "message_id": 154,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779064250.882327,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.17,
+        "bb": 1,
+        "mom": -1.0,
+        "inter": -0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.066,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "USD/CAD",
+      "signal": "BUY",
+      "entry_price": 1.37543,
+      "sl": 1.374813586724912,
+      "tp": 1.3766628265501755,
+      "sent_at": 1779060650.882327,
+      "message_id": 155,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779064250.882327,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": 0.14,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": -0.01
+      },
+      "regime": "RANGE",
+      "hurst": 0.072,
+      "aligned": 3,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1778693846.700291,
   "NZD/USD|SELL": 1778844654.428844,
-  "EUR/USD|SELL": 1778693846.700291,
+  "EUR/USD|SELL": 1779060650.882327,
   "AUD/USD|BUY": 1778712200.458527,
   "EUR/JPY|SELL": 1778850067.127447,
   "GBP/JPY|BUY": 1779059689.579696,
@@ -360,6 +416,20 @@
       "signal": "BUY",
       "correct": true,
       "date": "2026-05-17",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-18",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "EUR/GBP",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-18",
       "regime": "RANGE"
     }
   ],
