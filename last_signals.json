@@ -38,30 +38,30 @@
       "consensus": true
     },
     {
-      "sym": "EUR/GBP",
-      "signal": "SELL",
-      "entry_price": 0.87225,
-      "sl": 0.8726892752970267,
-      "tp": 0.8713714494059465,
-      "sent_at": 1779004857.872497,
-      "message_id": 133,
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "entry_price": 1.1623,
+      "sl": 1.1618695819916387,
+      "tp": 1.163160836016723,
+      "sent_at": 1779010248.217127,
+      "message_id": 135,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1779008457.872497,
-          "done": true
+          "at": 1779013848.217127,
+          "done": false
         }
       ],
       "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.29,
-        "bb": 0,
+        "rsi": 1,
+        "ema": -1,
+        "macd": 0.21,
+        "bb": 1,
         "mom": -0.6,
-        "inter": 0.0
+        "inter": -0.97
       },
       "regime": "RANGE",
-      "hurst": 0.228,
+      "hurst": 0.084,
       "aligned": 3,
       "consensus": true
     }
@@ -260,7 +260,7 @@
   ],
   "AUD/USD|SELL": 1778848251.923718,
   "XAG/USD|SELL": 1778853666.940891,
-  "EUR/USD|BUY": 1778972458.279356,
+  "EUR/USD|BUY": 1779010248.217127,
   "GBP/USD|BUY": 1778997659.840854,
   "XAU/USD|BUY": 1778994056.230899,
   "USD/CHF|SELL": 1778950862.949839,
