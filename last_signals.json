@@ -38,34 +38,6 @@
       "consensus": true
     },
     {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "entry_price": 1.1623,
-      "sl": 1.1618695819916387,
-      "tp": 1.163160836016723,
-      "sent_at": 1779010248.217127,
-      "message_id": 135,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779013848.217127,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": 0.21,
-        "bb": 1,
-        "mom": -0.6,
-        "inter": -0.97
-      },
-      "regime": "RANGE",
-      "hurst": 0.084,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "GBP/USD",
       "signal": "BUY",
       "entry_price": 1.33272,
