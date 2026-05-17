@@ -49,7 +49,7 @@
         {
           "hours": 1,
           "at": 1779001259.840854,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -240,6 +240,13 @@
       "sym": "USD/CAD",
       "signal": "SELL",
       "correct": true,
+      "date": "2026-05-17",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "correct": false,
       "date": "2026-05-17",
       "regime": "RANGE"
     }
