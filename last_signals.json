@@ -38,34 +38,6 @@
       "consensus": true
     },
     {
-      "sym": "GBP/JPY",
-      "signal": "SELL",
-      "entry_price": 211.39994,
-      "sl": 211.5185366166872,
-      "tp": 211.16274676662562,
-      "sent_at": 1779022857.748863,
-      "message_id": 140,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779026457.748863,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.37,
-        "bb": 1,
-        "mom": -0.6,
-        "inter": 0.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.098,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "XAU/USD",
       "signal": "BUY",
       "entry_price": 4537.84506,
