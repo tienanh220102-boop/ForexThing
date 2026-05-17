@@ -49,7 +49,7 @@
         {
           "hours": 1,
           "at": 1779013848.217127,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -62,6 +62,34 @@
       },
       "regime": "RANGE",
       "hurst": 0.084,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "entry_price": 1.33272,
+      "sl": 1.3322691321721598,
+      "tp": 1.33362173565568,
+      "sent_at": 1779015661.779208,
+      "message_id": 137,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779019261.779208,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": 0.29,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": -0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.276,
       "aligned": 3,
       "consensus": true
     }
@@ -256,12 +284,19 @@
       "correct": false,
       "date": "2026-05-17",
       "regime": "RANGE"
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-17",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1778848251.923718,
   "XAG/USD|SELL": 1778853666.940891,
   "EUR/USD|BUY": 1779010248.217127,
-  "GBP/USD|BUY": 1778997659.840854,
+  "GBP/USD|BUY": 1779015661.779208,
   "XAU/USD|BUY": 1778994056.230899,
   "USD/CHF|SELL": 1778950862.949839,
   "USD/JPY|SELL": 1778968862.131454,
