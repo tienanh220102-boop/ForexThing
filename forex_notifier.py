@@ -121,8 +121,45 @@ PRICE_SANITY = {
     'UKOIL/USD': (10,   300),
 }
 
-_im_cache   = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
-_gold_cache = {}   # Cache macro data rieng cho XAU/USD (TNX, VIX)
+_im_cache          = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
+_gold_cache        = {}   # Cache macro data rieng cho XAU/USD (TNX, VIX)
+_fundamental_cache = {}   # Cache Fundamental Intelligence Layer (Calendar/Sentiment/F&G)
+
+# Mapping dong tien → quoc gia (dung kiem tra lich kinh te)
+_CURRENCY_COUNTRY = {
+    'USD': 'United States', 'EUR': 'Euro Zone',  'GBP': 'United Kingdom',
+    'JPY': 'Japan',         'CAD': 'Canada',      'AUD': 'Australia',
+    'NZD': 'New Zealand',   'CHF': 'Switzerland',
+    'XAU': 'United States', 'XAG': 'United States',
+    'USO': 'United States', 'UKO': 'United States',
+}
+# Keyword tim headline lien quan tung dong tien
+_CURRENCY_KEYWORDS = {
+    'USD': ['dollar', 'usd', 'fed ', 'federal reserve', 'powell', 'treasury'],
+    'EUR': ['euro', 'eur ', 'ecb', 'eurozone', 'lagarde'],
+    'GBP': ['pound', 'gbp', 'sterling', 'boe', 'bank of england'],
+    'JPY': ['yen', 'jpy', 'boj', 'bank of japan'],
+    'CAD': ['canadian dollar', 'cad ', 'bank of canada', 'loonie'],
+    'AUD': ['aussie', 'aud ', 'rba', 'reserve bank of australia'],
+    'NZD': ['kiwi', 'nzd ', 'rbnz'],
+    'CHF': ['franc', 'chf ', 'snb', 'swiss national bank'],
+    'XAU': ['gold', 'bullion', 'precious metal', 'safe haven'],
+    'XAG': ['silver', 'xag'],
+    'USO': ['crude oil', 'wti', 'opec'],
+    'UKO': ['brent oil', 'crude', 'opec'],
+}
+_BULLISH_WORDS = [
+    'rises', 'gains', 'rallies', 'climbs', 'surges', 'jumps', 'soars',
+    'hawkish', 'rate hike', 'beats', 'stronger', 'optimism', 'recovery', 'upbeat',
+]
+_BEARISH_WORDS = [
+    'falls', 'drops', 'declines', 'weakens', 'plunges', 'tumbles', 'slides',
+    'dovish', 'rate cut', 'misses', 'weaker', 'concern', 'slowdown', 'recession',
+]
+# Phan loai cap: risk-on (tang khi thi truong lac quan) / risk-off (tang khi so hai)
+_RISK_ON_BUYS  = {'EUR/USD','GBP/USD','NZD/USD','AUD/JPY','CAD/JPY',
+                   'GBP/JPY','EUR/JPY','USOIL/USD','UKOIL/USD','XAG/USD'}
+_RISK_OFF_BUYS = {'USD/JPY', 'USD/CHF', 'XAU/USD'}
 
 # Symbol mapping cho Twelve Data API (16 cap × 48 lan/ngay = 768 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
@@ -529,6 +566,176 @@ def gold_macro_score():
     }
     return float(np.clip(score, -1.0, 1.0)), comps
 
+# ── Fundamental Intelligence Layer ───────────────────────────
+def _fetch_rss_headlines(url):
+    """Lay headlines tu RSS feed, tra ve list chuoi lowercase."""
+    try:
+        import xml.etree.ElementTree as ET
+        r = requests.get(url, timeout=8, headers={'User-Agent': 'Mozilla/5.0'})
+        root = ET.fromstring(r.content)
+        return [item.findtext('title', '').lower() for item in root.findall('.//item')][:40]
+    except Exception:
+        return []
+
+def fetch_fundamental(now):
+    """
+    Tai 3 nguon du lieu co ban, cache lai cho toan bo phien:
+      1. Economic Calendar (Twelve Data) — su kien high/medium-impact hom nay
+      2. News Sentiment (RSS Reuters + FXStreet) — xu huong tin tuc moi nhat
+      3. Fear & Greed Index (CNN) — tram thai cam xuc thi truong (0-100)
+    """
+    global _fundamental_cache
+    if _fundamental_cache:
+        return _fundamental_cache
+
+    print('  [Fundamental] Dang tai: Calendar / Sentiment / Fear&Greed ...')
+
+    # --- 1. Economic Calendar (Twelve Data) ---
+    calendar_events = []
+    if TWELVE_DATA_KEY:
+        try:
+            date_str = now.strftime('%Y-%m-%d')
+            r = requests.get(
+                'https://api.twelvedata.com/economic_calendar',
+                params={
+                    'start_date': f'{date_str} 00:00:00',
+                    'end_date':   f'{date_str} 23:59:59',
+                    'importance': 'high,medium',
+                    'apikey':     TWELVE_DATA_KEY,
+                },
+                timeout=10
+            )
+            for ev in r.json().get('result', {}).get('list', []):
+                try:
+                    ev_dt = datetime.strptime(
+                        f'{ev.get("date","")} {ev.get("time","00:00:00")}',
+                        '%Y-%m-%d %H:%M:%S'
+                    ).replace(tzinfo=timezone.utc)
+                    calendar_events.append({
+                        'title':      ev.get('event', ''),
+                        'country':    ev.get('country', ''),
+                        'datetime':   ev_dt,
+                        'importance': ev.get('importance', 'low').lower(),
+                    })
+                except Exception:
+                    pass
+        except Exception as e:
+            print(f'  [Fundamental] Calendar loi: {e}')
+
+    # --- 2. News Sentiment (RSS) ---
+    headlines = []
+    for url in [
+        'https://feeds.reuters.com/reuters/businessNews',
+        'https://rss.fxstreet.com/news',
+    ]:
+        headlines.extend(_fetch_rss_headlines(url))
+
+    currency_sentiment = {}
+    for ccy, keywords in _CURRENCY_KEYWORDS.items():
+        relevant = [h for h in headlines if any(k in h for k in keywords)]
+        if not relevant:
+            currency_sentiment[ccy] = 0.0
+            continue
+        score = 0.0
+        for h in relevant:
+            bull = sum(1 for w in _BULLISH_WORDS if w in h)
+            bear = sum(1 for w in _BEARISH_WORDS if w in h)
+            score += bull - bear
+        currency_sentiment[ccy] = float(np.clip(score / max(len(relevant), 1) / 2, -1.0, 1.0))
+
+    # --- 3. Fear & Greed Index (CNN) ---
+    fear_greed = {'value': 50.0, 'label': 'Neutral'}
+    try:
+        r = requests.get(
+            'https://production.dataviz.cnn.io/index/fearandgreed/graphdata/',
+            timeout=8,
+            headers={'User-Agent': 'Mozilla/5.0', 'Referer': 'https://www.cnn.com/'},
+        )
+        fg = r.json()['fear_and_greed']
+        fear_greed = {
+            'value': float(fg['score']),
+            'label': fg['rating'].replace('_', ' ').title(),
+        }
+    except Exception as e:
+        print(f'  [Fundamental] Fear&Greed loi: {e}')
+
+    _fundamental_cache = {
+        'calendar':   calendar_events,
+        'sentiment':  currency_sentiment,
+        'fear_greed': fear_greed,
+        'n_headlines': len(headlines),
+    }
+    fg = fear_greed
+    print(f'  [Fundamental] OK — {len(calendar_events)} su kien | '
+          f'{len(headlines)} headlines | F&G={fg["value"]:.0f} ({fg["label"]})')
+    return _fundamental_cache
+
+
+def check_calendar(fund, sym, now):
+    """
+    Kiem tra lich kinh te co anh huong den cap tien khong.
+    Tra ve: ('HARD', reason) | ('SOFT', reason) | ('PASS', '')
+      HARD: su kien high-impact trong 60p → block hoan toan
+      SOFT: su kien medium-impact trong 30p → can them 1 vote
+    """
+    try:
+        base, quote = sym.split('/')
+    except ValueError:
+        return 'PASS', ''
+    relevant = {_CURRENCY_COUNTRY.get(base[:3], ''), _CURRENCY_COUNTRY.get(quote[:3], '')} - {''}
+    for ev in fund.get('calendar', []):
+        if ev['country'] not in relevant:
+            continue
+        mins = (ev['datetime'] - now).total_seconds() / 60
+        if ev['importance'] == 'high' and -15 <= mins <= 60:
+            direction = 'vua qua' if mins < 0 else f'con {int(mins)}p'
+            return 'HARD', f'{ev["title"]} ({ev["country"]}, {direction})'
+        if ev['importance'] == 'medium' and 0 <= mins <= 30:
+            return 'SOFT', f'{ev["title"]} ({ev["country"]}, con {int(mins)}p)'
+    return 'PASS', ''
+
+
+def get_sentiment_score(fund, sym):
+    """
+    Tinh sentiment score cho cap tien tu headline RSS.
+    Logic: score_cap = sentiment_dong_tien_co_so - sentiment_dong_tien_dinh_gia
+    EUR/USD BUY tot khi: EUR bullish (+) va/hoac USD bearish (-) → score duong
+    Tra ve float [-1, +1].
+    """
+    try:
+        base, quote = sym.split('/')
+        sent  = fund.get('sentiment', {})
+        base_s  = sent.get(base[:3],  0.0)
+        quote_s = sent.get(quote[:3], 0.0)
+        return float(np.clip(base_s - quote_s, -1.0, 1.0))
+    except Exception:
+        return 0.0
+
+
+def get_fg_context(fund, sym, signal):
+    """
+    Danh gia tac dong Fear & Greed Index len tin hieu.
+    Extreme Fear + tin hieu risk-on → penalty (can them xac nhan)
+    Extreme Greed + tin hieu risk-off → penalty (can them xac nhan)
+    Cung chieu → bonus (ghi nhan trong tin nhan, khong anh huong vote)
+    Tra ve (penalty: int, label: str)
+    """
+    fg_val = fund.get('fear_greed', {}).get('value', 50.0)
+    extreme_fear  = fg_val < 25
+    extreme_greed = fg_val > 75
+
+    is_risk_on  = (sym in _RISK_ON_BUYS  and signal == 'BUY') or \
+                  (sym in _RISK_OFF_BUYS and signal == 'SELL')
+    is_risk_off = (sym in _RISK_OFF_BUYS and signal == 'BUY') or \
+                  (sym in _RISK_ON_BUYS  and signal == 'SELL')
+
+    if extreme_fear and is_risk_on:
+        return 1, f'F&G={fg_val:.0f} (Extreme Fear) — thi truong so, risk-on gap rui ro'
+    if extreme_greed and is_risk_off:
+        return 1, f'F&G={fg_val:.0f} (Extreme Greed) — thi truong tham lam, safe-haven qua dat'
+    return 0, ''
+
+
 # ── Cong cu nang cap ─────────────────────────────────────────
 def analyze_m15(sym, yf_sym):
     """Phan tich nhanh khung M15 de xac nhan confluence voi H1."""
@@ -603,12 +810,14 @@ def build_pa_vol(signal, indicators, rsi_val, h1_phase, m15_signal, m15_phase):
     return '\n'.join(lines)
 
 # ── Phan tich tin hieu (Vote System v4) ──────────────────────
-def analyze(sym, yf_sym):
+def analyze(sym, yf_sym, now=None):
     """
     He thong bieu quyet: moi chi bao bau +1 (MUA) / -1 (BAN) / 0 (trung tinh).
     Can it nhat 3/5 phieu cung chieu de phat tin hieu.
     Thay the Composite Score + OLS (qua phuc tap, can du lieu lon).
     """
+    if now is None:
+        now = datetime.now(timezone.utc)
     try:
         cfg = PAIR_CONFIG.get(sym, _DEFAULT_CONFIG)
         closes, highs, lows = fetch_ohlcv(sym, yf_sym)
@@ -631,6 +840,13 @@ def analyze(sym, yf_sym):
         lo, hi = PRICE_SANITY.get(sym, (0.0, float('inf')))
         if not (lo <= price <= hi):
             print(f'  [D] Gia {price} ngoai vung hop le [{lo}, {hi}] — du lieu sai, bo qua')
+            return None
+
+        # [TANG 1 — FUNDAMENTAL] Economic Calendar: block truoc khi tinh toan nang
+        fund = fetch_fundamental(now)
+        cal_status, cal_reason = check_calendar(fund, sym, now)
+        if cal_status == 'HARD':
+            print(f'  [D] Calendar HARD block: {cal_reason}')
             return None
 
         # [HURST] Phat hien regime (giu lai de context, khong dung lam he so nhan)
@@ -679,6 +895,10 @@ def analyze(sym, yf_sym):
         # [REGIME ADAPTIVE] NEUTRAL: xu huong chua ro, can them 1 vote de loc nhieu
         if regime == 'NEUTRAL':
             min_v = max(4, min_v)
+        # [TANG 1 — SOFT] Su kien medium-impact sap xay ra: tang min_votes them 1 de an toan
+        if cal_status == 'SOFT':
+            min_v = min(5, min_v + 1)
+            print(f'  [!] Calendar SOFT: {cal_reason} — tang min_votes len {min_v}')
 
         if bull_cnt >= min_v:
             signal     = 'BUY'
@@ -714,6 +934,23 @@ def analyze(sym, yf_sym):
                 print(f'  [D] Gold macro={g_score:.2f} nhe mau thuan, can them 1 vote')
                 return None
             gold_macro = {'score': round(g_score, 2), **g_comps}
+
+        # [TANG 2 — NEWS SENTIMENT] Kiem tra xu huong tin tuc co mau thuan khong
+        sent_score = get_sentiment_score(fund, sym)
+        sig_dir    = 1 if signal == 'BUY' else -1
+        sent_align = sent_score * sig_dir   # >0 = ung ho, <0 = mau thuan
+        if sent_align < -0.35:
+            print(f'  [D] Sentiment={sent_score:.2f} mau thuan manh voi {signal} — bo qua')
+            return None
+        if sent_align < -0.15 and vote_count < min(5, min_v + 1):
+            print(f'  [D] Sentiment={sent_score:.2f} mau thuan nhe, can them vote')
+            return None
+
+        # [TANG 3 — FEAR & GREED] Canh bao neu thi truong o trang thai cuc doan mau thuan
+        fg_penalty, fg_reason = get_fg_context(fund, sym, signal)
+        if fg_penalty and vote_count < min(5, min_v + 1):
+            print(f'  [D] F&G: {fg_reason} — can them xac nhan')
+            return None
 
         # Ten cac chi bao dong thuan
         aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
@@ -763,6 +1000,12 @@ def analyze(sym, yf_sym):
             'entry_low': entry_low, 'entry_high': entry_high,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
             'gold_macro': gold_macro,
+            'fundamental': {
+                'sentiment':  round(sent_score, 2),
+                'fear_greed': fund.get('fear_greed', {}),
+                'cal_status': cal_status,
+                'cal_reason': cal_reason,
+            },
             'aligned': vote_count,
             'indicators': {
                 'rsi':  rsi_v, 'ema': ema_v, 'macd': round(mac_s, 2),
@@ -991,10 +1234,13 @@ def main():
     state  = load_state()
     sent   = 0
 
-    # Buoc 1: fetch intermarket 1 lan cho ca phien
+    # Buoc 1: fetch intermarket + fundamental 1 lan cho ca phien
     print('=== Lay du lieu lien thi truong (DXY, Oil) ===')
     im = fetch_intermarket()
     print(f'  DXY trend: {im.get("dxy",0):+.3f} | Oil trend: {im.get("oil",0):+.3f}')
+
+    print('\n=== Fundamental Intelligence Layer ===')
+    fetch_fundamental(now)   # warm cache truoc vong lap, analyze() se dung cache nay
 
     # Buoc 2: xac nhan lenh cu (luon chay 24/7, khong phu thuoc session)
     print('\n=== Kiem tra xac nhan lenh cu ===')
@@ -1012,7 +1258,7 @@ def main():
 
     for sym, yf_sym in SYMBOLS.items():
         print(f'Phan tich {sym}...', end=' ', flush=True)
-        r = analyze(sym, yf_sym)
+        r = analyze(sym, yf_sym, now)
 
         if not r:
             print('NEUTRAL / loc ATR / khong du lieu')
@@ -1094,6 +1340,28 @@ def main():
                 f'| VIX {gm["vix"]:+.2f} | Oil {gm["oil"]:+.2f}  →  {gm["score"]:+.2f}'
             )
 
+        # Fundamental section (Calendar + Sentiment + F&G)
+        fund_lines = []
+        fd = r.get('fundamental', {})
+        if fd:
+            fg    = fd.get('fear_greed', {})
+            fg_v  = fg.get('value', 50.0)
+            fg_lb = fg.get('label', 'Neutral')
+            sent  = fd.get('sentiment', 0.0)
+            sent_lbl = ('Bullish' if sent > 0.15 else 'Bearish' if sent < -0.15 else 'Neutral')
+            sent_icon = '📈' if sent > 0.15 else ('📉' if sent < -0.15 else '➡️')
+            fg_icon = '😱' if fg_v < 25 else ('😰' if fg_v < 45 else ('😐' if fg_v < 55 else ('😀' if fg_v < 75 else '🤑')))
+            cal_line = ''
+            if fd.get('cal_status') == 'SOFT':
+                cal_line = f'  ⚡ Sự kiện: {fd["cal_reason"]}'
+            fund_lines = [
+                '🌐 Phân tích cơ bản:',
+                f'  {sent_icon} Sentiment: {sent:+.2f} ({sent_lbl})',
+                f'  {fg_icon} Fear & Greed: {fg_v:.0f}/100 ({fg_lb})',
+            ]
+            if cal_line:
+                fund_lines.append(cal_line)
+
         msg_parts = [
             f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cậy',
             f'<code>{bar}</code>  {conf_10}/10',
@@ -1118,6 +1386,9 @@ def main():
         ]
         if gold_macro_line:
             msg_parts.append(gold_macro_line)
+            msg_parts.append('')
+        if fund_lines:
+            msg_parts.extend(fund_lines)
             msg_parts.append('')
         if wr_line:
             msg_parts.append(wr_line)
