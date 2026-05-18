@@ -1,6 +1,6 @@
 {
   "GBP/USD|SELL": 1779057049.881722,
-  "USD/JPY|BUY": 1778693846.700291,
+  "USD/JPY|BUY": 1779066064.923412,
   "USD/CAD|BUY": 1779060650.882327,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
@@ -9,62 +9,6 @@
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
-    {
-      "sym": "GBP/JPY",
-      "signal": "BUY",
-      "entry_price": 211.531005859375,
-      "sl": 211.1735802674107,
-      "tp": 212.24585704330363,
-      "sent_at": 1779059689.579696,
-      "message_id": 150,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779063289.579696,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": 0.13,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": 0.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.383,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "UKOIL/USD",
-      "signal": "BUY",
-      "entry_price": 110.47000122070312,
-      "sl": 109.24570688134808,
-      "tp": 112.91858989941322,
-      "sent_at": 1779059689.579696,
-      "message_id": 151,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779063289.579696,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.14,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": 1.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.385,
-      "aligned": 3,
-      "consensus": true
-    },
     {
       "sym": "EUR/USD",
       "signal": "SELL",
@@ -77,7 +21,7 @@
         {
           "hours": 1,
           "at": 1779064250.882327,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -105,7 +49,7 @@
         {
           "hours": 1,
           "at": 1779064250.882327,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -146,6 +90,34 @@
       },
       "regime": "RANGE",
       "hurst": 0.083,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "entry_price": 158.93847,
+      "sl": 158.74982120796457,
+      "tp": 159.3157675840708,
+      "sent_at": 1779066064.923412,
+      "message_id": 161,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779069664.923412,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": 1.0,
+        "bb": -1,
+        "mom": 0.6,
+        "inter": 0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.0,
       "aligned": 3,
       "consensus": true
     }
@@ -415,6 +387,20 @@
       "sym": "UKOIL/USD",
       "signal": "BUY",
       "correct": false,
+      "date": "2026-05-18",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-18",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "USD/CAD",
+      "signal": "BUY",
+      "correct": true,
       "date": "2026-05-18",
       "regime": "RANGE"
     }
