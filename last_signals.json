@@ -10,62 +10,6 @@
   "USOIL/USD|BUY": 1778665333.167377,
   "pending_validations": [
     {
-      "sym": "GBP/USD",
-      "signal": "SELL",
-      "entry_price": 1.33152,
-      "sl": 1.3322722066198955,
-      "tp": 1.3300155867602093,
-      "sent_at": 1779057049.881722,
-      "message_id": 148,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779060649.881722,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.28,
-        "bb": 1,
-        "mom": -1.0,
-        "inter": -0.97
-      },
-      "regime": "RANGE",
-      "hurst": 0.086,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "EUR/GBP",
-      "signal": "BUY",
-      "entry_price": 0.87286,
-      "sl": 0.8722703744784971,
-      "tp": 0.8740392510430056,
-      "sent_at": 1779057049.881722,
-      "message_id": 149,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779060649.881722,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.36,
-        "bb": -1,
-        "mom": 0.6,
-        "inter": 0.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.144,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "GBP/JPY",
       "signal": "BUY",
       "entry_price": 211.531005859375,
@@ -176,10 +120,38 @@
       "hurst": 0.072,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "NZD/USD",
+      "signal": "SELL",
+      "entry_price": 0.58312,
+      "sl": 0.5841194387598655,
+      "tp": 0.5811211224802689,
+      "sent_at": 1779062468.994947,
+      "message_id": 156,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779066068.994947,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.17,
+        "bb": 1,
+        "mom": -0.6,
+        "inter": -0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.083,
+      "aligned": 3,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1778693846.700291,
-  "NZD/USD|SELL": 1778844654.428844,
+  "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779060650.882327,
   "AUD/USD|BUY": 1778712200.458527,
   "EUR/JPY|SELL": 1778850067.127447,
