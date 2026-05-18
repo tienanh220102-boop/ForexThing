@@ -27,7 +27,7 @@ MIN_CONFIDENCE  = 60     # 3/5 phieu = 60% | 4/5 = 75% | 5/5 = 90%
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
 # Cap nhat moi khi co thay doi lon ve thuat toan (ADX filter, session filter, swing SL)
-LOGIC_VERSION   = '2026-05-18'
+LOGIC_VERSION   = '2026-05-19'
 # Gio giao dich hop le (UTC): London 07-16, New York 12-21, overlap 13-16 (tot nhat)
 # Block: 21:00-07:00 UTC — Asian session volume thap, nhieu false signal
 TRADE_HOURS_UTC = set(range(7, 21))  # 07:00 → 20:59 UTC
@@ -57,43 +57,41 @@ _DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult':
 #   Range pairs:    nang block → loc chat hon
 # min_votes: so phieu toi thieu (3 = chuan | 4 = yeu cau cao hon cho cap nhieu nhieu)
 PAIR_CONFIG = {
-    # === MAJORS — can bang, thanh khoan cao ===
-    'EUR/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
-    'GBP/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 4},  # tang min_votes: RANGE hien tai can loc chat hon
-    'USD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},  # carry/momentum
-    'USD/CHF': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
-    'AUD/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
-    'USD/CAD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
-    'NZD/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
-    # === EUR CROSSES (volume cao: EUR/GBP 15B, EUR/JPY 31B) ===
-    'EUR/GBP': {'rsi_buy': 35, 'rsi_sell': 65, 'hurst_block': 0.48, 'min_votes': 5},  # range kinh nien, chi trade khi TREND that su manh
-    'EUR/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},  # carry trend
-    # === GBP CROSSES (GBP/JPY 21B) ===
-    'GBP/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.42, 'min_votes': 4},  # rat bien dong, loc them RANGE
-    # === JPY CROSSES — carry trade, Momentum la vua ===
-    'AUD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
-    'CAD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
-    # === KIM LOAI — BB+RSI reversal, chong DXY ===
-    'XAU/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
-    'XAG/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 4},  # bien dong lon
-    # === DAU MO — intermarket la chinh, xu huong ro ===
-    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
-    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
+    # === MAJORS — hurst_block=0.45: chi trade NEUTRAL/TREND, block RANGE hoan toan ===
+    'EUR/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
+    'GBP/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 4},
+    'USD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
+    'USD/CHF': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
+    'USD/CAD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
+    'NZD/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
+    # === EUR CROSSES ===
+    'EUR/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
+    # === GBP CROSSES ===
+    'GBP/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4},
+    # === JPY CROSSES — carry trade ===
+    'AUD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
+    'CAD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
+    # === VANG — UU TIEN CAO: hurst_block thap, mien tru regime penalty ===
+    # XAU/USD hoat dong tot o moi regime (80% win rate), mo rong vung RSI de bat them tin hieu
+    'XAU/USD': {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.35, 'min_votes': 3},
+    'XAG/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4},
+    # === DAU MO ===
+    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
+    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
 }
-_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3}
+_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3}
 
 SYMBOLS = {
-    # Majors
+    # Majors (6) — bo AUD/USD (0% win rate) va EUR/GBP (17% win rate)
     'EUR/USD': 'EURUSD=X', 'GBP/USD': 'GBPUSD=X', 'USD/JPY': 'USDJPY=X',
-    'USD/CHF': 'USDCHF=X', 'AUD/USD': 'AUDUSD=X', 'USD/CAD': 'USDCAD=X',
-    'NZD/USD': 'NZDUSD=X',
-    # EUR crosses (volume cao: >15B/ngay)
-    'EUR/GBP': 'EURGBP=X', 'EUR/JPY': 'EURJPY=X',
+    'USD/CHF': 'USDCHF=X', 'USD/CAD': 'USDCAD=X', 'NZD/USD': 'NZDUSD=X',
+    # EUR crosses
+    'EUR/JPY': 'EURJPY=X',
     # GBP crosses
     'GBP/JPY': 'GBPJPY=X',
-    # JPY crosses (carry trade, volume cao)
+    # JPY crosses (carry trade)
     'AUD/JPY': 'AUDJPY=X', 'CAD/JPY': 'CADJPY=X',
-    # Commodities
+    # Commodities — XAU/USD la trong tam (80% win rate)
     'XAU/USD': 'GC=F', 'XAG/USD': 'SI=F',
     'UKOIL/USD': 'BZ=F', 'USOIL/USD': 'CL=F',
 }
@@ -607,6 +605,11 @@ def analyze(sym, yf_sym):
         bear_cnt  = sum(-v for v in votes if v < 0)
 
         min_v = cfg['min_votes']
+        # [REGIME ADAPTIVE] NEUTRAL: xu huong chua ro, loc chat hon de tranh tin hieu nhieu
+        # XAU/USD mien tru — vang hoat dong tot o moi regime, khong can siet them
+        if regime == 'NEUTRAL' and sym != 'XAU/USD':
+            min_v = max(4, min_v)
+
         if bull_cnt >= min_v:
             signal     = 'BUY'
             vote_count = bull_cnt
