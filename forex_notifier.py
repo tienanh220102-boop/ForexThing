@@ -566,6 +566,62 @@ def gold_macro_score():
     }
     return float(np.clip(score, -1.0, 1.0)), comps
 
+
+# ── Phương trình macro JPY pairs ──────────────────────────────
+def jpy_macro_score(sym):
+    """
+    Macro equation cho 5 cap JPY — tai su dung _gold_cache (zero API cost).
+    score > 0: JPY suy yeu → BUY pair | score < 0: JPY manh → SELL pair
+
+    3 sub-group theo driver chinh:
+    - USD/JPY : yield differential (BoJ ~0% → TNX la proxy spread)
+    - EUR/JPY, GBP/JPY : risk sentiment (JPY safe haven khi so hai)
+    - AUD/JPY, CAD/JPY : carry trade (yield + oil/risk appetite)
+
+    Sign convention (tai su dung tu gold_cache):
+      raw_yield = -tny_s : duong khi US yield TANG (carry trade vao USD)
+      risk_on   = -vix_s : duong khi VIX GIAM (risk-on, JPY yeu di)
+      dxy_raw   = g['dxy_raw'] : duong khi DXY tang (USD manh)
+      oil_raw   = g['oil_raw'] : duong khi Oil tang (risk appetite)
+    """
+    g = fetch_gold_macro()
+    raw_yield = -g['tny_s']    # tny_s am khi yield tang → dao = duong khi carry thuan
+    risk_on   = -g['vix_s']    # vix_s duong khi VIX cao → dao = duong khi risk-on
+    dxy_raw   =  g['dxy_raw']
+    oil_raw   =  g['oil_raw']
+
+    if sym == 'USD/JPY':
+        score = 0.50 * raw_yield + 0.30 * risk_on + 0.20 * dxy_raw
+        comps = {'yield': round(raw_yield, 2), 'risk': round(risk_on, 2), 'dxy': round(dxy_raw, 2)}
+    elif sym in ('EUR/JPY', 'GBP/JPY'):
+        score = 0.55 * risk_on + 0.25 * raw_yield + 0.20 * oil_raw
+        comps = {'risk': round(risk_on, 2), 'yield': round(raw_yield, 2), 'oil': round(oil_raw, 2)}
+    elif sym in ('AUD/JPY', 'CAD/JPY'):
+        score = 0.45 * risk_on + 0.35 * oil_raw + 0.20 * raw_yield
+        comps = {'risk': round(risk_on, 2), 'oil': round(oil_raw, 2), 'yield': round(raw_yield, 2)}
+    else:
+        return 0.0, {}
+    return float(np.clip(score, -1.0, 1.0)), comps
+
+
+def oil_macro_score(sym):
+    """
+    Macro equation cho USOIL/USD va UKOIL/USD.
+    Tai su dung Oil trend + VIX tu gold_cache, Oil news tu fundamental_cache.
+    score > 0: macro ung ho Oil tang | score < 0: macro ung ho Oil giam
+    """
+    g = fetch_gold_macro()
+    oil_raw  = g['oil_raw']   # Oil trend hien tai
+    risk_on  = -g['vix_s']    # VIX thap = demand tot = bullish oil
+
+    sent_key = 'USO' if sym == 'USOIL/USD' else 'UKO'
+    oil_sent = _fundamental_cache.get('sentiment', {}).get(sent_key, 0.0) if _fundamental_cache else 0.0
+
+    score = 0.50 * oil_raw + 0.30 * risk_on + 0.20 * oil_sent
+    comps = {'trend': round(oil_raw, 2), 'risk': round(risk_on, 2), 'news': round(oil_sent, 2)}
+    return float(np.clip(score, -1.0, 1.0)), comps
+
+
 # ── Fundamental Intelligence Layer ───────────────────────────
 def _fetch_rss_headlines(url):
     """Lay headlines tu RSS feed, tra ve list chuoi lowercase."""
@@ -935,6 +991,32 @@ def analyze(sym, yf_sym, now=None):
                 return None
             gold_macro = {'score': round(g_score, 2), **g_comps}
 
+        # [JPY MACRO FILTER] Ket hop yield differential + risk sentiment + carry trade
+        # Tai su dung _gold_cache (zero API cost) — phan tich macro chuyen biet cho JPY
+        jpy_macro = None
+        if sym.endswith('/JPY'):
+            j_score, j_comps = jpy_macro_score(sym)
+            sig_dir     = 1 if signal == 'BUY' else -1
+            macro_align = j_score * sig_dir
+            if macro_align < -0.25:
+                print(f'  [D] JPY macro={j_score:.2f} mau thuan {signal} ({j_comps})')
+                return None
+            if macro_align < 0.0 and vote_count < min(5, min_v + 1):
+                print(f'  [D] JPY macro={j_score:.2f} nhe mau thuan, can them 1 vote')
+                return None
+            jpy_macro = {'score': round(j_score, 2), **j_comps}
+
+        # [OIL MACRO FILTER] Oil trend + risk sentiment + news sentiment
+        oil_macro = None
+        if sym in ('USOIL/USD', 'UKOIL/USD'):
+            o_score, o_comps = oil_macro_score(sym)
+            sig_dir     = 1 if signal == 'BUY' else -1
+            macro_align = o_score * sig_dir
+            if macro_align < -0.30:
+                print(f'  [D] Oil macro={o_score:.2f} mau thuan {signal} ({o_comps})')
+                return None
+            oil_macro = {'score': round(o_score, 2), **o_comps}
+
         # [TANG 2 — NEWS SENTIMENT] Kiem tra xu huong tin tuc co mau thuan khong
         sent_score = get_sentiment_score(fund, sym)
         sig_dir    = 1 if signal == 'BUY' else -1
@@ -956,6 +1038,9 @@ def analyze(sym, yf_sym, now=None):
         aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
                         if (v > 0 and signal == 'BUY') or (v < 0 and signal == 'SELL')]
 
+        # [FOURIER] Vi tri trong chu ky song gia: +1 = day chu ky (MUA), -1 = dinh (BAN)
+        fourier_s = fourier_signal(closes)
+
         # --- Do tin cay ---
         # Nen tang: 3/5=60%, 4/5=75%, 5/5=90%
         base_conf = {3: 60, 4: 75, 5: 90}.get(vote_count, 60)
@@ -963,7 +1048,10 @@ def analyze(sym, yf_sym, now=None):
         im_aligned  = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
         im_bonus    = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
-        conf        = min(95, base_conf + im_bonus + regime_bonus)
+        # Fourier cycle: cung chieu +3%, nguoc chieu manh -5% (chu ky rat kha tin trong RANGE)
+        fourier_align = fourier_s * (1 if signal == 'BUY' else -1)
+        fourier_bonus = 3 if fourier_align > 0.3 else (-5 if fourier_align < -0.3 else 0)
+        conf = min(95, base_conf + im_bonus + regime_bonus + fourier_bonus)
 
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
@@ -999,7 +1087,10 @@ def analyze(sym, yf_sym, now=None):
             'rr1': rr1, 'rr2': rr2,
             'entry_low': entry_low, 'entry_high': entry_high,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
+            'fourier': round(fourier_s, 2),
             'gold_macro': gold_macro,
+            'jpy_macro':  jpy_macro,
+            'oil_macro':  oil_macro,
             'fundamental': {
                 'sentiment':  round(sent_score, 2),
                 'fear_greed': fund.get('fear_greed', {}),
@@ -1340,6 +1431,22 @@ def main():
                 f'| VIX {gm["vix"]:+.2f} | Oil {gm["oil"]:+.2f}  →  {gm["score"]:+.2f}'
             )
 
+        jpy_macro_line = ''
+        if r.get('jpy_macro'):
+            jm = r['jpy_macro']
+            icon = '✅' if jm['score'] > 0 else '⚠️'
+            parts = ' | '.join(f'{k.capitalize()} {v:+.2f}' for k, v in jm.items() if k != 'score')
+            jpy_macro_line = f'{icon} Macro JPY: {parts}  →  {jm["score"]:+.2f}'
+
+        oil_macro_line = ''
+        if r.get('oil_macro'):
+            om = r['oil_macro']
+            icon = '✅' if om['score'] > 0 else '⚠️'
+            oil_macro_line = (
+                f'{icon} Macro Oil: Trend {om["trend"]:+.2f} | Risk {om["risk"]:+.2f} '
+                f'| News {om["news"]:+.2f}  →  {om["score"]:+.2f}'
+            )
+
         # Fundamental section (Calendar + Sentiment + F&G)
         fund_lines = []
         fd = r.get('fundamental', {})
@@ -1367,7 +1474,7 @@ def main():
             f'<code>{bar}</code>  {conf_10}/10',
             '',
             f'🗳 {vote_bar}',
-            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f})',
+            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f} | F={r.get("fourier", 0):+.2f})',
             '',
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
@@ -1386,6 +1493,12 @@ def main():
         ]
         if gold_macro_line:
             msg_parts.append(gold_macro_line)
+            msg_parts.append('')
+        if jpy_macro_line:
+            msg_parts.append(jpy_macro_line)
+            msg_parts.append('')
+        if oil_macro_line:
+            msg_parts.append(oil_macro_line)
             msg_parts.append('')
         if fund_lines:
             msg_parts.extend(fund_lines)
