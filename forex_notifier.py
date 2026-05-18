@@ -14,16 +14,23 @@ from datetime import datetime, timezone, timedelta
 
 import requests
 import yfinance as yf
+import pandas as pd
 
 # ── Cau hinh ──────────────────────────────────────────────────
 TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_TOKEN', '')
 TELEGRAM_CHAT    = os.environ.get('TELEGRAM_CHAT',  '')
 TWELVE_DATA_KEY  = os.environ.get('TWELVE_DATA_KEY', '')  # Twelve Data API (free: 800 req/ngay)
-COOLDOWN_HOURS  = 4
+COOLDOWN_HOURS  = 6
 STATE_FILE      = 'last_signals.json'
 CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
 MIN_CONFIDENCE  = 60     # 3/5 phieu = 60% | 4/5 = 75% | 5/5 = 90%
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
+# Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
+# Cap nhat moi khi co thay doi lon ve thuat toan (ADX filter, session filter, swing SL)
+LOGIC_VERSION   = '2026-05-18'
+# Gio giao dich hop le (UTC): London 07-16, New York 12-21, overlap 13-16 (tot nhat)
+# Block: 21:00-07:00 UTC — Asian session volume thap, nhieu false signal
+TRADE_HOURS_UTC = set(range(7, 21))  # 07:00 → 20:59 UTC
 
 # Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
 # w = [rsi, ema, macd, bb, mom]  |  trend_mult: he so Hurst TREND
@@ -42,31 +49,107 @@ PAIR_PROFILES = {
 # Mac dinh cho cac cap con lai (EUR/USD, GBP/USD, AUD/USD, USD/CAD, NZD/USD...)
 _DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult': 0.92}
 
+# Tham so phan tich rieng tung cap tien — thay the nguong chung trong analyze()
+# rsi_buy  : RSI <= nguong nay → phieu MUA  (cang thap → cang chat, tranh false BUY trong trend)
+# rsi_sell : RSI >= nguong nay → phieu BAN  (cang cao → cang chat)
+# hurst_block : H < nguong nay → bo qua (RANGE sau)
+#   Trailing pairs: ha block → cho qua thi truong co H thap hon
+#   Range pairs:    nang block → loc chat hon
+# min_votes: so phieu toi thieu (3 = chuan | 4 = yeu cau cao hon cho cap nhieu nhieu)
+PAIR_CONFIG = {
+    # === MAJORS — can bang, thanh khoan cao ===
+    'EUR/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
+    'GBP/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 4},  # tang min_votes: RANGE hien tai can loc chat hon
+    'USD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},  # carry/momentum
+    'USD/CHF': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
+    'AUD/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
+    'USD/CAD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
+    'NZD/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3},
+    # === EUR CROSSES (volume cao: EUR/GBP 15B, EUR/JPY 31B) ===
+    'EUR/GBP': {'rsi_buy': 35, 'rsi_sell': 65, 'hurst_block': 0.48, 'min_votes': 5},  # range kinh nien, chi trade khi TREND that su manh
+    'EUR/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},  # carry trend
+    # === GBP CROSSES (GBP/JPY 21B) ===
+    'GBP/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.42, 'min_votes': 4},  # rat bien dong, loc them RANGE
+    # === JPY CROSSES — carry trade, Momentum la vua ===
+    'AUD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
+    'CAD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
+    # === KIM LOAI — BB+RSI reversal, chong DXY ===
+    'XAU/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
+    'XAG/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 4},  # bien dong lon
+    # === DAU MO — intermarket la chinh, xu huong ro ===
+    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
+    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
+}
+_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3}
+
 SYMBOLS = {
+    # Majors
     'EUR/USD': 'EURUSD=X', 'GBP/USD': 'GBPUSD=X', 'USD/JPY': 'USDJPY=X',
     'USD/CHF': 'USDCHF=X', 'AUD/USD': 'AUDUSD=X', 'USD/CAD': 'USDCAD=X',
-    'NZD/USD': 'NZDUSD=X', 'EUR/GBP': 'EURGBP=X', 'EUR/JPY': 'EURJPY=X',
-    'GBP/JPY': 'GBPJPY=X', 'XAU/USD': 'GC=F',     'XAG/USD': 'SI=F',
-    'UKOIL/USD': 'BZ=F',   'USOIL/USD': 'CL=F',
+    'NZD/USD': 'NZDUSD=X',
+    # EUR crosses (volume cao: >15B/ngay)
+    'EUR/GBP': 'EURGBP=X', 'EUR/JPY': 'EURJPY=X',
+    # GBP crosses
+    'GBP/JPY': 'GBPJPY=X',
+    # JPY crosses (carry trade, volume cao)
+    'AUD/JPY': 'AUDJPY=X', 'CAD/JPY': 'CADJPY=X',
+    # Commodities
+    'XAU/USD': 'GC=F', 'XAG/USD': 'SI=F',
+    'UKOIL/USD': 'BZ=F', 'USOIL/USD': 'CL=F',
+}
+
+# Vung gia hop le tung symbol — loc du lieu sai tu yfinance/TwelveData
+# Dat rong de chi loai gia co ban ro rang bi loi (0, nan, data nham contract)
+PRICE_SANITY = {
+    # Majors
+    'EUR/USD':   (0.70, 1.80),
+    'GBP/USD':   (0.80, 2.20),
+    'USD/JPY':   (70,   220),
+    'USD/CHF':   (0.60, 1.40),
+    'AUD/USD':   (0.40, 1.20),
+    'USD/CAD':   (0.80, 1.80),
+    'NZD/USD':   (0.40, 1.00),
+    # EUR crosses
+    'EUR/GBP':   (0.60, 1.10),
+    'EUR/JPY':   (80,   220),
+    # GBP crosses
+    'GBP/JPY':   (100,  280),
+    # JPY crosses
+    'AUD/JPY':   (50,   130),
+    'CAD/JPY':   (70,   130),
+    # Commodities
+    'XAU/USD':   (1200, 8000),
+    'XAG/USD':   (5,    300),
+    'USOIL/USD': (10,   300),
+    'UKOIL/USD': (10,   300),
 }
 
 _im_cache = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
 
-# Symbol mapping cho Twelve Data API
+# Symbol mapping cho Twelve Data API (16 cap × 48 lan/ngay = 768 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
+    # Majors
     'EUR/USD': 'EUR/USD', 'GBP/USD': 'GBP/USD', 'USD/JPY': 'USD/JPY',
     'USD/CHF': 'USD/CHF', 'AUD/USD': 'AUD/USD', 'USD/CAD': 'USD/CAD',
-    'NZD/USD': 'NZD/USD', 'EUR/GBP': 'EUR/GBP', 'EUR/JPY': 'EUR/JPY',
-    'GBP/JPY': 'GBP/JPY', 'XAU/USD': 'XAU/USD', 'XAG/USD': 'XAG/USD',
-    'UKOIL/USD': 'XBR/USD',   # Brent crude
-    'USOIL/USD': 'XTI/USD',   # WTI crude
+    'NZD/USD': 'NZD/USD',
+    # EUR crosses
+    'EUR/GBP': 'EUR/GBP', 'EUR/JPY': 'EUR/JPY',
+    # GBP crosses
+    'GBP/JPY': 'GBP/JPY',
+    # JPY crosses
+    'AUD/JPY': 'AUD/JPY', 'CAD/JPY': 'CAD/JPY',
+    # Commodities
+    'XAU/USD': 'XAU/USD', 'XAG/USD': 'XAG/USD',
+    'UKOIL/USD': 'XBR/USD',
+    'USOIL/USD': 'XTI/USD',
 }
 
 def fetch_ohlcv(sym, yf_sym, outputsize=500):
     """
     Lay OHLCV H1: uu tien Twelve Data (chat luong cao),
-    fallback yfinance khi chua co API key.
-    Twelve Data free: 800 req/ngay — 14 cap × 48 lan/ngay = 672 req, vua du.
+    fallback yfinance khi chua co API key hoac het quota.
+    Twelve Data free: 800 req/ngay — 16 cap × 48 lan/ngay = 768 req (trong quota free).
+    Khi het quota, Twelve Data tra loi error → tu dong fallback sang yfinance.
     """
     if TWELVE_DATA_KEY:
         td_sym = TWELVE_DATA_SYMBOLS.get(sym)
@@ -168,6 +251,37 @@ def atr(highs, lows, closes, period=14):
     for v in trs[period:]:
         a = (a*(period-1)+v) / period
     return a
+
+def adx_indicator(highs, lows, closes, period=14):
+    """
+    ADX (Average Directional Index) - do suc manh xu huong, khong do huong.
+    ADX > 25 = trend manh  |  ADX < 20 = sideways / choppy
+    Tra ve: (adx, +DI, -DI)  — +DI > -DI: xu huong tang | -DI > +DI: xu huong giam
+    """
+    if len(closes) < period * 2 + 1:
+        return 0.0, 0.0, 0.0
+    pdm, mdm, trs = [], [], []
+    for i in range(1, len(closes)):
+        up   = highs[i] - highs[i-1]
+        down = lows[i-1] - lows[i]
+        pdm.append(up   if up > down and up > 0 else 0.0)
+        mdm.append(down if down > up and down > 0 else 0.0)
+        trs.append(max(highs[i]-lows[i], abs(highs[i]-closes[i-1]), abs(lows[i]-closes[i-1])))
+    def _wilder(arr, n):
+        s = sum(arr[:n]); out = [s]
+        for v in arr[n:]:
+            s = s - s/n + v; out.append(s)
+        return out
+    sp = _wilder(pdm, period); sm = _wilder(mdm, period); st = _wilder(trs, period)
+    pdi = [100*p/t if t > 1e-10 else 0.0 for p, t in zip(sp, st)]
+    mdi = [100*m/t if t > 1e-10 else 0.0 for m, t in zip(sm, st)]
+    dx  = [100*abs(p-m)/(p+m) if (p+m) > 1e-10 else 0.0 for p, m in zip(pdi, mdi)]
+    if len(dx) < period:
+        return 0.0, pdi[-1] if pdi else 0.0, mdi[-1] if mdi else 0.0
+    adx_v = sum(dx[:period]) / period
+    for v in dx[period:]:
+        adx_v = (adx_v*(period-1) + v) / period
+    return float(adx_v), float(pdi[-1]), float(mdi[-1])
 
 def momentum(closes, n=5):
     """Ti le nen tang trong n nen gan nhat: +1 (tat ca tang) .. -1 (tat ca giam)"""
@@ -307,26 +421,44 @@ def fetch_intermarket():
 
 def intermarket_signal(sym):
     """
-    Tin hieu lien thi truong (intermarket analysis):
-    - DXY tang → USD manh → USD/* tang, */USD giam, Vang giam
-    - Oil tang → CAD manh → USD/CAD giam
-    - Oil tang → USOIL/UKOIL tang truc tiep
+    Tin hieu lien thi truong (intermarket analysis).
+    Du lieu: DXY (suc manh USD) va Oil (WTI — proxy hang hoa/risk sentiment).
+
+    Nguyen tac:
+    - DXY tang → USD manh → USD/* tang, */USD giam, Vang/Bac giam
+    - Oil tang → CAD manh (xuat khau dau) → USD/CAD giam
+    - Oil tang = risk-on → carry trade (AUD/JPY, CAD/JPY) tang
+    - EUR/GBP, GBP/JPY: ca hai phia deu co safe-haven rieng → return 0 tranh nhieu
     """
     im  = fetch_intermarket()
     dxy = im.get('dxy', 0.0)
     oil = im.get('oil', 0.0)
 
+    # Hang hoa truc tiep
     if sym in ('USOIL/USD', 'UKOIL/USD'):
         return oil
     if sym in ('XAU/USD', 'XAG/USD'):
         return -dxy   # Vang/Bac nguoc chieu USD
+
+    # USD/CAD: DXY va Oil cung tac dong (CAD la dong tien dau mo)
     if sym == 'USD/CAD':
         return float(np.clip(dxy*0.5 - oil*0.5, -1.0, 1.0))
+
+    # Carry trade: Oil tang = risk-on → AUD/CAD/JPY tang so voi JPY
+    if sym == 'AUD/JPY':
+        return float(np.clip(oil*0.4, -1.0, 1.0))
+    if sym == 'CAD/JPY':
+        return float(np.clip(oil*0.6, -1.0, 1.0))   # CAD nhay cam nhat voi oil
+
+    # USD truc tiep
     if sym.startswith('USD/'):
         return dxy
     if sym.endswith('/USD'):
         return -dxy
-    return 0.0   # Cross pairs (EUR/GBP...) it bi DXY anh huong
+
+    # CHF crosses + EUR/GBP + JPY vs non-commodity: ca hai phia di chuyen cung chieu
+    # khi risk event xay ra → DXY anh huong qua nho → return 0 tranh nhieu
+    return 0.0
 
 # ── Cong cu nang cap ─────────────────────────────────────────
 def analyze_m15(sym, yf_sym):
@@ -409,6 +541,7 @@ def analyze(sym, yf_sym):
     Thay the Composite Score + OLS (qua phuc tap, can du lieu lon).
     """
     try:
+        cfg = PAIR_CONFIG.get(sym, _DEFAULT_CONFIG)
         closes, highs, lows = fetch_ohlcv(sym, yf_sym)
         if closes is None or len(closes) < 60:
             print(f'  [D] du lieu qua it hoac loi fetch')
@@ -425,9 +558,28 @@ def analyze(sym, yf_sym):
             print(f'  [D] ATR={atr_val:.6f} loc phang')
             return None
 
+        # [LOC 2] Sanity check gia — phat hien du lieu sai (wrong contract, nan, spike)
+        lo, hi = PRICE_SANITY.get(sym, (0.0, float('inf')))
+        if not (lo <= price <= hi):
+            print(f'  [D] Gia {price} ngoai vung hop le [{lo}, {hi}] — du lieu sai, bo qua')
+            return None
+
         # [HURST] Phat hien regime (giu lai de context, khong dung lam he so nhan)
         H      = hurst_exponent(closes)
         regime = 'TREND' if H > 0.55 else ('RANGE' if H < 0.45 else 'NEUTRAL')
+
+        # [LOC 3] Block RANGE sau: nguong H rieng tung cap (trending pair: 0.38 / range pair: 0.48)
+        if H < cfg['hurst_block']:
+            print(f'  [D] H={H:.3f} < {cfg["hurst_block"]} RANGE sau, bo qua')
+            return None
+
+        # [LOC 3b] ADX filter: chan sideways kep — ca ADX lan Hurst deu yeu
+        # Hurst do tinh ben cau truc | ADX do suc manh thuc te cua gia hien tai
+        # Ca hai yeu = thi truong thuc su i flat, moi tin hieu deu la noise
+        adx_val, pdi, mdi = adx_indicator(highs, lows, closes)
+        if adx_val < 20 and H < 0.50:
+            print(f'  [D] ADX={adx_val:.1f} + H={H:.3f} ca hai yeu — sideways kep, bo qua')
+            return None
 
         # [INTERMARKET] Tin hieu lien thi truong
         im_s = intermarket_signal(sym)
@@ -442,7 +594,8 @@ def analyze(sym, yf_sym):
 
         # --- He thong bieu quyet ---
         # Moi chi bao bau: +1 (MUA), -1 (BAN), 0 (trung tinh)
-        rsi_v = (1 if r_val <= 45 else -1 if r_val >= 55 else 0)
+        # Nguong RSI rieng tung cap: JPY/Kim loai/Dau = 40/60 | Range pair = 35/65 | Majors = 45/55
+        rsi_v = (1 if r_val <= cfg['rsi_buy'] else -1 if r_val >= cfg['rsi_sell'] else 0)
         ema_v = (1 if price > e20 > e50 else -1 if price < e20 < e50 else 0)
         mac_v = (1 if mac_s > 0.12 else -1 if mac_s < -0.12 else 0)
         bb_v  = (1 if price < lower else -1 if price > upper else 0)
@@ -453,14 +606,23 @@ def analyze(sym, yf_sym):
         bull_cnt  = sum(v for v in votes if v > 0)
         bear_cnt  = sum(-v for v in votes if v < 0)
 
-        if bull_cnt >= 3:
+        min_v = cfg['min_votes']
+        if bull_cnt >= min_v:
             signal     = 'BUY'
             vote_count = bull_cnt
-        elif bear_cnt >= 3:
+        elif bear_cnt >= min_v:
             signal     = 'SELL'
             vote_count = bear_cnt
         else:
-            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du 3/5 phieu')
+            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/5 phieu')
+            return None
+
+        # [LOC 4] RSI mau thuan voi huong tin hieu → can it nhat 4/5 phieu
+        # (co the cao hon neu min_votes cua cap da la 4)
+        rsi_contradicts = (rsi_v > 0 and signal == 'SELL') or (rsi_v < 0 and signal == 'BUY')
+        required_on_contradict = max(4, min_v)
+        if rsi_contradicts and vote_count < required_on_contradict:
+            print(f'  [D] RSI={r_val:.0f} mau thuan {signal} ({vote_count}/5), can {required_on_contradict}/5')
             return None
 
         # Ten cac chi bao dong thuan
@@ -479,10 +641,15 @@ def analyze(sym, yf_sym):
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
 
-        # SL = 1.5×ATR | TP1 = 3×ATR (RR 1:2) | TP2 = 4.5×ATR (RR 1:3)
-        sl_dist  = atr_val * 1.5
-        tp_dist  = atr_val * 3.0
-        tp2_dist = atr_val * 4.5
+        # SL dua tren Swing High/Low (cau truc thi truong) — tot hon ATR co dinh
+        # Lay dinh/day cua 10 nen gan nhat lam nguong invalidation thuc te
+        swing_low  = min(lows[-10:])
+        swing_high = max(highs[-10:])
+        swing_dist = (price - swing_low) if signal == 'BUY' else (swing_high - price)
+        # Dam bao SL it nhat bang 1.5×ATR (tranh SL qua chat bi stop-hunt)
+        sl_dist  = max(atr_val * 1.5, swing_dist)
+        tp_dist  = sl_dist * 2.0   # RR 1:2
+        tp2_dist = sl_dist * 3.0   # RR 1:3
         if signal == 'BUY':
             sl = price - sl_dist; tp = price + tp_dist; tp2 = price + tp2_dist
         else:
@@ -504,7 +671,7 @@ def analyze(sym, yf_sym):
             'sl_pct': sl_pct, 'tp_pct': tp_pct, 'tp2_pct': tp2_pct,
             'rr1': rr1, 'rr2': rr2,
             'entry_low': entry_low, 'entry_high': entry_high,
-            'phase': phase_name, 'hurst': round(H, 3), 'regime': regime,
+            'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
             'aligned': vote_count,
             'indicators': {
                 'rsi':  rsi_v, 'ema': ema_v, 'macd': round(mac_s, 2),
@@ -525,6 +692,25 @@ def fetch_current_price(yf_sym):
         return float(df['Close'].iloc[-1])
     except Exception:
         return None
+
+def fetch_price_range(yf_sym, since_ts, hours=1):
+    """Lay gia cao nhat / thap nhat trong 'hours' tieng ke tu since_ts (UTC epoch)."""
+    try:
+        df = yf.Ticker(yf_sym).history(period='2d', interval='5m')
+        if df is None or len(df) == 0:
+            return None, None
+        start = pd.Timestamp(since_ts, unit='s', tz='UTC')
+        end   = pd.Timestamp(since_ts + hours * 3600, unit='s', tz='UTC')
+        if df.index.tzinfo is None:
+            df.index = df.index.tz_localize('UTC')
+        else:
+            df.index = df.index.tz_convert('UTC')
+        window = df.loc[(df.index >= start) & (df.index <= end)]
+        if len(window) == 0:
+            return None, None
+        return float(window['High'].max()), float(window['Low'].min())
+    except Exception:
+        return None, None
 
 # ── Format ────────────────────────────────────────────────────
 def fmt_price(sym, price):
@@ -571,7 +757,6 @@ def run_validations(state, now):
         if 'checkpoints' not in v:
             continue
 
-        any_undone = False
         for cp in v.get('checkpoints', []):
             if cp['done']:
                 continue
@@ -579,7 +764,23 @@ def run_validations(state, now):
             if cp['hours'] not in CHECKPOINTS_H:
                 cp['done'] = True
                 continue
-            any_undone = True
+
+            # [FIX 1A] Het han: qua 6h sau checkpoint → bao cao va bo qua, khong retry mai mai
+            expires_at = v.get('expires_at', cp['at'] + 6 * 3600)
+            if now.timestamp() > expires_at:
+                sym_e  = v['sym']
+                sent_e = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
+                overdue_h = (now.timestamp() - cp['at']) / 3600
+                print(f'  [+{cp["hours"]}h] {sym_e} het han ({overdue_h:.1f}h qua han), bo qua')
+                send_telegram(
+                    f'⏰ <b>Hết hạn xác nhận +{cp["hours"]}h</b>\n'
+                    f'📍 {sym_e} {v["signal"]} @ {fmt_price(sym_e, v["entry_price"])}\n'
+                    f'⏱ {sent_e.strftime("%d/%m %H:%M")} — không lấy được kết quả',
+                    reply_to=v.get('message_id'),
+                )
+                cp['done'] = True
+                continue
+
             if now.timestamp() < cp['at']:
                 continue
 
@@ -593,7 +794,8 @@ def run_validations(state, now):
             current = fetch_current_price(yf_sym)
             if current is None:
                 print('Khong lay duoc gia, thu lai sau')
-                continue   # giu any_undone=True, thu lan chay ke tiep
+                continue
+            h1_high, h1_low = fetch_price_range(yf_sym, v['sent_at'], hours=cp['hours'])
 
             entry   = v['entry_price']
             signal  = v['signal']
@@ -636,6 +838,14 @@ def run_validations(state, now):
             else:
                 tp_sl_line = ''
 
+            if h1_high is not None and h1_low is not None:
+                range_line = (
+                    f'📉 Đáy {cp["hours"]}h: <b>{fmt_price(sym, h1_low)}</b> | '
+                    f'📈 Đỉnh {cp["hours"]}h: <b>{fmt_price(sym, h1_high)}</b>'
+                )
+            else:
+                range_line = ''
+
             msg_lines = [
                 f'{verdict_emoji} <b>Kết quả +{cp["hours"]}h — {verdict}</b>',
                 '',
@@ -643,6 +853,8 @@ def run_validations(state, now):
                 f'📌 {signal} @ {fmt_price(sym, entry)} → {fmt_price(sym, current)}',
                 f'📊 Biến động: <b>{move_text}</b>',
             ]
+            if range_line:
+                msg_lines.append(range_line)
             if tp_sl_line:
                 msg_lines.append(f'🎯 {tp_sl_line}')
             msg_lines += [
@@ -655,6 +867,9 @@ def run_validations(state, now):
             msg = '\n'.join(msg_lines)
 
             result = send_telegram(msg, reply_to=v.get('message_id'))
+            # [FIX 1C] Neu reply_to that bai (tin nhan goc bi xoa / bot bi han), gui lai khong reply
+            if not result.get('ok') and v.get('message_id'):
+                result = send_telegram(msg)
             if result.get('ok'):
                 cp['done'] = True
                 print(f'{verdict} ✓')
@@ -663,12 +878,12 @@ def run_validations(state, now):
                     'sym': sym, 'signal': signal, 'correct': correct,
                     'date': sent_dt.strftime('%Y-%m-%d'), 'regime': v.get('regime', '?'),
                 })
-                if len(state['results']) > 100:
-                    state['results'] = state['results'][-100:]
             else:
                 print(f'Loi Telegram: {result}')
             time.sleep(1)
 
+        # [FIX 1B] Tinh lai any_undone SAU khi xu ly — tranh giu signal da done them 1 vong
+        any_undone = any(not cp['done'] for cp in v.get('checkpoints', []))
         if any_undone:
             remaining.append(v)
 
@@ -690,12 +905,19 @@ def main():
     im = fetch_intermarket()
     print(f'  DXY trend: {im.get("dxy",0):+.3f} | Oil trend: {im.get("oil",0):+.3f}')
 
-    # Buoc 2: xac nhan lenh cu
+    # Buoc 2: xac nhan lenh cu (luon chay 24/7, khong phu thuoc session)
     print('\n=== Kiem tra xac nhan lenh cu ===')
     run_validations(state, now)
 
+    # [SESSION FILTER] Chi quet tin hieu moi trong London + New York session
+    # Asian session (21:00-07:00 UTC): volume thap, spread rong, nhieu false signal
+    if now.hour not in TRADE_HOURS_UTC:
+        print(f'\n=== Ngoai gio giao dich ({now.hour}:00 UTC) — validation xong, khong quet moi ===')
+        save_state(state)
+        return
+
     # Buoc 3: quet tin hieu moi
-    print(f'\n=== Forex Scan v3 — {now_vn.strftime("%Y-%m-%d %H:%M")} (Gio VN) ===')
+    print(f'\n=== Forex Scan v4 — {now_vn.strftime("%Y-%m-%d %H:%M")} (Gio VN) | {now.hour}:xx UTC ===')
 
     for sym, yf_sym in SYMBOLS.items():
         print(f'Phan tich {sym}...', end=' ', flush=True)
@@ -710,7 +932,7 @@ def main():
         print(
             f'{r["signal"]} {r["vote_count"]}/5 phieu | '
             f'conf={r["conf"]}% | '
-            f'regime={r["regime"]}(H={r["hurst"]:.2f}) | '
+            f'regime={r["regime"]}(H={r["hurst"]:.2f} ADX={r["adx"]:.0f}) | '
             f'dong thuan: {", ".join(r["vote_lbls"])}'
         )
 
@@ -724,6 +946,15 @@ def main():
         conf = r['conf']
         if conf < MIN_CONFIDENCE:
             print(f'  -> Do tin cay {conf}% < {MIN_CONFIDENCE}%, bo qua')
+            time.sleep(0.5)
+            continue
+
+        # [LOC 5] Phat lat chieu: tin hieu nguoc chieu trong 12h qua → can 4/5 phieu
+        # Tranh he thong chay theo noise khi thi truong choppy
+        opp_key      = f'{sym}|{"SELL" if r["signal"] == "BUY" else "BUY"}'
+        flip_elapsed = (now.timestamp() - state.get(opp_key, 0)) / 3600
+        if flip_elapsed < 12 and r['vote_count'] < 4:
+            print(f'  -> Lat chieu ({flip_elapsed:.1f}h truoc), can 4/5 phieu ({r["vote_count"]}/5), bo qua')
             time.sleep(0.5)
             continue
 
@@ -741,13 +972,13 @@ def main():
             conf_10 = min(10, conf_10 + 1)
         bar = confidence_bar(conf_10)
 
-        # Win rate (Cap 3) — hien thi khi co >= 5 ket qua
+        # Win rate — chi tinh ket qua tu LOGIC_VERSION tro di (danh gia logic hien tai)
         results_all = state.get('results', [])
         wr_line = ''
-        if len(results_all) >= 5:
-            recent_r = results_all[-20:]
-            wr = sum(1 for x in recent_r if x['correct']) / len(recent_r) * 100
-            wr_line = f'📈 Win rate ({len(recent_r)} lệnh gần nhất): {wr:.0f}%'
+        versioned_r = [x for x in results_all if x.get('date', '') >= LOGIC_VERSION]
+        if len(versioned_r) >= 5:
+            wr = sum(1 for x in versioned_r if x['correct']) / len(versioned_r) * 100
+            wr_line = f'📈 Win rate ({len(versioned_r)} lệnh từ {LOGIC_VERSION}): {wr:.0f}%'
 
         emoji     = '🟢' if r['signal'] == 'BUY' else '🔴'
         direction = 'MUA' if r['signal'] == 'BUY' else 'BÁN'
@@ -768,7 +999,7 @@ def main():
             f'<code>{bar}</code>  {conf_10}/10',
             '',
             f'🗳 {vote_bar}',
-            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f})',
+            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f})',
             '',
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
@@ -808,6 +1039,7 @@ def main():
                     {'hours': h, 'at': now.timestamp()+h*3600, 'done': False}
                     for h in CHECKPOINTS_H
                 ],
+                'expires_at':  now.timestamp() + (max(CHECKPOINTS_H) + 6) * 3600,
                 'indicators':  r['indicators'],
                 'regime':      r['regime'],
                 'hurst':       r['hurst'],
