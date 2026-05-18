@@ -7,64 +7,8 @@
   "XAU/USD|SELL": 1778850067.127447,
   "XAG/USD|BUY": 1778712200.458527,
   "UKOIL/USD|BUY": 1779059689.579696,
-  "USOIL/USD|BUY": 1778665333.167377,
+  "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
-    {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.16196,
-      "sl": 1.1626004335851958,
-      "tp": 1.1606791328296084,
-      "sent_at": 1779060650.882327,
-      "message_id": 154,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779064250.882327,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.17,
-        "bb": 1,
-        "mom": -1.0,
-        "inter": -0.97
-      },
-      "regime": "RANGE",
-      "hurst": 0.066,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "USD/CAD",
-      "signal": "BUY",
-      "entry_price": 1.37543,
-      "sl": 1.374813586724912,
-      "tp": 1.3766628265501755,
-      "sent_at": 1779060650.882327,
-      "message_id": 155,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779064250.882327,
-          "done": true
-        }
-      ],
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.14,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": -0.01
-      },
-      "regime": "RANGE",
-      "hurst": 0.072,
-      "aligned": 3,
-      "consensus": true
-    },
     {
       "sym": "NZD/USD",
       "signal": "SELL",
@@ -77,7 +21,7 @@
         {
           "hours": 1,
           "at": 1779066068.994947,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -120,9 +64,65 @@
       "hurst": 0.0,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "BUY",
+      "entry_price": 0.78743,
+      "sl": 0.7867074248626794,
+      "tp": 0.7888751502746412,
+      "sent_at": 1779067852.924825,
+      "message_id": 163,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779071452.924825,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": 0.29,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": 0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.02,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "USOIL/USD",
+      "signal": "BUY",
+      "entry_price": 104.30999755859375,
+      "sl": 102.804511972686,
+      "tp": 107.32096873040926,
+      "sent_at": 1779067852.924825,
+      "message_id": 164,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779071452.924825,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": 1.0,
+        "bb": -1,
+        "mom": 0.6,
+        "inter": 1.0
+      },
+      "regime": "RANGE",
+      "hurst": 0.215,
+      "aligned": 3,
+      "consensus": true
     }
   ],
-  "USD/CHF|BUY": 1778693846.700291,
+  "USD/CHF|BUY": 1779067852.924825,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779060650.882327,
   "AUD/USD|BUY": 1778712200.458527,
@@ -400,6 +400,13 @@
     {
       "sym": "USD/CAD",
       "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-18",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "NZD/USD",
+      "signal": "SELL",
       "correct": true,
       "date": "2026-05-18",
       "regime": "RANGE"
