@@ -71,9 +71,8 @@ PAIR_CONFIG = {
     # === JPY CROSSES — carry trade ===
     'AUD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
     'CAD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
-    # === VANG — UU TIEN CAO: hurst_block thap, mien tru regime penalty ===
-    # XAU/USD hoat dong tot o moi regime (80% win rate), mo rong vung RSI de bat them tin hieu
-    'XAU/USD': {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.35, 'min_votes': 3},
+    # === VANG — Phuong trinh macro rieng: DXY + US10Y Yield + VIX + Oil ===
+    'XAU/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
     'XAG/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4},
     # === DAU MO ===
     'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
@@ -122,7 +121,8 @@ PRICE_SANITY = {
     'UKOIL/USD': (10,   300),
 }
 
-_im_cache = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
+_im_cache   = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
+_gold_cache = {}   # Cache macro data rieng cho XAU/USD (TNX, VIX)
 
 # Symbol mapping cho Twelve Data API (16 cap × 48 lan/ngay = 768 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
@@ -458,6 +458,77 @@ def intermarket_signal(sym):
     # khi risk event xay ra → DXY anh huong qua nho → return 0 tranh nhieu
     return 0.0
 
+# ── Phuong trinh macro XAU/USD ───────────────────────────────
+def fetch_gold_macro():
+    """
+    Lay 4 nhan to macro anh huong den XAU/USD, cache 1 lan moi phien.
+      DXY  (UUP)  — da co trong _im_cache, tai su dung
+      10Y  (^TNX) — US Treasury Yield, nghich chieu Vang (co hoi)
+      VIX  (^VIX) — Chi so so hai, cung chieu Vang (safe haven)
+      Oil  (CL=F) — da co trong _im_cache, cung chieu nhe (lam phat)
+    """
+    global _gold_cache
+    if _gold_cache:
+        return _gold_cache
+    im = fetch_intermarket()
+    _gold_cache = {
+        'dxy_raw': im.get('dxy', 0.0),
+        'oil_raw': im.get('oil', 0.0),
+        'tny_s':   0.0,
+        'vix_s':   0.0,
+    }
+    # US 10-Year Treasury Yield — nghich chieu: yield tang → Vang giam (co hoi tai chinh)
+    try:
+        tny = yf.Ticker('^TNX').history(period='7d', interval='1d')['Close'].dropna()
+        if len(tny) >= 3:
+            delta = float(tny.iloc[-1] - tny.iloc[-3])   # thay doi trong 3 phien (% point)
+            # +0.20 pp yield → Vang giam ~1% → score = -0.7
+            _gold_cache['tny_s'] = float(np.clip(-delta * 3.5, -1.0, 1.0))
+    except Exception:
+        pass
+    # VIX — safe haven: tang khi thi truong so, Vang huong loi
+    try:
+        vix = yf.Ticker('^VIX').history(period='7d', interval='1d')['Close'].dropna()
+        if len(vix) >= 3:
+            vix_now = float(vix.iloc[-1])
+            vix_chg = (vix_now - float(vix.iloc[-3])) / max(float(vix.iloc[-3]), 1.0)
+            # Level bonus: VIX>25 = panic (mua Vang manh), VIX<15 = risk-on (ban Vang)
+            level = 0.30 if vix_now > 25 else (0.15 if vix_now > 20 else (-0.10 if vix_now < 15 else 0.0))
+            _gold_cache['vix_s'] = float(np.clip(vix_chg * 2.5 + level, -1.0, 1.0))
+    except Exception:
+        pass
+    return _gold_cache
+
+def gold_macro_score():
+    """
+    Phuong trinh lien thi truong danh rieng XAU/USD.
+
+    score = 0.40 * score_dxy + 0.35 * score_tny + 0.15 * score_vix + 0.10 * score_oil
+
+    Nguyen tac:
+      DXY  tang → USD manh → Vang GIAM  (nghich, w=0.40 — trong so lon nhat)
+      10Y  tang → lai suat → Vang GIAM  (nghich, w=0.35 — co hoi tai chinh)
+      VIX  tang → so hai   → Vang TANG  (thuan,  w=0.15 — safe haven)
+      Oil  tang → lam phat → Vang TANG  (thuan nhe, w=0.10 — kenh gian tiep)
+
+    Tra ve: (score[-1,+1], components_dict)
+      +1.0 = macro ung ho manh MUA Vang
+      -1.0 = macro ung ho manh BAN Vang
+    """
+    g = fetch_gold_macro()
+    dxy_s = -g['dxy_raw']    # dao dau: DXY tang → score am (bearish Gold)
+    tny_s =  g['tny_s']      # da dao dau trong fetch
+    vix_s =  g['vix_s']      # cung chieu
+    oil_s =  g['oil_raw']    # Oil tang → bullish Gold
+    score = 0.40 * dxy_s + 0.35 * tny_s + 0.15 * vix_s + 0.10 * oil_s
+    comps = {
+        'dxy': round(dxy_s, 2),
+        'tny': round(tny_s, 2),
+        'vix': round(vix_s, 2),
+        'oil': round(oil_s, 2),
+    }
+    return float(np.clip(score, -1.0, 1.0)), comps
+
 # ── Cong cu nang cap ─────────────────────────────────────────
 def analyze_m15(sym, yf_sym):
     """Phan tich nhanh khung M15 de xac nhan confluence voi H1."""
@@ -605,9 +676,8 @@ def analyze(sym, yf_sym):
         bear_cnt  = sum(-v for v in votes if v < 0)
 
         min_v = cfg['min_votes']
-        # [REGIME ADAPTIVE] NEUTRAL: xu huong chua ro, loc chat hon de tranh tin hieu nhieu
-        # XAU/USD mien tru — vang hoat dong tot o moi regime, khong can siet them
-        if regime == 'NEUTRAL' and sym != 'XAU/USD':
+        # [REGIME ADAPTIVE] NEUTRAL: xu huong chua ro, can them 1 vote de loc nhieu
+        if regime == 'NEUTRAL':
             min_v = max(4, min_v)
 
         if bull_cnt >= min_v:
@@ -627,6 +697,23 @@ def analyze(sym, yf_sym):
         if rsi_contradicts and vote_count < required_on_contradict:
             print(f'  [D] RSI={r_val:.0f} mau thuan {signal} ({vote_count}/5), can {required_on_contradict}/5')
             return None
+
+        # [GOLD MACRO FILTER] Ap dung rieng cho XAU/USD
+        # Kiem tra 4 nhan to macro (DXY, 10Y Yield, VIX, Oil) sau khi co tin hieu ky thuat
+        # Neu macro mau thuan manh → block; mau thuan nhe → tang min_votes them 1
+        gold_macro = None
+        if sym == 'XAU/USD':
+            g_score, g_comps = gold_macro_score()
+            sig_dir       = 1 if signal == 'BUY' else -1
+            macro_align   = g_score * sig_dir   # >0 = ung ho, <0 = mau thuan
+            if macro_align < -0.25:
+                print(f'  [D] Gold macro={g_score:.2f} mau thuan {signal} (DXY={g_comps["dxy"]:+.2f} '
+                      f'10Y={g_comps["tny"]:+.2f} VIX={g_comps["vix"]:+.2f} Oil={g_comps["oil"]:+.2f})')
+                return None
+            if macro_align < 0.0 and vote_count < min(5, min_v + 1):
+                print(f'  [D] Gold macro={g_score:.2f} nhe mau thuan, can them 1 vote')
+                return None
+            gold_macro = {'score': round(g_score, 2), **g_comps}
 
         # Ten cac chi bao dong thuan
         aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
@@ -675,6 +762,7 @@ def analyze(sym, yf_sym):
             'rr1': rr1, 'rr2': rr2,
             'entry_low': entry_low, 'entry_high': entry_high,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
+            'gold_macro': gold_macro,
             'aligned': vote_count,
             'indicators': {
                 'rsi':  rsi_v, 'ema': ema_v, 'macd': round(mac_s, 2),
@@ -997,6 +1085,15 @@ def main():
                               r['phase'], m15_dir, m15_phase)
 
         vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/5 đồng thuận)'
+        gold_macro_line = ''
+        if r.get('gold_macro'):
+            gm = r['gold_macro']
+            icon = '✅' if gm['score'] > 0 else '⚠️'
+            gold_macro_line = (
+                f'{icon} Macro Vàng: DXY {gm["dxy"]:+.2f} | 10Y {gm["tny"]:+.2f} '
+                f'| VIX {gm["vix"]:+.2f} | Oil {gm["oil"]:+.2f}  →  {gm["score"]:+.2f}'
+            )
+
         msg_parts = [
             f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cậy',
             f'<code>{bar}</code>  {conf_10}/10',
@@ -1019,6 +1116,9 @@ def main():
             inval_text,
             '',
         ]
+        if gold_macro_line:
+            msg_parts.append(gold_macro_line)
+            msg_parts.append('')
         if wr_line:
             msg_parts.append(wr_line)
         msg_parts.append(f'⏰ {now_vn.strftime("%H:%M %d/%m/%Y")} | {timeframe_lbl}')
