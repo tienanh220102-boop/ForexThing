@@ -1,5 +1,5 @@
 {
-  "GBP/USD|SELL": 1779057049.881722,
+  "GBP/USD|SELL": 1779071451.301777,
   "USD/JPY|BUY": 1779066064.923412,
   "USD/CAD|BUY": 1779060650.882327,
   "EUR/GBP|SELL": 1779019262.791257,
@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1779069664.923412,
-          "done": false
+          "done": true
         }
       ],
       "indicators": {
@@ -90,6 +90,62 @@
       },
       "regime": "RANGE",
       "hurst": 0.215,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "SELL",
+      "entry_price": 1.33132,
+      "sl": 1.332272799309424,
+      "tp": 1.329414401381152,
+      "sent_at": 1779071451.301777,
+      "message_id": 166,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779075051.301777,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.46,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.2,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "AUD/USD",
+      "signal": "SELL",
+      "entry_price": 0.71292,
+      "sl": 0.7138468405318508,
+      "tp": 0.7110663189362983,
+      "sent_at": 1779071451.301777,
+      "message_id": 167,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779075051.301777,
+          "done": false
+        }
+      ],
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.9,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -0.97
+      },
+      "regime": "RANGE",
+      "hurst": 0.11,
       "aligned": 3,
       "consensus": true
     }
@@ -382,9 +438,16 @@
       "correct": true,
       "date": "2026-05-18",
       "regime": "RANGE"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-18",
+      "regime": "RANGE"
     }
   ],
-  "AUD/USD|SELL": 1778848251.923718,
+  "AUD/USD|SELL": 1779071451.301777,
   "XAG/USD|SELL": 1778853666.940891,
   "EUR/USD|BUY": 1779010248.217127,
   "GBP/USD|BUY": 1779046248.926697,
