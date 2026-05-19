@@ -57,55 +57,56 @@ _DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult':
 # min_votes: so phieu toi thieu (3 = chuan | 4 = yeu cau cao hon cho cap nhieu nhieu)
 PAIR_CONFIG = {
     # === MAJORS ===
-    # EUR/USD: London (07-16) + New York (12-21) — Asian session volume thap
-    'EUR/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+    # EUR/USD: London (07-16) + NY — thuong co cau truc NEUTRAL/TREND trong London
+    'EUR/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # GBP/USD: London + New York — tuong tu EUR/USD
-    'GBP/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 4,
+    # GBP/USD: bien dong cao hon EUR/USD, giu nguong cao hon mot chut
+    'GBP/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.42, 'min_votes': 4,
                   'trade_hours': set(range(7, 21))},
-    # USD/JPY: Tokyo (00-09) + London + NY — JPY active ca Asian session
-    'USD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+    # USD/JPY: BoJ zero-rate → co xu huong carry, Tokyo session ben hon
+    'USD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
-    # USD/CHF: dong tien chau Au — London + NY
-    'USD/CHF':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+    # USD/CHF: safe-haven doi nghich, thuong range hon → nguong vua
+    'USD/CHF':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.42, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # USD/CAD: New York overlap manh (CAD = dau mo) — London cung OK
-    'USD/CAD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+    # USD/CAD: oil-driven → co xu huong ro khi oil di chuyen
+    'USD/CAD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # AUD/USD: Sydney (22-07) + Tokyo (00-09) + London (07-16) — skip NY late (16-22)
-    'AUD/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+    # AUD/USD: commodity-linked, Sydney+Tokyo session co cau truc nhat dinh
+    'AUD/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
                   'trade_hours': set(range(0, 17)) | {22, 23}},
 
-    # === JPY CROSSES ===
-    # EUR/JPY, GBP/JPY: Tokyo (JPY driver) + London (EUR/GBP driver) + NY
-    'EUR/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+    # === JPY CROSSES — bien dong cao, hay tao xu huong nhanh trong Asian session ===
+    # EUR/JPY: EUR driver (London) + JPY driver (Tokyo) → thap de bat ca 2 session
+    'EUR/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
-    'GBP/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4,
+    # GBP/JPY: "The beast" — bien dong nhat, min_votes=4 bu tru hurst_block thap
+    'GBP/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 4,
                   'trade_hours': set(range(0, 21))},
-    # AUD/JPY: carry trade — Sydney + Tokyo la peak, London OK — skip NY late
-    'AUD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+    # AUD/JPY: carry trade thuan tuy — Asian session la core session
+    'AUD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
                   'trade_hours': set(range(0, 17)) | {22, 23}},
-    # CAD/JPY: Tokyo + NY overlap (dau mo + carry trade)
-    'CAD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+    # CAD/JPY: carry trade + oil driver — Tokyo + NY overlap
+    'CAD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
 
     # === KIM LOAI QUY ===
-    # XAU/USD: bat dau truoc London 1h (06 UTC) vi Asian gold center dong cua, London + NY peak
-    'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
+    # XAU/USD: macro-driven, co the cho H thap hon vi news catalyst lam gia phang
+    'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.35, 'min_votes': 3,
                   'trade_hours': set(range(6, 21))},
-    # XAG/USD: tuong tu Vang nhung it Asian session hon
-    'XAG/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4,
+    # XAG/USD: industrial + gold hybrid — cu xu min_votes=4
+    'XAG/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 4,
                   'trade_hours': set(range(7, 21))},
 
     # === DAU MO ===
-    # USOIL/USD (WTI): NYMEX New York (13-21 UTC) + London futures (07-16)
-    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+    # USOIL/USD (WTI): NYMEX-driven, trend ro khi OPEC/supply news
+    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # UKOIL/USD (Brent): ICE London (07-16) + NY overlap
-    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+    # UKOIL/USD (Brent): ICE London — tuong tu WTI nhung London-centric
+    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
 }
-_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
                    'trade_hours': set(range(7, 21))}
 
 SYMBOLS = {
@@ -1068,10 +1069,10 @@ def analyze(sym, yf_sym, now=None):
             return None
 
         # [LOC 3b] ADX filter: chan sideways kep — ca ADX lan Hurst deu yeu
-        # Hurst do tinh ben cau truc | ADX do suc manh thuc te cua gia hien tai
-        # Ca hai yeu = thi truong thuc su i flat, moi tin hieu deu la noise
+        # Nguong 15 (giam tu 20) vi thi truong on dinh van co the cho tin hieu hop le
+        # Chi block khi THUC SU flat: ADX < 15 (rat yeu) VA H < 0.50
         adx_val, pdi, mdi = adx_indicator(highs, lows, closes)
-        if adx_val < 20 and H < 0.50:
+        if adx_val < 15 and H < 0.50:
             print(f'  [D] ADX={adx_val:.1f} + H={H:.3f} ca hai yeu — sideways kep, bo qua')
             return None
 
