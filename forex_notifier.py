@@ -28,9 +28,8 @@ VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
 # Cap nhat moi khi co thay doi lon ve thuat toan (ADX filter, session filter, swing SL)
 LOGIC_VERSION   = '2026-05-19'
-# Gio giao dich hop le (UTC): London 07-16, New York 12-21, overlap 13-16 (tot nhat)
-# Block: 21:00-07:00 UTC — Asian session volume thap, nhieu false signal
-TRADE_HOURS_UTC = set(range(7, 21))  # 07:00 → 20:59 UTC
+# Session per-pair duoc dinh nghia trong PAIR_CONFIG['trade_hours'] (UTC)
+# Xem PAIR_CONFIG ben duoi de biet gio cu the tung cap
 
 # Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
 # w = [rsi, ema, macd, bb, mom]  |  trend_mult: he so Hurst TREND
@@ -57,28 +56,57 @@ _DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult':
 #   Range pairs:    nang block → loc chat hon
 # min_votes: so phieu toi thieu (3 = chuan | 4 = yeu cau cao hon cho cap nhieu nhieu)
 PAIR_CONFIG = {
-    # === MAJORS — hurst_block=0.45: chi trade NEUTRAL/TREND, block RANGE hoan toan ===
-    'EUR/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
-    'GBP/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 4},
-    'USD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
-    'USD/CHF': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
-    'USD/CAD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
-    'AUD/USD': {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3},
-    # === EUR CROSSES ===
-    'EUR/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
-    # === GBP CROSSES ===
-    'GBP/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4},
-    # === JPY CROSSES — carry trade ===
-    'AUD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
-    'CAD/JPY': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
-    # === VANG — Phuong trinh macro rieng: DXY + US10Y Yield + VIX + Oil ===
-    'XAU/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3},
-    'XAG/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4},
+    # === MAJORS ===
+    # EUR/USD: London (07-16) + New York (12-21) — Asian session volume thap
+    'EUR/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(7, 21))},
+    # GBP/USD: London + New York — tuong tu EUR/USD
+    'GBP/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 4,
+                  'trade_hours': set(range(7, 21))},
+    # USD/JPY: Tokyo (00-09) + London + NY — JPY active ca Asian session
+    'USD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(0, 21))},
+    # USD/CHF: dong tien chau Au — London + NY
+    'USD/CHF':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(7, 21))},
+    # USD/CAD: New York overlap manh (CAD = dau mo) — London cung OK
+    'USD/CAD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(7, 21))},
+    # AUD/USD: Sydney (22-07) + Tokyo (00-09) + London (07-16) — skip NY late (16-22)
+    'AUD/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(0, 17)) | {22, 23}},
+
+    # === JPY CROSSES ===
+    # EUR/JPY, GBP/JPY: Tokyo (JPY driver) + London (EUR/GBP driver) + NY
+    'EUR/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(0, 21))},
+    'GBP/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4,
+                  'trade_hours': set(range(0, 21))},
+    # AUD/JPY: carry trade — Sydney + Tokyo la peak, London OK — skip NY late
+    'AUD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(0, 17)) | {22, 23}},
+    # CAD/JPY: Tokyo + NY overlap (dau mo + carry trade)
+    'CAD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(0, 21))},
+
+    # === KIM LOAI QUY ===
+    # XAU/USD: bat dau truoc London 1h (06 UTC) vi Asian gold center dong cua, London + NY peak
+    'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
+                  'trade_hours': set(range(6, 21))},
+    # XAG/USD: tuong tu Vang nhung it Asian session hon
+    'XAG/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 4,
+                  'trade_hours': set(range(7, 21))},
+
     # === DAU MO ===
-    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
-    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3},
+    # USOIL/USD (WTI): NYMEX New York (13-21 UTC) + London futures (07-16)
+    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(7, 21))},
+    # UKOIL/USD (Brent): ICE London (07-16) + NY overlap
+    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.45, 'min_votes': 3,
+                  'trade_hours': set(range(7, 21))},
 }
-_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3}
+_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
+                   'trade_hours': set(range(7, 21))}
 
 SYMBOLS = {
     # Majors (6)
@@ -1431,17 +1459,32 @@ def main():
     print('\n=== Kiem tra xac nhan lenh cu ===')
     run_validations(state, now)
 
-    # [SESSION FILTER] Chi quet tin hieu moi trong London + New York session
-    # Asian session (21:00-07:00 UTC): volume thap, spread rong, nhieu false signal
-    if now.hour not in TRADE_HOURS_UTC:
-        print(f'\n=== Ngoai gio giao dich ({now.hour}:00 UTC) — validation xong, khong quet moi ===')
+    # [SESSION FILTER] Per-pair: moi cap co trade_hours rieng trong PAIR_CONFIG
+    # Chi quet cap nao co now.hour nam trong trade_hours cua cap do
+    active_pairs = {
+        sym for sym in SYMBOLS
+        if now.hour in PAIR_CONFIG.get(sym, _DEFAULT_CONFIG).get('trade_hours', set(range(7, 21)))
+    }
+    if not active_pairs:
+        print(f'\n=== Tat ca cap ngoai session ({now.hour}:xx UTC) — khong quet moi ===')
         save_state(state)
         return
 
     # Buoc 3: quet tin hieu moi
-    print(f'\n=== Forex Scan v4 — {now_vn.strftime("%Y-%m-%d %H:%M")} (Gio VN) | {now.hour}:xx UTC ===')
+    session_label = (
+        'Asian' if now.hour < 7 or now.hour >= 21 else
+        'London' if now.hour < 12 else
+        'NY' if now.hour < 17 else 'London+NY'
+    )
+    print(f'\n=== Forex Scan v4 — {now_vn.strftime("%Y-%m-%d %H:%M")} (Gio VN) | '
+          f'{now.hour}:xx UTC ({session_label}) | {len(active_pairs)}/{len(SYMBOLS)} cap ===')
 
     for sym, yf_sym in SYMBOLS.items():
+        cfg_check = PAIR_CONFIG.get(sym, _DEFAULT_CONFIG)
+        if now.hour not in cfg_check.get('trade_hours', set(range(7, 21))):
+            print(f'Phan tich {sym}... ngoai session, bo qua')
+            continue
+
         print(f'Phan tich {sym}...', end=' ', flush=True)
         r = analyze(sym, yf_sym, now)
 
