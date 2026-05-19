@@ -531,7 +531,8 @@ def fetch_gold_macro():
             vix_chg = (vix_now - float(vix.iloc[-3])) / max(float(vix.iloc[-3]), 1.0)
             # Level bonus: VIX>25 = panic (mua Vang manh), VIX<15 = risk-on (ban Vang)
             level = 0.30 if vix_now > 25 else (0.15 if vix_now > 20 else (-0.10 if vix_now < 15 else 0.0))
-            _gold_cache['vix_s'] = float(np.clip(vix_chg * 2.5 + level, -1.0, 1.0))
+            _gold_cache['vix_s']   = float(np.clip(vix_chg * 2.5 + level, -1.0, 1.0))
+            _gold_cache['vix_raw'] = vix_now   # luu gia tri goc de Fear&Greed fallback
     except Exception:
         pass
     return _gold_cache
@@ -682,12 +683,32 @@ def macro_score(sym):
 
 # ── Fundamental Intelligence Layer ───────────────────────────
 def _fetch_rss_headlines(url):
-    """Lay headlines tu RSS feed, tra ve list chuoi lowercase."""
+    """Lay headlines tu RSS feed (RSS 2.0 + Atom), tra ve list chuoi lowercase."""
     try:
         import xml.etree.ElementTree as ET
-        r = requests.get(url, timeout=8, headers={'User-Agent': 'Mozilla/5.0'})
+        headers = {
+            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                           'AppleWebKit/537.36 (KHTML, like Gecko) '
+                           'Chrome/124.0 Safari/537.36'),
+            'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+        }
+        r = requests.get(url, timeout=10, headers=headers)
+        if r.status_code != 200 or not r.content:
+            return []
         root = ET.fromstring(r.content)
-        return [item.findtext('title', '').lower() for item in root.findall('.//item')][:40]
+        # RSS 2.0: <item><title>
+        items = root.findall('.//item')
+        if items:
+            return [i.findtext('title', '').lower() for i in items][:40]
+        # Atom: <entry><title>
+        ns = {'atom': 'http://www.w3.org/2005/Atom'}
+        entries = root.findall('.//atom:entry', ns) or root.findall('.//{http://www.w3.org/2005/Atom}entry')
+        if entries:
+            return [
+                (e.findtext('{http://www.w3.org/2005/Atom}title') or '').lower()
+                for e in entries
+            ][:40]
+        return []
     except Exception:
         return []
 
@@ -719,7 +740,16 @@ def fetch_fundamental(now):
                 },
                 timeout=10
             )
-            for ev in r.json().get('result', {}).get('list', []):
+            # Twelve Data doi khi tra ve JSON bi hong (null prefix, double-object...)
+            # Dung text parse truc tiep, fallback sang {} neu loi
+            try:
+                raw_data = r.json()
+            except Exception:
+                import re as _re
+                m = _re.search(r'\{.*\}', r.text, _re.DOTALL)
+                raw_data = json.loads(m.group()) if m else {}
+            events_list = raw_data.get('result', {}).get('list', []) if isinstance(raw_data, dict) else []
+            for ev in events_list:
                 try:
                     ev_dt = datetime.strptime(
                         f'{ev.get("date","")} {ev.get("time","00:00:00")}',
@@ -740,9 +770,17 @@ def fetch_fundamental(now):
     headlines = []
     for url in [
         'https://feeds.reuters.com/reuters/businessNews',
+        'https://feeds.reuters.com/reuters/topNews',
         'https://rss.fxstreet.com/news',
+        'https://forexlive.com/feed/',
+        'https://www.dailyfx.com/feeds/all',
     ]:
-        headlines.extend(_fetch_rss_headlines(url))
+        h = _fetch_rss_headlines(url)
+        if h:
+            headlines.extend(h)
+            print(f'  [RSS] {len(h)} headlines tu {url.split("/")[2]}')
+    if not headlines:
+        print('  [RSS] Khong lay duoc headlines tu bat ky feed nao')
 
     currency_sentiment = {}
     for ccy, keywords in _CURRENCY_KEYWORDS.items():
@@ -757,21 +795,50 @@ def fetch_fundamental(now):
             score += bull - bear
         currency_sentiment[ccy] = float(np.clip(score / max(len(relevant), 1) / 2, -1.0, 1.0))
 
-    # --- 3. Fear & Greed Index (CNN) ---
+    # --- 3. Fear & Greed Index (CNN) + VIX fallback ---
     fear_greed = {'value': 50.0, 'label': 'Neutral'}
-    try:
-        r = requests.get(
-            'https://production.dataviz.cnn.io/index/fearandgreed/graphdata/',
-            timeout=8,
-            headers={'User-Agent': 'Mozilla/5.0', 'Referer': 'https://www.cnn.com/'},
-        )
-        fg = r.json()['fear_and_greed']
-        fear_greed = {
-            'value': float(fg['score']),
-            'label': fg['rating'].replace('_', ' ').title(),
-        }
-    except Exception as e:
-        print(f'  [Fundamental] Fear&Greed loi: {e}')
+    _fg_ok = False
+    for _fg_url in [
+        'https://production.dataviz.cnn.io/index/fearandgreed/graphdata/',
+        'https://production.dataviz.cnn.io/index/fearandgreed/graphdata',
+    ]:
+        try:
+            r = requests.get(
+                _fg_url, timeout=8,
+                headers={
+                    'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                                   'AppleWebKit/537.36 Chrome/124.0 Safari/537.36'),
+                    'Referer': 'https://www.cnn.com/markets/fear-and-greed',
+                    'Accept': 'application/json, */*',
+                },
+            )
+            if r.status_code == 200 and r.text.strip():
+                fg = r.json()['fear_and_greed']
+                fear_greed = {
+                    'value': float(fg['score']),
+                    'label': fg['rating'].replace('_', ' ').title(),
+                }
+                _fg_ok = True
+                break
+        except Exception:
+            pass
+    if not _fg_ok:
+        # Fallback: uoc luong Fear&Greed tu VIX (da fetch truoc trong gold_macro)
+        _vix_raw = _gold_cache.get('vix_raw', 20.0) if _gold_cache else 20.0
+        if _vix_raw > 35:
+            fear_greed = {'value': 10.0, 'label': 'Extreme Fear'}
+        elif _vix_raw > 28:
+            fear_greed = {'value': 25.0, 'label': 'Fear'}
+        elif _vix_raw > 22:
+            fear_greed = {'value': 38.0, 'label': 'Fear'}
+        elif _vix_raw < 12:
+            fear_greed = {'value': 85.0, 'label': 'Extreme Greed'}
+        elif _vix_raw < 16:
+            fear_greed = {'value': 70.0, 'label': 'Greed'}
+        else:
+            fear_greed = {'value': 50.0, 'label': 'Neutral'}
+        print(f'  [Fundamental] Fear&Greed: CNN loi — dung VIX={_vix_raw:.0f} '
+              f'→ {fear_greed["value"]:.0f} ({fear_greed["label"]})')
 
     _fundamental_cache = {
         'calendar':   calendar_events,
