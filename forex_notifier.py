@@ -1006,9 +1006,8 @@ def analyze(sym, yf_sym, now=None):
         bear_cnt  = sum(-v for v in votes if v < 0)
 
         min_v = cfg['min_votes']
-        # [REGIME ADAPTIVE] NEUTRAL: xu huong chua ro, can them 1 vote de loc nhieu
-        if regime == 'NEUTRAL':
-            min_v = max(4, min_v)
+        # NEUTRAL da duoc xu ly bang hurst_block (H>=0.45) + ADX filter
+        # Khong tang min_votes — tranh block toan bo thi truong NEUTRAL
         # [TANG 1 — SOFT] Su kien medium-impact sap xay ra: tang min_votes them 1 de an toan
         if cal_status == 'SOFT':
             min_v = min(5, min_v + 1)
@@ -1024,12 +1023,13 @@ def analyze(sym, yf_sym, now=None):
             print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/5 phieu')
             return None
 
-        # [LOC 4] RSI mau thuan voi huong tin hieu → can it nhat 4/5 phieu
-        # (co the cao hon neu min_votes cua cap da la 4)
-        rsi_contradicts = (rsi_v > 0 and signal == 'SELL') or (rsi_v < 0 and signal == 'BUY')
+        # [LOC 4] RSI mau thuan CUC DOAN voi huong tin hieu → can 4/5 phieu
+        # Chi check khi RSI thuc su qua ban (<35) hoac qua mua (>65)
+        # Nguong 45/55 qua nhay — RSI=44 khong phai "qua ban" thuc su
+        rsi_contradicts = (r_val < 35 and signal == 'SELL') or (r_val > 65 and signal == 'BUY')
         required_on_contradict = max(4, min_v)
         if rsi_contradicts and vote_count < required_on_contradict:
-            print(f'  [D] RSI={r_val:.0f} mau thuan {signal} ({vote_count}/5), can {required_on_contradict}/5')
+            print(f'  [D] RSI={r_val:.0f} cuc doan mau thuan {signal} ({vote_count}/5), can {required_on_contradict}/5')
             return None
 
         # [PAIR MACRO] macro rieng tung cap — 100% cap, zero API (tai su dung _gold_cache)
@@ -1038,11 +1038,11 @@ def analyze(sym, yf_sym, now=None):
         if m_comps:
             sig_dir     = 1 if signal == 'BUY' else -1
             macro_align = m_score * sig_dir
-            if macro_align < -0.25:
+            if macro_align < -0.30:
                 print(f'  [D] Macro={m_score:.2f} mau thuan {signal} — {m_comps}')
                 return None
-            if macro_align < 0.0 and vote_count < min(5, min_v + 1):
-                print(f'  [D] Macro={m_score:.2f} nhe mau thuan, can them 1 vote')
+            if macro_align < -0.12 and vote_count < min(5, min_v + 1):
+                print(f'  [D] Macro={m_score:.2f} mau thuan ro, can them 1 vote')
                 return None
             pair_macro = {'score': round(m_score, 2), **m_comps}
 
@@ -1077,9 +1077,9 @@ def analyze(sym, yf_sym, now=None):
         im_aligned  = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
         im_bonus    = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
-        # Fourier cycle: cung chieu +3%, nguoc chieu manh -5% (chu ky rat kha tin trong RANGE)
+        # Fourier cycle: cung chieu +3% tin cay (chi bonus, khong penalty — tranh block qua nhieu)
         fourier_align = fourier_s * (1 if signal == 'BUY' else -1)
-        fourier_bonus = 3 if fourier_align > 0.3 else (-5 if fourier_align < -0.3 else 0)
+        fourier_bonus = 3 if fourier_align > 0.3 else 0
         conf = min(95, base_conf + im_bonus + regime_bonus + fourier_bonus)
 
         # Wyckoff phase
