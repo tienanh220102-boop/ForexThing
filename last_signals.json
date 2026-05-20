@@ -8,66 +8,7 @@
   "XAG/USD|BUY": 1778712200.458527,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/CHF",
-      "signal": "BUY",
-      "entry_price": 0.79045,
-      "sl": 0.78925,
-      "tp": 0.7928499999999999,
-      "sent_at": 1779280257.510826,
-      "message_id": 186,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779283857.510826,
-          "done": false
-        }
-      ],
-      "expires_at": 1779305457.510826,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.09,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.47
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.494,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
-      "sym": "EUR/JPY",
-      "signal": "SELL",
-      "entry_price": 184.43847,
-      "sl": 184.6433353052969,
-      "tp": 184.0287393894062,
-      "sent_at": 1779280257.510826,
-      "message_id": 187,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779283857.510826,
-          "done": false
-        }
-      ],
-      "expires_at": 1779305457.510826,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.18,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.426,
-      "aligned": 2,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779280257.510826,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779273054.142371,
@@ -440,6 +381,20 @@
       "correct": true,
       "date": "2026-05-20",
       "regime": "TREND"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-20",
+      "regime": "NEUTRAL"
+    },
+    {
+      "sym": "EUR/JPY",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-20",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1779246063.710942,
