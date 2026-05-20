@@ -137,6 +137,7 @@ _im_cache          = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
 _gold_cache        = {}   # Cache macro data rieng cho XAU/USD (TNX, VIX)
 _fundamental_cache = {}   # Cache Fundamental Intelligence Layer (Calendar/Sentiment/F&G)
 _price_history     = {}   # Lich su gia tich luy — load tu file, save cuoi phien
+_d1_cache          = {}   # D1 OHLCV cache per pair per session (180 ngay daily)
 
 PRICE_HISTORY_FILE = 'price_history.json'
 MAX_HISTORY_BARS   = 720  # 30 ngay H1 moi cap (720 nen × 1h = 720h = 30 ngay)
@@ -665,6 +666,186 @@ def macro_score(sym):
     return float(np.clip(s, -1.0, 1.0)), c
 
 
+# ── Multi-Timeframe Analysis ─────────────────────────────────
+
+def fetch_d1_data(sym, yf_sym):
+    """
+    Lay du lieu D1 (daily) — 180 ngay, cache per session.
+    Goi 1 lan duy nhat moi phien de tiet kiem API.
+    """
+    global _d1_cache
+    if sym in _d1_cache:
+        return _d1_cache[sym]
+    try:
+        df = yf.Ticker(yf_sym).history(period='180d', interval='1d')
+        if df is None or len(df) < 20:
+            _d1_cache[sym] = None
+            return None
+        closes = list(df['Close'].dropna())
+        highs  = list(df['High'].dropna())
+        lows   = list(df['Low'].dropna())
+        n = min(len(closes), len(highs), len(lows))
+        _d1_cache[sym] = {'closes': closes[:n], 'highs': highs[:n], 'lows': lows[:n]}
+        return _d1_cache[sym]
+    except Exception as e:
+        print(f'  [D1] fetch loi {sym}: {e}')
+        _d1_cache[sym] = None
+        return None
+
+
+def d1_trend(sym, yf_sym):
+    """
+    Xu huong Daily (D1) — bo loc macro quan trong nhat.
+    Nguyen tac: KHONG bao gio danh nguoc xu huong D1 tru khi tin hieu rat manh.
+
+    Returns: (direction: 'BULL'|'BEAR'|'NEUTRAL', score: float, details: dict)
+      score > 0.2  = BULL  (xu huong tang ngay)
+      score < -0.2 = BEAR  (xu huong giam ngay)
+      else         = NEUTRAL
+    """
+    d1 = fetch_d1_data(sym, yf_sym)
+    if d1 is None:
+        return 'NEUTRAL', 0.0, {}
+
+    closes = d1['closes']
+    highs  = d1['highs']
+    lows   = d1['lows']
+    price  = closes[-1]
+
+    # EMA 20/50 daily — xu huong trung va dai han
+    e20 = ema(closes, 20)
+    e50 = ema(closes, 50)
+    ema_s = 1 if (price > e20 > e50) else (-1 if (price < e20 < e50) else 0)
+
+    # Market structure D1: so sanh 15 nen gan nhat vs 15 nen truoc do
+    # HH + HL = uptrend structure | LH + LL = downtrend structure
+    n = min(len(closes), 30)
+    mid = n // 2
+    if n > mid and mid > 0:
+        prev_high = max(highs[-n:-mid])
+        curr_high = max(highs[-mid:])
+        prev_low  = min(lows[-n:-mid])
+        curr_low  = min(lows[-mid:])
+        struct_bull = (curr_high > prev_high) and (curr_low > prev_low)
+        struct_bear = (curr_high < prev_high) and (curr_low < prev_low)
+        struct_s = 1 if struct_bull else (-1 if struct_bear else 0)
+    else:
+        struct_s = 0
+
+    # RSI D1 — bias tong the
+    rsi_d = rsi(closes)
+    rsi_s = 1 if rsi_d < 45 else (-1 if rsi_d > 55 else 0)
+
+    score = ema_s * 0.50 + struct_s * 0.35 + rsi_s * 0.15
+    direction = 'BULL' if score > 0.20 else ('BEAR' if score < -0.20 else 'NEUTRAL')
+    details = {
+        'ema': ema_s, 'struct': struct_s, 'rsi': round(rsi_d),
+        'e20': round(e20, 5), 'e50': round(e50, 5), 'score': round(score, 2),
+    }
+    return direction, float(score), details
+
+
+def d1_key_levels(sym, yf_sym, signal, price):
+    """
+    Tim muc khang cu / ho tro gan nhat tren D1 lam TP thuc te.
+    Dieu nay quan trong hon ATR co dinh:
+      - TP tai resistance thuc → co kha nang chot loi thuc su
+      - TP tai ATR co dinh → co the bi block truoc khi chay
+
+    BUY: tim khang cu gan nhat phia TREN gia (it nhat 0.5% tren)
+    SELL: tim ho tro gan nhat phia DUOI gia (it nhat 0.5% duoi)
+    Returns: float (muc key level) hoac None neu khong tim duoc.
+    """
+    d1 = fetch_d1_data(sym, yf_sym)
+    if d1 is None:
+        return None
+
+    highs = d1['highs']
+    lows  = d1['lows']
+
+    if signal == 'BUY':
+        # Khang cu = swing high D1 phia tren gia, cach it nhat 0.5%
+        candidates = [h for h in highs[-90:] if h > price * 1.005]
+        return min(candidates) if candidates else None
+    else:
+        # Ho tro = swing low D1 phia duoi gia, cach it nhat 0.5%
+        candidates = [l for l in lows[-90:] if l < price * 0.995]
+        return max(candidates) if candidates else None
+
+
+def resample_to_h4(long_closes, long_highs, long_lows):
+    """
+    Resample H1 sang H4 bang cach nhom 4 nen lien tiep.
+    720 H1 bars → 180 H4 bars (30 ngay H4).
+    Bo nen H4 dang hinh (nhom cuoi chua du 4 nen).
+    """
+    n = len(long_closes)
+    if n < 8:
+        return [], [], []
+
+    # Bo nhom dau neu chua du 4 nen
+    remainder = n % 4
+    h4_c, h4_h, h4_l = [], [], []
+
+    for i in range(remainder, n, 4):
+        grp_c = long_closes[i:i+4]
+        grp_h = long_highs[i:i+4]
+        grp_l = long_lows[i:i+4]
+        if len(grp_c) == 4:
+            h4_c.append(grp_c[-1])    # Close nen H1 cuoi = close H4
+            h4_h.append(max(grp_h))   # High cao nhat trong 4 nen
+            h4_l.append(min(grp_l))   # Low thap nhat trong 4 nen
+
+    return h4_c, h4_h, h4_l
+
+
+def h4_trend(long_closes, long_highs, long_lows):
+    """
+    Xu huong H4 (4-giờ) — xu huong trung gian xac nhan H1.
+    Resample tu long_closes (720 H1 bars → 180 H4 bars).
+
+    Returns: (direction: 'BULL'|'BEAR'|'NEUTRAL', score: float, details: dict)
+    """
+    h4_c, h4_h, h4_l = resample_to_h4(long_closes, long_highs, long_lows)
+    if len(h4_c) < 20:
+        return 'NEUTRAL', 0.0, {}
+
+    price = h4_c[-1]
+    # EMA 9/21 tren H4 (nhanh hon 20/50, phu hop voi H4)
+    e9  = ema(h4_c, 9)
+    e21 = ema(h4_c, 21)
+    ema_s = 1 if (price > e9 > e21) else (-1 if (price < e9 < e21) else 0)
+
+    # Market structure H4
+    n = min(len(h4_c), 20)
+    mid = n // 2
+    if n > mid and mid > 0:
+        ph = max(h4_h[-n:-mid])
+        ch = max(h4_h[-mid:])
+        pl = min(h4_l[-n:-mid])
+        cl = min(h4_l[-mid:])
+        struct_s = 1 if (ch > ph and cl > pl) else (-1 if (ch < ph and cl < pl) else 0)
+    else:
+        struct_s = 0
+
+    # Momentum H4 (5 nen H4 = 20 nen H1 = xu huong 20 gio)
+    mom_h4 = momentum(h4_c, n=5)
+    mom_s  = 1 if mom_h4 >= 0.2 else (-1 if mom_h4 <= -0.2 else 0)
+
+    # MACD H4
+    mac_h4 = macd(h4_c)
+    mac_s  = 1 if mac_h4 > 0.09 else (-1 if mac_h4 < -0.09 else 0)
+
+    score = ema_s * 0.40 + struct_s * 0.30 + mom_s * 0.20 + mac_s * 0.10
+    direction = 'BULL' if score > 0.20 else ('BEAR' if score < -0.20 else 'NEUTRAL')
+    details = {
+        'ema': ema_s, 'struct': struct_s, 'mom': round(mom_h4, 2),
+        'macd': round(mac_h4, 2), 'score': round(score, 2),
+        'bars': len(h4_c),
+    }
+    return direction, float(score), details
+
+
 # ── Fundamental Intelligence Layer ───────────────────────────
 def _fetch_rss_headlines(url):
     """Lay headlines tu RSS feed (RSS 2.0 + Atom), tra ve list chuoi lowercase."""
@@ -1138,6 +1319,34 @@ def analyze(sym, yf_sym, now=None):
         aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
                         if (v > 0 and signal == 'BUY') or (v < 0 and signal == 'SELL')]
 
+        # [MTF — D1] Daily trend filter — QUAN TRONG NHAT
+        # Nguyen tac: tin hieu H1 phai di cung chieu voi xu huong D1
+        d1_dir, d1_score_val, d1_det = d1_trend(sym, yf_sym)
+        d1_aligned = (signal == 'BUY'  and d1_dir == 'BULL') or \
+                     (signal == 'SELL' and d1_dir == 'BEAR')
+        d1_opposed = (signal == 'BUY'  and d1_dir == 'BEAR') or \
+                     (signal == 'SELL' and d1_dir == 'BULL')
+
+        # [MTF — H4] Intermediate trend — xac nhan trung gian
+        h4_dir, h4_score_val, h4_det = h4_trend(long_closes, long_highs, long_lows)
+        h4_aligned = (signal == 'BUY'  and h4_dir == 'BULL') or \
+                     (signal == 'SELL' and h4_dir == 'BEAR')
+        h4_opposed = (signal == 'BUY'  and h4_dir == 'BEAR') or \
+                     (signal == 'SELL' and h4_dir == 'BULL')
+
+        # Block: ca D1 lan H4 deu nguoc → danh nguoc 2 timeframe = rui ro kep
+        if d1_opposed and h4_opposed:
+            print(f'  [D] D1={d1_dir} + H4={h4_dir} ca hai nguoc voi {signal} — rui ro kep, bo qua')
+            return None
+
+        # Block: D1 nguoc va khong du phieu manh de override
+        # Countertrend D1 can 4/5 de toi thieu co momentum rieng manh
+        if d1_opposed and vote_count < 4:
+            print(f'  [D] D1={d1_dir} nguoc voi {signal} — can 4/5 phieu ({vote_count}/5 hien tai)')
+            return None
+        if d1_opposed:
+            print(f'  [!] D1={d1_dir} nguoc voi {signal} ({vote_count}/5 manh) — tiep tuc, them canh bao')
+
         # --- Do tin cay ---
         # Nen tang: 3/5=60%, 4/5=75%, 5/5=90%
         base_conf = {3: 60, 4: 75, 5: 90}.get(vote_count, 60)
@@ -1145,9 +1354,12 @@ def analyze(sym, yf_sym, now=None):
         im_aligned   = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
         im_bonus     = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
-        # History bonus: neu co nhieu data (>200 bars) → Hurst on dinh hon → +2% tin cay
+        # History bonus: neu co nhieu data (>200 bars) → Hurst on dinh hon
         history_bonus = 2 if ln >= 200 else 0
-        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus)
+        # MTF bonus: tin hieu cung chieu voi khung cao hon → tin cay cao hon
+        mtf_bonus = (6 if d1_aligned else (-3 if d1_opposed else 0)) + \
+                    (4 if h4_aligned else (-2 if h4_opposed else 0))
+        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus)
 
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
@@ -1159,17 +1371,44 @@ def analyze(sym, yf_sym, now=None):
         swing_dist = (price - swing_low) if signal == 'BUY' else (swing_high - price)
         # Dam bao SL it nhat bang 1.5×ATR (tranh SL qua chat bi stop-hunt)
         sl_dist  = max(atr_val * 1.5, swing_dist)
-        tp_dist  = sl_dist * 2.0   # RR 1:2
-        tp2_dist = sl_dist * 3.0   # RR 1:3
+        tp_dist  = sl_dist * 2.0   # RR 1:2 mac dinh
+        tp2_dist = sl_dist * 3.0   # RR 1:3 mac dinh
         if signal == 'BUY':
             sl = price - sl_dist; tp = price + tp_dist; tp2 = price + tp2_dist
         else:
             sl = price + sl_dist; tp = price - tp_dist; tp2 = price - tp2_dist
+
+        # Dieu chinh TP theo D1 key level (khang cu/ho tro thuc te)
+        # TP tai level thuc → co kha nang chot loi cao hon TP ATR co dinh
+        d1_tp_level = d1_key_levels(sym, yf_sym, signal, price)
+        d1_level_used = False
+        if d1_tp_level is not None:
+            if signal == 'BUY' and price < d1_tp_level < tp:
+                # D1 resistance gan hon TP hien tai → thu hep TP1 vao truoc resistance
+                new_tp = d1_tp_level * 0.998   # Chot 0.2% truoc resistance (truot lenh)
+                new_rr = (new_tp - price) / sl_dist if sl_dist > 0 else 0
+                if new_rr >= 1.2:              # Chi thu hep neu RR van >= 1:1.2
+                    tp        = new_tp
+                    tp2       = d1_tp_level    # TP2 chinh xac tai resistance
+                    tp_dist   = tp - price
+                    tp2_dist  = tp2 - price
+                    d1_level_used = True
+            elif signal == 'SELL' and tp < d1_tp_level < price:
+                # D1 support gan hon TP hien tai → thu hep TP1 vao truoc support
+                new_tp = d1_tp_level * 1.002
+                new_rr = (price - new_tp) / sl_dist if sl_dist > 0 else 0
+                if new_rr >= 1.2:
+                    tp        = new_tp
+                    tp2       = d1_tp_level
+                    tp_dist   = price - tp
+                    tp2_dist  = price - tp2
+                    d1_level_used = True
+
         sl_pct  = round(sl_dist  / price * 100, 4)
         tp_pct  = round(tp_dist  / price * 100, 4)
         tp2_pct = round(tp2_dist / price * 100, 4)
-        rr1     = round(tp_dist  / sl_dist, 1)
-        rr2     = round(tp2_dist / sl_dist, 1)
+        rr1     = round(tp_dist  / sl_dist, 1) if sl_dist > 0 else 0
+        rr2     = round(tp2_dist / sl_dist, 1) if sl_dist > 0 else 0
 
         entry_low  = price - atr_val * 0.2
         entry_high = price + atr_val * 0.2
@@ -1184,6 +1423,14 @@ def analyze(sym, yf_sym, now=None):
             'entry_low': entry_low, 'entry_high': entry_high,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
             'history_bars': ln,
+            'mtf': {
+                'd1_dir':   d1_dir,   'd1_score': d1_det.get('score', 0),
+                'd1_ema':   d1_det.get('ema', 0), 'd1_struct': d1_det.get('struct', 0),
+                'h4_dir':   h4_dir,   'h4_score': h4_det.get('score', 0),
+                'h4_bars':  h4_det.get('bars', 0),
+                'd1_level': round(d1_tp_level, 5) if d1_tp_level else None,
+                'd1_level_used': d1_level_used,
+            },
             'pair_macro': pair_macro,
             'fundamental': {
                 'sentiment':  round(sent_score, 2),
@@ -1419,7 +1666,9 @@ def main():
     state  = load_state()
     sent   = 0
 
-    # Buoc 0: load lich su gia tich luy
+    # Buoc 0: load lich su gia tich luy + reset cache phien
+    global _d1_cache
+    _d1_cache = {}   # Reset D1 cache moi phien (du lieu fresh)
     print('=== Tai lich su gia ===')
     load_price_history()
 
@@ -1535,6 +1784,20 @@ def main():
                               r['phase'], m15_dir, m15_phase)
 
         vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/5 đồng thuận)'
+
+        # MTF summary line
+        mtf = r.get('mtf', {})
+        d1_icon = '✅' if mtf.get('d1_dir') == ('BULL' if r['signal']=='BUY' else 'BEAR') else \
+                  ('⚠️' if mtf.get('d1_dir') == 'NEUTRAL' else '❌')
+        h4_icon = '✅' if mtf.get('h4_dir') == ('BULL' if r['signal']=='BUY' else 'BEAR') else \
+                  ('⚠️' if mtf.get('h4_dir') == 'NEUTRAL' else '❌')
+        mtf_line = (f'📐 MTF: D1 {d1_icon}{mtf.get("d1_dir","?")}({mtf.get("d1_score",0):+.2f}) '
+                    f'| H4 {h4_icon}{mtf.get("h4_dir","?")}({mtf.get("h4_score",0):+.2f}) '
+                    f'| {mtf.get("h4_bars",0)} bars H4')
+        if mtf.get('d1_level_used') and mtf.get('d1_level'):
+            d1_lv = mtf['d1_level']
+            mtf_line += f'\n🏁 TP nhắm D1 key level: {fmt_price(r["sym"], d1_lv)}'
+
         pair_macro_line = ''
         if r.get('pair_macro'):
             pm   = r['pair_macro']
@@ -1569,7 +1832,8 @@ def main():
             f'<code>{bar}</code>  {conf_10}/10',
             '',
             f'🗳 {vote_bar}',
-            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f} | {r.get("history_bars", 0)} bars)',
+            f'📊 H1: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f} | {r.get("history_bars", 0)} bars)',
+            mtf_line,
             '',
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
