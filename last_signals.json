@@ -8,66 +8,7 @@
   "XAG/USD|BUY": 1778712200.458527,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 158.98998,
-      "sl": 158.8030428600618,
-      "tp": 159.36385427987645,
-      "sent_at": 1779256863.12655,
-      "message_id": 178,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779260463.12655,
-          "done": false
-        }
-      ],
-      "expires_at": 1779282063.12655,
-      "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": -0.89,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.47
-      },
-      "regime": "RANGE",
-      "hurst": 0.408,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "entry_price": 4472.50927,
-      "sl": 4507.34698,
-      "tp": 4422.226702148438,
-      "sent_at": 1779256863.12655,
-      "message_id": 179,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779260463.12655,
-          "done": false
-        }
-      ],
-      "expires_at": 1779282063.12655,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.09,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.47
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.52,
-      "aligned": 2,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779067852.924825,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779190253.896752,
@@ -412,6 +353,20 @@
       "correct": true,
       "date": "2026-05-20",
       "regime": "RANGE"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-20",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-20",
+      "regime": "NEUTRAL"
     }
   ],
   "AUD/USD|SELL": 1779246063.710942,
