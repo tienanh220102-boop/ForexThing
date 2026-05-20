@@ -850,6 +850,67 @@ def h4_trend(long_closes, long_highs, long_lows):
     return direction, float(score), details
 
 
+def find_sr_levels(highs, lows, closes, lookback=60, cluster_pct=0.003):
+    """
+    Phat hien cac muc ho tro (S) va khang cu (R) tu lich su gia.
+
+    Thuat toan:
+      1. Tim pivot high/low (2-bar confirmation moi phia)
+      2. Cluster cac muc gia gan nhau (trong pham vi cluster_pct)
+      3. Chi giu cluster co it nhat 2 lan cham (confirmed level)
+      4. Phan loai S (duoi gia hien tai) / R (tren gia hien tai)
+
+    Returns: list of {'price': float, 'type': 'S'|'R', 'touches': int}
+             sap xep theo khoang cach gan nhat voi gia hien tai
+    """
+    n = min(len(highs), len(lows), len(closes), lookback + 4)
+    if n < 10:
+        return []
+
+    h = highs[-n:]
+    l = lows[-n:]
+    price = closes[-1]
+    raw_levels = []
+
+    # Tim pivot high (2-bar confirmation moi phia: phai cao hon 2 nen trai/phai)
+    for i in range(2, len(h) - 2):
+        if h[i] >= h[i-1] and h[i] >= h[i-2] and h[i] > h[i+1] and h[i] > h[i+2]:
+            raw_levels.append(h[i])
+
+    # Tim pivot low (2-bar confirmation moi phia)
+    for i in range(2, len(l) - 2):
+        if l[i] <= l[i-1] and l[i] <= l[i-2] and l[i] < l[i+1] and l[i] < l[i+2]:
+            raw_levels.append(l[i])
+
+    if not raw_levels:
+        return []
+
+    # Cluster cac level gan nhau (trong cluster_pct %) — nhom thanh 1 zone
+    raw_levels.sort()
+    clusters = []
+    current_cluster = [raw_levels[0]]
+    for lv in raw_levels[1:]:
+        if (lv - current_cluster[0]) / current_cluster[0] <= cluster_pct:
+            current_cluster.append(lv)
+        else:
+            clusters.append(current_cluster)
+            current_cluster = [lv]
+    clusters.append(current_cluster)
+
+    # Tao level cuoi: gia trung binh cluster, can it nhat 2 lan cham
+    result = []
+    for cluster in clusters:
+        if len(cluster) < 2:
+            continue
+        avg_price  = sum(cluster) / len(cluster)
+        level_type = 'R' if avg_price > price else 'S'
+        result.append({'price': avg_price, 'type': level_type, 'touches': len(cluster)})
+
+    # Sap xep theo khoang cach gan nhat (level gan gia hien tai = quan trong nhat)
+    result.sort(key=lambda x: abs(x['price'] - price))
+    return result
+
+
 # ── Fundamental Intelligence Layer ───────────────────────────
 def _fetch_rss_headlines(url):
     """Lay headlines tu RSS feed (RSS 2.0 + Atom), tra ve list chuoi lowercase."""
@@ -1244,10 +1305,34 @@ def analyze(sym, yf_sym, now=None):
         upper, _, lower = bollinger(long_closes)
         mom_s = momentum(long_closes)
 
-        # --- He thong bieu quyet ---
-        rsi_v = (1 if r_val <= cfg['rsi_buy'] else -1 if r_val >= cfg['rsi_sell'] else 0)
-        ema_v = (1 if price > e20 > e50 else -1 if price < e20 < e50 else 0)
-        mac_v = (1 if mac_s > 0.09 else -1 if mac_s < -0.09 else 0)
+        # [H4] Phan tich TRUOC bieu quyet — context cho Pullback Mode
+        h4_dir, h4_score_val, h4_det = h4_trend(long_closes, long_highs, long_lows)
+
+        # --- H4 Pullback Mode: vote theo context xu huong H4 ---
+        # H4 BULL: entry ly tuong la BUY pullback (RSI dip, EMA hoi lui, MACD giam nhe)
+        #   RSI nguong mo rong den 58 — RSI 45-58 trong uptrend = pullback chua ve qua ban
+        #   EMA: gia > EMA50 nhung < EMA20 = pullback trong uptrend → neutral (khong phat SELL)
+        #   MACD: -0.05..0.09 = momentum hoi lui nhe → neutral (pullback, khong phai dao chieu)
+        # H4 BEAR: logic nguoc lai cho SELL bounce
+        if h4_dir == 'BULL':
+            rsi_buy_thr = min(cfg['rsi_buy'] + 10, 58)
+            rsi_v = 1 if r_val <= rsi_buy_thr else (-1 if r_val >= cfg['rsi_sell'] else 0)
+            ema_v = (1 if price > e20 > e50
+                     else 0 if price > e50   # pullback duoi EMA20, van tren EMA50
+                     else -1 if price < e20 < e50 else 0)
+            mac_v = 1 if mac_s > 0.09 else (0 if mac_s >= -0.05 else -1)
+        elif h4_dir == 'BEAR':
+            rsi_sell_thr = max(cfg['rsi_sell'] - 10, 42)
+            rsi_v = -1 if r_val >= rsi_sell_thr else (1 if r_val <= cfg['rsi_buy'] else 0)
+            ema_v = (-1 if price < e20 < e50
+                     else 0 if price < e50   # bounce tren EMA20, van duoi EMA50
+                     else 1 if price > e20 > e50 else 0)
+            mac_v = -1 if mac_s < -0.09 else (0 if mac_s <= 0.05 else 1)
+        else:  # NEUTRAL — nguong chuan
+            rsi_v = 1 if r_val <= cfg['rsi_buy'] else (-1 if r_val >= cfg['rsi_sell'] else 0)
+            ema_v = (1 if price > e20 > e50 else -1 if price < e20 < e50 else 0)
+            mac_v = 1 if mac_s > 0.09 else (-1 if mac_s < -0.09 else 0)
+
         bb_v  = (1 if price < lower else -1 if price > upper else 0)
         mom_v = (1 if mom_s >= 0.2 else -1 if mom_s <= -0.2 else 0)
 
@@ -1261,13 +1346,8 @@ def analyze(sym, yf_sym, now=None):
             print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — qua it phieu, skip')
             return None
 
-        # [H4] Phan tich khung 4h — trend trung gian (lag 3-4 ngay, phu hop voi H1 trading)
-        # H4 LA BO LOC XU HUONG CHINH cho H1 entry:
-        #   H4 BULL + H1 pullback (RSI dips, BB touch) = ideal BUY entry
-        #   H4 BEAR + H1 bounce = ideal SELL entry
         # H4 dieu chinh nguong phieu: THUAN chieu → ha 1 | NGUOC chieu → nang 1
         prov_dir = 'BUY' if bull_cnt >= bear_cnt else 'SELL'
-        h4_dir, h4_score_val, h4_det = h4_trend(long_closes, long_highs, long_lows)
         h4_aligned = (prov_dir == 'BUY' and h4_dir == 'BULL') or \
                      (prov_dir == 'SELL' and h4_dir == 'BEAR')
         h4_opposed = (prov_dir == 'BUY' and h4_dir == 'BEAR') or \
@@ -1275,16 +1355,14 @@ def analyze(sym, yf_sym, now=None):
 
         min_v = cfg['min_votes']
         if h4_aligned:
-            min_v = max(2, min_v - 1)   # H4 thuan chieu: chap nhan tin hieu nhe hon (2/5 la du)
+            min_v = max(2, min_v - 1)
         elif h4_opposed:
-            min_v = min(5, min_v + 1)   # H4 nguoc chieu: can momentum H1 manh hon
+            min_v = min(5, min_v + 1)
 
-        # Calendar SOFT: nang them 1 neu su kien dang toi
         if cal_status == 'SOFT':
             min_v = min(5, min_v + 1)
             print(f'  [!] Calendar SOFT: {cal_reason} — min_votes={min_v}')
 
-        # Quyet dinh tin hieu cuoi cung
         if bull_cnt >= min_v:
             signal     = 'BUY'
             vote_count = bull_cnt
@@ -1308,6 +1386,20 @@ def analyze(sym, yf_sym, now=None):
                      (signal == 'SELL' and h4_dir == 'BEAR')
         h4_opposed = (signal == 'BUY' and h4_dir == 'BEAR') or \
                      (signal == 'SELL' and h4_dir == 'BULL')
+
+        # [H4 S/R] Phat hien ho tro / khang cu tu lich su H4
+        h4_s_c, h4_s_h, h4_s_l = resample_to_h4(long_closes, long_highs, long_lows)
+        sr_levels = find_sr_levels(h4_s_h, h4_s_l, h4_s_c, lookback=60) if len(h4_s_c) >= 10 else []
+        nearest_s = nearest_r = None
+        for lv in sr_levels:
+            if lv['type'] == 'S' and nearest_s is None:
+                nearest_s = lv
+            if lv['type'] == 'R' and nearest_r is None:
+                nearest_r = lv
+            if nearest_s and nearest_r:
+                break
+        near_support    = nearest_s is not None and (price - nearest_s['price']) / price < 0.005
+        near_resistance = nearest_r is not None and (nearest_r['price'] - price) / price < 0.005
 
         # [LOC 4] RSI extreme contradiction
         rsi_contradicts = (r_val < 35 and signal == 'SELL') or (r_val > 65 and signal == 'BUY')
@@ -1355,12 +1447,14 @@ def analyze(sym, yf_sym, now=None):
         im_bonus     = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
         history_bonus = 2 if ln >= 200 else 0
-        # MTF confidence:
-        #   H4 = bo loc xu huong chinh → bonus/penalty lon hon
-        #   D1 = context tham khao → bonus/penalty nho hon (chi informational)
         mtf_bonus = (5 if h4_aligned else (-3 if h4_opposed else 0)) + \
                     (3 if d1_aligned else (-2 if d1_opposed else 0))
-        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus)
+        # S/R bonus: vao lenh gan ho tro (BUY) / khang cu (SELL) = confluence tot
+        # S/R penalty: vao lenh sap vao khang cu (BUY) / ho tro (SELL) = chong muc
+        sr_bonus = (5 if (signal == 'BUY' and near_support) or (signal == 'SELL' and near_resistance)
+                    else (-3 if (signal == 'BUY' and near_resistance) or (signal == 'SELL' and near_support)
+                    else 0))
+        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus + sr_bonus)
 
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
@@ -1378,6 +1472,26 @@ def analyze(sym, yf_sym, now=None):
             sl = price - sl_dist; tp = price + tp_dist; tp2 = price + tp2_dist
         else:
             sl = price + sl_dist; tp = price - tp_dist; tp2 = price - tp2_dist
+
+        # Dieu chinh TP theo H4 S/R (chinh xac hon D1 cho H1 trading)
+        h4_sr_tp = None
+        h4_sr_used = False
+        if signal == 'BUY' and nearest_r is not None:
+            r_price = nearest_r['price']
+            if price < r_price < tp:
+                new_tp_h4 = r_price * 0.998
+                new_rr_h4 = (new_tp_h4 - price) / sl_dist if sl_dist > 0 else 0
+                if new_rr_h4 >= 1.2:
+                    tp = new_tp_h4; tp2 = r_price; h4_sr_tp = r_price; h4_sr_used = True
+                    tp_dist = tp - price; tp2_dist = tp2 - price
+        elif signal == 'SELL' and nearest_s is not None:
+            s_price = nearest_s['price']
+            if tp < s_price < price:
+                new_tp_h4 = s_price * 1.002
+                new_rr_h4 = (price - new_tp_h4) / sl_dist if sl_dist > 0 else 0
+                if new_rr_h4 >= 1.2:
+                    tp = new_tp_h4; tp2 = s_price; h4_sr_tp = s_price; h4_sr_used = True
+                    tp_dist = price - tp; tp2_dist = price - tp2
 
         # Dieu chinh TP theo D1 key level (khang cu/ho tro thuc te)
         # TP tai level thuc → co kha nang chot loi cao hon TP ATR co dinh
@@ -1431,6 +1545,16 @@ def analyze(sym, yf_sym, now=None):
                 'h4_bars':  h4_det.get('bars', 0),
                 'd1_level': round(d1_tp_level, 5) if d1_tp_level else None,
                 'd1_level_used': d1_level_used,
+            },
+            'sr': {
+                'levels':   [{'price': round(l['price'], 5), 'type': l['type'],
+                              'touches': l['touches']} for l in sr_levels[:5]],
+                'nearest_s':     round(nearest_s['price'], 5) if nearest_s else None,
+                'nearest_r':     round(nearest_r['price'], 5) if nearest_r else None,
+                'near_support':  near_support,
+                'near_resistance': near_resistance,
+                'h4_sr_tp':      round(h4_sr_tp, 5) if h4_sr_tp else None,
+                'h4_sr_used':    h4_sr_used,
             },
             'pair_macro': pair_macro,
             'fundamental': {
@@ -1799,6 +1923,21 @@ def main():
             d1_lv = mtf['d1_level']
             mtf_line += f'\n🏁 TP nhắm D1 key level: {fmt_price(r["sym"], d1_lv)}'
 
+        # S/R line
+        sr = r.get('sr', {})
+        sr_parts = []
+        if sr.get('nearest_s'):
+            s_dist = abs(r['price'] - sr['nearest_s']) / r['price'] * 100
+            s_tag  = ' ⬅ GẦN!' if sr.get('near_support') else ''
+            sr_parts.append(f'S {fmt_price(sym, sr["nearest_s"])} ({s_dist:.2f}%){s_tag}')
+        if sr.get('nearest_r'):
+            r_dist = abs(sr['nearest_r'] - r['price']) / r['price'] * 100
+            r_tag  = ' ⬅ GẦN!' if sr.get('near_resistance') else ''
+            sr_parts.append(f'R {fmt_price(sym, sr["nearest_r"])} ({r_dist:.2f}%){r_tag}')
+        sr_line = ('🏗 H4 S/R: ' + ' | '.join(sr_parts)) if sr_parts else ''
+        if sr.get('h4_sr_used') and sr.get('h4_sr_tp'):
+            sr_line += f'\n🏁 TP nhắm H4 S/R: {fmt_price(sym, sr["h4_sr_tp"])}'
+
         pair_macro_line = ''
         if r.get('pair_macro'):
             pm   = r['pair_macro']
@@ -1835,7 +1974,7 @@ def main():
             f'🗳 {vote_bar}',
             f'📊 H1: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f} | {r.get("history_bars", 0)} bars)',
             mtf_line,
-            '',
+            *(([sr_line, '']) if sr_line else ['']),
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
             f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
