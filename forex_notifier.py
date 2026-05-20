@@ -31,23 +31,6 @@ LOGIC_VERSION   = '2026-05-19'
 # Session per-pair duoc dinh nghia trong PAIR_CONFIG['trade_hours'] (UTC)
 # Xem PAIR_CONFIG ben duoi de biet gio cu the tung cap
 
-# Trong so rieng tung nhom cap tien te (tu backtest 180 ngay)
-# w = [rsi, ema, macd, bb, mom]  |  trend_mult: he so Hurst TREND
-PAIR_PROFILES = {
-    # JPY cross: Momentum manh nhat, TREND lam viec tot (EUR/JPY 78.6% trong TREND)
-    'EUR/JPY': {'w': np.array([0.05, 0.25, 0.30, 0.03, 0.37]), 'trend_mult': 1.05},
-    'GBP/JPY': {'w': np.array([0.05, 0.25, 0.35, 0.03, 0.32]), 'trend_mult': 0.88},
-    'USD/JPY': {'w': np.array([0.05, 0.20, 0.35, 0.03, 0.37]), 'trend_mult': 0.83},
-    # Vang/Bac: Bollinger & RSI quan trong hon (bien dong lon, dao chieu ro)
-    'XAU/USD': {'w': np.array([0.14, 0.20, 0.25, 0.14, 0.27]), 'trend_mult': 1.05},
-    'XAG/USD': {'w': np.array([0.14, 0.20, 0.25, 0.14, 0.27]), 'trend_mult': 1.05},
-    # Dau: Intermarket (oil) la tin hieu chinh, chi bao ky thuat phu
-    'USOIL/USD': {'w': np.array([0.05, 0.20, 0.30, 0.05, 0.40]), 'trend_mult': 0.83},
-    'UKOIL/USD': {'w': np.array([0.05, 0.20, 0.30, 0.05, 0.40]), 'trend_mult': 0.83},
-}
-# Mac dinh cho cac cap con lai (EUR/USD, GBP/USD, AUD/USD, USD/CAD, NZD/USD...)
-_DEFAULT_PROFILE = {'w': np.array([0.08, 0.30, 0.35, 0.03, 0.24]), 'trend_mult': 0.92}
-
 # Tham so phan tich rieng tung cap tien — thay the nguong chung trong analyze()
 # rsi_buy  : RSI <= nguong nay → phieu MUA  (cang thap → cang chat, tranh false BUY trong trend)
 # rsi_sell : RSI >= nguong nay → phieu BAN  (cang cao → cang chat)
@@ -153,6 +136,10 @@ PRICE_SANITY = {
 _im_cache          = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
 _gold_cache        = {}   # Cache macro data rieng cho XAU/USD (TNX, VIX)
 _fundamental_cache = {}   # Cache Fundamental Intelligence Layer (Calendar/Sentiment/F&G)
+_price_history     = {}   # Lich su gia tich luy — load tu file, save cuoi phien
+
+PRICE_HISTORY_FILE = 'price_history.json'
+MAX_HISTORY_BARS   = 720  # 30 ngay H1 moi cap (720 nen × 1h = 720h = 30 ngay)
 
 # Mapping dong tien → quoc gia (dung kiem tra lich kinh te)
 _CURRENCY_COUNTRY = {
@@ -208,12 +195,46 @@ TWELVE_DATA_SYMBOLS = {
     'USOIL/USD': 'XTI/USD',
 }
 
+def load_price_history():
+    """Load lich su gia tu file khi bat dau phien."""
+    global _price_history
+    if os.path.exists(PRICE_HISTORY_FILE):
+        try:
+            with open(PRICE_HISTORY_FILE, encoding='utf-8') as f:
+                _price_history = json.load(f)
+            total = sum(len(v.get('bars', [])) for v in _price_history.values())
+            print(f'  [History] {len(_price_history)} cap, {total} bars (toi da {MAX_HISTORY_BARS}/cap)')
+        except Exception as e:
+            print(f'  [History] Load loi: {e} — bat dau tu dau')
+            _price_history = {}
+
+def save_price_history():
+    """Save lich su gia cuoi phien (compact JSON de giam kich thuoc file)."""
+    try:
+        with open(PRICE_HISTORY_FILE, 'w', encoding='utf-8') as f:
+            json.dump(_price_history, f, separators=(',', ':'))
+        total = sum(len(v.get('bars', [])) for v in _price_history.values())
+        print(f'  [History] Saved {len(_price_history)} cap, {total} bars')
+    except Exception as e:
+        print(f'  [History] Save loi: {e}')
+
+def _merge_bars(old_bars, new_bars):
+    """
+    Merge hai danh sach bars theo timestamp Unix (key 't').
+    Bar moi ghi de bar cu cung timestamp (cap nhat nen dang hinh).
+    Giu MAX_HISTORY_BARS bars moi nhat.
+    """
+    by_ts = {b['t']: b for b in old_bars}
+    for b in new_bars:
+        by_ts[b['t']] = b
+    return sorted(by_ts.values(), key=lambda x: x['t'])[-MAX_HISTORY_BARS:]
+
 def fetch_ohlcv(sym, yf_sym, outputsize=500):
     """
     Lay OHLCV H1: uu tien Twelve Data (chat luong cao),
     fallback yfinance khi chua co API key hoac het quota.
-    Twelve Data free: 800 req/ngay — 16 cap × 48 lan/ngay = 768 req (trong quota free).
-    Khi het quota, Twelve Data tra loi error → tu dong fallback sang yfinance.
+    Tra ve: (closes, highs, lows, timestamps) — timestamps la list unix int (UTC).
+    Twelve Data free: 800 req/ngay — 14 cap × 48 lan/ngay = 672 req (trong quota free).
     """
     if TWELVE_DATA_KEY:
         td_sym = TWELVE_DATA_SYMBOLS.get(sym)
@@ -231,10 +252,17 @@ def fetch_ohlcv(sym, yf_sym, outputsize=500):
                 if data.get('status') != 'error' and 'values' in data:
                     vals = list(reversed(data['values']))  # Newest-first → chronological
                     if len(vals) >= 60:
-                        closes = [float(v['close']) for v in vals]
-                        highs  = [float(v['high'])  for v in vals]
-                        lows   = [float(v['low'])   for v in vals]
-                        return closes, highs, lows
+                        closes     = [float(v['close'])    for v in vals]
+                        highs      = [float(v['high'])     for v in vals]
+                        lows       = [float(v['low'])      for v in vals]
+                        timestamps = []
+                        for v in vals:
+                            try:
+                                dt = datetime.strptime(v['datetime'], '%Y-%m-%d %H:%M:%S')
+                                timestamps.append(int(dt.replace(tzinfo=timezone.utc).timestamp()))
+                            except Exception:
+                                timestamps.append(0)
+                        return closes, highs, lows, timestamps
                 else:
                     print(f'  Twelve Data: {data.get("message", "unknown error")} ({sym})')
             except Exception as e:
@@ -243,14 +271,21 @@ def fetch_ohlcv(sym, yf_sym, outputsize=500):
     try:
         df = yf.Ticker(yf_sym).history(period='60d', interval='1h')
         if df is None or len(df) < 60:
-            return None, None, None
+            return None, None, None, None
+        idx    = df.index
         closes = list(df['Close'].dropna())
         highs  = list(df['High'].dropna())
         lows   = list(df['Low'].dropna())
-        return closes, highs, lows
+        # Convert index to unix timestamps (UTC)
+        if hasattr(idx, 'tz') and idx.tz is not None:
+            timestamps = [int(ts.timestamp()) for ts in idx]
+        else:
+            timestamps = [int(pd.Timestamp(ts, tz='UTC').timestamp()) for ts in idx]
+        n = min(len(closes), len(highs), len(lows), len(timestamps))
+        return closes[:n], highs[:n], lows[:n], timestamps[:n]
     except Exception as e:
         print(f'  yfinance loi {sym}: {e}')
-        return None, None, None
+        return None, None, None, None
 
 # ── Indicator co ban ─────────────────────────────────────────
 def ema(values, period):
@@ -361,107 +396,27 @@ def hurst_exponent(closes):
     H > 0.55: thi truong dang TREND (tin hieu EMA/MACD dang tin)
     H < 0.45: thi truong MEAN-REVERTING (tin hieu RSI/BB dang tin)
     H ~ 0.5:  RANDOM WALK (tin hieu yeu, can than hon)
+
+    Dung 200 nen (thay vi 50) de ket qua on dinh ve mat thong ke.
+    Hurst tren 50 nen: dao dong lon, khong dang tin.
+    Hurst tren 200 nen: xap xi dung duoc (Peters 1994).
     """
-    if len(closes) < 50:
+    n = min(len(closes), 200)
+    if n < 50:
         return 0.5
-    ts = np.array(closes[-50:], dtype=float)
-    lags = list(range(2, 20))
+    ts   = np.array(closes[-n:], dtype=float)
+    # Dung nhieu lag hon khi co du data — giam nhieu trong uoc luong
+    max_lag = min(n // 4, 50)
+    lags = list(range(2, max_lag))
+    if len(lags) < 5:
+        return 0.5
     tau  = [np.std(ts[lag:] - ts[:-lag]) for lag in lags]
     tau  = np.array(tau)
     valid = tau > 1e-10
-    if valid.sum() < 3:
+    if valid.sum() < 5:
         return 0.5
     poly = np.polyfit(np.log(np.array(lags)[valid]), np.log(tau[valid]), 1)
     return float(np.clip(poly[0], 0.0, 1.0))
-
-def fourier_signal(closes):
-    """
-    Fourier Decomposition - tim vi tri trong chu ky song gia.
-    Ung dung phan tich tan so (dung trong co hoc luong tu) vao gia.
-    +1.0 = dang o day chu ky (tin hieu MUA)
-    -1.0 = dang o dinh chu ky (tin hieu BAN)
-    """
-    if len(closes) < 32:
-        return 0.0
-    n  = min(128, len(closes))
-    ts = np.array(closes[-n:], dtype=float)
-    # Loai xu huong tuyen tinh de chi lay thanh phan chu ky
-    trend     = np.linspace(ts[0], ts[-1], n)
-    detrended = ts - trend
-    # Cua so Hanning giam spectral leakage (nhieu bien bien)
-    windowed  = detrended * np.hanning(n)
-    # FFT tim cac thanh phan tan so chinh
-    fft   = np.fft.rfft(windowed)
-    power = np.abs(fft)**2
-    # Giu 20% tan so co nang luong lon nhat (loc nhieu)
-    threshold   = np.percentile(power, 80)
-    fft_clean   = np.where(power >= threshold, fft, 0)
-    cycle       = np.fft.irfft(fft_clean, n=n)
-    std = np.std(cycle)
-    if std < 1e-12:
-        return 0.0
-    # Gia o day chu ky → goc am → tin hieu MUA (+1)
-    return float(np.clip(-cycle[-1] / (std*2), -1.0, 1.0))
-
-def _raw_scores(closes):
-    """Tinh nhanh 5 diem chi bao (khong can highs/lows) cho 1 period."""
-    if len(closes) < 55:
-        return None
-    p = closes[-1]
-    r = rsi(closes)
-    rsi_s = (1.0 if r<=30 else 0.5 if r<=40 else -1.0 if r>=70 else -0.5 if r>=60 else 0.0)
-    e20 = ema(closes, 20); e50 = ema(closes, 50)
-    ema_s = (1.0 if p>e20>e50 else -1.0 if p<e20<e50 else
-             0.4 if p>e20 else -0.4 if p<e20 else 0.0)
-    mac_s = macd(closes)
-    upper, _, lower = bollinger(closes)
-    bb_s  = (1.0 if p<lower else -1.0 if p>upper else 0.0)
-    mom_s = momentum(closes)
-    return [rsi_s, ema_s, mac_s, bb_s, mom_s]
-
-def dynamic_weights(closes, lookback=40):
-    """
-    OLS Rolling Regression: tinh trong so dong cho tung chi bao
-    dua tren kha nang du bao return thuc te trong qua khu.
-    - Indicator nao co tuong quan cao voi return thuc → trong so cao hon
-    - Tu dong thich nghi theo dieu kien thi truong
-    """
-    # Trong so mac dinh tu backtest 666 tin hieu: MACD>EMA>MOM>>RSI>BB
-    default = np.array([0.08, 0.30, 0.35, 0.03, 0.24])
-    c = closes[-120:] if len(closes) > 120 else closes
-    if len(c) < 70:
-        return default
-
-    scores_hist, fwd_hist = [], []
-    for i in range(55, len(c)-1):
-        sc = _raw_scores(c[:i+1])
-        if sc is None:
-            continue
-        fwd = (c[i+1] - c[i]) / c[i]
-        scores_hist.append(sc)
-        fwd_hist.append(fwd)
-
-    if len(scores_hist) < lookback:
-        return default
-
-    X = np.array(scores_hist[-lookback:])
-    y = np.array(fwd_hist[-lookback:])
-
-    # Pearson correlation cua tung chi bao voi return tuong lai
-    corrs = np.zeros(5)
-    for j in range(5):
-        col = X[:, j]
-        if np.std(col) > 1e-10 and np.std(y) > 1e-10:
-            c_val = np.corrcoef(col, y)[0, 1]
-            corrs[j] = 0.0 if np.isnan(c_val) else c_val
-
-    abs_c = np.abs(corrs)
-    total = abs_c.sum()
-    if total < 1e-10:
-        return default
-    # Trong so toi thieu 5% moi chi bao (tranh loai hoan toan)
-    w = np.maximum(abs_c / total, 0.05)
-    return w / w.sum()
 
 def fetch_intermarket():
     """Lay DXY (dollar index) va Oil 1 lan, cache cho toan bo phien."""
@@ -1030,18 +985,37 @@ def analyze(sym, yf_sym, now=None):
         now = datetime.now(timezone.utc)
     try:
         cfg = PAIR_CONFIG.get(sym, _DEFAULT_CONFIG)
-        closes, highs, lows = fetch_ohlcv(sym, yf_sym)
+        closes, highs, lows, timestamps = fetch_ohlcv(sym, yf_sym)
         if closes is None or len(closes) < 60:
             print(f'  [D] du lieu qua it hoac loi fetch')
             return None
-        n = min(len(closes), len(highs), len(lows))
-        closes, highs, lows = closes[:n], highs[:n], lows[:n]
+        n = min(len(closes), len(highs), len(lows), len(timestamps))
+        closes, highs, lows, timestamps = closes[:n], highs[:n], lows[:n], timestamps[:n]
         if n < 60:
             return None
-        price = closes[-1]
+
+        # Merge vao lich su tich luy va lay long series de phan tich
+        new_bars = [{'t': t, 'c': c, 'h': h, 'l': l}
+                    for t, c, h, l in zip(timestamps, closes, highs, lows)]
+        if sym not in _price_history:
+            _price_history[sym] = {'bars': []}
+        _price_history[sym]['bars'] = _merge_bars(_price_history[sym].get('bars', []), new_bars)
+
+        long_bars   = _price_history[sym]['bars']
+        long_closes = [b['c'] for b in long_bars]
+        long_highs  = [b['h'] for b in long_bars]
+        long_lows   = [b['l'] for b in long_bars]
+        ln = min(len(long_closes), len(long_highs), len(long_lows))
+        long_closes = long_closes[:ln]
+        long_highs  = long_highs[:ln]
+        long_lows   = long_lows[:ln]
+        if ln < 60:
+            return None
+
+        price = long_closes[-1]
 
         # [LOC 1] ATR filter: bo qua thi truong qua phang
-        atr_val = atr(highs, lows, closes)
+        atr_val = atr(long_highs, long_lows, long_closes)
         if atr_val < price * 0.00015:
             print(f'  [D] ATR={atr_val:.6f} loc phang')
             return None
@@ -1059,19 +1033,17 @@ def analyze(sym, yf_sym, now=None):
             print(f'  [D] Calendar HARD block: {cal_reason}')
             return None
 
-        # [HURST] Phat hien regime (giu lai de context, khong dung lam he so nhan)
-        H      = hurst_exponent(closes)
+        # [HURST] Dung long_closes (toi da 200 nen) de ket qua on dinh hon
+        H      = hurst_exponent(long_closes)
         regime = 'TREND' if H > 0.55 else ('RANGE' if H < 0.45 else 'NEUTRAL')
 
-        # [LOC 3] Block RANGE sau: nguong H rieng tung cap (trending pair: 0.38 / range pair: 0.48)
+        # [LOC 3] Block RANGE sau: nguong H rieng tung cap
         if H < cfg['hurst_block']:
-            print(f'  [D] H={H:.3f} < {cfg["hurst_block"]} RANGE sau, bo qua')
+            print(f'  [D] H={H:.3f} < {cfg["hurst_block"]} RANGE sau ({ln} bars), bo qua')
             return None
 
         # [LOC 3b] ADX filter: chan sideways kep — ca ADX lan Hurst deu yeu
-        # Nguong 15 (giam tu 20) vi thi truong on dinh van co the cho tin hieu hop le
-        # Chi block khi THUC SU flat: ADX < 15 (rat yeu) VA H < 0.50
-        adx_val, pdi, mdi = adx_indicator(highs, lows, closes)
+        adx_val, pdi, mdi = adx_indicator(long_highs, long_lows, long_closes)
         if adx_val < 15 and H < 0.50:
             print(f'  [D] ADX={adx_val:.1f} + H={H:.3f} ca hai yeu — sideways kep, bo qua')
             return None
@@ -1079,13 +1051,13 @@ def analyze(sym, yf_sym, now=None):
         # [INTERMARKET] Tin hieu lien thi truong
         im_s = intermarket_signal(sym)
 
-        # --- Chi bao ky thuat ---
-        r_val = rsi(closes)
-        e20   = ema(closes, 20)
-        e50   = ema(closes, 50)
-        mac_s = macd(closes)
-        upper, _, lower = bollinger(closes)
-        mom_s = momentum(closes)
+        # --- Chi bao ky thuat (dung long history cho warmup tot hon) ---
+        r_val = rsi(long_closes)
+        e20   = ema(long_closes, 20)
+        e50   = ema(long_closes, 50)
+        mac_s = macd(long_closes)
+        upper, _, lower = bollinger(long_closes)
+        mom_s = momentum(long_closes)
 
         # --- He thong bieu quyet ---
         # Moi chi bao bau: +1 (MUA), -1 (BAN), 0 (trung tinh)
@@ -1166,28 +1138,24 @@ def analyze(sym, yf_sym, now=None):
         aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
                         if (v > 0 and signal == 'BUY') or (v < 0 and signal == 'SELL')]
 
-        # [FOURIER] Vi tri trong chu ky song gia: +1 = day chu ky (MUA), -1 = dinh (BAN)
-        fourier_s = fourier_signal(closes)
-
         # --- Do tin cay ---
         # Nen tang: 3/5=60%, 4/5=75%, 5/5=90%
         base_conf = {3: 60, 4: 75, 5: 90}.get(vote_count, 60)
         # Intermarket cung chieu: +5%; TREND: +5%; RANGE (mean-rev ro hon): +3%
-        im_aligned  = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
-        im_bonus    = 5 if im_aligned else 0
+        im_aligned   = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
+        im_bonus     = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
-        # Fourier cycle: cung chieu +3% tin cay (chi bonus, khong penalty — tranh block qua nhieu)
-        fourier_align = fourier_s * (1 if signal == 'BUY' else -1)
-        fourier_bonus = 3 if fourier_align > 0.3 else 0
-        conf = min(95, base_conf + im_bonus + regime_bonus + fourier_bonus)
+        # History bonus: neu co nhieu data (>200 bars) → Hurst on dinh hon → +2% tin cay
+        history_bonus = 2 if ln >= 200 else 0
+        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus)
 
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
 
         # SL dua tren Swing High/Low (cau truc thi truong) — tot hon ATR co dinh
         # Lay dinh/day cua 10 nen gan nhat lam nguong invalidation thuc te
-        swing_low  = min(lows[-10:])
-        swing_high = max(highs[-10:])
+        swing_low  = min(long_lows[-10:])
+        swing_high = max(long_highs[-10:])
         swing_dist = (price - swing_low) if signal == 'BUY' else (swing_high - price)
         # Dam bao SL it nhat bang 1.5×ATR (tranh SL qua chat bi stop-hunt)
         sl_dist  = max(atr_val * 1.5, swing_dist)
@@ -1215,7 +1183,7 @@ def analyze(sym, yf_sym, now=None):
             'rr1': rr1, 'rr2': rr2,
             'entry_low': entry_low, 'entry_high': entry_high,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
-            'fourier':    round(fourier_s, 2),
+            'history_bars': ln,
             'pair_macro': pair_macro,
             'fundamental': {
                 'sentiment':  round(sent_score, 2),
@@ -1451,6 +1419,10 @@ def main():
     state  = load_state()
     sent   = 0
 
+    # Buoc 0: load lich su gia tich luy
+    print('=== Tai lich su gia ===')
+    load_price_history()
+
     # Buoc 1: fetch intermarket + fundamental 1 lan cho ca phien
     print('=== Lay du lieu lien thi truong (DXY, Oil) ===')
     im = fetch_intermarket()
@@ -1597,7 +1569,7 @@ def main():
             f'<code>{bar}</code>  {conf_10}/10',
             '',
             f'🗳 {vote_bar}',
-            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f} | F={r.get("fourier", 0):+.2f})',
+            f'📊 Context: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f} | {r.get("history_bars", 0)} bars)',
             '',
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
@@ -1658,6 +1630,8 @@ def main():
         time.sleep(1)
 
     save_state(state)
+    print('\n=== Luu lich su gia ===')
+    save_price_history()
     print(f'\n=== Hoan thanh. Da gui {sent} tin hieu moi ===')
 
 if __name__ == '__main__':
