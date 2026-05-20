@@ -911,6 +911,107 @@ def find_sr_levels(highs, lows, closes, lookback=60, cluster_pct=0.003):
     return result
 
 
+def find_fib_levels(h4_c, h4_h, h4_l, signal, lookback=25):
+    """
+    Tinh Fibonacci Retracement va Extension tu swing H4 gan nhat.
+
+    BUY pullback:  swing base = LL truoc top, swing top = HH gan nhat > price
+      Retracement: top - ratio * range  (38.2 / 50 / 61.8%)
+      Extension:   base + ratio * range (127.2 / 161.8% — lam TP target)
+
+    SELL bounce:   swing top = HH truoc bottom, swing base = LL gan nhat < price
+      Retracement: base + ratio * range (38.2 / 50 / 61.8%)
+      Extension:   top  - ratio * range (127.2 / 161.8% — lam TP target)
+
+    Golden Zone (38.2–61.8%): vung pullback ly tuong — entry xac nhan.
+    Returns dict hoac {} neu khong xac dinh duoc swing ro rang.
+    """
+    n = min(len(h4_c), lookback)
+    if n < 8:
+        return {}
+
+    price  = h4_c[-1]
+    h_seg  = list(h4_h[-n:])
+    l_seg  = list(h4_l[-n:])
+    sz     = len(h_seg)
+
+    if signal == 'BUY':
+        # Tim swing HIGH gan nhat ma price da pullback XUONG DUOI
+        top_idx = None
+        for i in range(sz - 2, 1, -1):
+            if h_seg[i] >= h_seg[i-1] and h_seg[i] > h_seg[min(i+1, sz-1)] and h_seg[i] > price:
+                top_idx = i; break
+        if top_idx is None:  # Fallback: HH cua toan segment
+            hh = max(range(sz), key=lambda x: h_seg[x])
+            if h_seg[hh] > price:
+                top_idx = hh
+        if top_idx is None:
+            return {}
+
+        top_val  = h_seg[top_idx]
+        base_val = min(l_seg[:top_idx]) if top_idx > 0 else l_seg[0]
+
+        swing_range = top_val - base_val
+        if swing_range < price * 0.003 or price <= base_val:
+            return {}
+
+        retrace_pct = (top_val - price) / swing_range
+        r382 = top_val - 0.382 * swing_range
+        r500 = top_val - 0.500 * swing_range
+        r618 = top_val - 0.618 * swing_range
+        e1272 = base_val + 1.272 * swing_range
+        e1618 = base_val + 1.618 * swing_range
+
+    else:  # SELL
+        # Tim swing LOW gan nhat ma price da bounce LEN TREN
+        bot_idx = None
+        for i in range(sz - 2, 1, -1):
+            if l_seg[i] <= l_seg[i-1] and l_seg[i] < l_seg[min(i+1, sz-1)] and l_seg[i] < price:
+                bot_idx = i; break
+        if bot_idx is None:
+            ll = min(range(sz), key=lambda x: l_seg[x])
+            if l_seg[ll] < price:
+                bot_idx = ll
+        if bot_idx is None:
+            return {}
+
+        base_val = l_seg[bot_idx]
+        top_val  = max(h_seg[:bot_idx]) if bot_idx > 0 else h_seg[0]
+
+        swing_range = top_val - base_val
+        if swing_range < price * 0.003 or price >= top_val:
+            return {}
+
+        retrace_pct = (price - base_val) / swing_range
+        r382 = base_val + 0.382 * swing_range
+        r500 = base_val + 0.500 * swing_range
+        r618 = base_val + 0.618 * swing_range
+        e1272 = top_val - 1.272 * swing_range
+        e1618 = top_val - 1.618 * swing_range
+
+    retrace_pct = float(np.clip(retrace_pct, 0.0, 1.0))
+
+    if   0.382 <= retrace_pct <= 0.618: zone = 'golden'
+    elif retrace_pct < 0.236:           zone = 'too_shallow'
+    elif retrace_pct < 0.382:           zone = 'shallow'
+    elif retrace_pct <= 0.786:          zone = 'deep'
+    else:                               zone = 'extreme'
+
+    return {
+        'retrace_pct': round(retrace_pct, 3),
+        'in_golden':   zone == 'golden',
+        'zone':        zone,
+        'r382':   round(r382,  5),
+        'r500':   round(r500,  5),
+        'r618':   round(r618,  5),
+        'e1272':  round(e1272, 5),
+        'e1618':  round(e1618, 5),
+        'swing_base':  round(base_val,    5),
+        'swing_top':   round(top_val,     5),
+        'swing_range': round(swing_range, 5),
+    }
+
+
 # ── Fundamental Intelligence Layer ───────────────────────────
 def _fetch_rss_headlines(url):
     """Lay headlines tu RSS feed (RSS 2.0 + Atom), tra ve list chuoi lowercase."""
@@ -1401,6 +1502,9 @@ def analyze(sym, yf_sym, now=None):
         near_support    = nearest_s is not None and (price - nearest_s['price']) / price < 0.005
         near_resistance = nearest_r is not None and (nearest_r['price'] - price) / price < 0.005
 
+        # [FIB] Fibonacci Retracement / Extension tu swing H4
+        fib = find_fib_levels(h4_s_c, h4_s_h, h4_s_l, signal, lookback=25)
+
         # [LOC 4] RSI extreme contradiction
         rsi_contradicts = (r_val < 35 and signal == 'SELL') or (r_val > 65 and signal == 'BUY')
         if rsi_contradicts and vote_count < max(4, min_v):
@@ -1454,7 +1558,15 @@ def analyze(sym, yf_sym, now=None):
         sr_bonus = (5 if (signal == 'BUY' and near_support) or (signal == 'SELL' and near_resistance)
                     else (-3 if (signal == 'BUY' and near_resistance) or (signal == 'SELL' and near_support)
                     else 0))
-        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus + sr_bonus)
+        # Fibonacci bonus: golden zone (38.2-61.8%) = vung pullback ly tuong
+        # extreme zone (>78.6%) = pullback qua sau, co the dao chieu
+        fib_zone = fib.get('zone') if fib else None
+        fib_bonus = (8 if fib_zone == 'golden'
+                     else 3 if fib_zone == 'shallow'
+                     else 2 if fib_zone == 'deep'
+                     else -5 if fib_zone == 'extreme'
+                     else 0)
+        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus + sr_bonus + fib_bonus)
 
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
@@ -1519,6 +1631,22 @@ def analyze(sym, yf_sym, now=None):
                     tp2_dist  = price - tp2
                     d1_level_used = True
 
+        # Fib Extension lam TP2 khi chua co S/R hoac D1 dat TP2 ro rang
+        fib_tp2_used = False
+        if fib and sl_dist > 0:
+            # Uu tien e1618 (target chinh), fallback e1272
+            for e_cand in [fib.get('e1618'), fib.get('e1272')]:
+                if e_cand is None:
+                    continue
+                if signal == 'BUY' and e_cand > tp:
+                    new_rr2 = (e_cand - price) / sl_dist
+                    if new_rr2 >= 1.5:
+                        tp2 = e_cand; tp2_dist = tp2 - price; fib_tp2_used = True; break
+                elif signal == 'SELL' and e_cand < tp:
+                    new_rr2 = (price - e_cand) / sl_dist
+                    if new_rr2 >= 1.5:
+                        tp2 = e_cand; tp2_dist = price - tp2; fib_tp2_used = True; break
+
         sl_pct  = round(sl_dist  / price * 100, 4)
         tp_pct  = round(tp_dist  / price * 100, 4)
         tp2_pct = round(tp2_dist / price * 100, 4)
@@ -1556,6 +1684,7 @@ def analyze(sym, yf_sym, now=None):
                 'h4_sr_tp':      round(h4_sr_tp, 5) if h4_sr_tp else None,
                 'h4_sr_used':    h4_sr_used,
             },
+            'fib': {**fib, 'tp2_used': fib_tp2_used} if fib else {'tp2_used': False},
             'pair_macro': pair_macro,
             'fundamental': {
                 'sentiment':  round(sent_score, 2),
@@ -1938,6 +2067,26 @@ def main():
         if sr.get('h4_sr_used') and sr.get('h4_sr_tp'):
             sr_line += f'\n🏁 TP nhắm H4 S/R: {fmt_price(sym, sr["h4_sr_tp"])}'
 
+        # Fibonacci line
+        fib_d = r.get('fib', {})
+        fib_line = ''
+        if fib_d.get('zone') and fib_d['zone'] != 'too_shallow':
+            zone_lbl = {
+                'golden':  '🟡 Golden Zone (38.2–61.8%)',
+                'shallow': '🔵 Shallow (<38.2%)',
+                'deep':    '🟠 Deep (61.8–78.6%)',
+                'extreme': '🔴 Extreme (>78.6%) — thận trọng',
+            }.get(fib_d['zone'], '')
+            retrace_pct = fib_d.get('retrace_pct', 0)
+            fib_line = (f'📐 Fib Retrace: {zone_lbl} | {retrace_pct*100:.1f}%\n'
+                        f'   Key: R38={fmt_price(sym, fib_d["r382"])} '
+                        f'R50={fmt_price(sym, fib_d["r500"])} '
+                        f'R62={fmt_price(sym, fib_d["r618"])}\n'
+                        f'   Ext: 127%={fmt_price(sym, fib_d["e1272"])} '
+                        f'162%={fmt_price(sym, fib_d["e1618"])}')
+            if fib_d.get('tp2_used'):
+                fib_line += '  ← TP2'
+
         pair_macro_line = ''
         if r.get('pair_macro'):
             pm   = r['pair_macro']
@@ -1975,6 +2124,7 @@ def main():
             f'📊 H1: {r["phase"]} | {r["regime"]} (H={r["hurst"]:.2f} | ADX={r["adx"]:.0f} | {r.get("history_bars", 0)} bars)',
             mtf_line,
             *(([sr_line, '']) if sr_line else ['']),
+            *(([fib_line, '']) if fib_line else []),
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
             f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
