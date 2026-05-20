@@ -695,13 +695,14 @@ def fetch_d1_data(sym, yf_sym):
 
 def d1_trend(sym, yf_sym):
     """
-    Xu huong Daily (D1) — bo loc macro quan trong nhat.
-    Nguyen tac: KHONG bao gio danh nguoc xu huong D1 tru khi tin hieu rat manh.
+    Xu huong Daily (D1) — context macro, khong phai bo loc cung.
+
+    3 thanh phan, trong so theo do tre:
+      fast_mom  (40%): dem so phien tang/giam trong 7 ngay — phan ung trong 1-2 ngay
+      ema20_pos (35%): gia vs EMA20 daily — phan ung trong 5-10 ngay (EMA50 qua cham)
+      structure (25%): HH/HL vs LH/LL trong 20 nen — xac nhan cau truc
 
     Returns: (direction: 'BULL'|'BEAR'|'NEUTRAL', score: float, details: dict)
-      score > 0.2  = BULL  (xu huong tang ngay)
-      score < -0.2 = BEAR  (xu huong giam ngay)
-      else         = NEUTRAL
     """
     d1 = fetch_d1_data(sym, yf_sym)
     if d1 is None:
@@ -712,35 +713,38 @@ def d1_trend(sym, yf_sym):
     lows   = d1['lows']
     price  = closes[-1]
 
-    # EMA 20/50 daily — xu huong trung va dai han
-    e20 = ema(closes, 20)
-    e50 = ema(closes, 50)
-    ema_s = 1 if (price > e20 > e50) else (-1 if (price < e20 < e50) else 0)
+    # [FAST] Momentum 7 phien: dem so phien tang/giam gan nhat
+    # Phan ung trong 1-2 ngay — khac phuc do tre EMA
+    window = closes[-8:] if len(closes) >= 8 else closes
+    up_days = sum(1 for i in range(1, len(window)) if window[i] > window[i-1])
+    total_d = len(window) - 1
+    if total_d > 0:
+        fast_s = 1 if up_days >= round(total_d * 0.70) else \
+                (-1 if up_days <= round(total_d * 0.30) else 0)
+    else:
+        fast_s = 0
 
-    # Market structure D1: so sanh 15 nen gan nhat vs 15 nen truoc do
-    # HH + HL = uptrend structure | LH + LL = downtrend structure
-    n = min(len(closes), 30)
+    # [MEDIUM] Vi tri gia vs EMA20 daily (it lag hon EMA50)
+    e20   = ema(closes, 20)
+    # Threshold nho de tranh flip lien tuc quanh EMA
+    ema_s = 1 if price > e20 * 1.001 else (-1 if price < e20 * 0.999 else 0)
+
+    # [SLOW] Market structure: HH+HL = uptrend | LH+LL = downtrend
+    n = min(len(closes), 20)
     mid = n // 2
     if n > mid and mid > 0:
-        prev_high = max(highs[-n:-mid])
-        curr_high = max(highs[-mid:])
-        prev_low  = min(lows[-n:-mid])
-        curr_low  = min(lows[-mid:])
-        struct_bull = (curr_high > prev_high) and (curr_low > prev_low)
-        struct_bear = (curr_high < prev_high) and (curr_low < prev_low)
-        struct_s = 1 if struct_bull else (-1 if struct_bear else 0)
+        ph = max(highs[-n:-mid]); ch = max(highs[-mid:])
+        pl = min(lows[-n:-mid]);  cl = min(lows[-mid:])
+        struct_s = 1 if (ch > ph and cl > pl) else (-1 if (ch < ph and cl < pl) else 0)
     else:
         struct_s = 0
 
-    # RSI D1 — bias tong the
-    rsi_d = rsi(closes)
-    rsi_s = 1 if rsi_d < 45 else (-1 if rsi_d > 55 else 0)
-
-    score = ema_s * 0.50 + struct_s * 0.35 + rsi_s * 0.15
+    score = fast_s * 0.40 + ema_s * 0.35 + struct_s * 0.25
     direction = 'BULL' if score > 0.20 else ('BEAR' if score < -0.20 else 'NEUTRAL')
     details = {
-        'ema': ema_s, 'struct': struct_s, 'rsi': round(rsi_d),
-        'e20': round(e20, 5), 'e50': round(e50, 5), 'score': round(score, 2),
+        'fast': fast_s, 'ema': ema_s, 'struct': struct_s,
+        'e20': round(e20, 5), 'up_days': up_days, 'total_days': total_d,
+        'score': round(score, 2),
     }
     return direction, float(score), details
 
@@ -1241,15 +1245,10 @@ def analyze(sym, yf_sym, now=None):
         mom_s = momentum(long_closes)
 
         # --- He thong bieu quyet ---
-        # Moi chi bao bau: +1 (MUA), -1 (BAN), 0 (trung tinh)
-        # Nguong RSI rieng tung cap: JPY/Kim loai/Dau = 40/60 | Range pair = 35/65 | Majors = 45/55
         rsi_v = (1 if r_val <= cfg['rsi_buy'] else -1 if r_val >= cfg['rsi_sell'] else 0)
         ema_v = (1 if price > e20 > e50 else -1 if price < e20 < e50 else 0)
-        # MACD: nguong 0.09 (giam tu 0.12) de bat duoc momentum yeu hon trong thi truong on dinh
         mac_v = (1 if mac_s > 0.09 else -1 if mac_s < -0.09 else 0)
         bb_v  = (1 if price < lower else -1 if price > upper else 0)
-        # Momentum: >= 0.2 (thay vi > 0.2) de 3/5 nen cung chieu duoc vote
-        # (3-2)/5 = 0.2 chinh xac — voi >, no khong bao gio fire voi 3/5 nen
         mom_v = (1 if mom_s >= 0.2 else -1 if mom_s <= -0.2 else 0)
 
         votes     = [rsi_v, ema_v, mac_v, bb_v, mom_v]
@@ -1257,14 +1256,40 @@ def analyze(sym, yf_sym, now=None):
         bull_cnt  = sum(v for v in votes if v > 0)
         bear_cnt  = sum(-v for v in votes if v < 0)
 
+        # Pre-filter: phai co it nhat 2 phieu mot chieu moi goi D1 API
+        if max(bull_cnt, bear_cnt) < 2:
+            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — qua it phieu, skip')
+            return None
+
+        # [MTF] Phan tich D1 + H4 TRUOC khi quyet dinh nguong phieu cuoi cung
+        # Muc dich: MTF dieu chinh nguong (khong them buc tuong chan)
+        #   D1 + H4 cung chieu → ha 1 vote (moi truong thuan loi, tin hieu nhe hon gia tri hon)
+        #   D1 + H4 ca 2 nguoc → nang 1 vote (can momentum H1 du manh de override)
+        prov_dir = 'BUY' if bull_cnt >= bear_cnt else 'SELL'
+        d1_dir, d1_score_val, d1_det = d1_trend(sym, yf_sym)
+        h4_dir, h4_score_val, h4_det = h4_trend(long_closes, long_highs, long_lows)
+
+        d1_aligned = (prov_dir == 'BUY' and d1_dir == 'BULL') or \
+                     (prov_dir == 'SELL' and d1_dir == 'BEAR')
+        d1_opposed = (prov_dir == 'BUY' and d1_dir == 'BEAR') or \
+                     (prov_dir == 'SELL' and d1_dir == 'BULL')
+        h4_aligned = (prov_dir == 'BUY' and h4_dir == 'BULL') or \
+                     (prov_dir == 'SELL' and h4_dir == 'BEAR')
+        h4_opposed = (prov_dir == 'BUY' and h4_dir == 'BEAR') or \
+                     (prov_dir == 'SELL' and h4_dir == 'BULL')
+
         min_v = cfg['min_votes']
-        # NEUTRAL da duoc xu ly bang hurst_block (H>=0.45) + ADX filter
-        # Khong tang min_votes — tranh block toan bo thi truong NEUTRAL
-        # [TANG 1 — SOFT] Su kien medium-impact sap xay ra: tang min_votes them 1 de an toan
+        if d1_aligned and h4_aligned:
+            min_v = max(2, min_v - 1)   # Gia tri tin hieu thap hon khi toan bo huong chuan
+        elif d1_opposed and h4_opposed:
+            min_v = min(5, min_v + 1)   # Can manh hon khi H4 + D1 cung chong lai
+
+        # Calendar SOFT: nang them 1 neu su kien dang toi
         if cal_status == 'SOFT':
             min_v = min(5, min_v + 1)
-            print(f'  [!] Calendar SOFT: {cal_reason} — tang min_votes len {min_v}')
+            print(f'  [!] Calendar SOFT: {cal_reason} — min_votes={min_v}')
 
+        # Quyet dinh tin hieu cuoi cung
         if bull_cnt >= min_v:
             signal     = 'BUY'
             vote_count = bull_cnt
@@ -1272,19 +1297,27 @@ def analyze(sym, yf_sym, now=None):
             signal     = 'SELL'
             vote_count = bear_cnt
         else:
-            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/5 phieu')
+            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/5 '
+                  f'(D1={d1_dir} H4={h4_dir} adj={min_v})')
             return None
 
-        # [LOC 4] RSI mau thuan CUC DOAN voi huong tin hieu → can 4/5 phieu
-        # Chi check khi RSI thuc su qua ban (<35) hoac qua mua (>65)
-        # Nguong 45/55 qua nhay — RSI=44 khong phai "qua ban" thuc su
+        # Cap nhat aligned/opposed theo signal chinh thuc
+        d1_aligned = (signal == 'BUY' and d1_dir == 'BULL') or \
+                     (signal == 'SELL' and d1_dir == 'BEAR')
+        d1_opposed = (signal == 'BUY' and d1_dir == 'BEAR') or \
+                     (signal == 'SELL' and d1_dir == 'BULL')
+        h4_aligned = (signal == 'BUY' and h4_dir == 'BULL') or \
+                     (signal == 'SELL' and h4_dir == 'BEAR')
+        h4_opposed = (signal == 'BUY' and h4_dir == 'BEAR') or \
+                     (signal == 'SELL' and h4_dir == 'BULL')
+
+        # [LOC 4] RSI extreme contradiction
         rsi_contradicts = (r_val < 35 and signal == 'SELL') or (r_val > 65 and signal == 'BUY')
-        required_on_contradict = max(4, min_v)
-        if rsi_contradicts and vote_count < required_on_contradict:
-            print(f'  [D] RSI={r_val:.0f} cuc doan mau thuan {signal} ({vote_count}/5), can {required_on_contradict}/5')
+        if rsi_contradicts and vote_count < max(4, min_v):
+            print(f'  [D] RSI={r_val:.0f} cuc doan mau thuan {signal}')
             return None
 
-        # [PAIR MACRO] macro rieng tung cap — 100% cap, zero API (tai su dung _gold_cache)
+        # [PAIR MACRO] macro rieng tung cap (tai su dung _gold_cache)
         pair_macro = None
         m_score, m_comps = macro_score(sym)
         if m_comps:
@@ -1298,65 +1331,40 @@ def analyze(sym, yf_sym, now=None):
                 return None
             pair_macro = {'score': round(m_score, 2), **m_comps}
 
-        # [TANG 2 — NEWS SENTIMENT] Kiem tra xu huong tin tuc co mau thuan khong
+        # Triple block: D1 + H4 + Macro ca 3 cung chong + khong du vote manh
+        sig_dir_num   = 1 if signal == 'BUY' else -1
+        macro_opposed = m_comps and (m_score * sig_dir_num < -0.30)
+        if d1_opposed and h4_opposed and macro_opposed and vote_count < 4:
+            print(f'  [D] Triple block: D1={d1_dir} H4={h4_dir} Macro={m_score:.2f}')
+            return None
+
+        # [TANG 2 — NEWS SENTIMENT]
         sent_score = get_sentiment_score(fund, sym)
         sig_dir    = 1 if signal == 'BUY' else -1
-        sent_align = sent_score * sig_dir   # >0 = ung ho, <0 = mau thuan
+        sent_align = sent_score * sig_dir
         if sent_align < -0.35:
-            print(f'  [D] Sentiment={sent_score:.2f} mau thuan manh voi {signal} — bo qua')
+            print(f'  [D] Sentiment={sent_score:.2f} mau thuan manh voi {signal}')
             return None
         if sent_align < -0.15 and vote_count < min(5, min_v + 1):
             print(f'  [D] Sentiment={sent_score:.2f} mau thuan nhe, can them vote')
             return None
 
-        # [TANG 3 — FEAR & GREED] Canh bao neu thi truong o trang thai cuc doan mau thuan
+        # [TANG 3 — FEAR & GREED]
         fg_penalty, fg_reason = get_fg_context(fund, sym, signal)
         if fg_penalty and vote_count < min(5, min_v + 1):
-            print(f'  [D] F&G: {fg_reason} — can them xac nhan')
+            print(f'  [D] F&G: {fg_reason}')
             return None
 
-        # Ten cac chi bao dong thuan
         aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
                         if (v > 0 and signal == 'BUY') or (v < 0 and signal == 'SELL')]
 
-        # [MTF — D1] Daily trend filter — QUAN TRONG NHAT
-        # Nguyen tac: tin hieu H1 phai di cung chieu voi xu huong D1
-        d1_dir, d1_score_val, d1_det = d1_trend(sym, yf_sym)
-        d1_aligned = (signal == 'BUY'  and d1_dir == 'BULL') or \
-                     (signal == 'SELL' and d1_dir == 'BEAR')
-        d1_opposed = (signal == 'BUY'  and d1_dir == 'BEAR') or \
-                     (signal == 'SELL' and d1_dir == 'BULL')
-
-        # [MTF — H4] Intermediate trend — xac nhan trung gian
-        h4_dir, h4_score_val, h4_det = h4_trend(long_closes, long_highs, long_lows)
-        h4_aligned = (signal == 'BUY'  and h4_dir == 'BULL') or \
-                     (signal == 'SELL' and h4_dir == 'BEAR')
-        h4_opposed = (signal == 'BUY'  and h4_dir == 'BEAR') or \
-                     (signal == 'SELL' and h4_dir == 'BULL')
-
-        # Block: ca D1 lan H4 deu nguoc → danh nguoc 2 timeframe = rui ro kep
-        if d1_opposed and h4_opposed:
-            print(f'  [D] D1={d1_dir} + H4={h4_dir} ca hai nguoc voi {signal} — rui ro kep, bo qua')
-            return None
-
-        # Block: D1 nguoc va khong du phieu manh de override
-        # Countertrend D1 can 4/5 de toi thieu co momentum rieng manh
-        if d1_opposed and vote_count < 4:
-            print(f'  [D] D1={d1_dir} nguoc voi {signal} — can 4/5 phieu ({vote_count}/5 hien tai)')
-            return None
-        if d1_opposed:
-            print(f'  [!] D1={d1_dir} nguoc voi {signal} ({vote_count}/5 manh) — tiep tuc, them canh bao')
-
         # --- Do tin cay ---
-        # Nen tang: 3/5=60%, 4/5=75%, 5/5=90%
-        base_conf = {3: 60, 4: 75, 5: 90}.get(vote_count, 60)
-        # Intermarket cung chieu: +5%; TREND: +5%; RANGE (mean-rev ro hon): +3%
+        base_conf    = {2: 50, 3: 60, 4: 75, 5: 90}.get(vote_count, 60)
         im_aligned   = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
         im_bonus     = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
-        # History bonus: neu co nhieu data (>200 bars) → Hurst on dinh hon
         history_bonus = 2 if ln >= 200 else 0
-        # MTF bonus: tin hieu cung chieu voi khung cao hon → tin cay cao hon
+        # MTF bonus/penalty theo muc do dong thuan (khong phai block)
         mtf_bonus = (6 if d1_aligned else (-3 if d1_opposed else 0)) + \
                     (4 if h4_aligned else (-2 if h4_opposed else 0))
         conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus)
