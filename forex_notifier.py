@@ -1256,33 +1256,28 @@ def analyze(sym, yf_sym, now=None):
         bull_cnt  = sum(v for v in votes if v > 0)
         bear_cnt  = sum(-v for v in votes if v < 0)
 
-        # Pre-filter: phai co it nhat 2 phieu mot chieu moi goi D1 API
+        # Pre-filter: phai co it nhat 2 phieu mot chieu moi phan tich tiep
         if max(bull_cnt, bear_cnt) < 2:
             print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — qua it phieu, skip')
             return None
 
-        # [MTF] Phan tich D1 + H4 TRUOC khi quyet dinh nguong phieu cuoi cung
-        # Muc dich: MTF dieu chinh nguong (khong them buc tuong chan)
-        #   D1 + H4 cung chieu → ha 1 vote (moi truong thuan loi, tin hieu nhe hon gia tri hon)
-        #   D1 + H4 ca 2 nguoc → nang 1 vote (can momentum H1 du manh de override)
+        # [H4] Phan tich khung 4h — trend trung gian (lag 3-4 ngay, phu hop voi H1 trading)
+        # H4 LA BO LOC XU HUONG CHINH cho H1 entry:
+        #   H4 BULL + H1 pullback (RSI dips, BB touch) = ideal BUY entry
+        #   H4 BEAR + H1 bounce = ideal SELL entry
+        # H4 dieu chinh nguong phieu: THUAN chieu → ha 1 | NGUOC chieu → nang 1
         prov_dir = 'BUY' if bull_cnt >= bear_cnt else 'SELL'
-        d1_dir, d1_score_val, d1_det = d1_trend(sym, yf_sym)
         h4_dir, h4_score_val, h4_det = h4_trend(long_closes, long_highs, long_lows)
-
-        d1_aligned = (prov_dir == 'BUY' and d1_dir == 'BULL') or \
-                     (prov_dir == 'SELL' and d1_dir == 'BEAR')
-        d1_opposed = (prov_dir == 'BUY' and d1_dir == 'BEAR') or \
-                     (prov_dir == 'SELL' and d1_dir == 'BULL')
         h4_aligned = (prov_dir == 'BUY' and h4_dir == 'BULL') or \
                      (prov_dir == 'SELL' and h4_dir == 'BEAR')
         h4_opposed = (prov_dir == 'BUY' and h4_dir == 'BEAR') or \
                      (prov_dir == 'SELL' and h4_dir == 'BULL')
 
         min_v = cfg['min_votes']
-        if d1_aligned and h4_aligned:
-            min_v = max(2, min_v - 1)   # Gia tri tin hieu thap hon khi toan bo huong chuan
-        elif d1_opposed and h4_opposed:
-            min_v = min(5, min_v + 1)   # Can manh hon khi H4 + D1 cung chong lai
+        if h4_aligned:
+            min_v = max(2, min_v - 1)   # H4 thuan chieu: chap nhan tin hieu nhe hon (2/5 la du)
+        elif h4_opposed:
+            min_v = min(5, min_v + 1)   # H4 nguoc chieu: can momentum H1 manh hon
 
         # Calendar SOFT: nang them 1 neu su kien dang toi
         if cal_status == 'SOFT':
@@ -1297,11 +1292,14 @@ def analyze(sym, yf_sym, now=None):
             signal     = 'SELL'
             vote_count = bear_cnt
         else:
-            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/5 '
-                  f'(D1={d1_dir} H4={h4_dir} adj={min_v})')
+            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/5 (H4={h4_dir})')
             return None
 
-        # Cap nhat aligned/opposed theo signal chinh thuc
+        # [D1] Chi dung de lay key levels (TP/SL) — KHONG dung lam bo loc chieu
+        # D1 direction chi hien thi trong Telegram lam tham khao, khong anh huong entry
+        d1_dir, d1_score_val, d1_det = d1_trend(sym, yf_sym)
+
+        # Cap nhat aligned/opposed theo signal chinh thuc (chi dung cho confidence)
         d1_aligned = (signal == 'BUY' and d1_dir == 'BULL') or \
                      (signal == 'SELL' and d1_dir == 'BEAR')
         d1_opposed = (signal == 'BUY' and d1_dir == 'BEAR') or \
@@ -1331,13 +1329,6 @@ def analyze(sym, yf_sym, now=None):
                 return None
             pair_macro = {'score': round(m_score, 2), **m_comps}
 
-        # Triple block: D1 + H4 + Macro ca 3 cung chong + khong du vote manh
-        sig_dir_num   = 1 if signal == 'BUY' else -1
-        macro_opposed = m_comps and (m_score * sig_dir_num < -0.30)
-        if d1_opposed and h4_opposed and macro_opposed and vote_count < 4:
-            print(f'  [D] Triple block: D1={d1_dir} H4={h4_dir} Macro={m_score:.2f}')
-            return None
-
         # [TANG 2 — NEWS SENTIMENT]
         sent_score = get_sentiment_score(fund, sym)
         sig_dir    = 1 if signal == 'BUY' else -1
@@ -1364,9 +1355,11 @@ def analyze(sym, yf_sym, now=None):
         im_bonus     = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
         history_bonus = 2 if ln >= 200 else 0
-        # MTF bonus/penalty theo muc do dong thuan (khong phai block)
-        mtf_bonus = (6 if d1_aligned else (-3 if d1_opposed else 0)) + \
-                    (4 if h4_aligned else (-2 if h4_opposed else 0))
+        # MTF confidence:
+        #   H4 = bo loc xu huong chinh → bonus/penalty lon hon
+        #   D1 = context tham khao → bonus/penalty nho hon (chi informational)
+        mtf_bonus = (5 if h4_aligned else (-3 if h4_opposed else 0)) + \
+                    (3 if d1_aligned else (-2 if d1_opposed else 0))
         conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus)
 
         # Wyckoff phase
