@@ -10,40 +10,69 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "GBP/USD",
+      "sym": "USD/CHF",
       "signal": "BUY",
-      "entry_price": 1.34021,
-      "sl": 1.33765,
-      "tp": 1.3453299999999997,
-      "sent_at": 1779276654.894536,
-      "message_id": 184,
+      "entry_price": 0.79045,
+      "sl": 0.78925,
+      "tp": 0.7928499999999999,
+      "sent_at": 1779280257.510826,
+      "message_id": 186,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1779280254.894536,
+          "at": 1779283857.510826,
           "done": false
         }
       ],
-      "expires_at": 1779301854.894536,
+      "expires_at": 1779305457.510826,
       "indicators": {
-        "rsi": 1,
+        "rsi": -1,
         "ema": 1,
-        "macd": 0.14,
+        "macd": -0.09,
         "bb": 0,
-        "mom": 0.6,
-        "inter": -0.47
+        "mom": 0.2,
+        "inter": 0.47
       },
-      "regime": "TREND",
-      "hurst": 0.654,
-      "aligned": 4,
+      "regime": "NEUTRAL",
+      "hurst": 0.494,
+      "aligned": 2,
+      "consensus": true
+    },
+    {
+      "sym": "EUR/JPY",
+      "signal": "SELL",
+      "entry_price": 184.43847,
+      "sl": 184.6433353052969,
+      "tp": 184.0287393894062,
+      "sent_at": 1779280257.510826,
+      "message_id": 187,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779283857.510826,
+          "done": false
+        }
+      ],
+      "expires_at": 1779305457.510826,
+      "indicators": {
+        "rsi": 0,
+        "ema": -1,
+        "macd": 0.18,
+        "bb": 0,
+        "mom": -0.2,
+        "inter": 0.0
+      },
+      "regime": "RANGE",
+      "hurst": 0.426,
+      "aligned": 2,
       "consensus": true
     }
   ],
-  "USD/CHF|BUY": 1779067852.924825,
+  "USD/CHF|BUY": 1779280257.510826,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779273054.142371,
   "AUD/USD|BUY": 1778712200.458527,
-  "EUR/JPY|SELL": 1779251449.48729,
+  "EUR/JPY|SELL": 1779280257.510826,
   "GBP/JPY|BUY": 1779059689.579696,
   "UKOIL/USD|SELL": 1778712200.458527,
   "USOIL/USD|SELL": 1778712200.458527,
@@ -402,6 +431,13 @@
       "sym": "EUR/USD",
       "signal": "SELL",
       "correct": false,
+      "date": "2026-05-20",
+      "regime": "TREND"
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "correct": true,
       "date": "2026-05-20",
       "regime": "TREND"
     }
