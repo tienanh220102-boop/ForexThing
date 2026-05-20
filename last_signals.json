@@ -10,32 +10,32 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.15956,
-      "sl": 1.1609535406521936,
-      "tp": 1.1567729186956126,
-      "sent_at": 1779273054.142371,
-      "message_id": 182,
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "entry_price": 1.34021,
+      "sl": 1.33765,
+      "tp": 1.3453299999999997,
+      "sent_at": 1779276654.894536,
+      "message_id": 184,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1779276654.142371,
+          "at": 1779280254.894536,
           "done": false
         }
       ],
-      "expires_at": 1779298254.142371,
+      "expires_at": 1779301854.894536,
       "indicators": {
         "rsi": 1,
-        "ema": -1,
-        "macd": 0.02,
+        "ema": 1,
+        "macd": 0.14,
         "bb": 0,
-        "mom": -0.2,
+        "mom": 0.6,
         "inter": -0.47
       },
       "regime": "TREND",
-      "hurst": 0.561,
-      "aligned": 2,
+      "hurst": 0.654,
+      "aligned": 4,
       "consensus": true
     }
   ],
@@ -397,12 +397,19 @@
       "correct": false,
       "date": "2026-05-20",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-20",
+      "regime": "TREND"
     }
   ],
   "AUD/USD|SELL": 1779246063.710942,
   "XAG/USD|SELL": 1778853666.940891,
   "EUR/USD|BUY": 1779010248.217127,
-  "GBP/USD|BUY": 1779046248.926697,
+  "GBP/USD|BUY": 1779276654.894536,
   "XAU/USD|BUY": 1779022857.748863,
   "USD/CHF|SELL": 1778950862.949839,
   "USD/JPY|SELL": 1778968862.131454,
