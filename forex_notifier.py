@@ -1092,9 +1092,12 @@ def analyze(sym, yf_sym, now=None):
         # Nguong RSI rieng tung cap: JPY/Kim loai/Dau = 40/60 | Range pair = 35/65 | Majors = 45/55
         rsi_v = (1 if r_val <= cfg['rsi_buy'] else -1 if r_val >= cfg['rsi_sell'] else 0)
         ema_v = (1 if price > e20 > e50 else -1 if price < e20 < e50 else 0)
-        mac_v = (1 if mac_s > 0.12 else -1 if mac_s < -0.12 else 0)
+        # MACD: nguong 0.09 (giam tu 0.12) de bat duoc momentum yeu hon trong thi truong on dinh
+        mac_v = (1 if mac_s > 0.09 else -1 if mac_s < -0.09 else 0)
         bb_v  = (1 if price < lower else -1 if price > upper else 0)
-        mom_v = (1 if mom_s > 0.2 else -1 if mom_s < -0.2 else 0)
+        # Momentum: >= 0.2 (thay vi > 0.2) de 3/5 nen cung chieu duoc vote
+        # (3-2)/5 = 0.2 chinh xac — voi >, no khong bao gio fire voi 3/5 nen
+        mom_v = (1 if mom_s >= 0.2 else -1 if mom_s <= -0.2 else 0)
 
         votes     = [rsi_v, ema_v, mac_v, bb_v, mom_v]
         vote_lbls = ['RSI', 'EMA', 'MACD', 'BB', 'Mom']
