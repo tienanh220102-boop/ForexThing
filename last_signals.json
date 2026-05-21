@@ -10,35 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "GBP/USD",
-      "signal": "BUY",
-      "entry_price": 1.34477,
-      "sl": 1.33941,
-      "tp": 1.35549,
-      "sent_at": 1779388254.933022,
-      "message_id": 226,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779391854.933022,
-          "done": false
-        }
-      ],
-      "expires_at": 1779413454.933022,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.2,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": 0.14
-      },
-      "regime": "TREND",
-      "hurst": 0.632,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "USD/CHF",
       "signal": "BUY",
       "entry_price": 0.78741,
@@ -609,6 +580,13 @@
       "correct": false,
       "date": "2026-05-21",
       "regime": "RANGE"
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-22",
+      "regime": "TREND"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
