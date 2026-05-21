@@ -1,6 +1,6 @@
 {
   "GBP/USD|SELL": 1779071451.301777,
-  "USD/JPY|BUY": 1779330654.483316,
+  "USD/JPY|BUY": 1779359457.98077,
   "USD/CAD|BUY": 1779060650.882327,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
@@ -8,7 +8,66 @@
   "XAG/USD|BUY": 1778712200.458527,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [],
+  "pending_validations": [
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "entry_price": 1.34316,
+      "sl": 1.3409588584174519,
+      "tp": 1.3475622831650957,
+      "sent_at": 1779359457.98077,
+      "message_id": 210,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779363057.98077,
+          "done": false
+        }
+      ],
+      "expires_at": 1779384657.98077,
+      "indicators": {
+        "rsi": 1,
+        "ema": 1,
+        "macd": -0.16,
+        "bb": 0,
+        "mom": 0.2,
+        "inter": 0.05
+      },
+      "regime": "TREND",
+      "hurst": 0.652,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "entry_price": 159.06377,
+      "sl": 158.82895,
+      "tp": 159.53341000000003,
+      "sent_at": 1779359457.98077,
+      "message_id": 211,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779363057.98077,
+          "done": false
+        }
+      ],
+      "expires_at": 1779384657.98077,
+      "indicators": {
+        "rsi": 0,
+        "ema": 1,
+        "macd": 0.97,
+        "bb": 0,
+        "mom": -0.2,
+        "inter": -0.05
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.468,
+      "aligned": 2,
+      "consensus": true
+    }
+  ],
   "USD/CHF|BUY": 1779309056.684334,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779348653.420361,
@@ -470,7 +529,7 @@
   "AUD/USD|SELL": 1779332463.119578,
   "XAG/USD|SELL": 1779346865.206978,
   "EUR/USD|BUY": 1779010248.217127,
-  "GBP/USD|BUY": 1779276654.894536,
+  "GBP/USD|BUY": 1779359457.98077,
   "XAU/USD|BUY": 1779305725.567297,
   "USD/CHF|SELL": 1778950862.949839,
   "USD/JPY|SELL": 1778968862.131454,
