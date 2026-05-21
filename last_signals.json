@@ -37,6 +37,35 @@
       "hurst": 0.464,
       "aligned": 2,
       "consensus": true
+    },
+    {
+      "sym": "AUD/USD",
+      "signal": "SELL",
+      "entry_price": 0.71092,
+      "sl": 0.7162,
+      "tp": 0.7003600000000001,
+      "sent_at": 1779332463.119578,
+      "message_id": 201,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779336063.119578,
+          "done": false
+        }
+      ],
+      "expires_at": 1779357663.119578,
+      "indicators": {
+        "rsi": 1,
+        "ema": 0,
+        "macd": -0.5,
+        "bb": 0,
+        "mom": -1.0,
+        "inter": 0.05
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.452,
+      "aligned": 2,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1779309056.684334,
@@ -462,7 +491,7 @@
       "regime": "RANGE"
     }
   ],
-  "AUD/USD|SELL": 1779292871.598416,
+  "AUD/USD|SELL": 1779332463.119578,
   "XAG/USD|SELL": 1778853666.940891,
   "EUR/USD|BUY": 1779010248.217127,
   "GBP/USD|BUY": 1779276654.894536,
