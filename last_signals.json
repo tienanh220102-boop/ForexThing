@@ -37,15 +37,73 @@
       "hurst": 0.632,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "BUY",
+      "entry_price": 0.78741,
+      "sl": 0.7855536209287652,
+      "tp": 0.7911227581424697,
+      "sent_at": 1779390065.138854,
+      "message_id": 227,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779393665.138854,
+          "done": false
+        }
+      ],
+      "expires_at": 1779415265.138854,
+      "indicators": {
+        "rsi": 1,
+        "ema": 0,
+        "macd": 0.18,
+        "bb": 0,
+        "mom": -0.2,
+        "inter": 0.1
+      },
+      "regime": "RANGE",
+      "hurst": 0.448,
+      "aligned": 2,
+      "consensus": true
+    },
+    {
+      "sym": "UKOIL/USD",
+      "signal": "SELL",
+      "entry_price": 103.51000213623047,
+      "sl": 109.30999755859375,
+      "tp": 91.9100112915039,
+      "sent_at": 1779390065.138854,
+      "message_id": 228,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779393665.138854,
+          "done": false
+        }
+      ],
+      "expires_at": 1779415265.138854,
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.3,
+        "bb": 0,
+        "mom": -0.2,
+        "inter": -1.0
+      },
+      "regime": "RANGE",
+      "hurst": 0.417,
+      "aligned": 3,
+      "consensus": true
     }
   ],
-  "USD/CHF|BUY": 1779361264.163014,
+  "USD/CHF|BUY": 1779390065.138854,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779372076.229648,
   "AUD/USD|BUY": 1779375670.612482,
   "EUR/JPY|SELL": 1779381057.554533,
   "GBP/JPY|BUY": 1779059689.579696,
-  "UKOIL/USD|SELL": 1778712200.458527,
+  "UKOIL/USD|SELL": 1779390065.138854,
   "USOIL/USD|SELL": 1778712200.458527,
   "results": [
     {
