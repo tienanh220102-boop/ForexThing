@@ -8,66 +8,7 @@
   "XAG/USD|BUY": 1778712200.458527,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 158.92058,
-      "sl": 158.7529737702338,
-      "tp": 159.2557924595324,
-      "sent_at": 1779330654.483316,
-      "message_id": 200,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779334254.483316,
-          "done": false
-        }
-      ],
-      "expires_at": 1779355854.483316,
-      "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": 0.01,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": -0.05
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.464,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
-      "sym": "AUD/USD",
-      "signal": "SELL",
-      "entry_price": 0.71092,
-      "sl": 0.7162,
-      "tp": 0.7003600000000001,
-      "sent_at": 1779332463.119578,
-      "message_id": 201,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779336063.119578,
-          "done": false
-        }
-      ],
-      "expires_at": 1779357663.119578,
-      "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": -0.5,
-        "bb": 0,
-        "mom": -1.0,
-        "inter": 0.05
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.452,
-      "aligned": 2,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779309056.684334,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779294662.781423,
@@ -489,6 +430,20 @@
       "correct": false,
       "date": "2026-05-21",
       "regime": "RANGE"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-21",
+      "regime": "NEUTRAL"
+    },
+    {
+      "sym": "AUD/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-21",
+      "regime": "NEUTRAL"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
