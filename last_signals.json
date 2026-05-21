@@ -10,64 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "GBP/USD",
-      "signal": "BUY",
-      "entry_price": 1.34316,
-      "sl": 1.3409588584174519,
-      "tp": 1.3475622831650957,
-      "sent_at": 1779359457.98077,
-      "message_id": 210,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779363057.98077,
-          "done": false
-        }
-      ],
-      "expires_at": 1779384657.98077,
-      "indicators": {
-        "rsi": 1,
-        "ema": 1,
-        "macd": -0.16,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.05
-      },
-      "regime": "TREND",
-      "hurst": 0.652,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 159.06377,
-      "sl": 158.82895,
-      "tp": 159.53341000000003,
-      "sent_at": 1779359457.98077,
-      "message_id": 211,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779363057.98077,
-          "done": false
-        }
-      ],
-      "expires_at": 1779384657.98077,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": 0.97,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.05
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.468,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
       "sym": "USD/CHF",
       "signal": "BUY",
       "entry_price": 0.78789,
@@ -551,6 +493,20 @@
       "sym": "EUR/USD",
       "signal": "SELL",
       "correct": false,
+      "date": "2026-05-21",
+      "regime": "NEUTRAL"
+    },
+    {
+      "sym": "GBP/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-21",
+      "regime": "TREND"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
       "date": "2026-05-21",
       "regime": "NEUTRAL"
     }
