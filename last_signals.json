@@ -10,64 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.15955,
-      "sl": 1.16361,
-      "tp": 1.1514300000000002,
-      "sent_at": 1779372076.229648,
-      "message_id": 218,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779375676.229648,
-          "done": false
-        }
-      ],
-      "expires_at": 1779397276.229648,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -1.0,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.6
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.522,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "XAG/USD",
-      "signal": "SELL",
-      "entry_price": 75.16000366210938,
-      "sl": 76.25790588784741,
-      "tp": 73.51423530578613,
-      "sent_at": 1779372076.229648,
-      "message_id": 219,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779375676.229648,
-          "done": false
-        }
-      ],
-      "expires_at": 1779397276.229648,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": -1.0,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.6
-      },
-      "regime": "TREND",
-      "hurst": 0.561,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "AUD/USD",
       "signal": "BUY",
       "entry_price": 0.71372,
@@ -581,6 +523,20 @@
       "correct": false,
       "date": "2026-05-21",
       "regime": "RANGE"
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-21",
+      "regime": "NEUTRAL"
+    },
+    {
+      "sym": "XAG/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-21",
+      "regime": "TREND"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
