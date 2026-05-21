@@ -10,31 +10,31 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/CHF",
+      "sym": "AUD/JPY",
       "signal": "BUY",
-      "entry_price": 0.78789,
-      "sl": 0.78594,
-      "tp": 0.79179,
-      "sent_at": 1779361264.163014,
-      "message_id": 212,
+      "entry_price": 113.48621,
+      "sl": 112.99457,
+      "tp": 114.46949000000001,
+      "sent_at": 1779364871.720824,
+      "message_id": 216,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1779364864.163014,
+          "at": 1779368471.720824,
           "done": false
         }
       ],
-      "expires_at": 1779386464.163014,
+      "expires_at": 1779390071.720824,
       "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": 0.15,
+        "rsi": 0,
+        "ema": 1,
+        "macd": 1.0,
         "bb": 0,
-        "mom": 0.2,
-        "inter": -0.05
+        "mom": 0.6,
+        "inter": 0.4
       },
-      "regime": "NEUTRAL",
-      "hurst": 0.458,
+      "regime": "RANGE",
+      "hurst": 0.385,
       "aligned": 3,
       "consensus": true
     }
@@ -509,6 +509,13 @@
       "correct": true,
       "date": "2026-05-21",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-21",
+      "regime": "NEUTRAL"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -520,5 +527,6 @@
   "USD/JPY|SELL": 1778968862.131454,
   "USD/CAD|SELL": 1778972458.279356,
   "EUR/GBP|BUY": 1779057049.881722,
-  "EUR/JPY|BUY": 1779337849.915899
+  "EUR/JPY|BUY": 1779337849.915899,
+  "AUD/JPY|BUY": 1779364871.720824
 }
