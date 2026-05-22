@@ -8,37 +8,7 @@
   "XAG/USD|BUY": 1778712200.458527,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "UKOIL/USD",
-      "signal": "SELL",
-      "entry_price": 103.47000122070312,
-      "sl": 106.3499984741211,
-      "tp": 97.71000671386719,
-      "sent_at": 1779471051.038411,
-      "message_id": 252,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779474651.038411,
-          "done": false
-        }
-      ],
-      "expires_at": 1779496251.038411,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": -0.18,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -1.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.439,
-      "aligned": 3,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779390065.138854,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -642,6 +612,13 @@
       "correct": true,
       "date": "2026-05-22",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "UKOIL/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-23",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
