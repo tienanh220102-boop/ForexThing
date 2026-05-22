@@ -37,6 +37,35 @@
       "hurst": 0.373,
       "aligned": 3,
       "consensus": true
+    },
+    {
+      "sym": "UKOIL/USD",
+      "signal": "SELL",
+      "entry_price": 105.16000366210938,
+      "sl": 106.86934394140961,
+      "tp": 101.74132310350889,
+      "sent_at": 1779447665.638612,
+      "message_id": 243,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779451265.638612,
+          "done": false
+        }
+      ],
+      "expires_at": 1779472865.638612,
+      "indicators": {
+        "rsi": 0,
+        "ema": -1,
+        "macd": 0.41,
+        "bb": 0,
+        "mom": -0.2,
+        "inter": -0.58
+      },
+      "regime": "RANGE",
+      "hurst": 0.439,
+      "aligned": 2,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1779390065.138854,
@@ -45,7 +74,7 @@
   "AUD/USD|BUY": 1779402648.900413,
   "EUR/JPY|SELL": 1779381057.554533,
   "GBP/JPY|BUY": 1779059689.579696,
-  "UKOIL/USD|SELL": 1779390065.138854,
+  "UKOIL/USD|SELL": 1779447665.638612,
   "USOIL/USD|SELL": 1778712200.458527,
   "results": [
     {
