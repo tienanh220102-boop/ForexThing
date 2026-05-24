@@ -8,66 +8,7 @@
   "XAG/USD|BUY": 1778712200.458527,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/CHF",
-      "signal": "SELL",
-      "entry_price": 0.7853,
-      "sl": 0.7858557064392923,
-      "tp": 0.7841885871214156,
-      "sent_at": 1779649259.30038,
-      "message_id": 278,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779652859.30038,
-          "done": false
-        }
-      ],
-      "expires_at": 1779674459.30038,
-      "indicators": {
-        "rsi": -1,
-        "ema": 0,
-        "macd": 1.0,
-        "bb": -1,
-        "mom": -0.2,
-        "inter": 0.06
-      },
-      "regime": "RANGE",
-      "hurst": 0.421,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "CAD/JPY",
-      "signal": "SELL",
-      "entry_price": 115.18084,
-      "sl": 115.39455,
-      "tp": 114.75342000000002,
-      "sent_at": 1779649259.30038,
-      "message_id": 279,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779652859.30038,
-          "done": false
-        }
-      ],
-      "expires_at": 1779674459.30038,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.19,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.6
-      },
-      "regime": "RANGE",
-      "hurst": 0.399,
-      "aligned": 2,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779390065.138854,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -760,6 +701,20 @@
       "sym": "USD/CAD",
       "signal": "BUY",
       "correct": false,
+      "date": "2026-05-25",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-25",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "CAD/JPY",
+      "signal": "SELL",
+      "correct": true,
       "date": "2026-05-25",
       "regime": "RANGE"
     }
