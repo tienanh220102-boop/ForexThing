@@ -10,60 +10,31 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/CHF",
+      "sym": "CAD/JPY",
       "signal": "SELL",
-      "entry_price": 0.78433,
-      "sl": 0.78515,
-      "tp": 0.7826899999999999,
-      "sent_at": 1779606063.394925,
-      "message_id": 268,
+      "entry_price": 115.19676,
+      "sl": 115.25290559544567,
+      "tp": 115.08446880910867,
+      "sent_at": 1779611452.690307,
+      "message_id": 272,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1779609663.394925,
+          "at": 1779615052.690307,
           "done": false
         }
       ],
-      "expires_at": 1779631263.394925,
+      "expires_at": 1779636652.690307,
       "indicators": {
-        "rsi": 1,
+        "rsi": 0,
         "ema": -1,
-        "macd": 0.02,
+        "macd": 0.29,
         "bb": 0,
-        "mom": -0.6,
-        "inter": 0.06
+        "mom": -0.2,
+        "inter": -0.6
       },
       "regime": "RANGE",
-      "hurst": 0.422,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
-      "sym": "USD/CAD",
-      "signal": "BUY",
-      "entry_price": 1.38212,
-      "sl": 1.3813661586283423,
-      "tp": 1.3836276827433154,
-      "sent_at": 1779606063.394925,
-      "message_id": 269,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779609663.394925,
-          "done": false
-        }
-      ],
-      "expires_at": 1779631263.394925,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.23,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.53
-      },
-      "regime": "RANGE",
-      "hurst": 0.414,
+      "hurst": 0.406,
       "aligned": 2,
       "consensus": true
     }
@@ -727,6 +698,20 @@
       "correct": true,
       "date": "2026-05-24",
       "regime": "RANGE"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-24",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "USD/CAD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-24",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -740,5 +725,5 @@
   "EUR/GBP|BUY": 1779057049.881722,
   "EUR/JPY|BUY": 1779337849.915899,
   "AUD/JPY|BUY": 1779364871.720824,
-  "CAD/JPY|SELL": 1779588064.234552
+  "CAD/JPY|SELL": 1779611452.690307
 }
