@@ -37,6 +37,35 @@
       "hurst": 0.444,
       "aligned": 2,
       "consensus": true
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "entry_price": 4569.58149,
+      "sl": 4553.73406,
+      "tp": 4601.276349999999,
+      "sent_at": 1779733854.326739,
+      "message_id": 290,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1779737454.326739,
+          "done": false
+        }
+      ],
+      "expires_at": 1779759054.326739,
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": -0.12,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": -0.06
+      },
+      "regime": "RANGE",
+      "hurst": 0.355,
+      "aligned": 2,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1779390065.138854,
@@ -767,7 +796,7 @@
   "XAG/USD|SELL": 1779481152.198852,
   "EUR/USD|BUY": 1779010248.217127,
   "GBP/USD|BUY": 1779463855.81869,
-  "XAU/USD|BUY": 1779395452.86675,
+  "XAU/USD|BUY": 1779733854.326739,
   "USD/CHF|SELL": 1779649259.30038,
   "USD/JPY|SELL": 1778968862.131454,
   "USD/CAD|SELL": 1778972458.279356,
