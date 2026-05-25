@@ -15,35 +15,6 @@
       "entry_price": 103.54000091552734,
       "sl": 105.73745266065846,
       "tp": 99.1450974252651,
-      "sent_at": 1779692465.217874,
-      "message_id": 287,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779696065.217874,
-          "done": false
-        }
-      ],
-      "expires_at": 1779717665.217874,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": -0.11,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": -1.0
-      },
-      "regime": "RANGE",
-      "hurst": 0.444,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
-      "sym": "UKOIL/USD",
-      "signal": "SELL",
-      "entry_price": 103.54000091552734,
-      "sl": 105.73745266065846,
-      "tp": 99.1450974252651,
       "sent_at": 1779715848.760572,
       "message_id": 288,
       "checkpoints": [
