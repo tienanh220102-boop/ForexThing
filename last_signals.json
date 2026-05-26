@@ -8,66 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "XAG/USD",
-      "signal": "BUY",
-      "entry_price": 76.80999755859375,
-      "sl": 75.76000213623047,
-      "tp": 78.90998840332031,
-      "sent_at": 1779802260.848845,
-      "message_id": 297,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779805860.848845,
-          "done": false
-        }
-      ],
-      "expires_at": 1779827460.848845,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": 0.34,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.16
-      },
-      "regime": "TREND",
-      "hurst": 0.595,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "USD/CAD",
-      "signal": "BUY",
-      "entry_price": 1.381,
-      "sl": 1.3798567680137983,
-      "tp": 1.3832864639724036,
-      "sent_at": 1779803615.829842,
-      "message_id": 298,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779807215.829842,
-          "done": false
-        }
-      ],
-      "expires_at": 1779828815.829842,
-      "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": 0.63,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.45
-      },
-      "regime": "RANGE",
-      "hurst": 0.434,
-      "aligned": 2,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779390065.138854,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -790,6 +731,20 @@
       "correct": true,
       "date": "2026-05-25",
       "regime": "RANGE"
+    },
+    {
+      "sym": "USD/CAD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-26",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "XAG/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-05-26",
+      "regime": "TREND"
     },
     {
       "sym": "USD/CAD",
