@@ -10,64 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "entry_price": 4488.43345,
-      "sl": 4527.94941,
-      "tp": 4409.401530000001,
-      "sent_at": 1779870654.234933,
-      "message_id": 301,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779874254.234933,
-          "done": false
-        }
-      ],
-      "expires_at": 1779895854.234933,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.13,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.05
-      },
-      "regime": "RANGE",
-      "hurst": 0.352,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
-      "sym": "XAG/USD",
-      "signal": "SELL",
-      "entry_price": 75.46499633789062,
-      "sl": 77.9000015258789,
-      "tp": 70.59498596191406,
-      "sent_at": 1779870654.234933,
-      "message_id": 302,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779874254.234933,
-          "done": false
-        }
-      ],
-      "expires_at": 1779895854.234933,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -1.0,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.05
-      },
-      "regime": "TREND",
-      "hurst": 0.606,
-      "aligned": 3,
-      "consensus": true
-    },
-    {
       "sym": "USD/CAD",
       "signal": "BUY",
       "entry_price": 1.3824,
@@ -840,6 +782,20 @@
       "correct": false,
       "date": "2026-05-26",
       "regime": "RANGE"
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-27",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "XAG/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-27",
+      "regime": "TREND"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
