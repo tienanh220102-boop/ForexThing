@@ -10,32 +10,32 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 159.54094,
-      "sl": 159.43329930573066,
-      "tp": 159.7562213885387,
-      "sent_at": 1779935450.970834,
-      "message_id": 311,
+      "sym": "CAD/JPY",
+      "signal": "SELL",
+      "entry_price": 115.10189,
+      "sl": 115.35608,
+      "tp": 114.59350999999998,
+      "sent_at": 1779940863.161611,
+      "message_id": 313,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1779939050.970834,
+          "at": 1779944463.161611,
           "done": false
         }
       ],
-      "expires_at": 1779960650.970834,
+      "expires_at": 1779966063.161611,
       "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.02,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.03
+        "rsi": 1,
+        "ema": -1,
+        "macd": -1.0,
+        "bb": 1,
+        "mom": -1.0,
+        "inter": -0.6
       },
-      "regime": "NEUTRAL",
-      "hurst": 0.455,
-      "aligned": 2,
+      "regime": "RANGE",
+      "hurst": 0.394,
+      "aligned": 3,
       "consensus": true
     }
   ],
@@ -817,6 +817,13 @@
       "correct": false,
       "date": "2026-05-28",
       "regime": "RANGE"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-28",
+      "regime": "NEUTRAL"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -830,5 +837,5 @@
   "EUR/GBP|BUY": 1779057049.881722,
   "EUR/JPY|BUY": 1779679852.520935,
   "AUD/JPY|BUY": 1779364871.720824,
-  "CAD/JPY|SELL": 1779649259.30038
+  "CAD/JPY|SELL": 1779940863.161611
 }
