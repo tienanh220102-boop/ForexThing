@@ -10,35 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "UKOIL/USD",
-      "signal": "SELL",
-      "entry_price": 94.16999816894531,
-      "sl": 95.95999908447266,
-      "tp": 90.58999633789062,
-      "sent_at": 1779960655.448202,
-      "message_id": 319,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779964255.448202,
-          "done": false
-        }
-      ],
-      "expires_at": 1779985855.448202,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.6,
-        "bb": 0,
-        "mom": -1.0,
-        "inter": -0.62
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.457,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
       "sym": "USD/CHF",
       "signal": "BUY",
       "entry_price": 0.78918,
@@ -903,6 +874,13 @@
       "correct": false,
       "date": "2026-05-28",
       "regime": "RANGE"
+    },
+    {
+      "sym": "UKOIL/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-28",
+      "regime": "NEUTRAL"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
