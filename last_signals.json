@@ -1,6 +1,6 @@
 {
   "GBP/USD|SELL": 1779906657.704856,
-  "USD/JPY|BUY": 1779935450.970834,
+  "USD/JPY|BUY": 1779967852.109147,
   "USD/CAD|BUY": 1779951664.755662,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
@@ -10,60 +10,31 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/CHF",
+      "sym": "USD/JPY",
       "signal": "BUY",
-      "entry_price": 0.78918,
-      "sl": 0.78741,
-      "tp": 0.7927199999999999,
-      "sent_at": 1779962477.127064,
-      "message_id": 320,
+      "entry_price": 159.46146,
+      "sl": 159.34834147414549,
+      "tp": 159.68769705170897,
+      "sent_at": 1779967852.109147,
+      "message_id": 325,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1779966077.127064,
+          "at": 1779971452.109147,
           "done": false
         }
       ],
-      "expires_at": 1779987677.127064,
+      "expires_at": 1779993052.109147,
       "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.03,
+        "rsi": 1,
+        "ema": 0,
+        "macd": -0.53,
         "bb": 0,
         "mom": 0.2,
         "inter": 0.03
       },
-      "regime": "RANGE",
-      "hurst": 0.433,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
-      "sym": "CAD/JPY",
-      "signal": "SELL",
-      "entry_price": 115.03041,
-      "sl": 115.23282,
-      "tp": 114.62559,
-      "sent_at": 1779962477.127064,
-      "message_id": 321,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779966077.127064,
-          "done": false
-        }
-      ],
-      "expires_at": 1779987677.127064,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": -0.03,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.6
-      },
-      "regime": "RANGE",
-      "hurst": 0.39,
+      "regime": "NEUTRAL",
+      "hurst": 0.462,
       "aligned": 2,
       "consensus": true
     }
@@ -881,6 +852,20 @@
       "correct": false,
       "date": "2026-05-28",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-28",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "CAD/JPY",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-28",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
