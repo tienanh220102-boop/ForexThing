@@ -8,37 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "CAD/JPY",
-      "signal": "SELL",
-      "entry_price": 115.10189,
-      "sl": 115.35608,
-      "tp": 114.59350999999998,
-      "sent_at": 1779940863.161611,
-      "message_id": 313,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779944463.161611,
-          "done": false
-        }
-      ],
-      "expires_at": 1779966063.161611,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -1.0,
-        "bb": 1,
-        "mom": -1.0,
-        "inter": -0.6
-      },
-      "regime": "RANGE",
-      "hurst": 0.394,
-      "aligned": 3,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779390065.138854,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -824,6 +794,13 @@
       "correct": true,
       "date": "2026-05-28",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "CAD/JPY",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-28",
+      "regime": "RANGE"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
