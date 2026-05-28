@@ -8,66 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/CAD",
-      "signal": "BUY",
-      "entry_price": 1.38505,
-      "sl": 1.38361,
-      "tp": 1.3879299999999997,
-      "sent_at": 1779951664.755662,
-      "message_id": 315,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779955264.755662,
-          "done": false
-        }
-      ],
-      "expires_at": 1779976864.755662,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.1,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.09
-      },
-      "regime": "RANGE",
-      "hurst": 0.44,
-      "aligned": 2,
-      "consensus": true
-    },
-    {
-      "sym": "XAG/USD",
-      "signal": "SELL",
-      "entry_price": 73.33000183105469,
-      "sl": 75.2300033569336,
-      "tp": 69.52999877929688,
-      "sent_at": 1779951664.755662,
-      "message_id": 316,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1779955264.755662,
-          "done": false
-        }
-      ],
-      "expires_at": 1779976864.755662,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.19,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.03
-      },
-      "regime": "RANGE",
-      "hurst": 0.43,
-      "aligned": 3,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1779390065.138854,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -856,6 +797,20 @@
     },
     {
       "sym": "CAD/JPY",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-05-28",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "USD/CAD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-05-28",
+      "regime": "RANGE"
+    },
+    {
+      "sym": "XAG/USD",
       "signal": "SELL",
       "correct": false,
       "date": "2026-05-28",
