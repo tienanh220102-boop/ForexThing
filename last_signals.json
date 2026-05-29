@@ -8,7 +8,37 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [],
+  "pending_validations": [
+    {
+      "sym": "USD/JPY",
+      "signal": "SELL",
+      "entry_price": 159.26324,
+      "sl": 159.39566257471407,
+      "tp": 158.99839485057186,
+      "sent_at": 1780014652.289056,
+      "message_id": 331,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1780018252.289056,
+          "done": false
+        }
+      ],
+      "expires_at": 1780039852.289056,
+      "indicators": {
+        "rsi": 0,
+        "ema": -1,
+        "macd": -0.18,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -0.22
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.458,
+      "aligned": 3,
+      "consensus": true
+    }
+  ],
   "USD/CHF|BUY": 1779962477.127064,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -865,7 +895,7 @@
   "GBP/USD|BUY": 1779463855.81869,
   "XAU/USD|BUY": 1779733854.326739,
   "USD/CHF|SELL": 1779649259.30038,
-  "USD/JPY|SELL": 1778968862.131454,
+  "USD/JPY|SELL": 1780014652.289056,
   "USD/CAD|SELL": 1778972458.279356,
   "EUR/GBP|BUY": 1779057049.881722,
   "EUR/JPY|BUY": 1779679852.520935,
