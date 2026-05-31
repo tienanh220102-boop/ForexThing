@@ -37,35 +37,6 @@
       "hurst": 0.539,
       "aligned": 2,
       "consensus": true
-    },
-    {
-      "sym": "USD/CHF",
-      "signal": "SELL",
-      "entry_price": 0.78122,
-      "sl": 0.7814899177929479,
-      "tp": 0.7806801644141045,
-      "sent_at": 1780254060.694785,
-      "message_id": 366,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1780257660.694785,
-          "done": false
-        }
-      ],
-      "expires_at": 1780279260.694785,
-      "indicators": {
-        "rsi": -1,
-        "ema": 0,
-        "macd": 0.51,
-        "bb": -1,
-        "mom": -0.2,
-        "inter": -0.26
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.539,
-      "aligned": 3,
-      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1779962477.127064,
@@ -1027,6 +998,13 @@
       "signal": "BUY",
       "correct": false,
       "date": "2026-05-31",
+      "regime": "NEUTRAL"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-06-01",
       "regime": "NEUTRAL"
     }
   ],
