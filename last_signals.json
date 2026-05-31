@@ -10,31 +10,60 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
+      "sym": "GBP/USD",
       "signal": "BUY",
-      "entry_price": 4542.53712,
-      "sl": 4540.383910416097,
-      "tp": 4546.843539167806,
-      "sent_at": 1780219853.717793,
-      "message_id": 357,
+      "entry_price": 1.34571,
+      "sl": 1.3451567826446391,
+      "tp": 1.3468164347107217,
+      "sent_at": 1780245649.560464,
+      "message_id": 363,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1780223453.717793,
+          "at": 1780249249.560464,
           "done": false
         }
       ],
-      "expires_at": 1780245053.717793,
+      "expires_at": 1780270849.560464,
       "indicators": {
-        "rsi": 0,
+        "rsi": 1,
         "ema": 1,
-        "macd": -0.32,
+        "macd": -0.13,
         "bb": 0,
         "mom": 0.2,
         "inter": 0.26
       },
       "regime": "NEUTRAL",
-      "hurst": 0.541,
+      "hurst": 0.493,
+      "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "entry_price": 4542.45824,
+      "sl": 4541.011126319504,
+      "tp": 4545.352467360993,
+      "sent_at": 1780245649.560464,
+      "message_id": 364,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1780249249.560464,
+          "done": false
+        }
+      ],
+      "expires_at": 1780270849.560464,
+      "indicators": {
+        "rsi": 0,
+        "ema": 1,
+        "macd": -0.33,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": 0.26
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.539,
       "aligned": 2,
       "consensus": true
     }
@@ -997,8 +1026,8 @@
   "AUD/USD|SELL": 1779332463.119578,
   "XAG/USD|SELL": 1779951664.755662,
   "EUR/USD|BUY": 1779010248.217127,
-  "GBP/USD|BUY": 1779463855.81869,
-  "XAU/USD|BUY": 1780219853.717793,
+  "GBP/USD|BUY": 1780245649.560464,
+  "XAU/USD|BUY": 1780245649.560464,
   "USD/CHF|SELL": 1779649259.30038,
   "USD/JPY|SELL": 1780237855.188667,
   "USD/CAD|SELL": 1778972458.279356,
