@@ -37,35 +37,6 @@
       "hurst": 0.541,
       "aligned": 2,
       "consensus": true
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "SELL",
-      "entry_price": 159.28478,
-      "sl": 159.33433,
-      "tp": 159.18568000000005,
-      "sent_at": 1780237855.188667,
-      "message_id": 360,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1780241455.188667,
-          "done": false
-        }
-      ],
-      "expires_at": 1780263055.188667,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": -0.0,
-        "bb": 0,
-        "mom": -1.0,
-        "inter": -0.26
-      },
-      "regime": "TREND",
-      "hurst": 0.553,
-      "aligned": 2,
-      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1779962477.127064,
@@ -1014,6 +985,13 @@
       "correct": true,
       "date": "2026-05-31",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-05-31",
+      "regime": "TREND"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
