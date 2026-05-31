@@ -37,12 +37,41 @@
       "hurst": 0.541,
       "aligned": 2,
       "consensus": true
+    },
+    {
+      "sym": "AUD/USD",
+      "signal": "BUY",
+      "entry_price": 0.71851,
+      "sl": 0.7179417461076505,
+      "tp": 0.719646507784699,
+      "sent_at": 1780230653.948312,
+      "message_id": 358,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1780234253.948312,
+          "done": false
+        }
+      ],
+      "expires_at": 1780255853.948312,
+      "indicators": {
+        "rsi": 1,
+        "ema": 0,
+        "macd": -0.09,
+        "bb": 0,
+        "mom": 0.2,
+        "inter": 0.26
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.51,
+      "aligned": 2,
+      "consensus": true
     }
   ],
   "USD/CHF|BUY": 1779962477.127064,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
-  "AUD/USD|BUY": 1780207265.26923,
+  "AUD/USD|BUY": 1780230653.948312,
   "EUR/JPY|SELL": 1779381057.554533,
   "GBP/JPY|BUY": 1779059689.579696,
   "UKOIL/USD|SELL": 1779982261.373463,
