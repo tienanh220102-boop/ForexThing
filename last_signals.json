@@ -8,11 +8,41 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [],
+  "pending_validations": [
+    {
+      "sym": "AUD/USD",
+      "signal": "BUY",
+      "entry_price": 0.71853,
+      "sl": 0.71689,
+      "tp": 0.72181,
+      "sent_at": 1780275662.631774,
+      "message_id": 369,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1780279262.631774,
+          "done": false
+        }
+      ],
+      "expires_at": 1780300862.631774,
+      "indicators": {
+        "rsi": 1,
+        "ema": 1,
+        "macd": -0.58,
+        "bb": 0,
+        "mom": 0.2,
+        "inter": 0.26
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.504,
+      "aligned": 3,
+      "consensus": true
+    }
+  ],
   "USD/CHF|BUY": 1779962477.127064,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
-  "AUD/USD|BUY": 1780230653.948312,
+  "AUD/USD|BUY": 1780275662.631774,
   "EUR/JPY|SELL": 1779381057.554533,
   "GBP/JPY|BUY": 1779059689.579696,
   "UKOIL/USD|SELL": 1779982261.373463,
