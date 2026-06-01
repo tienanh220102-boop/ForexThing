@@ -23,7 +23,7 @@ TWELVE_DATA_KEY  = os.environ.get('TWELVE_DATA_KEY', '')  # Twelve Data API (fre
 COOLDOWN_HOURS  = 6
 STATE_FILE      = 'last_signals.json'
 CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
-MIN_CONFIDENCE  = 60     # 3/5 phieu = 60% | 4/5 = 75% | 5/5 = 90%
+MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de dat 65
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
 # Cap nhat moi khi co thay doi lon ve thuat toan (ADX filter, session filter, swing SL)
@@ -40,56 +40,59 @@ LOGIC_VERSION   = '2026-05-19'
 # min_votes: so phieu toi thieu (3 = chuan | 4 = yeu cau cao hon cho cap nhieu nhieu)
 PAIR_CONFIG = {
     # === MAJORS ===
-    # EUR/USD: London (07-16) + NY — thuong co cau truc NEUTRAL/TREND trong London
-    'EUR/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
+    # EUR/USD: cap tot nhat (83% WR) — giu nhu cu nhung nang hurst_block
+    'EUR/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # GBP/USD: bien dong cao hon EUR/USD, giu nguong cao hon mot chut
-    'GBP/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.42, 'min_votes': 4,
+    # GBP/USD: 29% WR — rat nhieu nhieu, can xu huong ro rang moi vao
+    'GBP/USD':   {'rsi_buy': 42, 'rsi_sell': 58, 'hurst_block': 0.52, 'min_votes': 4,
                   'trade_hours': set(range(7, 21))},
-    # USD/JPY: BoJ zero-rate → co xu huong carry, Tokyo session ben hon
-    'USD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 3,
+    # USD/JPY: 33% WR — nang hurst_block, RSI chat hon
+    'USD/JPY':   {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.48, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
-    # USD/CHF: safe-haven doi nghich, thuong range hon → nguong vua
-    'USD/CHF':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.42, 'min_votes': 3,
+    # USD/CHF: 67% WR — hoat dong tot, nang nhe hurst_block
+    'USD/CHF':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # USD/CAD: oil-driven → co xu huong ro khi oil di chuyen
-    'USD/CAD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
+    # USD/CAD: 100% WR — pair tot, giu nguong tuong duong
+    'USD/CAD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # AUD/USD: commodity-linked, Sydney+Tokyo session co cau truc nhat dinh
-    'AUD/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
+    # AUD/USD: 0% WR (tat ca SELL deu sai) — nang hurst_block, chi ban khi RSI that su qua mua
+    'AUD/USD':   {'rsi_buy': 42, 'rsi_sell': 62, 'hurst_block': 0.50, 'min_votes': 4,
                   'trade_hours': set(range(0, 17)) | {22, 23}},
 
-    # === JPY CROSSES — bien dong cao, hay tao xu huong nhanh trong Asian session ===
-    # EUR/JPY: EUR driver (London) + JPY driver (Tokyo) → thap de bat ca 2 session
-    'EUR/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
+    # === JPY CROSSES ===
+    # EUR/JPY: 67% WR — OK, nang nhe hurst_block len tren nguong RANGE
+    'EUR/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
-    # GBP/JPY: "The beast" — bien dong nhat, min_votes=4 bu tru hurst_block thap
-    'GBP/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 4,
+    # GBP/JPY: 33% WR — "The beast" qua nhieu nhieu, can TREND that su
+    'GBP/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.52, 'min_votes': 4,
                   'trade_hours': set(range(0, 21))},
-    # AUD/JPY: carry trade thuan tuy — Asian session la core session
-    'AUD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
+    # AUD/JPY: carry trade — nang hurst_block tren nguong RANGE
+    'AUD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
                   'trade_hours': set(range(0, 17)) | {22, 23}},
-    # CAD/JPY: carry trade + oil driver — Tokyo + NY overlap
-    'CAD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.38, 'min_votes': 3,
+    # CAD/JPY: carry trade + oil — nang hurst_block
+    'CAD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
 
     # === KIM LOAI QUY ===
-    # XAU/USD: macro-driven, co the cho H thap hon vi news catalyst lam gia phang
-    'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.35, 'min_votes': 3,
+    # XAU/USD: 67% WR — pair tot nhat, nang nhe hurst_block
+    'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.42, 'min_votes': 3,
                   'trade_hours': set(range(6, 21))},
-    # XAG/USD: industrial + gold hybrid — cu xu min_votes=4
-    'XAG/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 4,
+    # XAG/USD: 0% WR (1 lenh) — nang hurst_block, giu min_votes=4
+    'XAG/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.48, 'min_votes': 4,
                   'trade_hours': set(range(7, 21))},
 
     # === DAU MO ===
-    # USOIL/USD (WTI): NYMEX-driven, trend ro khi OPEC/supply news
-    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 3,
+    # USOIL: 0% WR (1 lenh) — nang hurst_block
+    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.47, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # UKOIL/USD (Brent): ICE London — tuong tu WTI nhung London-centric
-    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.40, 'min_votes': 3,
+    # UKOIL: 33% WR — nang hurst_block
+    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.47, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
 }
-_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.40, 'min_votes': 3,
+# EUR/GBP da bi loai: 17% WR (1/6), pair phu thuoc chinh sach Brexit/UK-EU
+# Khong the phan tich ky thuat chuan xac — loai hoan toan
+
+_DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                    'trade_hours': set(range(7, 21))}
 
 SYMBOLS = {
@@ -1460,6 +1463,11 @@ def analyze(sym, yf_sym, now=None):
         elif h4_opposed:
             min_v = min(5, min_v + 1)
 
+        # RANGE regime: thi truong ngang, tin hieu chi bao khong dang tin — can them 1 vote
+        # Day la bao ve chinh: du hurst_block da cao, van co H vua qua nguong nhung van RANGE
+        if regime == 'RANGE':
+            min_v = min(5, min_v + 1)
+
         if cal_status == 'SOFT':
             min_v = min(5, min_v + 1)
             print(f'  [!] Calendar SOFT: {cal_reason} — min_votes={min_v}')
@@ -1819,16 +1827,51 @@ def run_validations(state, now):
 
             entry   = v['entry_price']
             signal  = v['signal']
-            diff    = current - entry if signal == 'BUY' else entry - current
-            pct     = abs(diff/entry) * 100
-            correct = diff > 0
+            sl_val  = v.get('sl')
+            tp_val  = v.get('tp')
 
-            verdict_emoji = '✅' if correct else '❌'
-            verdict       = 'ĐÚNG HƯỚNG' if correct else 'SAI HƯỚNG'
-            move_text     = (
-                (f'Tăng {pct:.3f}%' if signal=='BUY' else f'Giảm {pct:.3f}%') if correct
-                else (f'Giảm {pct:.3f}%' if signal=='BUY' else f'Tăng {pct:.3f}%')
-            )
+            # Kiem tra TP/SL tu HIGH/LOW trong khung gio (chinh xac hon gia hien tai)
+            # Su dung h1_high/h1_low de biet TP hay SL da duoc cham trong khung gio
+            tp_hit = sl_hit = False
+            if sl_val and tp_val and h1_high is not None and h1_low is not None:
+                # Trong khung gio: gia co dat toi TP hay SL khong?
+                tp_hit = (h1_high >= tp_val) if signal == 'BUY' else (h1_low <= tp_val)
+                sl_hit = (h1_low  <= sl_val) if signal == 'BUY' else (h1_high >= sl_val)
+            elif sl_val and tp_val:
+                # Fallback: dung gia hien tai
+                tp_hit = (current >= tp_val) if signal == 'BUY' else (current <= tp_val)
+                sl_hit = (current <= sl_val) if signal == 'BUY' else (current >= sl_val)
+
+            # correct = TP hit (thang) > SL hit (thua) > direction (tham khao)
+            # Day la metric chinh xac: phan anh P&L thuc te cua giao dich
+            if tp_hit and not sl_hit:
+                correct = True    # TP dat truoc SL → thang
+            elif sl_hit and not tp_hit:
+                correct = False   # SL bi cham truoc TP → thua
+            elif tp_hit and sl_hit:
+                # Ca hai trong khung: can xem cai nao den truoc — dung direction lam tiebreak
+                diff_direction = current - entry if signal == 'BUY' else entry - current
+                correct = diff_direction > 0
+            else:
+                # Khong cham ca hai: dung direction tai thoi diem check
+                diff    = current - entry if signal == 'BUY' else entry - current
+                correct = diff > 0
+
+            diff = current - entry if signal == 'BUY' else entry - current
+            pct  = abs(diff/entry) * 100
+
+            if tp_hit and not sl_hit:
+                verdict_emoji = '🎉'; verdict = 'CHỐT LỜI (TP)'
+                move_text = f'TP chạm! +{abs(tp_val-entry)/entry*100:.3f}%'
+            elif sl_hit and not tp_hit:
+                verdict_emoji = '💸'; verdict = 'DỪNG LỖ (SL)'
+                move_text = f'SL chạm! -{abs(sl_val-entry)/entry*100:.3f}%'
+            elif diff > 0:
+                verdict_emoji = '✅'; verdict = 'ĐÚNG HƯỚNG'
+                move_text = f'{"Tăng" if signal=="BUY" else "Giảm"} {pct:.3f}%'
+            else:
+                verdict_emoji = '❌'; verdict = 'SAI HƯỚNG'
+                move_text = f'{"Giảm" if signal=="BUY" else "Tăng"} {pct:.3f}%'
 
             inds    = v.get('indicators', {})
             regime  = v.get('regime', '?')
@@ -1840,15 +1883,11 @@ def run_validations(state, now):
             sent_dt    = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
             now_vn_val = now.astimezone(VN_TZ)
 
-            # Kiem tra TP/SL da bi cham chua (ap sat, vi check theo dinh ky 30 phut)
-            sl_val = v.get('sl')
-            tp_val = v.get('tp')
+            # TP/SL status line
             if sl_val and tp_val:
-                tp_hit = (current >= tp_val) if signal == 'BUY' else (current <= tp_val)
-                sl_hit = (current <= sl_val) if signal == 'BUY' else (current >= sl_val)
-                if tp_hit:
+                if tp_hit and not sl_hit:
                     tp_sl_line = f'🎉 ĐÃ CHẠM TP ({fmt_price(sym, tp_val)}) — CHỐT LỜI!'
-                elif sl_hit:
+                elif sl_hit and not tp_hit:
                     tp_sl_line = f'💸 ĐÃ CHẠM SL ({fmt_price(sym, sl_val)}) — DỪNG LỖ!'
                 else:
                     d_tp = abs(tp_val - current) / entry * 100
