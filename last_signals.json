@@ -8,37 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1779059689.579696,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/CHF",
-      "signal": "BUY",
-      "entry_price": 0.78608,
-      "sl": 0.78445,
-      "tp": 0.78934,
-      "sent_at": 1780390870.847848,
-      "message_id": 377,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1780394470.847848,
-          "done": false
-        }
-      ],
-      "expires_at": 1780416070.847848,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.39,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.14
-      },
-      "regime": "TREND",
-      "hurst": 0.559,
-      "aligned": 2,
-      "consensus": true
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1780390870.847848,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -1041,6 +1011,13 @@
       "correct": true,
       "date": "2026-06-02",
       "regime": "NEUTRAL"
+    },
+    {
+      "sym": "USD/CHF",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-06-02",
+      "regime": "TREND"
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
