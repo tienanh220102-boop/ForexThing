@@ -27,7 +27,7 @@ MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
 # Cap nhat moi khi co thay doi lon ve thuat toan (ADX filter, session filter, swing SL)
-LOGIC_VERSION   = '2026-05-19'
+LOGIC_VERSION   = '2026-06-03'
 # Session per-pair duoc dinh nghia trong PAIR_CONFIG['trade_hours'] (UTC)
 # Xem PAIR_CONFIG ben duoi de biet gio cu the tung cap
 
@@ -43,8 +43,8 @@ PAIR_CONFIG = {
     # EUR/USD: cap tot nhat (83% WR) — giu nhu cu nhung nang hurst_block
     'EUR/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # GBP/USD: 29% WR — rat nhieu nhieu, can xu huong ro rang moi vao
-    'GBP/USD':   {'rsi_buy': 42, 'rsi_sell': 58, 'hurst_block': 0.52, 'min_votes': 4,
+    # GBP/USD: 27% WR — nhu cau tin hieu cuc chat, nang min_votes=5
+    'GBP/USD':   {'rsi_buy': 42, 'rsi_sell': 58, 'hurst_block': 0.52, 'min_votes': 5,
                   'trade_hours': set(range(7, 21))},
     # USD/JPY: 33% WR — nang hurst_block, RSI chat hon
     'USD/JPY':   {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.48, 'min_votes': 3,
@@ -77,9 +77,7 @@ PAIR_CONFIG = {
     # XAU/USD: 67% WR — pair tot nhat, nang nhe hurst_block
     'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.42, 'min_votes': 3,
                   'trade_hours': set(range(6, 21))},
-    # XAG/USD: 0% WR (1 lenh) — nang hurst_block, giu min_votes=4
-    'XAG/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.48, 'min_votes': 4,
-                  'trade_hours': set(range(7, 21))},
+    # XAG/USD: da bi loai (0% WR, 7 lenh thua lien tiep — 2026-06-03)
 
     # === DAU MO ===
     # USOIL: 0% WR (1 lenh) — nang hurst_block
@@ -106,7 +104,7 @@ SYMBOLS = {
     # JPY crosses (carry trade)
     'AUD/JPY': 'AUDJPY=X', 'CAD/JPY': 'CADJPY=X',
     # Commodities — XAU/USD la trong tam (80% win rate)
-    'XAU/USD': 'GC=F', 'XAG/USD': 'SI=F',
+    'XAU/USD': 'GC=F',
     'UKOIL/USD': 'BZ=F', 'USOIL/USD': 'CL=F',
 }
 
@@ -122,7 +120,6 @@ PRICE_SANITY = {
     'USD/CAD':   (0.80, 1.80),
     'NZD/USD':   (0.40, 1.00),
     # EUR crosses
-    'EUR/GBP':   (0.60, 1.10),
     'EUR/JPY':   (80,   220),
     # GBP crosses
     'GBP/JPY':   (100,  280),
@@ -131,7 +128,6 @@ PRICE_SANITY = {
     'CAD/JPY':   (70,   130),
     # Commodities
     'XAU/USD':   (1200, 8000),
-    'XAG/USD':   (5,    300),
     'USOIL/USD': (10,   300),
     'UKOIL/USD': (10,   300),
 }
@@ -150,7 +146,7 @@ _CURRENCY_COUNTRY = {
     'USD': 'United States', 'EUR': 'Euro Zone',  'GBP': 'United Kingdom',
     'JPY': 'Japan',         'CAD': 'Canada',      'AUD': 'Australia',
     'NZD': 'New Zealand',   'CHF': 'Switzerland',
-    'XAU': 'United States', 'XAG': 'United States',
+    'XAU': 'United States',
     'USO': 'United States', 'UKO': 'United States',
 }
 # Keyword tim headline lien quan tung dong tien
@@ -164,7 +160,7 @@ _CURRENCY_KEYWORDS = {
     'NZD': ['kiwi', 'nzd ', 'rbnz'],
     'CHF': ['franc', 'chf ', 'snb', 'swiss national bank'],
     'XAU': ['gold', 'bullion', 'precious metal', 'safe haven'],
-    'XAG': ['silver', 'xag'],
+
     'USO': ['crude oil', 'wti', 'opec'],
     'UKO': ['brent oil', 'crude', 'opec'],
 }
@@ -178,23 +174,23 @@ _BEARISH_WORDS = [
 ]
 # Phan loai cap: risk-on (tang khi thi truong lac quan) / risk-off (tang khi so hai)
 _RISK_ON_BUYS  = {'EUR/USD','GBP/USD','AUD/USD','AUD/JPY','CAD/JPY',
-                   'GBP/JPY','EUR/JPY','USOIL/USD','UKOIL/USD','XAG/USD'}
+                   'GBP/JPY','EUR/JPY','USOIL/USD','UKOIL/USD'}
 _RISK_OFF_BUYS = {'USD/JPY', 'USD/CHF', 'XAU/USD'}
 
-# Symbol mapping cho Twelve Data API (16 cap × 48 lan/ngay = 768 req — trong quota free 800)
+# Symbol mapping cho Twelve Data API (13 cap × 48 lan/ngay = 624 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
     # Majors
     'EUR/USD': 'EUR/USD', 'GBP/USD': 'GBP/USD', 'USD/JPY': 'USD/JPY',
     'USD/CHF': 'USD/CHF', 'AUD/USD': 'AUD/USD', 'USD/CAD': 'USD/CAD',
     'AUD/USD': 'AUD/USD',
     # EUR crosses
-    'EUR/GBP': 'EUR/GBP', 'EUR/JPY': 'EUR/JPY',
+    'EUR/JPY': 'EUR/JPY',
     # GBP crosses
     'GBP/JPY': 'GBP/JPY',
     # JPY crosses
     'AUD/JPY': 'AUD/JPY', 'CAD/JPY': 'CAD/JPY',
     # Commodities
-    'XAU/USD': 'XAU/USD', 'XAG/USD': 'XAG/USD',
+    'XAU/USD': 'XAU/USD',
     'UKOIL/USD': 'XBR/USD',
     'USOIL/USD': 'XTI/USD',
 }
@@ -460,8 +456,8 @@ def intermarket_signal(sym):
     # Hang hoa truc tiep
     if sym in ('USOIL/USD', 'UKOIL/USD'):
         return oil
-    if sym in ('XAU/USD', 'XAG/USD'):
-        return -dxy   # Vang/Bac nguoc chieu USD
+    if sym == 'XAU/USD':
+        return -dxy   # Vang nguoc chieu USD
 
     # USD/CAD: DXY va Oil cung tac dong (CAD la dong tien dau mo)
     if sym == 'USD/CAD':
@@ -635,13 +631,7 @@ def macro_score(sym):
     vix_s   =  g['vix_s']
     oil_s   =  g['oil_raw']
 
-    if sym == 'XAG/USD':
-        # Silver = Gold nhung industrial demand (Oil) quan trong hon, yield it hon
-        s = 0.35*dxy_inv + 0.25*yield_s + 0.15*vix_s + 0.25*oil_s
-        c = {'dxy': round(dxy_inv,2), 'tny': round(yield_s,2),
-             'vix': round(vix_s,2),   'oil': round(oil_s,2)}
-
-    elif sym == 'USD/CHF':
+    if sym == 'USD/CHF':
         # Ca hai la safe haven; trong extreme fear CHF thang hon USD → USD/CHF giam
         dxy_raw = g['dxy_raw']
         s = 0.55*dxy_raw + 0.45*(-vix_s)
@@ -658,10 +648,17 @@ def macro_score(sym):
         s = 0.45*dxy_inv + 0.35*(-vix_s) + 0.20*oil_s
         c = {'dxy': round(dxy_inv,2), 'risk': round(-vix_s,2), 'oil': round(oil_s,2)}
 
-    elif sym in ('EUR/USD', 'GBP/USD'):
+    elif sym == 'EUR/USD':
         # Risk-on vs USD: DXY tang = bearish; VIX spike = bearish (USD la safe haven)
         s = 0.60*dxy_inv + 0.40*(-vix_s)
         c = {'dxy': round(dxy_inv,2), 'risk': round(-vix_s,2)}
+
+    elif sym == 'GBP/USD':
+        # GBP nhay cam hon EUR voi risk-off (thanh khoan thap, BoE doc lap)
+        # them GBP news sentiment (BoE, UK GDP, inflation)
+        gbp_sent = _fundamental_cache.get('sentiment', {}).get('GBP', 0.0) if _fundamental_cache else 0.0
+        s = 0.50*dxy_inv + 0.35*(-vix_s) + 0.15*gbp_sent
+        c = {'dxy': round(dxy_inv,2), 'risk': round(-vix_s,2), 'gbp': round(gbp_sent,2)}
 
     else:
         return None, {}
@@ -1468,6 +1465,12 @@ def analyze(sym, yf_sym, now=None):
         if regime == 'RANGE':
             min_v = min(5, min_v + 1)
 
+        # TREND regime + H4 nguoc chieu: counter-trend trong xu huong manh = bay nguy hiem
+        # H > 0.55 = momentum ro rang — vao nguoc chieu la no tien, block cung
+        if regime == 'TREND' and h4_opposed:
+            print(f'  [D] TREND regime + H4 nguoc chieu — counter-trend nguy hiem, bo qua')
+            return None
+
         if cal_status == 'SOFT':
             min_v = min(5, min_v + 1)
             print(f'  [!] Calendar SOFT: {cal_reason} — min_votes={min_v}')
@@ -1743,7 +1746,6 @@ def fetch_price_range(yf_sym, since_ts, hours=1):
 # ── Format ────────────────────────────────────────────────────
 def fmt_price(sym, price):
     if 'JPY' in sym:                                  return f'{price:,.3f}'
-    if sym in ('XAG/USD',):                           return f'{price:,.3f}'
     if sym in ('XAU/USD','UKOIL/USD','USOIL/USD'):    return f'{price:,.2f}'
     return f'{price:.5f}'
 
