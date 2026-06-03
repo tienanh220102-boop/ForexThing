@@ -1,6 +1,6 @@
 {
   "GBP/USD|SELL": 1780056069.457483,
-  "USD/JPY|BUY": 1780458945.986587,
+  "USD/JPY|BUY": 1780489857.749717,
   "USD/CAD|BUY": 1779978655.726155,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
@@ -36,6 +36,35 @@
       "regime": "NEUTRAL",
       "hurst": 0.479,
       "aligned": 3,
+      "consensus": true
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "entry_price": 159.86896,
+      "sl": 159.39599,
+      "tp": 160.81489999999994,
+      "sent_at": 1780489857.749717,
+      "message_id": 384,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1780493457.749717,
+          "done": false
+        }
+      ],
+      "expires_at": 1780515057.749717,
+      "indicators": {
+        "rsi": 0,
+        "ema": 1,
+        "macd": -0.62,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": 0.04
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.487,
+      "aligned": 2,
       "consensus": true
     }
   ],
