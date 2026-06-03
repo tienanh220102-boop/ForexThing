@@ -1749,6 +1749,20 @@ def fmt_price(sym, price):
     if sym in ('XAU/USD','UKOIL/USD','USOIL/USD'):    return f'{price:,.2f}'
     return f'{price:.5f}'
 
+def price_to_pips(sym, raw_diff):
+    """
+    Chuyen doi raw price diff (co dau) thanh pips.
+    raw_diff > 0 = co loi theo chieu signal, < 0 = thua lo.
+    - Standard (EURUSD...): 1 pip = 0.0001 → × 10000
+    - JPY pairs:             1 pip = 0.01   → × 100
+    - XAU/USD (Gold):        1 pip = $0.10  → × 10
+    - Oil (UKOIL/USOIL):     1 pip = $0.01  → × 100
+    """
+    if 'JPY' in sym:                          return round(raw_diff * 100,   1)
+    if sym == 'XAU/USD':                      return round(raw_diff * 10,    1)
+    if sym in ('UKOIL/USD', 'USOIL/USD'):     return round(raw_diff * 100,   1)
+    return                                           round(raw_diff * 10000, 1)
+
 def _icon(v):
     if v > 0.1:  return '⬆'
     if v < -0.1: return '⬇'
@@ -1934,10 +1948,34 @@ def run_validations(state, now):
             if result.get('ok'):
                 cp['done'] = True
                 print(f'{verdict} ✓')
-                # Ghi ket qua theo doi win rate
+                # Ghi ket qua theo doi win rate + pip P&L
+                dir_mult = 1 if signal == 'BUY' else -1
+                if tp_hit and not sl_hit:
+                    outcome    = 'TP'
+                    exit_price = tp_val
+                    pip_result = price_to_pips(sym,  abs(tp_val - entry))   # luon duong
+                elif sl_hit and not tp_hit:
+                    outcome    = 'SL'
+                    exit_price = sl_val
+                    pip_result = price_to_pips(sym, -abs(sl_val - entry))   # luon am
+                else:
+                    outcome    = 'OPEN'
+                    exit_price = current
+                    pip_result = price_to_pips(sym, dir_mult * (current - entry))
+
+                sl_pips = price_to_pips(sym, abs(entry - sl_val)) if sl_val else None
+                tp_pips = price_to_pips(sym, abs(tp_val - entry)) if tp_val else None
+
                 state.setdefault('results', []).append({
-                    'sym': sym, 'signal': signal, 'correct': correct,
-                    'date': sent_dt.strftime('%Y-%m-%d'), 'regime': v.get('regime', '?'),
+                    'sym':     sym,     'signal':  signal,  'correct': correct,
+                    'date':    sent_dt.strftime('%Y-%m-%d'),
+                    'regime':  v.get('regime', '?'),
+                    'outcome': outcome,
+                    'pips':    pip_result,
+                    'entry':   round(entry,      5),
+                    'exit':    round(exit_price, 5),
+                    'sl_pips': sl_pips,
+                    'tp_pips': tp_pips,
                 })
             else:
                 print(f'Loi Telegram: {result}')
@@ -2057,13 +2095,30 @@ def main():
             conf_10 = min(10, conf_10 + 1)
         bar = confidence_bar(conf_10)
 
-        # Win rate — chi tinh ket qua tu LOGIC_VERSION tro di (danh gia logic hien tai)
+        # Win rate + Expectancy — chi tinh ket qua tu LOGIC_VERSION tro di
         results_all = state.get('results', [])
         wr_line = ''
         versioned_r = [x for x in results_all if x.get('date', '') >= LOGIC_VERSION]
         if len(versioned_r) >= 5:
-            wr = sum(1 for x in versioned_r if x['correct']) / len(versioned_r) * 100
-            wr_line = f'📈 Win rate ({len(versioned_r)} lệnh từ {LOGIC_VERSION}): {wr:.0f}%'
+            n_total  = len(versioned_r)
+            n_win    = sum(1 for x in versioned_r if x['correct'])
+            wr_pct   = n_win / n_total * 100
+
+            # Expectancy (chi tinh neu da co du lieu pip)
+            pip_data = [x for x in versioned_r if 'pips' in x]
+            exp_line = ''
+            if len(pip_data) >= 5:
+                wins_pip   = [x['pips'] for x in pip_data if x['correct']]
+                losses_pip = [x['pips'] for x in pip_data if not x['correct']]
+                avg_w = sum(wins_pip)   / len(wins_pip)   if wins_pip   else 0.0
+                avg_l = sum(losses_pip) / len(losses_pip) if losses_pip else 0.0
+                wr_r  = len(wins_pip) / len(pip_data)
+                exp   = wr_r * avg_w + (1 - wr_r) * avg_l   # avg_l am nen + la dung
+                sign  = '+' if exp >= 0 else ''
+                exp_line = (f' | ⚡ Exp: {sign}{exp:.1f}p/lệnh'
+                            f' (W: +{avg_w:.0f}p L: {avg_l:.0f}p, {len(pip_data)} lệnh)')
+
+            wr_line = f'📈 Win rate: {wr_pct:.0f}% ({n_total} lệnh từ {LOGIC_VERSION}){exp_line}'
 
         emoji     = '🟢' if r['signal'] == 'BUY' else '🔴'
         direction = 'MUA' if r['signal'] == 'BUY' else 'BÁN'
