@@ -9,6 +9,7 @@ Forex Signal Notifier v4 — Vote System
   - Xac nhan +1h: ket qua, TP/SL, win rate
 """
 import json, os, time
+from pathlib import Path
 import numpy as np
 from datetime import datetime, timezone, timedelta
 
@@ -17,11 +18,12 @@ import yfinance as yf
 import pandas as pd
 
 # ── Cau hinh ──────────────────────────────────────────────────
+_ROOT            = Path(__file__).parent.parent             # cloud_notifier/ → project root
 TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_TOKEN', '')
 TELEGRAM_CHAT    = os.environ.get('TELEGRAM_CHAT',  '')
 TWELVE_DATA_KEY  = os.environ.get('TWELVE_DATA_KEY', '')  # Twelve Data API (free: 800 req/ngay)
 COOLDOWN_HOURS  = 6
-STATE_FILE      = 'last_signals.json'
+STATE_FILE      = str(_ROOT / 'data' / 'last_signals.json')
 CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
 MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de dat 65
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
@@ -138,7 +140,7 @@ _fundamental_cache = {}   # Cache Fundamental Intelligence Layer (Calendar/Senti
 _price_history     = {}   # Lich su gia tich luy — load tu file, save cuoi phien
 _d1_cache          = {}   # D1 OHLCV cache per pair per session (180 ngay daily)
 
-PRICE_HISTORY_FILE = 'price_history.json'
+PRICE_HISTORY_FILE = str(_ROOT / 'data' / 'price_history.json')
 MAX_HISTORY_BARS   = 720  # 30 ngay H1 moi cap (720 nen × 1h = 720h = 30 ngay)
 
 # Mapping dong tien → quoc gia (dung kiem tra lich kinh te)
@@ -1012,6 +1014,214 @@ def find_fib_levels(h4_c, h4_h, h4_l, signal, lookback=25):
     }
 
 
+# ── Book-Enhanced Modules (Technical Analysis for Mega Profit) ────────────────
+# Bab 5 Trend + Bab 7 S/R + Bab 8 Angka Psikologi + Bab 17 Dow Theory
+
+def _count_tl_touches(side_prices, idx1, p1, slope, tol=0.003):
+    """Dem so lan gia cham gan trendline tu idx1 den hien tai."""
+    touches = 2
+    for i in range(idx1 + 1, len(side_prices)):
+        line_val = p1 + slope * (i - idx1)
+        if line_val <= 0:
+            continue
+        if abs(side_prices[i] - line_val) / line_val < tol:
+            touches += 1
+    return touches
+
+
+def find_trendlines(closes, highs, lows, lookback=80, lb=5):
+    """
+    Phat hien Trendline tu swing points (sach: Technical Analysis for Mega Profit Bab 5).
+    - Uptrend  : noi 2 swing low gan nhat co Higher Low (doc len)
+    - Downtrend: noi 2 swing high gan nhat co Lower High (doc xuong)
+    Valid break (Bab 9 Batas Toleransi): gia dong cua vuot 1.5% moi la break hop le.
+    Touch signal (Bab 5): cham +/-0.5% = tin hieu entry.
+
+    Returns dict:
+      up  : {'value', 'valid', 'slope', 'touches'} | None
+      dn  : {'value', 'valid', 'slope', 'touches'} | None
+      tl_vote : +1 (buy signal) / -1 (sell signal) / 0 (neutral)
+      tl_label: mo ta tin hieu
+    """
+    n = min(len(closes), len(highs), len(lows), lookback)
+    if n < 20:
+        return {'up': None, 'dn': None, 'tl_vote': 0, 'tl_label': 'NO_TL'}
+
+    c = closes[-n:]
+    h = highs[-n:]
+    l = lows[-n:]
+    last_idx = len(c) - 1
+    price = c[-1]
+
+    # Tim swing lows (lb bars moi phia)
+    swing_lows = []
+    for i in range(lb, last_idx - lb + 1):
+        if (all(l[i] <= l[j] for j in range(i - lb, i)) and
+                all(l[i] <= l[j] for j in range(i + 1, i + lb + 1))):
+            swing_lows.append((i, l[i]))
+
+    # Tim swing highs
+    swing_highs = []
+    for i in range(lb, last_idx - lb + 1):
+        if (all(h[i] >= h[j] for j in range(i - lb, i)) and
+                all(h[i] >= h[j] for j in range(i + 1, i + lb + 1))):
+            swing_highs.append((i, h[i]))
+
+    up_tl = dn_tl = None
+
+    # Uptrend trendline: 2 swing low gan nhat co slope duong
+    for i in range(len(swing_lows) - 1, 0, -1):
+        idx2, p2 = swing_lows[i]
+        idx1, p1 = swing_lows[i - 1]
+        if p2 > p1 and idx2 > idx1:
+            slope = (p2 - p1) / (idx2 - idx1)
+            value = p2 + slope * (last_idx - idx2)
+            if value <= 0:
+                continue
+            valid = c[-1] > value * 0.997
+            touches = _count_tl_touches(l, idx1, p1, slope)
+            up_tl = {'value': value, 'valid': valid, 'slope': slope, 'touches': touches}
+            break
+
+    # Downtrend trendline: 2 swing high gan nhat co slope am
+    for i in range(len(swing_highs) - 1, 0, -1):
+        idx2, p2 = swing_highs[i]
+        idx1, p1 = swing_highs[i - 1]
+        if p2 < p1 and idx2 > idx1:
+            slope = (p2 - p1) / (idx2 - idx1)
+            value = p2 + slope * (last_idx - idx2)
+            if value <= 0:
+                continue
+            valid = c[-1] < value * 1.003
+            touches = _count_tl_touches(h, idx1, p1, slope)
+            dn_tl = {'value': value, 'valid': valid, 'slope': slope, 'touches': touches}
+            break
+
+    tol_touch = 0.005   # 0.5%: dang cham trendline
+    tol_break = 0.015   # 1.5%: batas toleransi — valid break
+
+    tl_vote = 0
+    tl_label = 'NO_TL'
+
+    if up_tl and up_tl['valid']:
+        dist = (price - up_tl['value']) / up_tl['value']
+        if dist < -tol_break:
+            tl_vote = -1
+            tl_label = f'UP_TL_BREAK'
+        elif abs(dist) <= tol_touch:
+            tl_vote = 1
+            tl_label = f'UP_TL_TOUCH(x{up_tl["touches"]})'
+
+    if dn_tl and dn_tl['valid'] and tl_vote == 0:
+        dist = (price - dn_tl['value']) / dn_tl['value']
+        if dist > tol_break:
+            tl_vote = 1
+            tl_label = f'DN_TL_BREAK'
+        elif abs(dist) <= tol_touch:
+            tl_vote = -1
+            tl_label = f'DN_TL_TOUCH(x{dn_tl["touches"]})'
+
+    return {'up': up_tl, 'dn': dn_tl, 'tl_vote': tl_vote, 'tl_label': tl_label}
+
+
+def dow_structure(closes, highs, lows, lookback=60, lb=5):
+    """
+    Phan tich cau truc Dow Theory: HH+HL = uptrend, LH+LL = downtrend (sach Bab 17).
+    Dow Theory mat 20-25% truoc khi xac nhan — day la chi phi cua su chac chan.
+
+    Returns: {'structure': str, 'score': float}
+      UPTREND (+1.0), DOWNTREND (-1.0),
+      REVERSAL_UP_RISK (+0.2), REVERSAL_DN_RISK (-0.2), SIDEWAYS (0.0)
+    """
+    n = min(len(closes), len(highs), len(lows), lookback)
+    if n < 20:
+        return {'structure': 'INSUFFICIENT', 'score': 0.0}
+
+    h = highs[-n:]
+    l = lows[-n:]
+    last_idx = len(h) - 1
+
+    s_highs = [(i, h[i]) for i in range(lb, last_idx - lb + 1)
+               if all(h[i] >= h[j] for j in range(i - lb, i)) and
+               all(h[i] >= h[j] for j in range(i + 1, i + lb + 1))]
+    s_lows  = [(i, l[i]) for i in range(lb, last_idx - lb + 1)
+               if all(l[i] <= l[j] for j in range(i - lb, i)) and
+               all(l[i] <= l[j] for j in range(i + 1, i + lb + 1))]
+
+    if len(s_highs) < 2 or len(s_lows) < 2:
+        return {'structure': 'INSUFFICIENT', 'score': 0.0}
+
+    hh1, hh2 = s_highs[-2][1], s_highs[-1][1]
+    ll1, ll2 = s_lows[-2][1],  s_lows[-1][1]
+
+    higher_high = hh2 > hh1
+    higher_low  = ll2 > ll1
+    lower_high  = hh2 < hh1
+    lower_low   = ll2 < ll1
+
+    if higher_high and higher_low:
+        return {'structure': 'UPTREND',            'score':  1.0}
+    if lower_high and lower_low:
+        return {'structure': 'DOWNTREND',           'score': -1.0}
+    if higher_high and lower_low:
+        return {'structure': 'REVERSAL_UP_RISK',   'score':  0.2}
+    if lower_high and higher_low:
+        return {'structure': 'REVERSAL_DN_RISK',   'score': -0.2}
+    return {'structure': 'SIDEWAYS', 'score': 0.0}
+
+
+def psychological_levels(price, n_near=4):
+    """
+    Tim cac muc gia tam ly (so tron) gan gia hien tai (sach Bab 8 Angka Psikologi).
+    Sach: dat lenh mua NGAY TREN, lenh ban NGAY DUOI muc tam ly.
+
+    Returns: list of {'price', 'type': 'R'|'S', 'strength': 2-5, 'is_psych': True}
+    """
+    if price >= 1000:
+        steps = [50, 100, 500]
+    elif price >= 100:
+        steps = [10, 25, 50]
+    elif price >= 10:
+        steps = [1, 5, 10]
+    elif price >= 1:
+        steps = [0.25, 0.5, 1.0]
+    elif price >= 0.1:
+        steps = [0.005, 0.01, 0.05]
+    else:
+        steps = [0.0005, 0.001, 0.005]
+
+    seen = set()
+    result = []
+    for step in steps:
+        base = round(price / step) * step
+        for i in range(-n_near, n_near + 1):
+            lvl = round(base + i * step, 8)
+            if lvl <= 0 or lvl in seen:
+                continue
+            seen.add(lvl)
+            dist = abs(lvl - price) / price
+            if dist > 0.06:
+                continue
+            # Strength: so tron hon → manh hon (1000 > 500 > 100 > ...)
+            if step >= 100 and round(lvl % (step * 10), 6) < 1e-6:
+                strength = 5
+            elif round(lvl % (step * 5), 6) < 1e-6:
+                strength = 4
+            elif round(lvl % (step * 2), 6) < 1e-6:
+                strength = 3
+            else:
+                strength = 2
+            result.append({
+                'price':    lvl,
+                'type':     'R' if lvl > price else 'S',
+                'strength': strength,
+                'is_psych': True,
+            })
+
+    result.sort(key=lambda x: abs(x['price'] - price))
+    return result[:8]
+
+
 # ── Fundamental Intelligence Layer ───────────────────────────
 def _fetch_rss_headlines(url):
     """Lay headlines tu RSS feed (RSS 2.0 + Atom), tra ve list chuoi lowercase."""
@@ -1395,6 +1605,16 @@ def analyze(sym, yf_sym, now=None):
             print(f'  [D] ADX={adx_val:.1f} + H={H:.3f} ca hai yeu — sideways kep, bo qua')
             return None
 
+        # [DOW THEORY] Cau truc thi truong HH/HL — Bab 17 sach TAFMP
+        dow = dow_structure(long_closes, long_highs, long_lows, lookback=60)
+
+        # [TRENDLINE] Phat hien trendline tu swing points — Bab 5 sach TAFMP
+        tl = find_trendlines(long_closes, long_highs, long_lows, lookback=80)
+        tl_v = tl['tl_vote']
+
+        # [PSYCH LEVELS] Muc gia tam ly (so tron) — Bab 8 sach TAFMP
+        psych_lvls = psychological_levels(price)
+
         # [INTERMARKET] Tin hieu lien thi truong
         im_s = intermarket_signal(sym)
 
@@ -1437,8 +1657,9 @@ def analyze(sym, yf_sym, now=None):
         bb_v  = (1 if price < lower else -1 if price > upper else 0)
         mom_v = (1 if mom_s >= 0.2 else -1 if mom_s <= -0.2 else 0)
 
-        votes     = [rsi_v, ema_v, mac_v, bb_v, mom_v]
-        vote_lbls = ['RSI', 'EMA', 'MACD', 'BB', 'Mom']
+        # [TRENDLINE VOTE] Tin hieu trendline tham gia bau phieu (Bab 5)
+        votes     = [rsi_v, ema_v, mac_v, bb_v, mom_v, tl_v]
+        vote_lbls = ['RSI', 'EMA', 'MACD', 'BB', 'Mom', 'TL']
         bull_cnt  = sum(v for v in votes if v > 0)
         bear_cnt  = sum(-v for v in votes if v < 0)
 
@@ -1482,7 +1703,7 @@ def analyze(sym, yf_sym, now=None):
             signal     = 'SELL'
             vote_count = bear_cnt
         else:
-            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/5 (H4={h4_dir})')
+            print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/6 (H4={h4_dir})')
             return None
 
         # [D1] Chi dung de lay key levels (TP/SL) — KHONG dung lam bo loc chieu
@@ -1557,7 +1778,7 @@ def analyze(sym, yf_sym, now=None):
                         if (v > 0 and signal == 'BUY') or (v < 0 and signal == 'SELL')]
 
         # --- Do tin cay ---
-        base_conf    = {2: 50, 3: 60, 4: 75, 5: 90}.get(vote_count, 60)
+        base_conf    = {2: 50, 3: 60, 4: 75, 5: 90, 6: 95}.get(vote_count, 60)
         im_aligned   = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
         im_bonus     = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
@@ -1577,7 +1798,31 @@ def analyze(sym, yf_sym, now=None):
                      else 2 if fib_zone == 'deep'
                      else -5 if fib_zone == 'extreme'
                      else 0)
-        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus + sr_bonus + fib_bonus)
+
+        # [DOW THEORY BONUS] Bab 17: cau truc HH/HL xac nhan = +5, nguoc chieu = -5
+        sig_dir    = 1 if signal == 'BUY' else -1
+        dow_bonus  = (5  if dow['score'] * sig_dir > 0.5
+                      else -5 if dow['score'] * sig_dir < -0.5
+                      else 0)
+
+        # [TRENDLINE BONUS] Bab 5: cham trendline = +5, pha trendline thuan = +3
+        tl_bonus = 0
+        if tl_v == 1 and signal == 'BUY':
+            tl_bonus = 5 if 'TOUCH' in tl['tl_label'] else 3
+        elif tl_v == -1 and signal == 'SELL':
+            tl_bonus = 5 if 'TOUCH' in tl['tl_label'] else 3
+
+        # [PSYCH LEVEL PENALTY] Bab 8: vao lenh sap vuong muc tam ly nguoc chieu = -3
+        psych_penalty = 0
+        for pl in psych_lvls[:3]:
+            dist = abs(pl['price'] - price) / price
+            if dist < 0.003:  # rat gan muc tam ly
+                if (signal == 'BUY' and pl['type'] == 'R') or (signal == 'SELL' and pl['type'] == 'S'):
+                    psych_penalty = -3
+                    break
+
+        conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus
+                   + sr_bonus + fib_bonus + dow_bonus + tl_bonus + psych_penalty)
 
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
@@ -1707,7 +1952,26 @@ def analyze(sym, yf_sym, now=None):
             'indicators': {
                 'rsi':  rsi_v, 'ema': ema_v, 'macd': round(mac_s, 2),
                 'bb':   bb_v,  'mom': round(mom_s, 2), 'inter': round(im_s, 2),
+                'tl':   tl_v,
             },
+            # [BOOK-ENHANCED] Cac module tu sach Technical Analysis for Mega Profit
+            'trendline': {
+                'label':   tl['tl_label'],
+                'tl_vote': tl_v,
+                'up_valid':   tl['up']['valid']   if tl['up']  else False,
+                'dn_valid':   tl['dn']['valid']   if tl['dn']  else False,
+                'up_touches': tl['up']['touches'] if tl['up']  else 0,
+                'dn_touches': tl['dn']['touches'] if tl['dn']  else 0,
+            },
+            'dow': {
+                'structure': dow['structure'],
+                'score':     round(dow['score'], 2),
+                'bonus':     dow_bonus,
+            },
+            'psych_levels': [
+                {'price': round(p['price'], 5), 'type': p['type'], 'strength': p['strength']}
+                for p in psych_lvls[:4]
+            ],
             'consensus': True,   # Luon True khi da qua nguong 3/5
         }
     except Exception as e:
@@ -2053,7 +2317,7 @@ def main():
 
         inds = r['indicators']
         print(
-            f'{r["signal"]} {r["vote_count"]}/5 phieu | '
+            f'{r["signal"]} {r["vote_count"]}/6 phieu | '
             f'conf={r["conf"]}% | '
             f'regime={r["regime"]}(H={r["hurst"]:.2f} ADX={r["adx"]:.0f}) | '
             f'dong thuan: {", ".join(r["vote_lbls"])}'
@@ -2077,7 +2341,7 @@ def main():
         opp_key      = f'{sym}|{"SELL" if r["signal"] == "BUY" else "BUY"}'
         flip_elapsed = (now.timestamp() - state.get(opp_key, 0)) / 3600
         if flip_elapsed < 12 and r['vote_count'] < 4:
-            print(f'  -> Lat chieu ({flip_elapsed:.1f}h truoc), can 4/5 phieu ({r["vote_count"]}/5), bo qua')
+            print(f'  -> Lat chieu ({flip_elapsed:.1f}h truoc), can 4/6 phieu ({r["vote_count"]}/6), bo qua')
             time.sleep(0.5)
             continue
 
@@ -2133,7 +2397,7 @@ def main():
         pa_vol = build_pa_vol(r['signal'], inds, r['rsi'],
                               r['phase'], m15_dir, m15_phase)
 
-        vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/5 đồng thuận)'
+        vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/6 đồng thuận)'
 
         # MTF summary line
         mtf = r.get('mtf', {})
@@ -2183,6 +2447,22 @@ def main():
             if fib_d.get('tp2_used'):
                 fib_line += '  ← TP2'
 
+        # Trendline line (Bab 5)
+        tl_line = ''
+        tl_d = r.get('trendline', {})
+        if tl_d.get('tl_vote') and tl_d['tl_vote'] != 0:
+            tl_icon = '📈' if tl_d['tl_vote'] > 0 else '📉'
+            tl_touches = tl_d.get('up_touches', 0) if tl_d['tl_vote'] > 0 else tl_d.get('dn_touches', 0)
+            tl_line = f'{tl_icon} Trendline: {tl_d["label"]} ({tl_touches} lần chạm)'
+
+        # Dow Theory line (Bab 17)
+        dow_line = ''
+        dow_d = r.get('dow', {})
+        if dow_d.get('structure') and dow_d['structure'] != 'NEUTRAL':
+            dow_icon = '🔺' if dow_d['score'] > 0 else '🔻'
+            bonus_str = f' | bonus {dow_d["bonus"]:+d}%' if dow_d.get('bonus') else ''
+            dow_line = f'{dow_icon} Dow Theory: {dow_d["structure"]} (score={dow_d["score"]:.1f}{bonus_str})'
+
         pair_macro_line = ''
         if r.get('pair_macro'):
             pm   = r['pair_macro']
@@ -2221,6 +2501,8 @@ def main():
             mtf_line,
             *(([sr_line, '']) if sr_line else ['']),
             *(([fib_line, '']) if fib_line else []),
+            *(([tl_line]) if tl_line else []),
+            *(([dow_line, '']) if dow_line else (([''] if tl_line else []))),
             f'📍 Entry: {entry_zone}',
             f'🔴 SL: {fmt_price(sym, r["sl"])}',
             f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
@@ -2273,7 +2555,7 @@ def main():
                 'consensus':   r['consensus'],
             })
             sent += 1
-            print(f'  -> Telegram OK | +1h xac nhan | {r["vote_count"]}/5 phieu | conf={conf}%')
+            print(f'  -> Telegram OK | +1h xac nhan | {r["vote_count"]}/6 phieu | conf={conf}%')
         else:
             print(f'  -> Loi Telegram: {result}')
 
