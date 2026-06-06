@@ -8,7 +8,7 @@ Forex Signal Notifier v4 — Vote System
   - Twelve Data API (fallback yfinance)
   - Xac nhan +1h: ket qua, TP/SL, win rate
 """
-import json, os, time
+import json, os, time, logging
 from pathlib import Path
 import numpy as np
 from datetime import datetime, timezone, timedelta
@@ -18,13 +18,24 @@ import yfinance as yf
 import pandas as pd
 
 # ── Cau hinh ──────────────────────────────────────────────────
-_ROOT            = Path(__file__).parent.parent             # cloud_notifier/ → project root
+# parent = cloud_notifier/ locally va repo root trong GitHub Actions
+_ROOT            = Path(__file__).parent
+
+# Decision log
+_LOG_FILE = str(_ROOT / 'data' / 'decisions.log')
+(_ROOT / 'data').mkdir(exist_ok=True)
+logging.basicConfig(
+    filename=_LOG_FILE, level=logging.INFO,
+    format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S UTC',
+)
+_log = logging.getLogger('forex')
+
 TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_TOKEN', '')
 TELEGRAM_CHAT    = os.environ.get('TELEGRAM_CHAT',  '')
 TWELVE_DATA_KEY  = os.environ.get('TWELVE_DATA_KEY', '')  # Twelve Data API (free: 800 req/ngay)
 COOLDOWN_HOURS  = 6
-STATE_FILE      = str(_ROOT / 'data' / 'last_signals.json')
-CHECKPOINTS_H   = [1]    # Xac nhan tai +1h (khop voi kieu giu lenh 1 gio)
+STATE_FILE      = str(_ROOT / 'last_signals.json')
+CHECKPOINTS_H   = [1, 4]  # Xac nhan tai +1h va +4h — du lieu win rate phong phu hon
 MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de dat 65
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
@@ -140,7 +151,7 @@ _fundamental_cache = {}   # Cache Fundamental Intelligence Layer (Calendar/Senti
 _price_history     = {}   # Lich su gia tich luy — load tu file, save cuoi phien
 _d1_cache          = {}   # D1 OHLCV cache per pair per session (180 ngay daily)
 
-PRICE_HISTORY_FILE = str(_ROOT / 'data' / 'price_history.json')
+PRICE_HISTORY_FILE = str(_ROOT / 'price_history.json')
 MAX_HISTORY_BARS   = 720  # 30 ngay H1 moi cap (720 nen × 1h = 720h = 30 ngay)
 
 # Mapping dong tien → quoc gia (dung kiem tra lich kinh te)
@@ -1545,6 +1556,7 @@ def analyze(sym, yf_sym, now=None):
         closes, highs, lows, timestamps = fetch_ohlcv(sym, yf_sym)
         if closes is None or len(closes) < 60:
             print(f'  [D] du lieu qua it hoac loi fetch')
+            _log.info(f'[{sym}] BLOCKED no_data bars={len(closes) if closes else 0}')
             return None
         n = min(len(closes), len(highs), len(lows), len(timestamps))
         closes, highs, lows, timestamps = closes[:n], highs[:n], lows[:n], timestamps[:n]
@@ -1581,6 +1593,7 @@ def analyze(sym, yf_sym, now=None):
         lo, hi = PRICE_SANITY.get(sym, (0.0, float('inf')))
         if not (lo <= price <= hi):
             print(f'  [D] Gia {price} ngoai vung hop le [{lo}, {hi}] — du lieu sai, bo qua')
+            _log.info(f'[{sym}] BLOCKED sanity_fail price={price:.5f} valid=[{lo},{hi}]')
             return None
 
         # [TANG 1 — FUNDAMENTAL] Economic Calendar: block truoc khi tinh toan nang
@@ -1588,6 +1601,7 @@ def analyze(sym, yf_sym, now=None):
         cal_status, cal_reason = check_calendar(fund, sym, now)
         if cal_status == 'HARD':
             print(f'  [D] Calendar HARD block: {cal_reason}')
+            _log.info(f'[{sym}] BLOCKED calendar_hard {cal_reason}')
             return None
 
         # [HURST] Dung long_closes (toi da 200 nen) de ket qua on dinh hon
@@ -1597,12 +1611,14 @@ def analyze(sym, yf_sym, now=None):
         # [LOC 3] Block RANGE sau: nguong H rieng tung cap
         if H < cfg['hurst_block']:
             print(f'  [D] H={H:.3f} < {cfg["hurst_block"]} RANGE sau ({ln} bars), bo qua')
+            _log.info(f'[{sym}] BLOCKED hurst H={H:.3f} threshold={cfg["hurst_block"]} bars={ln}')
             return None
 
         # [LOC 3b] ADX filter: chan sideways kep — ca ADX lan Hurst deu yeu
         adx_val, pdi, mdi = adx_indicator(long_highs, long_lows, long_closes)
         if adx_val < 15 and H < 0.50:
             print(f'  [D] ADX={adx_val:.1f} + H={H:.3f} ca hai yeu — sideways kep, bo qua')
+            _log.info(f'[{sym}] BLOCKED adx_hurst ADX={adx_val:.1f} H={H:.3f}')
             return None
 
         # [DOW THEORY] Cau truc thi truong HH/HL — Bab 17 sach TAFMP
@@ -1666,6 +1682,7 @@ def analyze(sym, yf_sym, now=None):
         # Pre-filter: phai co it nhat 2 phieu mot chieu moi phan tich tiep
         if max(bull_cnt, bear_cnt) < 2:
             print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — qua it phieu, skip')
+            _log.info(f'[{sym}] BLOCKED few_votes BUY={bull_cnt} BEAR={bear_cnt}')
             return None
 
         # H4 dieu chinh nguong phieu: THUAN chieu → ha 1 | NGUOC chieu → nang 1
@@ -1690,6 +1707,7 @@ def analyze(sym, yf_sym, now=None):
         # H > 0.55 = momentum ro rang — vao nguoc chieu la no tien, block cung
         if regime == 'TREND' and h4_opposed:
             print(f'  [D] TREND regime + H4 nguoc chieu — counter-trend nguy hiem, bo qua')
+            _log.info(f'[{sym}] BLOCKED counter_trend H={H:.3f} H4={h4_dir}')
             return None
 
         if cal_status == 'SOFT':
@@ -1704,6 +1722,7 @@ def analyze(sym, yf_sym, now=None):
             vote_count = bear_cnt
         else:
             print(f'  [D] BUY={bull_cnt} BEAR={bear_cnt} — chua du {min_v}/6 (H4={h4_dir})')
+            _log.info(f'[{sym}] BLOCKED low_votes BUY={bull_cnt} BEAR={bear_cnt} need={min_v} H4={h4_dir}')
             return None
 
         # [D1] Chi dung de lay key levels (TP/SL) — KHONG dung lam bo loc chieu
@@ -1741,6 +1760,7 @@ def analyze(sym, yf_sym, now=None):
         rsi_contradicts = (r_val < 35 and signal == 'SELL') or (r_val > 65 and signal == 'BUY')
         if rsi_contradicts and vote_count < max(4, min_v):
             print(f'  [D] RSI={r_val:.0f} cuc doan mau thuan {signal}')
+            _log.info(f'[{sym}] BLOCKED rsi_extreme RSI={r_val:.0f} {signal} votes={vote_count}')
             return None
 
         # [PAIR MACRO] macro rieng tung cap (tai su dung _gold_cache)
@@ -1751,9 +1771,11 @@ def analyze(sym, yf_sym, now=None):
             macro_align = m_score * sig_dir
             if macro_align < -0.30:
                 print(f'  [D] Macro={m_score:.2f} mau thuan {signal} — {m_comps}')
+                _log.info(f'[{sym}] BLOCKED macro_strong {signal} score={m_score:.2f}')
                 return None
             if macro_align < -0.12 and vote_count < min(5, min_v + 1):
                 print(f'  [D] Macro={m_score:.2f} mau thuan ro, can them 1 vote')
+                _log.info(f'[{sym}] BLOCKED macro_mild {signal} score={m_score:.2f} votes={vote_count}')
                 return None
             pair_macro = {'score': round(m_score, 2), **m_comps}
 
@@ -1763,15 +1785,18 @@ def analyze(sym, yf_sym, now=None):
         sent_align = sent_score * sig_dir
         if sent_align < -0.35:
             print(f'  [D] Sentiment={sent_score:.2f} mau thuan manh voi {signal}')
+            _log.info(f'[{sym}] BLOCKED sentiment_strong {signal} sent={sent_score:.2f}')
             return None
         if sent_align < -0.15 and vote_count < min(5, min_v + 1):
             print(f'  [D] Sentiment={sent_score:.2f} mau thuan nhe, can them vote')
+            _log.info(f'[{sym}] BLOCKED sentiment_mild {signal} sent={sent_score:.2f} votes={vote_count}')
             return None
 
         # [TANG 3 — FEAR & GREED]
         fg_penalty, fg_reason = get_fg_context(fund, sym, signal)
         if fg_penalty and vote_count < min(5, min_v + 1):
             print(f'  [D] F&G: {fg_reason}')
+            _log.info(f'[{sym}] BLOCKED fear_greed {signal} {fg_reason}')
             return None
 
         aligned_lbls = [vote_lbls[i] for i, v in enumerate(votes)
@@ -1912,6 +1937,7 @@ def analyze(sym, yf_sym, now=None):
         entry_low  = price - atr_val * 0.2
         entry_high = price + atr_val * 0.2
 
+        _log.info(f'[{sym}] SIGNAL {signal} conf={conf} votes={vote_count}/6 regime={regime} H={H:.3f} ADX={adx_val:.1f}')
         return {
             'sym': sym, 'signal': signal, 'price': price, 'rsi': round(r_val, 1),
             'vote_count': vote_count, 'vote_lbls': aligned_lbls,
@@ -2252,6 +2278,52 @@ def run_validations(state, now):
 
     state['pending_validations'] = remaining
 
+# ── Bao cao hieu suat tuan ────────────────────────────────────
+def send_weekly_report(state):
+    """Gui bao cao hieu suat per-pair qua Telegram, kích hoat moi 7 ngay."""
+    results  = state.get('results', [])
+    versioned = [x for x in results if x.get('date', '') >= LOGIC_VERSION]
+    if len(versioned) < 5:
+        return
+
+    pair_stats = {}
+    for x in versioned:
+        key = f"{x.get('sym','?')} {x.get('signal','?')}"
+        if key not in pair_stats:
+            pair_stats[key] = {'n': 0, 'wins': 0, 'pips': []}
+        pair_stats[key]['n'] += 1
+        if x.get('correct'):
+            pair_stats[key]['wins'] += 1
+        if 'pips' in x:
+            pair_stats[key]['pips'].append(x['pips'])
+
+    rows = []
+    for key, s in pair_stats.items():
+        if s['n'] >= 3:
+            wr      = s['wins'] / s['n'] * 100
+            avg_pip = sum(s['pips']) / len(s['pips']) if s['pips'] else 0
+            rows.append((key, wr, s['n'], avg_pip))
+    rows.sort(key=lambda x: -x[1])
+
+    total  = len(versioned)
+    n_wins = sum(1 for x in versioned if x.get('correct'))
+    overall = n_wins / total * 100 if total > 0 else 0
+
+    lines = [
+        f'📊 <b>Báo cáo hiệu suất</b> (từ {LOGIC_VERSION})',
+        f'Tổng: {n_wins}/{total} = <b>{overall:.0f}%</b>',
+        '',
+    ]
+    for key, wr, n, avg_pip in rows:
+        icon    = '🔥' if wr >= 65 else ('⚠️' if wr < 45 else '  ')
+        pip_str = f'  {avg_pip:+.1f}p' if avg_pip != 0 else ''
+        lines.append(f'{icon} {key}: <b>{wr:.0f}%</b> ({n}L{pip_str})')
+
+    send_telegram('\n'.join(lines))
+    state['last_weekly_report'] = datetime.now(timezone.utc).timestamp()
+    _log.info(f'[REPORT] Weekly performance sent total={total} overall={overall:.0f}%')
+
+
 # ── Main ──────────────────────────────────────────────────────
 def main():
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT:
@@ -2312,6 +2384,7 @@ def main():
 
         if not r:
             print('NEUTRAL / loc ATR / khong du lieu')
+            _log.info(f'[{sym}] NO_SIGNAL')
             time.sleep(0.5)
             continue
 
@@ -2327,12 +2400,14 @@ def main():
         elapsed = (now.timestamp() - state.get(key, 0)) / 3600
         if elapsed < COOLDOWN_HOURS:
             print(f'  -> Cooldown ({elapsed:.1f}h / {COOLDOWN_HOURS}h), bo qua')
+            _log.info(f'[{sym}] COOLDOWN {r["signal"]} {elapsed:.1f}h/{COOLDOWN_HOURS}h')
             time.sleep(0.5)
             continue
 
         conf = r['conf']
         if conf < MIN_CONFIDENCE:
             print(f'  -> Do tin cay {conf}% < {MIN_CONFIDENCE}%, bo qua')
+            _log.info(f'[{sym}] LOW_CONF {r["signal"]} {conf}%<{MIN_CONFIDENCE}% votes={r["vote_count"]}/6')
             time.sleep(0.5)
             continue
 
@@ -2342,6 +2417,7 @@ def main():
         flip_elapsed = (now.timestamp() - state.get(opp_key, 0)) / 3600
         if flip_elapsed < 12 and r['vote_count'] < 4:
             print(f'  -> Lat chieu ({flip_elapsed:.1f}h truoc), can 4/6 phieu ({r["vote_count"]}/6), bo qua')
+            _log.info(f'[{sym}] FLIP_BLOCK {r["signal"]} {flip_elapsed:.1f}h votes={r["vote_count"]}/6')
             time.sleep(0.5)
             continue
 
@@ -2382,7 +2458,12 @@ def main():
                 exp_line = (f' | ⚡ Exp: {sign}{exp:.1f}p/lệnh'
                             f' (W: +{avg_w:.0f}p L: {avg_l:.0f}p, {len(pip_data)} lệnh)')
 
-            wr_line = f'📈 Win rate: {wr_pct:.0f}% ({n_total} lệnh từ {LOGIC_VERSION}){exp_line}'
+            pair_r = [x for x in versioned_r if x.get('sym') == sym and x.get('signal') == r['signal']]
+            pair_wr_str = ''
+            if len(pair_r) >= 3:
+                pair_wr = sum(1 for x in pair_r if x['correct']) / len(pair_r) * 100
+                pair_wr_str = f' | {sym} {r["signal"]}: {pair_wr:.0f}% ({len(pair_r)}L)'
+            wr_line = f'📈 Win rate: {wr_pct:.0f}% ({n_total} lệnh từ {LOGIC_VERSION}){exp_line}{pair_wr_str}'
 
         emoji     = '🟢' if r['signal'] == 'BUY' else '🔴'
         direction = 'MUA' if r['signal'] == 'BUY' else 'BÁN'
@@ -2533,6 +2614,7 @@ def main():
         if result.get('ok'):
             msg_id = result.get('result', {}).get('message_id')
             state[key] = now.timestamp()
+            _log.info(f'[{sym}] SENT {r["signal"]} conf={conf}% entry={r["price"]:.5f} sl={r["sl"]:.5f} tp={r["tp"]:.5f}')
             if 'pending_validations' not in state:
                 state['pending_validations'] = []
             state['pending_validations'].append({
@@ -2562,6 +2644,15 @@ def main():
         time.sleep(1)
 
     save_state(state)
+
+    # Bao cao tuan (moi 7 ngay) — gui qua Telegram neu du du lieu
+    last_rpt  = state.get('last_weekly_report', 0)
+    days_since = (now.timestamp() - last_rpt) / 86400
+    if days_since >= 7 and len(state.get('results', [])) >= 5:
+        print('\n=== Bao cao hieu suat tuan ===')
+        send_weekly_report(state)
+        save_state(state)
+
     print('\n=== Luu lich su gia ===')
     save_price_history()
     print(f'\n=== Hoan thanh. Da gui {sent} tin hieu moi ===')
