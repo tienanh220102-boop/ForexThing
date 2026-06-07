@@ -21,7 +21,7 @@
         {
           "hours": 1,
           "at": 1780873263.443352,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -1165,6 +1165,19 @@
       "exit": 0.78948,
       "sl_pips": 18.8,
       "tp_pips": 37.6
+    },
+    {
+      "sym": "AUD/JPY",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-06-08",
+      "regime": "NEUTRAL",
+      "outcome": "OPEN",
+      "pips": -8.1,
+      "entry": 112.69809,
+      "exit": 112.779,
+      "sl_pips": 41.7,
+      "tp_pips": 83.3
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
