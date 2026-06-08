@@ -53,96 +53,71 @@ LOGIC_VERSION   = '2026-06-03'
 # min_votes: so phieu toi thieu (3 = chuan | 4 = yeu cau cao hon cho cap nhieu nhieu)
 PAIR_CONFIG = {
     # === MAJORS ===
-    # EUR/USD: cap tot nhat (83% WR) — giu nhu cu nhung nang hurst_block
+    # EUR/USD: 83% WR — cap tot nhat, giu nguong hien tai
     'EUR/USD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # GBP/USD: 27% WR — nhu cau tin hieu cuc chat, nang min_votes=5
-    'GBP/USD':   {'rsi_buy': 42, 'rsi_sell': 58, 'hurst_block': 0.52, 'min_votes': 5,
-                  'trade_hours': set(range(7, 21))},
-    # USD/JPY: 33% WR — nang hurst_block, RSI chat hon
+    # USD/JPY: yield differential + risk sentiment; strict RSI tranh false signal
     'USD/JPY':   {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.48, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
-    # USD/CHF: 67% WR — hoat dong tot, nang nhe hurst_block
+    # USD/CHF: 67% WR, safe-haven correlated — giu nguong hien tai
     'USD/CHF':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # USD/CAD: 100% WR — pair tot, giu nguong tuong duong
+    # USD/CAD: 100% WR — oil-correlated model hoat dong tot
     'USD/CAD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
                   'trade_hours': set(range(7, 21))},
-    # AUD/USD: 0% WR (tat ca SELL deu sai) — nang hurst_block, chi ban khi RSI that su qua mua
-    'AUD/USD':   {'rsi_buy': 42, 'rsi_sell': 62, 'hurst_block': 0.50, 'min_votes': 4,
-                  'trade_hours': set(range(0, 17)) | {22, 23}},
 
-    # === JPY CROSSES ===
-    # EUR/JPY: 67% WR — OK, nang nhe hurst_block len tren nguong RANGE
+    # === JPY CROSS ===
+    # EUR/JPY: 67% WR — risk sentiment model reuse gold_cache, zero API cost
     'EUR/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
-    # GBP/JPY: 33% WR — "The beast" qua nhieu nhieu, can TREND that su
-    'GBP/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.52, 'min_votes': 4,
-                  'trade_hours': set(range(0, 21))},
-    # AUD/JPY: carry trade — nang hurst_block tren nguong RANGE
-    'AUD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
-                  'trade_hours': set(range(0, 17)) | {22, 23}},
-    # CAD/JPY: carry trade + oil — nang hurst_block
-    'CAD/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
-                  'trade_hours': set(range(0, 21))},
 
-    # === KIM LOAI QUY ===
-    # XAU/USD: 67% WR — pair tot nhat, nang nhe hurst_block
-    'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.42, 'min_votes': 3,
-                  'trade_hours': set(range(6, 21))},
-    # XAG/USD: da bi loai (0% WR, 7 lenh thua lien tiep — 2026-06-03)
+    # === COMMODITY CURRENCY ===
+    # NZD/USD: risk-on pair, VIX corr=-0.70 → model fit tot nhat trong ngoai te
+    # Macro: -DXY(0.50) + risk_on/-VIX(0.35) + Oil(0.15) — tai su dung gold_cache
+    'NZD/USD':   {'rsi_buy': 42, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
+                  'trade_hours': set(range(20, 24)) | set(range(0, 17))},
 
-    # === DAU MO ===
-    # USOIL: 0% WR (1 lenh) — nang hurst_block
-    'USOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.47, 'min_votes': 3,
-                  'trade_hours': set(range(7, 21))},
-    # UKOIL: 33% WR — nang hurst_block
-    'UKOIL/USD': {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.47, 'min_votes': 3,
-                  'trade_hours': set(range(7, 21))},
+    # === KIM LOAI QUY — TRONG TAM CHINH ===
+    # XAU/USD: PRIMARY PAIR — macro 5-factor (DXY/TIPS/TNX/VIX/Oil)
+    # hurst_block 0.39: vang thuong co H thap hon forex nhung van trend tot
+    # cooldown_hours 4: gold co session-based volatility cao, 6h bỏ lỡ co hoi
+    'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.39, 'min_votes': 3,
+                  'trade_hours': set(range(6, 21)), 'cooldown_hours': 4},
+    # XAG/USD: loai (0% WR, 7 lenh thua — 2026-06-03); industrial demand kho model
+    # GBP/USD: loai (27% WR); Brexit/BoE surprise khong the model hoa
+    # AUD/USD: loai (0% WR); China manufacturing demand khong co trong model
+    # GBP/JPY: loai (33% WR); double uncertainty, qua nhieu noise
+    # AUD/JPY: loai; carry trade phu thuoc China demand khong co data
+    # CAD/JPY: loai; complex carry, sample size qua nho
+    # USOIL/UKOIL: loai (0%/33% WR); OPEC+ surprise-driven, kho du bao
 }
 # EUR/GBP da bi loai: 17% WR (1/6), pair phu thuoc chinh sach Brexit/UK-EU
-# Khong the phan tich ky thuat chuan xac — loai hoan toan
 
 _DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                    'trade_hours': set(range(7, 21))}
 
 SYMBOLS = {
-    # Majors (6)
-    'EUR/USD': 'EURUSD=X', 'GBP/USD': 'GBPUSD=X', 'USD/JPY': 'USDJPY=X',
-    'USD/CHF': 'USDCHF=X', 'USD/CAD': 'USDCAD=X', 'AUD/USD': 'AUDUSD=X',
-    # EUR crosses
+    # Majors
+    'EUR/USD': 'EURUSD=X', 'USD/JPY': 'USDJPY=X',
+    'USD/CHF': 'USDCHF=X', 'USD/CAD': 'USDCAD=X',
+    # EUR cross
     'EUR/JPY': 'EURJPY=X',
-    # GBP crosses
-    'GBP/JPY': 'GBPJPY=X',
-    # JPY crosses (carry trade)
-    'AUD/JPY': 'AUDJPY=X', 'CAD/JPY': 'CADJPY=X',
-    # Commodities — XAU/USD la trong tam (80% win rate)
+    # Commodity currency — risk-on, VIX corr=-0.70
+    'NZD/USD': 'NZDUSD=X',
+    # Kim loai quy — TRONG TAM CHINH
     'XAU/USD': 'GC=F',
-    'UKOIL/USD': 'BZ=F', 'USOIL/USD': 'CL=F',
 }
 
 # Vung gia hop le tung symbol — loc du lieu sai tu yfinance/TwelveData
 # Dat rong de chi loai gia co ban ro rang bi loi (0, nan, data nham contract)
 PRICE_SANITY = {
-    # Majors
     'EUR/USD':   (0.70, 1.80),
-    'GBP/USD':   (0.80, 2.20),
     'USD/JPY':   (70,   220),
     'USD/CHF':   (0.60, 1.40),
-    'AUD/USD':   (0.40, 1.20),
     'USD/CAD':   (0.80, 1.80),
-    'NZD/USD':   (0.40, 1.00),
-    # EUR crosses
     'EUR/JPY':   (80,   220),
-    # GBP crosses
-    'GBP/JPY':   (100,  280),
-    # JPY crosses
-    'AUD/JPY':   (50,   130),
-    'CAD/JPY':   (70,   130),
-    # Commodities
+    'NZD/USD':   (0.40, 1.00),
     'XAU/USD':   (1200, 8000),
-    'USOIL/USD': (10,   300),
-    'UKOIL/USD': (10,   300),
 }
 
 _im_cache          = {}   # Cache intermarket data (chi fetch 1 lan moi phien)
@@ -172,10 +147,9 @@ _CURRENCY_KEYWORDS = {
     'AUD': ['aussie', 'aud ', 'rba', 'reserve bank of australia'],
     'NZD': ['kiwi', 'nzd ', 'rbnz'],
     'CHF': ['franc', 'chf ', 'snb', 'swiss national bank'],
-    'XAU': ['gold', 'bullion', 'precious metal', 'safe haven'],
-
-    'USO': ['crude oil', 'wti', 'opec'],
-    'UKO': ['brent oil', 'crude', 'opec'],
+    'XAU': ['gold', 'bullion', 'precious metal', 'safe haven',
+            'central bank gold', 'gold etf', 'gld', 'real yield',
+            'stagflation', 'inflation hedge', 'brics gold'],
 }
 _BULLISH_WORDS = [
     'rises', 'gains', 'rallies', 'climbs', 'surges', 'jumps', 'soars',
@@ -186,26 +160,16 @@ _BEARISH_WORDS = [
     'dovish', 'rate cut', 'misses', 'weaker', 'concern', 'slowdown', 'recession',
 ]
 # Phan loai cap: risk-on (tang khi thi truong lac quan) / risk-off (tang khi so hai)
-_RISK_ON_BUYS  = {'EUR/USD','GBP/USD','AUD/USD','AUD/JPY','CAD/JPY',
-                   'GBP/JPY','EUR/JPY','USOIL/USD','UKOIL/USD'}
+_RISK_ON_BUYS  = {'EUR/USD', 'NZD/USD', 'EUR/JPY'}
 _RISK_OFF_BUYS = {'USD/JPY', 'USD/CHF', 'XAU/USD'}
 
-# Symbol mapping cho Twelve Data API (13 cap × 48 lan/ngay = 624 req — trong quota free 800)
+# Symbol mapping cho Twelve Data API (7 cap × 48 lan/ngay = 336 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
-    # Majors
-    'EUR/USD': 'EUR/USD', 'GBP/USD': 'GBP/USD', 'USD/JPY': 'USD/JPY',
-    'USD/CHF': 'USD/CHF', 'AUD/USD': 'AUD/USD', 'USD/CAD': 'USD/CAD',
-    'AUD/USD': 'AUD/USD',
-    # EUR crosses
+    'EUR/USD': 'EUR/USD', 'USD/JPY': 'USD/JPY',
+    'USD/CHF': 'USD/CHF', 'USD/CAD': 'USD/CAD',
     'EUR/JPY': 'EUR/JPY',
-    # GBP crosses
-    'GBP/JPY': 'GBP/JPY',
-    # JPY crosses
-    'AUD/JPY': 'AUD/JPY', 'CAD/JPY': 'CAD/JPY',
-    # Commodities
+    'NZD/USD': 'NZD/USD',
     'XAU/USD': 'XAU/USD',
-    'UKOIL/USD': 'XBR/USD',
-    'USOIL/USD': 'XTI/USD',
 }
 
 def load_price_history():
@@ -457,18 +421,14 @@ def intermarket_signal(sym):
     Du lieu: DXY (suc manh USD) va Oil (WTI — proxy hang hoa/risk sentiment).
 
     Nguyen tac:
-    - DXY tang → USD manh → USD/* tang, */USD giam, Vang/Bac giam
-    - Oil tang → CAD manh (xuat khau dau) → USD/CAD giam
-    - Oil tang = risk-on → carry trade (AUD/JPY, CAD/JPY) tang
-    - EUR/GBP, GBP/JPY: ca hai phia deu co safe-haven rieng → return 0 tranh nhieu
+    - DXY tang → USD manh → USD/* tang, */USD giam, Vang giam
+    - Oil tang → CAD manh → USD/CAD giam
+    - NZD/USD: risk-on currency, DXY nghich chieu la tin hieu chinh
     """
     im  = fetch_intermarket()
     dxy = im.get('dxy', 0.0)
     oil = im.get('oil', 0.0)
 
-    # Hang hoa truc tiep
-    if sym in ('USOIL/USD', 'UKOIL/USD'):
-        return oil
     if sym == 'XAU/USD':
         return -dxy   # Vang nguoc chieu USD
 
@@ -476,30 +436,26 @@ def intermarket_signal(sym):
     if sym == 'USD/CAD':
         return float(np.clip(dxy*0.5 - oil*0.5, -1.0, 1.0))
 
-    # Carry trade: Oil tang = risk-on → AUD/CAD/JPY tang so voi JPY
-    if sym == 'AUD/JPY':
-        return float(np.clip(oil*0.4, -1.0, 1.0))
-    if sym == 'CAD/JPY':
-        return float(np.clip(oil*0.6, -1.0, 1.0))   # CAD nhay cam nhat voi oil
-
     # USD truc tiep
     if sym.startswith('USD/'):
         return dxy
+    # */USD (EUR/USD, NZD/USD): DXY nghich chieu
     if sym.endswith('/USD'):
         return -dxy
 
-    # CHF crosses + EUR/GBP + JPY vs non-commodity: ca hai phia di chuyen cung chieu
-    # khi risk event xay ra → DXY anh huong qua nho → return 0 tranh nhieu
+    # Crosses (EUR/JPY): ca hai phia cung chieu khi risk event → return 0 tranh nhieu
     return 0.0
 
 # ── Phuong trinh macro XAU/USD ───────────────────────────────
 def fetch_gold_macro():
     """
-    Lay 4 nhan to macro anh huong den XAU/USD, cache 1 lan moi phien.
-      DXY  (UUP)  — da co trong _im_cache, tai su dung
-      10Y  (^TNX) — US Treasury Yield, nghich chieu Vang (co hoi)
-      VIX  (^VIX) — Chi so so hai, cung chieu Vang (safe haven)
-      Oil  (CL=F) — da co trong _im_cache, cung chieu nhe (lam phat)
+    Lay 5 nhan to macro anh huong den XAU/USD, cache 1 lan moi phien.
+      DXY   (UUP)   — da co trong _im_cache, tai su dung
+      TIPS  (^DFII10)— US 10Y Real Yield = nominal - inflation expectations
+                        Driver MANH NHAT cua vang: real yield am → vang tang
+      10Y   (^TNX)  — US Nominal Treasury Yield, nghich chieu Vang
+      VIX   (^VIX)  — Chi so so hai, cung chieu Vang (safe haven)
+      Oil   (CL=F)  — da co trong _im_cache, cung chieu nhe (lam phat)
     """
     global _gold_cache
     if _gold_cache:
@@ -510,13 +466,27 @@ def fetch_gold_macro():
         'oil_raw': im.get('oil', 0.0),
         'tny_s':   0.0,
         'vix_s':   0.0,
+        'tips_s':  0.0,
     }
-    # US 10-Year Treasury Yield — nghich chieu: yield tang → Vang giam (co hoi tai chinh)
+    # TIPS 10Y Real Yield (^DFII10) — driver manh nhat cua vang
+    # Real yield tang → co hoi tai chinh thuc su → Vang giam (no dividend/coupon)
+    # Real yield < 0 → negative carry → Vang rat bullish
+    try:
+        tips = yf.Ticker('^DFII10').history(period='7d', interval='1d')['Close'].dropna()
+        if len(tips) >= 2:
+            tips_now   = float(tips.iloc[-1])
+            tips_delta = float(tips.iloc[-1] - tips.iloc[max(0, len(tips)-3)])
+            # Level penalty: real yield duong = co hoi tai chinh ton tai → bearish gold
+            level_pen  = -0.20 if tips_now > 0.5 else (0.25 if tips_now < 0 else 0.0)
+            # Delta: real yield tang → score am (bearish gold); giam → score duong
+            _gold_cache['tips_s'] = float(np.clip(-tips_delta * 4.0 + level_pen, -1.0, 1.0))
+    except Exception:
+        pass
+    # US 10-Year Nominal Yield — nghich chieu: yield tang → Vang giam
     try:
         tny = yf.Ticker('^TNX').history(period='7d', interval='1d')['Close'].dropna()
         if len(tny) >= 3:
             delta = float(tny.iloc[-1] - tny.iloc[-3])   # thay doi trong 3 phien (% point)
-            # +0.20 pp yield → Vang giam ~1% → score = -0.7
             _gold_cache['tny_s'] = float(np.clip(-delta * 3.5, -1.0, 1.0))
     except Exception:
         pass
@@ -536,31 +506,34 @@ def fetch_gold_macro():
 
 def gold_macro_score():
     """
-    Phuong trinh lien thi truong danh rieng XAU/USD.
+    Phuong trinh lien thi truong danh rieng XAU/USD — 5 factors.
 
-    score = 0.40 * score_dxy + 0.35 * score_tny + 0.15 * score_vix + 0.10 * score_oil
+    score = 0.30*DXY + 0.25*TIPS + 0.20*TNX + 0.15*VIX + 0.10*Oil
 
     Nguyen tac:
-      DXY  tang → USD manh → Vang GIAM  (nghich, w=0.40 — trong so lon nhat)
-      10Y  tang → lai suat → Vang GIAM  (nghich, w=0.35 — co hoi tai chinh)
-      VIX  tang → so hai   → Vang TANG  (thuan,  w=0.15 — safe haven)
-      Oil  tang → lam phat → Vang TANG  (thuan nhe, w=0.10 — kenh gian tiep)
+      DXY  tang → USD manh  → Vang GIAM  (nghich, w=0.30)
+      TIPS tang → real yield tang → Vang GIAM  (nghich, w=0.25 — driver manh nhat)
+      TNX  tang → nominal yield → Vang GIAM  (nghich, w=0.20)
+      VIX  tang → so hai    → Vang TANG  (thuan,  w=0.15 — safe haven)
+      Oil  tang → lam phat  → Vang TANG  (thuan nhe, w=0.10)
 
     Tra ve: (score[-1,+1], components_dict)
       +1.0 = macro ung ho manh MUA Vang
       -1.0 = macro ung ho manh BAN Vang
     """
-    g = fetch_gold_macro()
-    dxy_s = -g['dxy_raw']    # dao dau: DXY tang → score am (bearish Gold)
-    tny_s =  g['tny_s']      # da dao dau trong fetch
-    vix_s =  g['vix_s']      # cung chieu
-    oil_s =  g['oil_raw']    # Oil tang → bullish Gold
-    score = 0.40 * dxy_s + 0.35 * tny_s + 0.15 * vix_s + 0.10 * oil_s
-    comps = {
-        'dxy': round(dxy_s, 2),
-        'tny': round(tny_s, 2),
-        'vix': round(vix_s, 2),
-        'oil': round(oil_s, 2),
+    g     = fetch_gold_macro()
+    dxy_s  = -g['dxy_raw']   # DXY tang → bearish gold
+    tips_s =  g['tips_s']    # da tinh dau trong fetch: real yield giam → duong
+    tny_s  =  g['tny_s']     # nominal yield giam → duong
+    vix_s  =  g['vix_s']     # VIX tang → duong (safe haven)
+    oil_s  =  g['oil_raw']   # Oil tang → bullish gold (lam phat)
+    score  = 0.30*dxy_s + 0.25*tips_s + 0.20*tny_s + 0.15*vix_s + 0.10*oil_s
+    comps  = {
+        'dxy':  round(dxy_s,  2),
+        'tips': round(tips_s, 2),
+        'tny':  round(tny_s,  2),
+        'vix':  round(vix_s,  2),
+        'oil':  round(oil_s,  2),
     }
     return float(np.clip(score, -1.0, 1.0)), comps
 
@@ -568,110 +541,80 @@ def gold_macro_score():
 # ── Phương trình macro JPY pairs ──────────────────────────────
 def jpy_macro_score(sym):
     """
-    Macro equation cho 5 cap JPY — tai su dung _gold_cache (zero API cost).
+    Macro equation cho JPY pairs — tai su dung _gold_cache (zero API cost).
     score > 0: JPY suy yeu → BUY pair | score < 0: JPY manh → SELL pair
 
-    3 sub-group theo driver chinh:
-    - USD/JPY : yield differential (BoJ ~0% → TNX la proxy spread)
-    - EUR/JPY, GBP/JPY : risk sentiment (JPY safe haven khi so hai)
-    - AUD/JPY, CAD/JPY : carry trade (yield + oil/risk appetite)
+    2 sub-group:
+    - USD/JPY : yield differential (BoJ ~0% → TNX la proxy spread) + risk + DXY
+    - EUR/JPY  : risk sentiment chinh (JPY safe haven khi so hai) + yield + oil
 
-    Sign convention (tai su dung tu gold_cache):
-      raw_yield = -tny_s : duong khi US yield TANG (carry trade vao USD)
-      risk_on   = -vix_s : duong khi VIX GIAM (risk-on, JPY yeu di)
-      dxy_raw   = g['dxy_raw'] : duong khi DXY tang (USD manh)
-      oil_raw   = g['oil_raw'] : duong khi Oil tang (risk appetite)
+    Sign convention:
+      raw_yield = -tny_s : duong khi US yield TANG (carry trade vao USD → JPY yeu)
+      risk_on   = -vix_s : duong khi VIX GIAM (risk-on → JPY yeu)
+      dxy_raw   : duong khi DXY tang (USD manh)
     """
-    g = fetch_gold_macro()
-    raw_yield = -g['tny_s']    # tny_s am khi yield tang → dao = duong khi carry thuan
-    risk_on   = -g['vix_s']    # vix_s duong khi VIX cao → dao = duong khi risk-on
+    g         = fetch_gold_macro()
+    raw_yield = -g['tny_s']
+    risk_on   = -g['vix_s']
     dxy_raw   =  g['dxy_raw']
     oil_raw   =  g['oil_raw']
 
     if sym == 'USD/JPY':
         score = 0.50 * raw_yield + 0.30 * risk_on + 0.20 * dxy_raw
         comps = {'yield': round(raw_yield, 2), 'risk': round(risk_on, 2), 'dxy': round(dxy_raw, 2)}
-    elif sym in ('EUR/JPY', 'GBP/JPY'):
+    elif sym == 'EUR/JPY':
         score = 0.55 * risk_on + 0.25 * raw_yield + 0.20 * oil_raw
         comps = {'risk': round(risk_on, 2), 'yield': round(raw_yield, 2), 'oil': round(oil_raw, 2)}
-    elif sym in ('AUD/JPY', 'CAD/JPY'):
-        score = 0.45 * risk_on + 0.35 * oil_raw + 0.20 * raw_yield
-        comps = {'risk': round(risk_on, 2), 'oil': round(oil_raw, 2), 'yield': round(raw_yield, 2)}
     else:
         return 0.0, {}
     return float(np.clip(score, -1.0, 1.0)), comps
 
 
-def oil_macro_score(sym):
-    """
-    Macro equation cho USOIL/USD va UKOIL/USD.
-    Tai su dung Oil trend + VIX tu gold_cache, Oil news tu fundamental_cache.
-    score > 0: macro ung ho Oil tang | score < 0: macro ung ho Oil giam
-    """
-    g = fetch_gold_macro()
-    oil_raw  = g['oil_raw']   # Oil trend hien tai
-    risk_on  = -g['vix_s']    # VIX thap = demand tot = bullish oil
-
-    sent_key = 'USO' if sym == 'USOIL/USD' else 'UKO'
-    oil_sent = _fundamental_cache.get('sentiment', {}).get(sent_key, 0.0) if _fundamental_cache else 0.0
-
-    score = 0.50 * oil_raw + 0.30 * risk_on + 0.20 * oil_sent
-    comps = {'trend': round(oil_raw, 2), 'risk': round(risk_on, 2), 'news': round(oil_sent, 2)}
-    return float(np.clip(score, -1.0, 1.0)), comps
-
-
 def macro_score(sym):
     """
-    Router macro thong nhat — 100% cap deu co equation rieng.
-    Moi cap tai su dung _gold_cache (DXY, TNX, VIX, Oil) — zero API cost.
+    Router macro thong nhat — 7 cap deu co equation rieng.
+    100% tai su dung _gold_cache (DXY, TIPS, TNX, VIX, Oil) — zero API cost them.
 
     Tra ve (score[-1,+1], comps) hoac (None, {}) neu khong co macro.
     score > 0: macro ung ho BUY  |  score < 0: macro ung ho SELL
 
-    Sign map (de nhat quan khi doc):
+    Sign map:
       dxy_inv = -dxy_raw  : duong khi USD yeu → bullish */USD
-      yield_s =  tny_s    : duong khi yield giam → bullish gold/silver
       vix_s   =  vix_s    : duong khi VIX cao → bullish safe-haven (gold, CHF, JPY)
-      oil_s   =  oil_raw  : duong khi oil tang → bullish dau, CAD, risk-on
+      risk_on = -vix_s    : duong khi VIX thap → bullish risk-on (EUR, NZD, JPY crosses)
+      oil_s   =  oil_raw  : duong khi oil tang → bullish CAD
     """
-    if sym == 'XAU/USD':                          return gold_macro_score()
-    if sym.endswith('/JPY'):                       return jpy_macro_score(sym)
-    if sym in ('USOIL/USD', 'UKOIL/USD'):         return oil_macro_score(sym)
+    if sym == 'XAU/USD':       return gold_macro_score()
+    if sym.endswith('/JPY'):   return jpy_macro_score(sym)
 
     g       = fetch_gold_macro()
     dxy_inv = -g['dxy_raw']
-    yield_s =  g['tny_s']
     vix_s   =  g['vix_s']
     oil_s   =  g['oil_raw']
+    risk_on = -vix_s   # VIX thap = risk appetite = bullish risk-on pairs
 
     if sym == 'USD/CHF':
         # Ca hai la safe haven; trong extreme fear CHF thang hon USD → USD/CHF giam
         dxy_raw = g['dxy_raw']
         s = 0.55*dxy_raw + 0.45*(-vix_s)
-        c = {'dxy': round(dxy_raw,2), 'risk': round(-vix_s,2)}
+        c = {'dxy': round(dxy_raw, 2), 'risk': round(-vix_s, 2)}
 
     elif sym == 'USD/CAD':
         # CAD = dong tien dau mo: Oil tang → CAD manh → USD/CAD giam
         dxy_raw = g['dxy_raw']
         s = 0.45*dxy_raw + 0.40*(-oil_s) + 0.15*vix_s
-        c = {'dxy': round(dxy_raw,2), 'oil': round(-oil_s,2), 'vix': round(vix_s,2)}
-
-    elif sym == 'AUD/USD':
-        # Risk-on commodity: DXY tang = bearish, VIX tang = bearish, Oil tang = bullish
-        s = 0.45*dxy_inv + 0.35*(-vix_s) + 0.20*oil_s
-        c = {'dxy': round(dxy_inv,2), 'risk': round(-vix_s,2), 'oil': round(oil_s,2)}
+        c = {'dxy': round(dxy_raw, 2), 'oil': round(-oil_s, 2), 'vix': round(vix_s, 2)}
 
     elif sym == 'EUR/USD':
         # Risk-on vs USD: DXY tang = bearish; VIX spike = bearish (USD la safe haven)
-        s = 0.60*dxy_inv + 0.40*(-vix_s)
-        c = {'dxy': round(dxy_inv,2), 'risk': round(-vix_s,2)}
+        s = 0.60*dxy_inv + 0.40*risk_on
+        c = {'dxy': round(dxy_inv, 2), 'risk': round(risk_on, 2)}
 
-    elif sym == 'GBP/USD':
-        # GBP nhay cam hon EUR voi risk-off (thanh khoan thap, BoE doc lap)
-        # them GBP news sentiment (BoE, UK GDP, inflation)
-        gbp_sent = _fundamental_cache.get('sentiment', {}).get('GBP', 0.0) if _fundamental_cache else 0.0
-        s = 0.50*dxy_inv + 0.35*(-vix_s) + 0.15*gbp_sent
-        c = {'dxy': round(dxy_inv,2), 'risk': round(-vix_s,2), 'gbp': round(gbp_sent,2)}
+    elif sym == 'NZD/USD':
+        # Risk-on commodity currency — VIX corr=-0.70 (manh nhat ngoai te)
+        # NZD tang khi: USD yeu + thi truong lac quan (VIX thap) + hang hoa tang
+        s = 0.50*dxy_inv + 0.35*risk_on + 0.15*oil_s
+        c = {'dxy': round(dxy_inv, 2), 'risk': round(risk_on, 2), 'oil': round(oil_s, 2)}
 
     else:
         return None, {}
@@ -2036,7 +1979,7 @@ def fetch_price_range(yf_sym, since_ts, hours=1):
 # ── Format ────────────────────────────────────────────────────
 def fmt_price(sym, price):
     if 'JPY' in sym:                                  return f'{price:,.3f}'
-    if sym in ('XAU/USD','UKOIL/USD','USOIL/USD'):    return f'{price:,.2f}'
+    if sym == 'XAU/USD':                               return f'{price:,.2f}'
     return f'{price:.5f}'
 
 def price_to_pips(sym, raw_diff):
@@ -2046,12 +1989,10 @@ def price_to_pips(sym, raw_diff):
     - Standard (EURUSD...): 1 pip = 0.0001 → × 10000
     - JPY pairs:             1 pip = 0.01   → × 100
     - XAU/USD (Gold):        1 pip = $0.10  → × 10
-    - Oil (UKOIL/USOIL):     1 pip = $0.01  → × 100
     """
-    if 'JPY' in sym:                          return round(raw_diff * 100,   1)
-    if sym == 'XAU/USD':                      return round(raw_diff * 10,    1)
-    if sym in ('UKOIL/USD', 'USOIL/USD'):     return round(raw_diff * 100,   1)
-    return                                           round(raw_diff * 10000, 1)
+    if 'JPY' in sym:     return round(raw_diff * 100,   1)
+    if sym == 'XAU/USD': return round(raw_diff * 10,    1)
+    return               round(raw_diff * 10000, 1)
 
 def _icon(v):
     if v > 0.1:  return '⬆'
@@ -2396,11 +2337,12 @@ def main():
             f'dong thuan: {", ".join(r["vote_lbls"])}'
         )
 
-        key     = f'{sym}|{r["signal"]}'
-        elapsed = (now.timestamp() - state.get(key, 0)) / 3600
-        if elapsed < COOLDOWN_HOURS:
-            print(f'  -> Cooldown ({elapsed:.1f}h / {COOLDOWN_HOURS}h), bo qua')
-            _log.info(f'[{sym}] COOLDOWN {r["signal"]} {elapsed:.1f}h/{COOLDOWN_HOURS}h')
+        key            = f'{sym}|{r["signal"]}'
+        elapsed        = (now.timestamp() - state.get(key, 0)) / 3600
+        pair_cooldown  = PAIR_CONFIG.get(sym, _DEFAULT_CONFIG).get('cooldown_hours', COOLDOWN_HOURS)
+        if elapsed < pair_cooldown:
+            print(f'  -> Cooldown ({elapsed:.1f}h / {pair_cooldown}h), bo qua')
+            _log.info(f'[{sym}] COOLDOWN {r["signal"]} {elapsed:.1f}h/{pair_cooldown}h')
             time.sleep(0.5)
             continue
 
