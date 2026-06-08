@@ -125,6 +125,7 @@ _gold_cache        = {}   # Cache macro data rieng cho XAU/USD (TNX, VIX)
 _fundamental_cache = {}   # Cache Fundamental Intelligence Layer (Calendar/Sentiment/F&G)
 _price_history     = {}   # Lich su gia tich luy — load tu file, save cuoi phien
 _d1_cache          = {}   # D1 OHLCV cache per pair per session (180 ngay daily)
+_w1_cache          = {}   # W1 Weekly cache per pair per session (52 tuan)
 
 PRICE_HISTORY_FILE = str(_ROOT / 'price_history.json')
 MAX_HISTORY_BARS   = 720  # 30 ngay H1 moi cap (720 nen × 1h = 720h = 30 ngay)
@@ -731,6 +732,61 @@ def d1_key_levels(sym, yf_sym, signal, price):
         # Ho tro = swing low D1 phia duoi gia, cach it nhat 0.5%
         candidates = [l for l in lows[-90:] if l < price * 0.995]
         return max(candidates) if candidates else None
+
+
+def w1_trend(sym, yf_sym):
+    """
+    Xu huong Weekly (W1) — buc tranh lon nhat, loc counter-trend trong xu huong tuan.
+    Fetch 52 tuan tu yfinance, cache per session.
+
+    3 thanh phan:
+      ema_s    (50%): gia vs EMA20 tuan (~5 thang) — xu huong chien luoc
+      mom_s    (30%): 4 tuan gan nhat tang/giam — dong luc ngan han tuan
+      struct_s (20%): HH/HL vs LH/LL — cau truc gia tuan
+
+    Returns: ('BULL'|'BEAR'|'NEUTRAL', score, details)
+    """
+    global _w1_cache
+    if sym in _w1_cache:
+        return _w1_cache[sym]
+    neutral = ('NEUTRAL', 0.0, {})
+    try:
+        df = yf.Ticker(yf_sym).history(period='1y', interval='1wk')
+        if df is None or len(df) < 10:
+            _w1_cache[sym] = neutral; return neutral
+        closes = list(df['Close'].dropna())
+        highs  = list(df['High'].dropna())
+        lows   = list(df['Low'].dropna())
+        n      = min(len(closes), len(highs), len(lows))
+        closes = closes[:n]; highs = highs[:n]; lows = lows[:n]
+        price  = closes[-1]
+
+        # EMA 20 weekly (~5 thang trend)
+        e20   = ema(closes, 20)
+        ema_s = 1 if price > e20 * 1.001 else (-1 if price < e20 * 0.999 else 0)
+
+        # Momentum: 4 tuan gan nhat
+        w = closes[-5:] if len(closes) >= 5 else closes
+        up_w  = sum(1 for i in range(1, len(w)) if w[i] > w[i-1])
+        tot_w = len(w) - 1
+        mom_s = (1 if up_w >= round(tot_w*0.75) else
+                 -1 if up_w <= round(tot_w*0.25) else 0)
+
+        # Market structure: HH/HL vs LH/LL (10 tuan)
+        n2 = min(n, 10); mid = n2 // 2; struct_s = 0
+        if n2 > mid > 0:
+            ph = max(highs[-n2:-mid]); ch = max(highs[-mid:])
+            pl = min(lows[-n2:-mid]);  cl = min(lows[-mid:])
+            struct_s = 1 if (ch > ph and cl > pl) else (-1 if (ch < ph and cl < pl) else 0)
+
+        score     = ema_s*0.50 + mom_s*0.30 + struct_s*0.20
+        direction = 'BULL' if score > 0.20 else ('BEAR' if score < -0.20 else 'NEUTRAL')
+        details   = {'ema': ema_s, 'mom': mom_s, 'struct': struct_s, 'score': round(score, 2)}
+        _w1_cache[sym] = (direction, float(score), details)
+        return _w1_cache[sym]
+    except Exception as e:
+        print(f'  [W1] fetch loi {sym}: {e}')
+        _w1_cache[sym] = neutral; return neutral
 
 
 def resample_to_h4(long_closes, long_highs, long_lows):
@@ -1672,6 +1728,9 @@ def analyze(sym, yf_sym, now=None):
         # D1 direction chi hien thi trong Telegram lam tham khao, khong anh huong entry
         d1_dir, d1_score_val, d1_det = d1_trend(sym, yf_sym)
 
+        # [W1] Weekly trend — buc tranh lon nhat, loc counter-trend tuan
+        w1_dir, w1_score_val, w1_det = w1_trend(sym, yf_sym)
+
         # Cap nhat aligned/opposed theo signal chinh thuc (chi dung cho confidence)
         d1_aligned = (signal == 'BUY' and d1_dir == 'BULL') or \
                      (signal == 'SELL' and d1_dir == 'BEAR')
@@ -1681,6 +1740,20 @@ def analyze(sym, yf_sym, now=None):
                      (signal == 'SELL' and h4_dir == 'BEAR')
         h4_opposed = (signal == 'BUY' and h4_dir == 'BEAR') or \
                      (signal == 'SELL' and h4_dir == 'BULL')
+        w1_aligned = (signal == 'BUY' and w1_dir == 'BULL') or \
+                     (signal == 'SELL' and w1_dir == 'BEAR')
+        w1_opposed = (signal == 'BUY' and w1_dir == 'BEAR') or \
+                     (signal == 'SELL' and w1_dir == 'BULL')
+
+        # Block counter-weekly-trend khi xu huong tuan manh (TREND + H > 0.52)
+        # W1 nguoc chieu trong momentum manh = bay counter-trend nguy hiem nhat
+        if w1_opposed and regime == 'TREND' and H > 0.52:
+            print(f'  [D] W1={w1_dir} nguoc chieu {signal} trong TREND (H={H:.3f}) — counter weekly trend')
+            _log.info(f'[{sym}] BLOCKED counter_w1 {signal} W1={w1_dir} H={H:.3f}')
+            return None
+
+        # [M15] Phan tich M15 — xac nhan entry timing va phat hien "chasing"
+        m15_dir = analyze_m15(sym, yf_sym)
 
         # [H4 S/R] Phat hien ho tro / khang cu tu lich su H4
         h4_s_c, h4_s_h, h4_s_l = resample_to_h4(long_closes, long_highs, long_lows)
@@ -1751,8 +1824,14 @@ def analyze(sym, yf_sym, now=None):
         im_bonus     = 5 if im_aligned else 0
         regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
         history_bonus = 2 if ln >= 200 else 0
-        mtf_bonus = (5 if h4_aligned else (-3 if h4_opposed else 0)) + \
-                    (3 if d1_aligned else (-2 if d1_opposed else 0))
+        # W1: +7 khi dong thuan (xu huong tuan ung ho), -5 khi nguoc chieu (da qua block → chi penalty nhe)
+        # H4: +5/-3 | D1: +3/-2 | M15: +4 khi hop luu, -2 khi nguoc (entry timing)
+        m15_aligned = (m15_dir == signal)
+        m15_opposed = (m15_dir is not None and m15_dir != signal)
+        mtf_bonus = (7 if w1_aligned else (-5 if w1_opposed else 0)) + \
+                    (5 if h4_aligned else (-3 if h4_opposed else 0)) + \
+                    (3 if d1_aligned else (-2 if d1_opposed else 0)) + \
+                    (4 if m15_aligned else (-2 if m15_opposed else 0))
         # S/R bonus: vao lenh gan ho tro (BUY) / khang cu (SELL) = confluence tot
         # S/R penalty: vao lenh sap vao khang cu (BUY) / ho tro (SELL) = chong muc
         sr_bonus = (5 if (signal == 'BUY' and near_support) or (signal == 'SELL' and near_resistance)
@@ -1877,8 +1956,11 @@ def analyze(sym, yf_sym, now=None):
         rr1     = round(tp_dist  / sl_dist, 1) if sl_dist > 0 else 0
         rr2     = round(tp2_dist / sl_dist, 1) if sl_dist > 0 else 0
 
-        entry_low  = price - atr_val * 0.2
-        entry_high = price + atr_val * 0.2
+        entry_low   = price - atr_val * 0.2
+        entry_high  = price + atr_val * 0.2
+        # Chase limit: nguong gia toi da chap nhan khi user thay tin tri hoan 10-15p
+        # Vuot nguong nay = gia da chay xa, entry risk/reward bi xau di ro rang
+        chase_limit = price + atr_val * 0.5 if signal == 'BUY' else price - atr_val * 0.5
 
         _log.info(f'[{sym}] SIGNAL {signal} conf={conf} votes={vote_count}/6 regime={regime} H={H:.3f} ADX={adx_val:.1f}')
         return {
@@ -1888,10 +1970,12 @@ def analyze(sym, yf_sym, now=None):
             'sl': sl, 'tp': tp, 'tp2': tp2,
             'sl_pct': sl_pct, 'tp_pct': tp_pct, 'tp2_pct': tp2_pct,
             'rr1': rr1, 'rr2': rr2,
-            'entry_low': entry_low, 'entry_high': entry_high,
+            'entry_low': entry_low, 'entry_high': entry_high, 'chase_limit': chase_limit,
+            'm15_dir': m15_dir,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
             'history_bars': ln,
             'mtf': {
+                'w1_dir':   w1_dir,   'w1_score': w1_det.get('score', 0),
                 'd1_dir':   d1_dir,   'd1_score': d1_det.get('score', 0),
                 'd1_ema':   d1_det.get('ema', 0), 'd1_struct': d1_det.get('struct', 0),
                 'h4_dir':   h4_dir,   'h4_score': h4_det.get('score', 0),
@@ -2363,8 +2447,8 @@ def main():
             time.sleep(0.5)
             continue
 
-        # M15 confluence
-        m15_dir   = analyze_m15(sym, yf_sym)
+        # M15 confluence — da tinh ben trong analyze(), lay tu result
+        m15_dir   = r.get('m15_dir')
         m15_phase = wyckoff_phase(
             'RANGE' if m15_dir else 'NEUTRAL', m15_dir or r['signal'], r['rsi']
         )
@@ -2422,15 +2506,17 @@ def main():
 
         vote_bar = '|'.join(r['vote_lbls']) + f'  ({r["vote_count"]}/6 đồng thuận)'
 
-        # MTF summary line
+        # MTF summary line — W1 + D1 + H4
         mtf = r.get('mtf', {})
-        d1_icon = '✅' if mtf.get('d1_dir') == ('BULL' if r['signal']=='BUY' else 'BEAR') else \
-                  ('⚠️' if mtf.get('d1_dir') == 'NEUTRAL' else '❌')
-        h4_icon = '✅' if mtf.get('h4_dir') == ('BULL' if r['signal']=='BUY' else 'BEAR') else \
-                  ('⚠️' if mtf.get('h4_dir') == 'NEUTRAL' else '❌')
-        mtf_line = (f'📐 MTF: D1 {d1_icon}{mtf.get("d1_dir","?")}({mtf.get("d1_score",0):+.2f}) '
-                    f'| H4 {h4_icon}{mtf.get("h4_dir","?")}({mtf.get("h4_score",0):+.2f}) '
-                    f'| {mtf.get("h4_bars",0)} bars H4')
+        sig_tf = 'BULL' if r['signal'] == 'BUY' else 'BEAR'
+        def _tf_icon(tf_dir):
+            return '✅' if tf_dir == sig_tf else ('⚠️' if tf_dir == 'NEUTRAL' else '❌')
+        w1_icon = _tf_icon(mtf.get('w1_dir', 'NEUTRAL'))
+        d1_icon = _tf_icon(mtf.get('d1_dir', 'NEUTRAL'))
+        h4_icon = _tf_icon(mtf.get('h4_dir', 'NEUTRAL'))
+        mtf_line = (f'📐 MTF: W1 {w1_icon}{mtf.get("w1_dir","?")}({mtf.get("w1_score",0):+.2f}) '
+                    f'| D1 {d1_icon}{mtf.get("d1_dir","?")}({mtf.get("d1_score",0):+.2f}) '
+                    f'| H4 {h4_icon}{mtf.get("h4_dir","?")}({mtf.get("h4_score",0):+.2f})')
         if mtf.get('d1_level_used') and mtf.get('d1_level'):
             d1_lv = mtf['d1_level']
             mtf_line += f'\n🏁 TP nhắm D1 key level: {fmt_price(r["sym"], d1_lv)}'
@@ -2531,14 +2617,16 @@ def main():
             f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
             f'🎯 TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]})',
             '',
+            ('🚫 Bỏ qua nếu giá đã vượt: ' + fmt_price(sym, r['chase_limit'])
+             if r['signal'] == 'BUY'
+             else '🚫 Bỏ qua nếu giá đã thủng: ' + fmt_price(sym, r['chase_limit'])),
+            '⚠️ Vô hiệu nếu: ' + inval_text,
+            '',
             '💡 Lý do:',
             reason,
             '',
             '🔍 Bằng chứng PA/Vol:',
             pa_vol,
-            '',
-            '⚠️ Vô hiệu nếu:',
-            inval_text,
             '',
         ]
         if pair_macro_line:
