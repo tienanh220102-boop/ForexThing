@@ -34,6 +34,7 @@ TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_TOKEN', '')
 TELEGRAM_CHAT    = os.environ.get('TELEGRAM_CHAT',  '')
 TWELVE_DATA_KEY  = os.environ.get('TWELVE_DATA_KEY', '')  # Twelve Data API (free: 800 req/ngay)
 COOLDOWN_HOURS  = 6
+LOT_SIZE        = 0.01   # Lot size thuc te moi lenh — chinh khi scale von
 STATE_FILE      = str(_ROOT / 'last_signals.json')
 CHECKPOINTS_H   = [1, 4]  # Xac nhan tai +1h va +4h — du lieu win rate phong phu hon
 MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de dat 65
@@ -2236,12 +2237,24 @@ def run_validations(state, now):
             else:
                 range_line = ''
 
+            dir_m = 1 if signal == 'BUY' else -1
+            if tp_hit and not sl_hit:
+                _chk_pips = price_to_pips(sym,  abs(tp_val - entry))
+            elif sl_hit and not tp_hit:
+                _chk_pips = price_to_pips(sym, -abs(sl_val - entry))
+            else:
+                _chk_pips = price_to_pips(sym, dir_m * (current - entry))
+            _chk_usd = round(_chk_pips * LOT_SIZE * 10, 2)
+            _sign     = '+' if _chk_usd >= 0 else ''
+            _usd_str  = f'{_sign}{_chk_usd:.2f} USD ({_chk_pips:+.1f} pips × {LOT_SIZE} lot)'
+
             msg_lines = [
                 f'{verdict_emoji} <b>Kết quả +{cp["hours"]}h — {verdict}</b>',
                 '',
                 f'📈 Cặp: <b>{sym}</b>',
                 f'📌 {signal} @ {fmt_price(sym, entry)} → {fmt_price(sym, current)}',
                 f'📊 Biến động: <b>{move_text}</b>',
+                f'💰 P&L: <b>{_usd_str}</b>',
             ]
             if range_line:
                 msg_lines.append(range_line)
@@ -2291,6 +2304,8 @@ def run_validations(state, now):
                     'exit':    round(exit_price, 5),
                     'sl_pips': sl_pips,
                     'tp_pips': tp_pips,
+                    'conf':    v.get('conf', 0),
+                    'votes':   v.get('aligned', 0),
                 })
             else:
                 print(f'Loi Telegram: {result}')
@@ -2330,19 +2345,47 @@ def send_weekly_report(state):
             rows.append((key, wr, s['n'], avg_pip))
     rows.sort(key=lambda x: -x[1])
 
-    total  = len(versioned)
-    n_wins = sum(1 for x in versioned if x.get('correct'))
-    overall = n_wins / total * 100 if total > 0 else 0
+    total     = len(versioned)
+    n_wins    = sum(1 for x in versioned if x.get('correct'))
+    overall   = n_wins / total * 100 if total > 0 else 0
+    all_pips  = [x['pips'] for x in versioned if 'pips' in x]
+    total_usd = round(sum(all_pips) * LOT_SIZE * 10, 2) if all_pips else 0
+    usd_sign  = '+' if total_usd >= 0 else ''
+
+    resolved  = [x for x in versioned if x.get('outcome') in ('TP', 'SL')]
+    tp_rate_str = ''
+    if len(resolved) >= 5:
+        tp_hits = sum(1 for x in resolved if x.get('outcome') == 'TP')
+        tp_rate_str = f' | TP rate: {tp_hits/len(resolved)*100:.0f}% ({len(resolved)}R)'
 
     lines = [
         f'📊 <b>Báo cáo hiệu suất</b> (từ {LOGIC_VERSION})',
-        f'Tổng: {n_wins}/{total} = <b>{overall:.0f}%</b>',
+        f'Tổng: {n_wins}/{total} = <b>{overall:.0f}%</b>{tp_rate_str}  |  💰 {usd_sign}{total_usd:.2f} USD ({LOT_SIZE} lot)',
         '',
     ]
     for key, wr, n, avg_pip in rows:
         icon    = '🔥' if wr >= 65 else ('⚠️' if wr < 45 else '  ')
-        pip_str = f'  {avg_pip:+.1f}p' if avg_pip != 0 else ''
+        avg_usd = round(avg_pip * LOT_SIZE * 10, 2)
+        usd_s   = '+' if avg_usd >= 0 else ''
+        pip_str = f'  {avg_pip:+.1f}p ({usd_s}{avg_usd:.2f}$)' if avg_pip != 0 else ''
         lines.append(f'{icon} {key}: <b>{wr:.0f}%</b> ({n}L{pip_str})')
+
+    # Regime breakdown — Kaufman Ch21: biet regime nao he thong hoat dong tot nhat
+    regime_stats = {}
+    for x in versioned:
+        reg = x.get('regime', '?')
+        st  = regime_stats.setdefault(reg, {'n': 0, 'wins': 0})
+        st['n'] += 1
+        if x.get('correct'):
+            st['wins'] += 1
+    regime_parts = []
+    for reg, s in sorted(regime_stats.items(), key=lambda kv: -kv[1]['n']):
+        if s['n'] >= 3:
+            wr   = s['wins'] / s['n'] * 100
+            icon = '🔥' if wr >= 65 else ('⚠️' if wr < 45 else '  ')
+            regime_parts.append(f'{icon} {reg}: {wr:.0f}% ({s["n"]}L)')
+    if regime_parts:
+        lines += ['', '📐 Theo regime:'] + [f'  {p}' for p in regime_parts]
 
     send_telegram('\n'.join(lines))
     state['last_weekly_report'] = datetime.now(timezone.utc).timestamp()
@@ -2601,6 +2644,20 @@ def main():
             if cal_line:
                 fund_lines.append(cal_line)
 
+        sl_raw  = abs(r['price'] - r['sl'])
+        tp1_raw = abs(r['tp']   - r['price'])
+        tp2_raw = abs(r['tp2']  - r['price'])
+
+        sl_pips_val  = price_to_pips(sym, sl_raw)
+        tp1_pips_val = price_to_pips(sym, tp1_raw)
+        tp2_pips_val = price_to_pips(sym, tp2_raw)
+
+        sl_usd  = round(sl_pips_val  * LOT_SIZE * 10, 2)
+        tp1_usd = round(tp1_pips_val * LOT_SIZE * 10, 2)
+        tp2_usd = round(tp2_pips_val * LOT_SIZE * 10, 2)
+
+        sl_pips_str = f'${sl_raw:.1f}' if sym == 'XAU/USD' else f'{sl_pips_val:.1f} pips'
+
         msg_parts = [
             f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cậy',
             f'<code>{bar}</code>  {conf_10}/10',
@@ -2613,9 +2670,9 @@ def main():
             *(([tl_line]) if tl_line else []),
             *(([dow_line, '']) if dow_line else (([''] if tl_line else []))),
             f'📍 Entry: {entry_zone}',
-            f'🔴 SL: {fmt_price(sym, r["sl"])}',
-            f'🎯 TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]})',
-            f'🎯 TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]})',
+            f'🛑 SL:  {fmt_price(sym, r["sl"])}  ({sl_pips_str} / -${sl_usd:.2f})',
+            f'✅ TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]} / +${tp1_usd:.2f})',
+            f'✅ TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]} / +${tp2_usd:.2f})',
             '',
             ('🚫 Bỏ qua nếu giá đã vượt: ' + fmt_price(sym, r['chase_limit'])
              if r['signal'] == 'BUY'
@@ -2663,6 +2720,7 @@ def main():
                 'indicators':  r['indicators'],
                 'regime':      r['regime'],
                 'hurst':       r['hurst'],
+                'conf':        conf,
                 'aligned':     r['aligned'],
                 'consensus':   r['consensus'],
             })
