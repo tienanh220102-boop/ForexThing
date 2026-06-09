@@ -2136,7 +2136,7 @@ def process_callbacks(state):
         if key in cb_lookup:
             cb_lookup[key]['entry_confirmed'] = (decision == 'yes')
             label = '✅ Đã vào' if decision == 'yes' else '❌ Bỏ qua'
-            print(f'  [callback] {sym_key} → {label}')
+            print(f'  [callback] {sym_key} -> {label}')
 
 
 # ── Xac nhan 3 moc ───────────────────────────────────────────
@@ -2307,7 +2307,7 @@ def run_validations(state, now):
                 result = send_telegram(msg)
             if result.get('ok'):
                 cp['done'] = True
-                print(f'{verdict} ✓')
+                print(f'{verdict} OK')
                 # Ghi ket qua theo doi win rate + pip P&L
                 dir_mult = 1 if signal == 'BUY' else -1
                 if tp_hit and not sl_hit:
