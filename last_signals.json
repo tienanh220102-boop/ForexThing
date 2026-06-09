@@ -8,7 +8,46 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [],
+  "pending_validations": [
+    {
+      "sym": "WTI/USD",
+      "signal": "SELL",
+      "entry_price": 89.5999984741211,
+      "sl": 91.30000305175781,
+      "tp": 86.19998931884766,
+      "sent_at": 1781006795.706521,
+      "message_id": 401,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1781010395.706521,
+          "done": false
+        },
+        {
+          "hours": 4,
+          "at": 1781021195.706521,
+          "done": false
+        }
+      ],
+      "expires_at": 1781042795.706521,
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.14,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -0.5,
+        "tl": 0
+      },
+      "regime": "RANGE",
+      "hurst": 0.405,
+      "conf": 76,
+      "aligned": 3,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "WTIUSD_1781006795"
+    }
+  ],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -1157,5 +1196,6 @@
   "AUD/JPY|BUY": 1780119052.907226,
   "CAD/JPY|SELL": 1779962477.127064,
   "AUD/JPY|SELL": 1780869663.443352,
-  "last_weekly_report": 1780743174.681201
+  "last_weekly_report": 1780743174.681201,
+  "WTI/USD|SELL": 1781006795.706521
 }
