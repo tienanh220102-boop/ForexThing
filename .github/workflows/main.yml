@@ -2,7 +2,7 @@ name: Forex Signal Notifier
 
 on:
   schedule:
-    - cron: '*/30 * * * *'   # Chay moi 30 phut
+    - cron: '*/15 * * * *'   # Chay moi 15 phut
   workflow_dispatch:          # Cho phep chay thu cong
 
 permissions:
