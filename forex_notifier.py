@@ -35,6 +35,7 @@ TELEGRAM_CHAT    = os.environ.get('TELEGRAM_CHAT',  '')
 TWELVE_DATA_KEY  = os.environ.get('TWELVE_DATA_KEY', '')  # Twelve Data API (free: 800 req/ngay)
 COOLDOWN_HOURS  = 6
 LOT_SIZE        = 0.01   # Lot size thuc te moi lenh — chinh khi scale von
+ACCOUNT_SIZE    = float(os.environ.get('ACCOUNT_SIZE', '1000'))  # Von tai khoan (USD) — dung tinh lot de xuat
 STATE_FILE      = str(_ROOT / 'last_signals.json')
 CHECKPOINTS_H   = [1, 4]  # Xac nhan tai +1h va +4h — du lieu win rate phong phu hon
 MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de dat 65
@@ -60,6 +61,12 @@ PAIR_CONFIG = {
     # USD/JPY: yield differential + risk sentiment; strict RSI tranh false signal
     'USD/JPY':   {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.48, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
+
+    # === HANG HOA ===
+    # WTI/USD: energy bucket — doc lap voi FX, driver: DXY inverse + risk sentiment + yield
+    # Phase 2 (09/06/2026): thay the USD/CAD proxy bang WTI truc tiep
+    'WTI/USD':   {'rsi_buy': 42, 'rsi_sell': 58, 'hurst_block': 0.40, 'min_votes': 3,
+                  'trade_hours': set(range(8, 22)), 'cooldown_hours': 4},
 
     # === KIM LOAI QUY — TRONG TAM CHINH ===
     # XAU/USD: PRIMARY PAIR — macro 5-factor (DXY/TIPS/TNX/VIX/Oil)
@@ -89,6 +96,8 @@ _DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_vote
 SYMBOLS = {
     # Majors
     'EUR/USD': 'EURUSD=X', 'USD/JPY': 'USDJPY=X',
+    # Hang hoa
+    'WTI/USD': 'CL=F',
     # Kim loai quy — TRONG TAM CHINH
     'XAU/USD': 'GC=F',
 }
@@ -98,6 +107,7 @@ SYMBOLS = {
 PRICE_SANITY = {
     'EUR/USD':   (0.70, 1.80),
     'USD/JPY':   (70,   220),
+    'WTI/USD':   (30,   250),
     'XAU/USD':   (1200, 8000),
 }
 
@@ -142,12 +152,13 @@ _BEARISH_WORDS = [
     'dovish', 'rate cut', 'misses', 'weaker', 'concern', 'slowdown', 'recession',
 ]
 # Phan loai cap: risk-on (tang khi thi truong lac quan) / risk-off (tang khi so hai)
-_RISK_ON_BUYS  = {'EUR/USD'}
+_RISK_ON_BUYS  = {'EUR/USD', 'WTI/USD'}
 _RISK_OFF_BUYS = {'USD/JPY', 'XAU/USD'}
 
-# Symbol mapping cho Twelve Data API (3 cap × 96 lan/ngay = 288 req — trong quota free 800)
+# Symbol mapping cho Twelve Data API (4 cap × 96 lan/ngay = 384 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
     'EUR/USD': 'EUR/USD', 'USD/JPY': 'USD/JPY',
+    'WTI/USD': 'WTI/USD',
     'XAU/USD': 'XAU/USD',
 }
 
@@ -548,6 +559,14 @@ def macro_score(sym):
     if sym == 'EUR/USD':
         s = 0.60*dxy_inv + 0.40*risk_on
         c = {'dxy': round(dxy_inv, 2), 'risk': round(risk_on, 2)}
+
+    elif sym == 'WTI/USD':
+        # Oil: DXY inverse (USD-denominated) + risk sentiment (demand) + yield (growth proxy)
+        # tny_s > 0 khi yields giam → USD yeu + expansion expectations → bullish oil
+        tny_s = g['tny_s']
+        s = 0.40*dxy_inv + 0.40*risk_on + 0.20*tny_s
+        c = {'dxy': round(dxy_inv, 2), 'risk': round(risk_on, 2), 'yield': round(tny_s, 2)}
+
     else:
         return None, {}
 
@@ -1993,8 +2012,8 @@ def fetch_price_range(yf_sym, since_ts, hours=1):
 
 # ── Format ────────────────────────────────────────────────────
 def fmt_price(sym, price):
-    if 'JPY' in sym:                                  return f'{price:,.3f}'
-    if sym == 'XAU/USD':                               return f'{price:,.2f}'
+    if 'JPY' in sym:    return f'{price:,.3f}'
+    if sym in ('XAU/USD', 'WTI/USD'): return f'{price:,.2f}'
     return f'{price:.5f}'
 
 def price_to_pips(sym, raw_diff):
@@ -2003,11 +2022,11 @@ def price_to_pips(sym, raw_diff):
     raw_diff > 0 = co loi theo chieu signal, < 0 = thua lo.
     - Standard (EURUSD...): 1 pip = 0.0001 → × 10000
     - JPY pairs:             1 pip = 0.01   → × 100
-    - XAU/USD (Gold):        1 pip = $0.10  → × 10
+    - XAU/USD, WTI/USD:     1 pip = $0.10  → × 10
     """
-    if 'JPY' in sym:     return round(raw_diff * 100,   1)
-    if sym == 'XAU/USD': return round(raw_diff * 10,    1)
-    return               round(raw_diff * 10000, 1)
+    if 'JPY' in sym:                  return round(raw_diff * 100,   1)
+    if sym in ('XAU/USD', 'WTI/USD'): return round(raw_diff * 10,    1)
+    return                            round(raw_diff * 10000, 1)
 
 def _icon(v):
     if v > 0.1:  return '⬆'
@@ -2586,7 +2605,14 @@ def main():
         tp1_usd = round(tp1_pips_val * LOT_SIZE * 10, 2)
         tp2_usd = round(tp2_pips_val * LOT_SIZE * 10, 2)
 
-        sl_pips_str = f'${sl_raw:.1f}' if sym == 'XAU/USD' else f'{sl_pips_val:.1f} pips'
+        sl_pips_str = f'${sl_raw:.2f}' if sym in ('XAU/USD', 'WTI/USD') else f'{sl_pips_val:.1f} pips'
+
+        # ATR-normalized lot recommendation: risk 1% account equity
+        rec_lot = None
+        if ACCOUNT_SIZE > 0 and sl_usd > 0:
+            risk_amount = ACCOUNT_SIZE * 0.01
+            rec_lot = round(risk_amount / (sl_usd / LOT_SIZE), 2)
+            rec_lot = max(rec_lot, 0.01)  # floor micro lot
 
         msg_parts = [
             f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cậy',
@@ -2603,6 +2629,7 @@ def main():
             f'🛑 SL:  {fmt_price(sym, r["sl"])}  ({sl_pips_str} / -${sl_usd:.2f})',
             f'✅ TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]} / +${tp1_usd:.2f})',
             f'✅ TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]} / +${tp2_usd:.2f})',
+            *(([f'📐 Lot đề xuất: {rec_lot} lot  (1% rủi ro / ${ACCOUNT_SIZE:.0f} vốn)']) if rec_lot else []),
             '',
             ('🚫 Bỏ qua nếu giá đã vượt: ' + fmt_price(sym, r['chase_limit'])
              if r['signal'] == 'BUY'
