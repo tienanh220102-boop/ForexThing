@@ -60,23 +60,6 @@ PAIR_CONFIG = {
     # USD/JPY: yield differential + risk sentiment; strict RSI tranh false signal
     'USD/JPY':   {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.48, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
-    # USD/CHF: 67% WR, safe-haven correlated — giu nguong hien tai
-    'USD/CHF':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
-                  'trade_hours': set(range(7, 21))},
-    # USD/CAD: 100% WR — oil-correlated model hoat dong tot
-    'USD/CAD':   {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.45, 'min_votes': 3,
-                  'trade_hours': set(range(7, 21))},
-
-    # === JPY CROSS ===
-    # EUR/JPY: 67% WR — risk sentiment model reuse gold_cache, zero API cost
-    'EUR/JPY':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
-                  'trade_hours': set(range(0, 21))},
-
-    # === COMMODITY CURRENCY ===
-    # NZD/USD: risk-on pair, VIX corr=-0.70 → model fit tot nhat trong ngoai te
-    # Macro: -DXY(0.50) + risk_on/-VIX(0.35) + Oil(0.15) — tai su dung gold_cache
-    'NZD/USD':   {'rsi_buy': 42, 'rsi_sell': 60, 'hurst_block': 0.46, 'min_votes': 3,
-                  'trade_hours': set(range(20, 24)) | set(range(0, 17))},
 
     # === KIM LOAI QUY — TRONG TAM CHINH ===
     # XAU/USD: PRIMARY PAIR — macro 5-factor (DXY/TIPS/TNX/VIX/Oil)
@@ -84,6 +67,12 @@ PAIR_CONFIG = {
     # cooldown_hours 4: gold co session-based volatility cao, 6h bỏ lỡ co hoi
     'XAU/USD':   {'rsi_buy': 40, 'rsi_sell': 60, 'hurst_block': 0.39, 'min_votes': 3,
                   'trade_hours': set(range(6, 21)), 'cooldown_hours': 4},
+
+    # === PAIRS DA LOAI ===
+    # USD/CHF: loai 09/06/2026 — correlation ~0.70 voi USD/JPY (ca hai safe haven USD/JPY du dien)
+    # USD/CAD: loai 09/06/2026 — proxy oil, thay bang WTI truc tiep (Phase 2)
+    # EUR/JPY: loai 09/06/2026 — synthetic EUR/USD × USD/JPY, khong doc lap
+    # NZD/USD: loai 09/06/2026 — correlation cao voi risk-on bucket, sample size chua du
     # XAG/USD: loai (0% WR, 7 lenh thua — 2026-06-03); industrial demand kho model
     # GBP/USD: loai (27% WR); Brexit/BoE surprise khong the model hoa
     # AUD/USD: loai (0% WR); China manufacturing demand khong co trong model
@@ -100,11 +89,6 @@ _DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_vote
 SYMBOLS = {
     # Majors
     'EUR/USD': 'EURUSD=X', 'USD/JPY': 'USDJPY=X',
-    'USD/CHF': 'USDCHF=X', 'USD/CAD': 'USDCAD=X',
-    # EUR cross
-    'EUR/JPY': 'EURJPY=X',
-    # Commodity currency — risk-on, VIX corr=-0.70
-    'NZD/USD': 'NZDUSD=X',
     # Kim loai quy — TRONG TAM CHINH
     'XAU/USD': 'GC=F',
 }
@@ -114,10 +98,6 @@ SYMBOLS = {
 PRICE_SANITY = {
     'EUR/USD':   (0.70, 1.80),
     'USD/JPY':   (70,   220),
-    'USD/CHF':   (0.60, 1.40),
-    'USD/CAD':   (0.80, 1.80),
-    'EUR/JPY':   (80,   220),
-    'NZD/USD':   (0.40, 1.00),
     'XAU/USD':   (1200, 8000),
 }
 
@@ -162,15 +142,12 @@ _BEARISH_WORDS = [
     'dovish', 'rate cut', 'misses', 'weaker', 'concern', 'slowdown', 'recession',
 ]
 # Phan loai cap: risk-on (tang khi thi truong lac quan) / risk-off (tang khi so hai)
-_RISK_ON_BUYS  = {'EUR/USD', 'NZD/USD', 'EUR/JPY'}
-_RISK_OFF_BUYS = {'USD/JPY', 'USD/CHF', 'XAU/USD'}
+_RISK_ON_BUYS  = {'EUR/USD'}
+_RISK_OFF_BUYS = {'USD/JPY', 'XAU/USD'}
 
-# Symbol mapping cho Twelve Data API (7 cap × 48 lan/ngay = 336 req — trong quota free 800)
+# Symbol mapping cho Twelve Data API (3 cap × 96 lan/ngay = 288 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
     'EUR/USD': 'EUR/USD', 'USD/JPY': 'USD/JPY',
-    'USD/CHF': 'USD/CHF', 'USD/CAD': 'USD/CAD',
-    'EUR/JPY': 'EUR/JPY',
-    'NZD/USD': 'NZD/USD',
     'XAU/USD': 'XAU/USD',
 }
 
@@ -420,32 +397,18 @@ def fetch_intermarket():
 def intermarket_signal(sym):
     """
     Tin hieu lien thi truong (intermarket analysis).
-    Du lieu: DXY (suc manh USD) va Oil (WTI — proxy hang hoa/risk sentiment).
-
-    Nguyen tac:
+    Du lieu: DXY (suc manh USD).
     - DXY tang → USD manh → USD/* tang, */USD giam, Vang giam
-    - Oil tang → CAD manh → USD/CAD giam
-    - NZD/USD: risk-on currency, DXY nghich chieu la tin hieu chinh
     """
     im  = fetch_intermarket()
     dxy = im.get('dxy', 0.0)
-    oil = im.get('oil', 0.0)
 
     if sym == 'XAU/USD':
-        return -dxy   # Vang nguoc chieu USD
-
-    # USD/CAD: DXY va Oil cung tac dong (CAD la dong tien dau mo)
-    if sym == 'USD/CAD':
-        return float(np.clip(dxy*0.5 - oil*0.5, -1.0, 1.0))
-
-    # USD truc tiep
+        return -dxy
     if sym.startswith('USD/'):
         return dxy
-    # */USD (EUR/USD, NZD/USD): DXY nghich chieu
     if sym.endswith('/USD'):
         return -dxy
-
-    # Crosses (EUR/JPY): ca hai phia cung chieu khi risk event → return 0 tranh nhieu
     return 0.0
 
 # ── Phuong trinh macro XAU/USD ───────────────────────────────
@@ -546,9 +509,7 @@ def jpy_macro_score(sym):
     Macro equation cho JPY pairs — tai su dung _gold_cache (zero API cost).
     score > 0: JPY suy yeu → BUY pair | score < 0: JPY manh → SELL pair
 
-    2 sub-group:
-    - USD/JPY : yield differential (BoJ ~0% → TNX la proxy spread) + risk + DXY
-    - EUR/JPY  : risk sentiment chinh (JPY safe haven khi so hai) + yield + oil
+    USD/JPY: yield differential (BoJ ~0% → TNX la proxy spread) + risk + DXY
 
     Sign convention:
       raw_yield = -tny_s : duong khi US yield TANG (carry trade vao USD → JPY yeu)
@@ -564,9 +525,6 @@ def jpy_macro_score(sym):
     if sym == 'USD/JPY':
         score = 0.50 * raw_yield + 0.30 * risk_on + 0.20 * dxy_raw
         comps = {'yield': round(raw_yield, 2), 'risk': round(risk_on, 2), 'dxy': round(dxy_raw, 2)}
-    elif sym == 'EUR/JPY':
-        score = 0.55 * risk_on + 0.25 * raw_yield + 0.20 * oil_raw
-        comps = {'risk': round(risk_on, 2), 'yield': round(raw_yield, 2), 'oil': round(oil_raw, 2)}
     else:
         return 0.0, {}
     return float(np.clip(score, -1.0, 1.0)), comps
@@ -574,50 +532,22 @@ def jpy_macro_score(sym):
 
 def macro_score(sym):
     """
-    Router macro thong nhat — 7 cap deu co equation rieng.
+    Router macro thong nhat — 3 cap (EUR/USD, USD/JPY, XAU/USD).
     100% tai su dung _gold_cache (DXY, TIPS, TNX, VIX, Oil) — zero API cost them.
 
     Tra ve (score[-1,+1], comps) hoac (None, {}) neu khong co macro.
     score > 0: macro ung ho BUY  |  score < 0: macro ung ho SELL
-
-    Sign map:
-      dxy_inv = -dxy_raw  : duong khi USD yeu → bullish */USD
-      vix_s   =  vix_s    : duong khi VIX cao → bullish safe-haven (gold, CHF, JPY)
-      risk_on = -vix_s    : duong khi VIX thap → bullish risk-on (EUR, NZD, JPY crosses)
-      oil_s   =  oil_raw  : duong khi oil tang → bullish CAD
     """
     if sym == 'XAU/USD':       return gold_macro_score()
     if sym.endswith('/JPY'):   return jpy_macro_score(sym)
 
     g       = fetch_gold_macro()
     dxy_inv = -g['dxy_raw']
-    vix_s   =  g['vix_s']
-    oil_s   =  g['oil_raw']
-    risk_on = -vix_s   # VIX thap = risk appetite = bullish risk-on pairs
+    risk_on = -g['vix_s']
 
-    if sym == 'USD/CHF':
-        # Ca hai la safe haven; trong extreme fear CHF thang hon USD → USD/CHF giam
-        dxy_raw = g['dxy_raw']
-        s = 0.55*dxy_raw + 0.45*(-vix_s)
-        c = {'dxy': round(dxy_raw, 2), 'risk': round(-vix_s, 2)}
-
-    elif sym == 'USD/CAD':
-        # CAD = dong tien dau mo: Oil tang → CAD manh → USD/CAD giam
-        dxy_raw = g['dxy_raw']
-        s = 0.45*dxy_raw + 0.40*(-oil_s) + 0.15*vix_s
-        c = {'dxy': round(dxy_raw, 2), 'oil': round(-oil_s, 2), 'vix': round(vix_s, 2)}
-
-    elif sym == 'EUR/USD':
-        # Risk-on vs USD: DXY tang = bearish; VIX spike = bearish (USD la safe haven)
+    if sym == 'EUR/USD':
         s = 0.60*dxy_inv + 0.40*risk_on
         c = {'dxy': round(dxy_inv, 2), 'risk': round(risk_on, 2)}
-
-    elif sym == 'NZD/USD':
-        # Risk-on commodity currency — VIX corr=-0.70 (manh nhat ngoai te)
-        # NZD tang khi: USD yeu + thi truong lac quan (VIX thap) + hang hoa tang
-        s = 0.50*dxy_inv + 0.35*risk_on + 0.15*oil_s
-        c = {'dxy': round(dxy_inv, 2), 'risk': round(risk_on, 2), 'oil': round(oil_s, 2)}
-
     else:
         return None, {}
 
