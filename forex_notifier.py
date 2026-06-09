@@ -93,6 +93,15 @@ PAIR_CONFIG = {
 _DEFAULT_CONFIG = {'rsi_buy': 45, 'rsi_sell': 55, 'hurst_block': 0.47, 'min_votes': 3,
                    'trade_hours': set(range(7, 21))}
 
+# USD direction map: True = giao dich nay la "short USD" (USD yeu thi co loi)
+# EUR/USD BUY = ban USD; USD/JPY BUY = mua USD; WTI+XAU BUY = USD-denominated → nghich chieu
+_USD_SHORT = {
+    'EUR/USD': {'BUY': True,  'SELL': False},
+    'USD/JPY': {'BUY': False, 'SELL': True},
+    'WTI/USD': {'BUY': True,  'SELL': False},
+    'XAU/USD': {'BUY': True,  'SELL': False},
+}
+
 SYMBOLS = {
     # Majors
     'EUR/USD': 'EURUSD=X', 'USD/JPY': 'USDJPY=X',
@@ -2081,6 +2090,26 @@ def answer_callback(callback_query_id):
         pass
 
 
+def get_active_corr(state, sym, signal, now_ts):
+    """Tra ve list pending signals co cung USD direction voi (sym, signal) hien tai.
+    confirmed=True → user da vao lenh (hard block); None/False → chua xac nhan (warn only).
+    """
+    direction = _USD_SHORT.get(sym, {}).get(signal)
+    if direction is None:
+        return []
+    conflicts = []
+    for v in state.get('pending_validations', []):
+        if v['sym'] == sym:
+            continue
+        if v.get('expires_at', 0) < now_ts:
+            continue
+        other_dir = _USD_SHORT.get(v['sym'], {}).get(v['signal'])
+        if other_dir == direction:
+            conflicts.append({'sym': v['sym'], 'signal': v['signal'],
+                              'confirmed': v.get('entry_confirmed')})
+    return conflicts
+
+
 def process_callbacks(state):
     """Doc xac nhan vao/bo qua lenh tu Telegram inline keyboard, cap nhat pending_validations."""
     if not TELEGRAM_TOKEN:
@@ -2402,6 +2431,18 @@ def send_weekly_report(state):
         c_sign  = '+' if c_usd >= 0 else ''
         lines  += ['', f'✋ Lệnh thực vào: {c_wins}/{len(confirmed)} = <b>{c_wr:.0f}%</b>  |  {c_sign}{c_usd:.2f} USD']
 
+    # Circuit breaker alert trong weekly report
+    resolved_recent = [x for x in versioned if x.get('outcome') in ('TP', 'SL')][-5:]
+    if len(resolved_recent) >= 3:
+        recent_loss_streak = 0
+        for x in reversed(resolved_recent):
+            if not x.get('correct'):
+                recent_loss_streak += 1
+            else:
+                break
+        if recent_loss_streak >= 3:
+            lines += ['', f'🛑 <b>Chuỗi thua hiện tại: {recent_loss_streak} lệnh liên tiếp</b> — cân nhắc giảm lot tuần tới']
+
     send_telegram('\n'.join(lines))
     state['last_weekly_report'] = datetime.now(timezone.utc).timestamp()
     _log.info(f'[REPORT] Weekly performance sent total={total} overall={overall:.0f}%')
@@ -2508,6 +2549,25 @@ def main():
             _log.info(f'[{sym}] FLIP_BLOCK {r["signal"]} {flip_elapsed:.1f}h votes={r["vote_count"]}/6')
             time.sleep(0.5)
             continue
+
+        # [LOC 6] Correlated position check — tranh double risk tren cung USD direction
+        active_corr = get_active_corr(state, sym, r['signal'], now.timestamp())
+        hard_block  = any(c['confirmed'] is True for c in active_corr)
+        if hard_block:
+            confl = next(c for c in active_corr if c['confirmed'] is True)
+            print(f'  -> BLOCKED corr_bucket: {confl["sym"]} {confl["signal"]} da vao (cung USD dir)')
+            _log.info(f'[{sym}] BLOCKED corr_bucket {confl["sym"]} {confl["signal"]}')
+            time.sleep(0.5)
+            continue
+        corr_warning = ''
+        if active_corr:
+            names = ', '.join(f'{c["sym"]} {c["signal"]}' for c in active_corr)
+            corr_warning = f'\n⚠️ <b>Rủi ro tương quan:</b> {names} đang pending (cùng hướng USD — tổng rủi ro tăng)'
+
+        # Circuit breaker — canh bao chuoi thua
+        resolved_recent = [x for x in state.get('results', []) if x.get('outcome') in ('TP', 'SL')][-3:]
+        consec_loss = len(resolved_recent) >= 3 and all(not x.get('correct') for x in resolved_recent)
+        cb_warning  = '\n🛑 <b>Cảnh báo:</b> 3 lệnh liên tiếp thua — cân nhắc giảm lot hoặc bỏ qua' if consec_loss else ''
 
         # M15 confluence — da tinh ben trong analyze(), lay tu result
         m15_dir   = r.get('m15_dir')
@@ -2722,6 +2782,10 @@ def main():
         if wr_line:
             msg_parts.append(wr_line)
         msg_parts.append(f'⏰ {now_vn.strftime("%H:%M %d/%m/%Y")} | {timeframe_lbl}')
+        if corr_warning:
+            msg_parts.append(corr_warning)
+        if cb_warning:
+            msg_parts.append(cb_warning)
         msg = '\n'.join(msg_parts)
 
         sym_key = sym.replace('/', '')
