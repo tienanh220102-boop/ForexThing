@@ -29,6 +29,7 @@ jobs:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
           TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}
+          ACCOUNT_SIZE:     ${{ secrets.ACCOUNT_SIZE }}
         run: python forex_notifier.py
 
       - name: Save signal state and price history
