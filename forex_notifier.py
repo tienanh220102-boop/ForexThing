@@ -2048,13 +2048,67 @@ def save_state(state):
         json.dump(state, f, indent=2, ensure_ascii=False)
 
 # ── Telegram ──────────────────────────────────────────────────
-def send_telegram(msg, reply_to=None):
+def send_telegram(msg, reply_to=None, keyboard=None):
     url     = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage'
     payload = {'chat_id': TELEGRAM_CHAT, 'text': msg, 'parse_mode': 'HTML'}
     if reply_to:
         payload['reply_to_message_id'] = reply_to
+    if keyboard:
+        payload['reply_markup'] = json.dumps({'inline_keyboard': keyboard})
     resp = requests.post(url, json=payload, timeout=10)
     return resp.json()
+
+def get_tg_updates(offset=None):
+    """Lay callback_query tu nguoi dung (nut xac nhan vao/bo qua lenh)."""
+    url    = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates'
+    params = {'limit': 100, 'timeout': 0, 'allowed_updates': ['callback_query']}
+    if offset:
+        params['offset'] = offset
+    try:
+        return requests.get(url, params=params, timeout=10).json().get('result', [])
+    except Exception:
+        return []
+
+
+def answer_callback(callback_query_id):
+    """Tra loi callback de xoa loading indicator tren nut Telegram."""
+    try:
+        requests.post(
+            f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/answerCallbackQuery',
+            json={'callback_query_id': callback_query_id}, timeout=5,
+        )
+    except Exception:
+        pass
+
+
+def process_callbacks(state):
+    """Doc xac nhan vao/bo qua lenh tu Telegram inline keyboard, cap nhat pending_validations."""
+    if not TELEGRAM_TOKEN:
+        return
+    last_id = state.get('last_tg_update_id', 0)
+    updates = get_tg_updates(last_id + 1 if last_id else None)
+    if not updates:
+        return
+    cb_lookup = {v['cb_key']: v for v in state.get('pending_validations', []) if 'cb_key' in v}
+    for upd in updates:
+        cb = upd.get('callback_query')
+        if not cb:
+            continue
+        state['last_tg_update_id'] = upd['update_id']
+        answer_callback(cb['id'])
+        data = cb.get('data', '')
+        if not (data.startswith('confirm_yes_') or data.startswith('confirm_no_')):
+            continue
+        parts = data.split('_', 3)   # ['confirm', 'yes'/'no', sym_key, ts_key]
+        if len(parts) != 4:
+            continue
+        _, decision, sym_key, ts_key = parts
+        key = f'{sym_key}_{ts_key}'
+        if key in cb_lookup:
+            cb_lookup[key]['entry_confirmed'] = (decision == 'yes')
+            label = '✅ Đã vào' if decision == 'yes' else '❌ Bỏ qua'
+            print(f'  [callback] {sym_key} → {label}')
+
 
 # ── Xac nhan 3 moc ───────────────────────────────────────────
 def run_validations(state, now):
@@ -2243,18 +2297,21 @@ def run_validations(state, now):
                 sl_pips = price_to_pips(sym, abs(entry - sl_val)) if sl_val else None
                 tp_pips = price_to_pips(sym, abs(tp_val - entry)) if tp_val else None
 
+                confirmed = v.get('entry_confirmed')
                 state.setdefault('results', []).append({
-                    'sym':     sym,     'signal':  signal,  'correct': correct,
-                    'date':    sent_dt.strftime('%Y-%m-%d'),
-                    'regime':  v.get('regime', '?'),
-                    'outcome': outcome,
-                    'pips':    pip_result,
-                    'entry':   round(entry,      5),
-                    'exit':    round(exit_price, 5),
-                    'sl_pips': sl_pips,
-                    'tp_pips': tp_pips,
-                    'conf':    v.get('conf', 0),
-                    'votes':   v.get('aligned', 0),
+                    'sym':             sym,     'signal':  signal,  'correct': correct,
+                    'date':            sent_dt.strftime('%Y-%m-%d'),
+                    'regime':          v.get('regime', '?'),
+                    'outcome':         outcome,
+                    'pips':            pip_result,
+                    'entry':           round(entry,      5),
+                    'exit':            round(exit_price, 5),
+                    'sl_pips':         sl_pips,
+                    'tp_pips':         tp_pips,
+                    'conf':            v.get('conf', 0),
+                    'votes':           v.get('aligned', 0),
+                    'entry_confirmed': confirmed,
+                    'actual_pnl_pips': pip_result if confirmed is True else None,
                 })
             else:
                 print(f'Loi Telegram: {result}')
@@ -2336,6 +2393,15 @@ def send_weekly_report(state):
     if regime_parts:
         lines += ['', '📐 Theo regime:'] + [f'  {p}' for p in regime_parts]
 
+    confirmed = [x for x in versioned if x.get('entry_confirmed') is True]
+    if len(confirmed) >= 3:
+        c_wins  = sum(1 for x in confirmed if x.get('correct'))
+        c_wr    = c_wins / len(confirmed) * 100
+        c_pips  = [x['actual_pnl_pips'] for x in confirmed if x.get('actual_pnl_pips') is not None]
+        c_usd   = round(sum(c_pips) * LOT_SIZE * 10, 2) if c_pips else 0
+        c_sign  = '+' if c_usd >= 0 else ''
+        lines  += ['', f'✋ Lệnh thực vào: {c_wins}/{len(confirmed)} = <b>{c_wr:.0f}%</b>  |  {c_sign}{c_usd:.2f} USD']
+
     send_telegram('\n'.join(lines))
     state['last_weekly_report'] = datetime.now(timezone.utc).timestamp()
     _log.info(f'[REPORT] Weekly performance sent total={total} overall={overall:.0f}%')
@@ -2366,7 +2432,11 @@ def main():
     print('\n=== Fundamental Intelligence Layer ===')
     fetch_fundamental(now)   # warm cache truoc vong lap, analyze() se dung cache nay
 
-    # Buoc 2: xac nhan lenh cu (luon chay 24/7, khong phu thuoc session)
+    # Buoc 2: doc phan hoi nguoi dung (vao/bo qua lenh) truoc khi xac nhan
+    print('\n=== Doc phan hoi nguoi dung (Telegram callback) ===')
+    process_callbacks(state)
+
+    # Buoc 2b: xac nhan lenh cu (luon chay 24/7, khong phu thuoc session)
     print('\n=== Kiem tra xac nhan lenh cu ===')
     run_validations(state, now)
 
@@ -2654,7 +2724,13 @@ def main():
         msg_parts.append(f'⏰ {now_vn.strftime("%H:%M %d/%m/%Y")} | {timeframe_lbl}')
         msg = '\n'.join(msg_parts)
 
-        result = send_telegram(msg)
+        sym_key = sym.replace('/', '')
+        ts_key  = int(now.timestamp())
+        keyboard = [[
+            {'text': '✅ Đã vào lệnh', 'callback_data': f'confirm_yes_{sym_key}_{ts_key}'},
+            {'text': '❌ Bỏ qua',      'callback_data': f'confirm_no_{sym_key}_{ts_key}'},
+        ]]
+        result = send_telegram(msg, keyboard=keyboard)
         if result.get('ok'):
             msg_id = result.get('result', {}).get('message_id')
             state[key] = now.timestamp()
@@ -2662,24 +2738,26 @@ def main():
             if 'pending_validations' not in state:
                 state['pending_validations'] = []
             state['pending_validations'].append({
-                'sym':         sym,
-                'signal':      r['signal'],
-                'entry_price': r['price'],
-                'sl':          r['sl'],
-                'tp':          r['tp'],
-                'sent_at':     now.timestamp(),
-                'message_id':  msg_id,
+                'sym':            sym,
+                'signal':         r['signal'],
+                'entry_price':    r['price'],
+                'sl':             r['sl'],
+                'tp':             r['tp'],
+                'sent_at':        now.timestamp(),
+                'message_id':     msg_id,
                 'checkpoints': [
                     {'hours': h, 'at': now.timestamp()+h*3600, 'done': False}
                     for h in CHECKPOINTS_H
                 ],
-                'expires_at':  now.timestamp() + (max(CHECKPOINTS_H) + 6) * 3600,
-                'indicators':  r['indicators'],
-                'regime':      r['regime'],
-                'hurst':       r['hurst'],
-                'conf':        conf,
-                'aligned':     r['aligned'],
-                'consensus':   r['consensus'],
+                'expires_at':     now.timestamp() + (max(CHECKPOINTS_H) + 6) * 3600,
+                'indicators':     r['indicators'],
+                'regime':         r['regime'],
+                'hurst':          r['hurst'],
+                'conf':           conf,
+                'aligned':        r['aligned'],
+                'consensus':      r['consensus'],
+                'entry_confirmed': None,
+                'cb_key':         f'{sym_key}_{ts_key}',
             })
             sent += 1
             print(f'  -> Telegram OK | +1h xac nhan | {r["vote_count"]}/6 phieu | conf={conf}%')
