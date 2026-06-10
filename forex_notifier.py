@@ -670,29 +670,40 @@ def d1_trend(sym, yf_sym):
 
 def d1_key_levels(sym, yf_sym, signal, price):
     """
-    Tim muc khang cu / ho tro gan nhat tren D1 lam TP thuc te.
-    Dieu nay quan trong hon ATR co dinh:
-      - TP tai resistance thuc → co kha nang chot loi thuc su
-      - TP tai ATR co dinh → co the bi block truoc khi chay
+    Tim muc khang cu / ho tro D1 gan nhat lam TP thuc te.
 
-    BUY: tim khang cu gan nhat phia TREN gia (it nhat 0.5% tren)
-    SELL: tim ho tro gan nhat phia DUOI gia (it nhat 0.5% duoi)
-    Returns: float (muc key level) hoac None neu khong tim duoc.
+    [FIX #3] Dung pivot point (swing high/low) thay vi min/max toan bo nen.
+    Pivot high: nen cao hon ca lb nen trai lan lb nen phai (dinh cuc bo xac nhan)
+    Pivot low:  nen thap hon ca lb nen trai lan lb nen phai (day cuc bo xac nhan)
+
+    BUY: tim pivot high gan nhat phia TREN gia (it nhat 0.3% tren)
+    SELL: tim pivot low gan nhat phia DUOI gia (it nhat 0.3% duoi)
+    Returns: float hoac None.
     """
     d1 = fetch_d1_data(sym, yf_sym)
     if d1 is None:
         return None
 
-    highs = d1['highs']
-    lows  = d1['lows']
+    highs  = d1['highs']
+    lows   = d1['lows']
+    lb     = 3   # 3 nen xac nhan moi phia
+    n      = len(highs)
 
     if signal == 'BUY':
-        # Khang cu = swing high D1 phia tren gia, cach it nhat 0.5%
-        candidates = [h for h in highs[-90:] if h > price * 1.005]
+        pivot_highs = [
+            highs[i]
+            for i in range(lb, n - lb)
+            if all(highs[i] >= highs[j] for j in range(i - lb, i + lb + 1) if j != i)
+        ]
+        candidates = [h for h in pivot_highs if h > price * 1.003]
         return min(candidates) if candidates else None
     else:
-        # Ho tro = swing low D1 phia duoi gia, cach it nhat 0.5%
-        candidates = [l for l in lows[-90:] if l < price * 0.995]
+        pivot_lows = [
+            lows[i]
+            for i in range(lb, n - lb)
+            if all(lows[i] <= lows[j] for j in range(i - lb, i + lb + 1) if j != i)
+        ]
+        candidates = [l for l in pivot_lows if l < price * 0.997]
         return max(candidates) if candidates else None
 
 
@@ -1784,7 +1795,7 @@ def analyze(sym, yf_sym, now=None):
         base_conf    = {2: 50, 3: 60, 4: 75, 5: 90, 6: 95}.get(vote_count, 60)
         im_aligned   = (im_s > 0.15 and signal == 'BUY') or (im_s < -0.15 and signal == 'SELL')
         im_bonus     = 5 if im_aligned else 0
-        regime_bonus = 5 if regime == 'TREND' else (3 if regime == 'RANGE' else 0)
+        regime_bonus = 5 if regime == 'TREND' else 0  # RANGE không cộng bonus — min_votes đã +1 ở trên
         history_bonus = 2 if ln >= 200 else 0
         # W1: +7 khi dong thuan (xu huong tuan ung ho), -5 khi nguoc chieu (da qua block → chi penalty nhe)
         # H4: +5/-3 | D1: +3/-2 | M15: +4 khi hop luu, -2 khi nguoc (entry timing)
