@@ -171,6 +171,9 @@ TWELVE_DATA_SYMBOLS = {
     'XAU/USD': 'XAU/USD',
 }
 
+# Reverse mapping: yfinance symbol -> Twelve Data symbol (dung fallback khi yfinance fail)
+_YF_TO_TD_SYM = {yf: TWELVE_DATA_SYMBOLS[k] for k, yf in SYMBOLS.items() if k in TWELVE_DATA_SYMBOLS}
+
 def load_price_history():
     """Load lich su gia tu file khi bat dau phien."""
     global _price_history
@@ -1994,11 +1997,26 @@ def analyze(sym, yf_sym, now=None):
 def fetch_current_price(yf_sym):
     try:
         df = yf.Ticker(yf_sym).history(period='1d', interval='5m')
-        if df is None or len(df) == 0:
-            return None
-        return float(df['Close'].iloc[-1])
+        if df is not None and len(df) > 0:
+            return float(df['Close'].iloc[-1])
     except Exception:
-        return None
+        pass
+    # Fallback: Twelve Data /price (1 req, khong ton quota time_series)
+    if TWELVE_DATA_KEY:
+        td_sym = _YF_TO_TD_SYM.get(yf_sym)
+        if td_sym:
+            try:
+                r = requests.get(
+                    'https://api.twelvedata.com/price',
+                    params={'symbol': td_sym, 'apikey': TWELVE_DATA_KEY},
+                    timeout=10,
+                )
+                data = r.json()
+                if 'price' in data:
+                    return float(data['price'])
+            except Exception:
+                pass
+    return None
 
 def fetch_price_range(yf_sym, since_ts, hours=1):
     """Lay gia cao nhat / thap nhat trong 'hours' tieng ke tu since_ts (UTC epoch)."""
@@ -2090,6 +2108,20 @@ def answer_callback(callback_query_id):
         pass
 
 
+def _remove_keyboard(message_id):
+    """Xoa inline keyboard tren tin nhan signal sau khi user da bam nut (tranh bam lai)."""
+    if not message_id or not TELEGRAM_TOKEN:
+        return
+    try:
+        requests.post(
+            f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/editMessageReplyMarkup',
+            json={'chat_id': TELEGRAM_CHAT, 'message_id': message_id, 'reply_markup': {}},
+            timeout=5,
+        )
+    except Exception:
+        pass
+
+
 def get_active_corr(state, sym, signal, now_ts):
     """Tra ve list pending signals co cung USD direction voi (sym, signal) hien tai.
     confirmed=True → user da vao lenh (hard block); None/False → chua xac nhan (warn only).
@@ -2134,8 +2166,24 @@ def process_callbacks(state):
         _, decision, sym_key, ts_key = parts
         key = f'{sym_key}_{ts_key}'
         if key in cb_lookup:
-            cb_lookup[key]['entry_confirmed'] = (decision == 'yes')
-            label = '✅ Đã vào' if decision == 'yes' else '❌ Bỏ qua'
+            v = cb_lookup[key]
+            v['entry_confirmed'] = (decision == 'yes')
+            sym    = v.get('sym', sym_key)
+            signal = v.get('signal', '?')
+            entry  = v.get('entry_price', 0)
+            if decision == 'yes':
+                confirm_msg = (
+                    f'<b>Ghi nhan: DA VAO LENH</b>\n'
+                    f'{sym} {signal} @ {fmt_price(sym, entry)}'
+                )
+            else:
+                confirm_msg = (
+                    f'<b>Ghi nhan: BO QUA</b>\n'
+                    f'{sym} {signal}'
+                )
+            send_telegram(confirm_msg, reply_to=v.get('message_id'))
+            _remove_keyboard(v.get('message_id'))
+            label = 'DA VAO' if decision == 'yes' else 'BO QUA'
             print(f'  [callback] {sym_key} -> {label}')
 
 
