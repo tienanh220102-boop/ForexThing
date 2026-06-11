@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: forex-notifier
+  cancel-in-progress: false
+
 jobs:
   scan:
     runs-on: ubuntu-latest
