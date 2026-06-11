@@ -4,7 +4,7 @@
   "USD/CAD|BUY": 1779978655.726155,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
-  "XAU/USD|SELL": 1781184641.689614,
+  "XAU/USD|SELL": 1781199043.424485,
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
@@ -12,40 +12,40 @@
     {
       "sym": "XAU/USD",
       "signal": "SELL",
-      "entry_price": 4080.54227,
-      "sl": 4117.57330069968,
-      "tp": 4006.4802086006403,
-      "sent_at": 1781184641.689614,
-      "message_id": 406,
+      "entry_price": 4080.34307,
+      "sl": 4118.311760114154,
+      "tp": 4004.405689771692,
+      "sent_at": 1781199043.424485,
+      "message_id": 410,
       "checkpoints": [
         {
           "hours": 1,
-          "at": 1781188241.689614,
-          "done": true
+          "at": 1781202643.424485,
+          "done": false
         },
         {
           "hours": 4,
-          "at": 1781199041.689614,
+          "at": 1781213443.424485,
           "done": false
         }
       ],
-      "expires_at": 1781220641.689614,
+      "expires_at": 1781235043.424485,
       "indicators": {
         "rsi": 0,
         "ema": -1,
-        "macd": 0.22,
+        "macd": 0.23,
         "bb": 0,
         "mom": -0.2,
-        "inter": -0.37,
+        "inter": -0.17,
         "tl": 0
       },
       "regime": "NEUTRAL",
-      "hurst": 0.517,
+      "hurst": 0.513,
       "conf": 81,
       "aligned": 2,
       "consensus": true,
       "entry_confirmed": null,
-      "cb_key": "XAUUSD_1781184641"
+      "cb_key": "XAUUSD_1781199043"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -1226,6 +1226,23 @@
       "pips": -161.6,
       "entry": 4080.54227,
       "exit": 4096.7002,
+      "sl_pips": 370.3,
+      "tp_pips": 740.6,
+      "conf": 81,
+      "votes": 2,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-06-11",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -370.3,
+      "entry": 4080.54227,
+      "exit": 4117.5733,
       "sl_pips": 370.3,
       "tp_pips": 740.6,
       "conf": 81,
