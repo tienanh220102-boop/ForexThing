@@ -311,3 +311,13 @@
 2026-06-11 13:45:42 UTC [WTI/USD] NO_SIGNAL
 2026-06-11 13:45:43 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=4 H4=BEAR
 2026-06-11 13:45:43 UTC [XAU/USD] NO_SIGNAL
+2026-06-11 14:01:03 UTC [EUR/USD] BLOCKED hurst H=0.467 threshold=0.47 bars=720
+2026-06-11 14:01:03 UTC [EUR/USD] NO_SIGNAL
+2026-06-11 14:01:13 UTC [USD/JPY] BLOCKED hurst H=0.336 threshold=0.48 bars=720
+2026-06-11 14:01:13 UTC [USD/JPY] NO_SIGNAL
+2026-06-11 14:01:14 UTC [WTI/USD] BLOCKED hurst H=0.385 threshold=0.4 bars=720
+2026-06-11 14:01:14 UTC [WTI/USD] NO_SIGNAL
+2026-06-11 14:01:20 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-11 14:01:21 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-11 14:01:21 UTC [XAU/USD] SIGNAL SELL conf=75 votes=2/6 regime=NEUTRAL H=0.517 ADX=32.0
+2026-06-11 14:01:21 UTC [XAU/USD] COOLDOWN SELL 0.5h/4h
