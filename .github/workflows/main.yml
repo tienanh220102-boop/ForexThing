@@ -36,6 +36,14 @@ jobs:
           ACCOUNT_SIZE:     ${{ secrets.ACCOUNT_SIZE }}
         run: python forex_notifier.py
 
+      - name: Run Gold PA Bot (he Price Action doc lap cho XAU)
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
+          TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}
+          ACCOUNT_SIZE:     ${{ secrets.ACCOUNT_SIZE }}
+        run: python gold_pa_bot.py
+
       - name: Save signal state and price history
         run: |
           git config user.name "github-actions[bot]"
@@ -43,6 +51,8 @@ jobs:
           git add last_signals.json
           git add price_history.json || true
           git add data/decisions.log || true
+          git add gold_pa_state.json || true
+          git add data/gold_pa.log || true
           git diff --staged --quiet || git commit -m "chore: update state + price history [skip ci]"
           git pull --rebase -X theirs origin main
           git push

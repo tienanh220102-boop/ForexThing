@@ -1217,30 +1217,14 @@ def psychological_levels(price, n_near=4):
     return result[:8]
 
 
-# ── Price Action & Chart Patterns — XAU/USD (doc lap voi vote system) ──
+# ── Chart Pattern detectors (H4) — dung boi gold_pa_bot.py ──
 # Nghien cuu Bulkowski (thepatternsite.com): failure rate thap nhat thuoc ve
 #   Inverse H&S (~11%), H&S top (~14%), Double Bottom/Top, Ascending Triangle.
-# Voi vang: H4 la timeframe chuan (loc noise M15/H1 — gold nhieu wick trap);
-# candle pattern (pin bar/engulfing) CHI dang tin khi co confluence voi S/R.
-# Ket qua PA duoc theo doi RIENG (state['pa_history']) de do duoc do chinh xac
-# thuc te, tach biet hoan toan voi win rate cua he thong vote.
+# He Price Action XAU doc lap nam o gold_pa_bot.py — import cac detector nay.
 
 PA_PIVOT_LB     = 3       # pivot H4: cao/thap hon 3 nen moi ben (~12h)
 PA_PEAK_TOL     = 0.0035  # 2 dinh/day coi la "bang nhau" neu chenh < 0.35%
 PA_BREAK_FRESH  = 3       # neckline break phai moi xay ra trong 3 nen H4 cuoi
-PA_COOLDOWN_H   = 24      # khong gui lai cung pattern + huong trong 24h
-PA_TIMEOUT_DAYS = 7       # khong cham target/invalidation sau 7 ngay → het han
-
-_PA_NAMES = {
-    'double_top':    ('Hai đỉnh (Double Top)',           'Bulkowski xếp nhóm reversal hiệu quả cao'),
-    'double_bottom': ('Hai đáy (Double Bottom)',         'Bulkowski xếp nhóm reversal hiệu quả cao'),
-    'hs_top':        ('Vai-Đầu-Vai (Head & Shoulders)',  'Bulkowski: failure rate ~14% — top tier'),
-    'hs_inv':        ('Vai-Đầu-Vai ngược (Inverse H&S)', 'Bulkowski: failure rate ~11% — thấp nhất nhóm bullish'),
-    'pin_bull':      ('Pin Bar tăng tại hỗ trợ',          'Rejection wick ≥2× thân — cần S/R confluence'),
-    'pin_bear':      ('Pin Bar giảm tại kháng cự',        'Rejection wick ≥2× thân — cần S/R confluence'),
-    'engulf_bull':   ('Nến nhấn chìm tăng tại hỗ trợ',    'Thân phủ trọn nến trước — cần S/R confluence'),
-    'engulf_bear':   ('Nến nhấn chìm giảm tại kháng cự',  'Thân phủ trọn nến trước — cần S/R confluence'),
-}
 
 
 def _pa_pivots(highs, lows, lb=PA_PIVOT_LB):
@@ -1356,281 +1340,6 @@ def _detect_head_shoulders(h4_c, h4_h, h4_l):
                     'note':   f'Đầu {hd:,.1f}, vai {ls:,.1f}/{rs:,.1f}, neckline {neckline:,.1f} đã phá',
                 })
     return out
-
-
-def _pa_near_level(price_pt, levels, atr_h4, want_type=None):
-    """Level gan price_pt nhat trong pham vi 0.5×ATR(H4). want_type='S'|'R'|None."""
-    best = None
-    for lv in levels:
-        if want_type and lv['type'] != want_type:
-            continue
-        d = abs(price_pt - lv['price'])
-        if d <= 0.5 * atr_h4 and (best is None or d < best[1]):
-            best = (lv, d)
-    return best[0] if best else None
-
-
-def _detect_candle_pa(h4_c, h4_h, h4_l, levels, atr_h4):
-    """Pin Bar / Engulfing tren nen H4 DONG gan nhat (index -2 — nen -1 dang hinh).
-    Open xap xi = close nen truoc (thi truong lien tuc 24h).
-    Chi nhan pattern khi nen cham vung S/R — PA khong co location = noise."""
-    if len(h4_c) < 4 or atr_h4 <= 0:
-        return []
-    out = []
-    o,  c  = h4_c[-3], h4_c[-2]     # nen dong gan nhat
-    o2, c2 = h4_c[-4], h4_c[-3]     # nen truoc do
-    hi, lo = h4_h[-2], h4_l[-2]
-    body    = abs(c - o)
-    rng     = max(hi - lo, 1e-9)
-    up_wick = hi - max(o, c)
-    dn_wick = min(o, c) - lo
-    price   = h4_c[-1]
-    # Nen pattern phai du lon — nen ti hon thoa ty le wick/body van la noise
-    pin_ok  = rng >= 0.75 * atr_h4
-
-    # Pin Bar tang (hammer): duoi dai >= 2x than, dong nua tren nen, tai vung S
-    if pin_ok and dn_wick >= 2 * body and up_wick <= body and body <= 0.35 * rng and \
-       c > (hi + lo) / 2:
-        lv = _pa_near_level(lo, levels, atr_h4, 'S')
-        if lv:
-            out.append({
-                'code': 'pin_bull', 'kind': 'candle', 'dir': 'BUY',
-                'entry': price, 'neckline': lv['price'],
-                'target': price + 2.0 * atr_h4,
-                'inval':  lo - 0.25 * atr_h4,
-                'note':   f'Wick rejection {dn_wick:,.1f}$ tại S {lv["price"]:,.1f}',
-            })
-
-    # Pin Bar giam (shooting star): tren dai >= 2x than, dong nua duoi, tai vung R
-    if pin_ok and up_wick >= 2 * body and dn_wick <= body and body <= 0.35 * rng and \
-       c < (hi + lo) / 2:
-        lv = _pa_near_level(hi, levels, atr_h4, 'R')
-        if lv:
-            out.append({
-                'code': 'pin_bear', 'kind': 'candle', 'dir': 'SELL',
-                'entry': price, 'neckline': lv['price'],
-                'target': price - 2.0 * atr_h4,
-                'inval':  hi + 0.25 * atr_h4,
-                'note':   f'Wick rejection {up_wick:,.1f}$ tại R {lv["price"]:,.1f}',
-            })
-
-    # Engulfing: than phu tron than nen truoc, nguoc mau, than du lon (>= 0.5 ATR)
-    body2 = abs(c2 - o2)
-    engulfs = max(o, c) >= max(o2, c2) and min(o, c) <= min(o2, c2) and \
-              body >= max(1.1 * body2, 0.5 * atr_h4)
-    if engulfs and c > o and c2 < o2:        # bullish engulfing
-        lv = _pa_near_level(lo, levels, atr_h4, 'S')
-        if lv:
-            out.append({
-                'code': 'engulf_bull', 'kind': 'candle', 'dir': 'BUY',
-                'entry': price, 'neckline': lv['price'],
-                'target': price + 2.0 * atr_h4,
-                'inval':  lo - 0.25 * atr_h4,
-                'note':   f'Thân {body:,.1f}$ nhấn chìm nến giảm tại S {lv["price"]:,.1f}',
-            })
-    if engulfs and c < o and c2 > o2:        # bearish engulfing
-        lv = _pa_near_level(hi, levels, atr_h4, 'R')
-        if lv:
-            out.append({
-                'code': 'engulf_bear', 'kind': 'candle', 'dir': 'SELL',
-                'entry': price, 'neckline': lv['price'],
-                'target': price - 2.0 * atr_h4,
-                'inval':  hi + 0.25 * atr_h4,
-                'note':   f'Thân {body:,.1f}$ nhấn chìm nến tăng tại R {lv["price"]:,.1f}',
-            })
-    return out
-
-
-def _pa_quality(p, d1_dir, w1_dir, levels, atr_h4):
-    """Cham chat luong 1-5 sao theo confluence (nghien cuu: PA can location + trend).
-    Chart pattern da xac nhan break = 3 sao goc; candle tai S/R = 2 sao goc."""
-    stars = 3 if p['kind'] == 'chart' else 2
-    conf  = [p['note']]
-    sig_tf = 'BULL' if p['dir'] == 'BUY' else 'BEAR'
-
-    # Chart pattern: neckline trung vung S/R co san → +1
-    if p['kind'] == 'chart':
-        lv = _pa_near_level(p['neckline'], levels, atr_h4)
-        if lv:
-            touches = lv.get('touches')
-            lbl = f'{lv["price"]:,.1f} ({touches} lần chạm)' if touches else \
-                  f'{lv["price"]:,.1f} (mức tâm lý)'
-            conf.append(f'Neckline trùng vùng S/R {lbl}')
-            stars += 1
-
-    if d1_dir == sig_tf:
-        conf.append('D1 thuận chiều ✅')
-        stars += 1
-    elif d1_dir not in ('NEUTRAL', None):
-        conf.append('D1 ngược chiều ❌')
-        stars -= 1
-    if w1_dir == sig_tf:
-        conf.append('W1 thuận chiều ✅')
-        stars += 1
-
-    p['stars'] = max(1, min(5, stars))
-    p['confluence'] = conf
-    return p
-
-
-def resolve_pa_history(state, now):
-    """Cap nhat ket qua cac pattern PA dang theo doi bang lich su gia H1.
-    Trong cung 1 nen: kiem tra invalidation TRUOC target (conservative)."""
-    hist = state.get('pa_history', [])
-    if not hist:
-        return
-    bars = _price_history.get('XAU/USD', {}).get('bars', [])
-    n_resolved = 0
-    for rec in hist:
-        if rec.get('outcome'):
-            continue
-        is_buy = rec['dir'] == 'BUY'
-        for b in bars:
-            if b.get('t', 0) <= rec['ts']:
-                continue
-            hit_inval  = (b['l'] <= rec['inval'])  if is_buy else (b['h'] >= rec['inval'])
-            hit_target = (b['h'] >= rec['target']) if is_buy else (b['l'] <= rec['target'])
-            if hit_inval:
-                rec['outcome'] = 'SL'
-                rec['correct'] = False
-                rec['pips'] = price_to_pips('XAU/USD',
-                    (rec['inval'] - rec['entry']) * (1 if is_buy else -1))
-                break
-            if hit_target:
-                rec['outcome'] = 'TP'
-                rec['correct'] = True
-                rec['pips'] = price_to_pips('XAU/USD',
-                    (rec['target'] - rec['entry']) * (1 if is_buy else -1))
-                break
-        if not rec.get('outcome') and \
-           (now.timestamp() - rec['ts']) > PA_TIMEOUT_DAYS * 86400:
-            last_c = bars[-1]['c'] if bars else rec['entry']
-            move = (last_c - rec['entry']) * (1 if is_buy else -1)
-            rec['outcome'] = 'EXP'
-            rec['correct'] = move > 0
-            rec['pips']    = price_to_pips('XAU/USD', move)
-        if rec.get('outcome'):
-            n_resolved += 1
-            _log.info(f"[XAU/USD] PA_RESOLVED {rec['code']} {rec['dir']} "
-                      f"{rec['outcome']} pips={rec['pips']}")
-    if n_resolved:
-        print(f'  [PA] Da chot ket qua {n_resolved} pattern')
-    state['pa_history'] = hist[-100:]   # cap lich su 100 records
-
-
-def analyze_gold_pa(state, now):
-    """Phan tich Price Action & Chart Patterns doc lap cho XAU/USD (H4).
-    Chay SONG SONG voi he thong vote — khong block, khong duoc block.
-    Gui Telegram theo format rieng (🕯️) de phan biet voi signal vote (🟢/🔴)."""
-    sym, yf_sym = 'XAU/USD', SYMBOLS['XAU/USD']
-    bars = _price_history.get(sym, {}).get('bars', [])
-    if len(bars) < 160:                  # can toi thieu ~40 nen H4
-        print('  [PA] Chua du du lieu H4, bo qua')
-        return
-    closes = [b['c'] for b in bars]
-    highs  = [b['h'] for b in bars]
-    lows   = [b['l'] for b in bars]
-    h4_c, h4_h, h4_l = resample_to_h4(closes, highs, lows)
-    if len(h4_c) < 30:
-        return
-    atr_h4 = atr(h4_h, h4_l, h4_c)
-    if not atr_h4 or atr_h4 <= 0:
-        return
-
-    levels = find_sr_levels(h4_h, h4_l, h4_c, lookback=60)
-    levels += [p for p in psychological_levels(h4_c[-1]) if p['strength'] >= 4]
-
-    pats = (_detect_double_top_bottom(h4_c, h4_h, h4_l)
-            + _detect_head_shoulders(h4_c, h4_h, h4_l)
-            + _detect_candle_pa(h4_c, h4_h, h4_l, levels, atr_h4))
-    # Guard: gia chua vuot target va chua cham invalidation (break qua nhanh
-    # co the khien pattern "xac nhan" nhung phan thuong con lai khong dang)
-    pats = [p for p in pats
-            if ((p['target'] > p['entry']) == (p['dir'] == 'BUY'))
-            and ((p['entry'] > p['inval']) == (p['dir'] == 'BUY'))
-            and abs(p['target'] - p['entry']) >= 0.5 * atr_h4]
-    if not pats:
-        print('  [PA] Khong co pattern nao hinh thanh/xac nhan')
-        _log.info('[XAU/USD] PA_NONE')
-        return
-
-    d1_dir, _, _ = d1_trend(sym, yf_sym)
-    w1_dir, _, _ = w1_trend(sym, yf_sym)
-    pats = [_pa_quality(p, d1_dir, w1_dir, levels, atr_h4) for p in pats]
-
-    # Loc cooldown + chat luong toi thieu 3 sao
-    last_pa = state.get('last_pa', {})
-    sendable = []
-    for p in pats:
-        key = f"{p['code']}|{p['dir']}"
-        elapsed_h = (now.timestamp() - last_pa.get(key, 0)) / 3600
-        if elapsed_h < PA_COOLDOWN_H:
-            print(f"  [PA] {p['code']} cooldown ({elapsed_h:.1f}h/{PA_COOLDOWN_H}h)")
-            _log.info(f"[XAU/USD] PA_COOLDOWN {p['code']} {p['dir']}")
-            continue
-        if p['stars'] < 3:
-            print(f"  [PA] {p['code']} chat luong {p['stars']}/5 < 3, bo qua")
-            _log.info(f"[XAU/USD] PA_LOW_QUALITY {p['code']} stars={p['stars']}")
-            continue
-        sendable.append(p)
-    if not sendable:
-        return
-
-    # Gui pattern tot nhat (nhieu sao nhat; chart pattern uu tien hon candle)
-    best = max(sendable, key=lambda p: (p['stars'], p['kind'] == 'chart'))
-    name_vn, stat = _PA_NAMES[best['code']]
-    is_buy   = best['dir'] == 'BUY'
-    dir_lbl  = 'MUA (BUY)' if is_buy else 'BÁN (SELL)'
-    dir_icon = '📈' if is_buy else '📉'
-    star_bar = '★' * best['stars'] + '☆' * (5 - best['stars'])
-
-    tgt_pips  = price_to_pips(sym, abs(best['target'] - best['entry']))
-    inv_pips  = price_to_pips(sym, abs(best['entry'] - best['inval']))
-    tgt_usd   = round(tgt_pips * LOT_SIZE * 10, 2)
-    inv_usd   = round(inv_pips * LOT_SIZE * 10, 2)
-    rr        = round(tgt_pips / inv_pips, 1) if inv_pips > 0 else 0
-
-    now_vn = now.astimezone(VN_TZ)
-    msg = '\n'.join([
-        '🕯️ <b>XAU/USD — PRICE ACTION &amp; CHART PATTERNS</b>',
-        '<i>Phân tích độc lập — song song với hệ thống vote, thống kê riêng</i>',
-        '━━━━━━━━━━━━━━━━━━━━',
-        '',
-        f'🧩 Pattern: <b>{name_vn}</b> — H4',
-        f'{dir_icon} Hướng: <b>{dir_lbl}</b> | Chất lượng: {star_bar} ({best["stars"]}/5)',
-        '',
-        f'📍 Giá hiện tại: {fmt_price(sym, best["entry"])}',
-        f'🎯 Target (measured move): {fmt_price(sym, best["target"])}  (+${tgt_usd:.2f} / {LOT_SIZE} lot)',
-        f'🛑 Vô hiệu nếu chạm: {fmt_price(sym, best["inval"])}  (-${inv_usd:.2f})',
-        f'⚖️ R:R ≈ 1:{rr}',
-        '',
-        '🏗 Confluence:',
-        *[f'  • {c}' for c in best['confluence']],
-        f'📚 {stat}',
-        '',
-        f'⏰ {now_vn.strftime("%H:%M %d/%m/%Y")} | H4 Price Action',
-        '⚠️ Kết quả PA được thống kê tách biệt trong báo cáo tuần',
-    ])
-    result = send_telegram(msg)
-    if result.get('ok'):
-        last_pa[f"{best['code']}|{best['dir']}"] = now.timestamp()
-        state['last_pa'] = last_pa
-        state.setdefault('pa_history', []).append({
-            'ts':     now.timestamp(),
-            'date':   now.strftime('%Y-%m-%d'),
-            'code':   best['code'],
-            'dir':    best['dir'],
-            'entry':  best['entry'],
-            'target': best['target'],
-            'inval':  best['inval'],
-            'stars':  best['stars'],
-        })
-        _log.info(f"[XAU/USD] PA_SENT {best['code']} {best['dir']} "
-                  f"stars={best['stars']} entry={best['entry']:.2f} "
-                  f"target={best['target']:.2f} inval={best['inval']:.2f}")
-        print(f"  [PA] Da gui {best['code']} {best['dir']} {best['stars']}/5 sao")
-    else:
-        print(f'  [PA] Loi Telegram: {result}')
 
 
 # ── Gold Macro Outlook — ban tin vi mo hang ngay (THONG TIN, khong phai lenh) ──
@@ -3017,25 +2726,7 @@ def send_weekly_report(state):
     if regime_parts:
         lines += ['', '📐 Theo regime:'] + [f'  {p}' for p in regime_parts]
 
-    # PA & Chart Patterns (XAU) — thong ke RIENG, khong tron voi vote system
-    pa_done = [x for x in state.get('pa_history', [])
-               if x.get('outcome') in ('TP', 'SL', 'EXP')]
-    if len(pa_done) >= 3:
-        pa_wins = sum(1 for x in pa_done if x.get('correct'))
-        pa_wr   = pa_wins / len(pa_done) * 100
-        pa_icon = '🔥' if pa_wr >= 65 else ('⚠️' if pa_wr < 45 else '  ')
-        lines += ['', f'🕯️ PA&amp;CP XAU (độc lập): {pa_icon} {pa_wins}/{len(pa_done)} '
-                      f'= <b>{pa_wr:.0f}%</b>']
-        pa_by_code = {}
-        for x in pa_done:
-            st = pa_by_code.setdefault(x.get('code', '?'), {'n': 0, 'wins': 0})
-            st['n'] += 1
-            if x.get('correct'):
-                st['wins'] += 1
-        for code, st in sorted(pa_by_code.items(), key=lambda kv: -kv[1]['n']):
-            if st['n'] >= 3:
-                name_vn = _PA_NAMES.get(code, (code, ''))[0]
-                lines.append(f'    {name_vn}: {st["wins"]}/{st["n"]}')
+    # (Thong ke Price Action XAU nam o bao cao tuan rieng cua gold_pa_bot.py)
 
     confirmed = [x for x in versioned if x.get('entry_confirmed') is True]
     if len(confirmed) >= 3:
@@ -3447,18 +3138,8 @@ def main():
 
     save_state(state)
 
-    # PA & Chart Patterns — XAU doc lap (sau scan de dung gia moi nhat)
-    # resolve chay moi run (chi doc lich su local); detect chi trong session vang
-    print('\n=== XAU Price Action & Chart Patterns (doc lap) ===')
-    try:
-        resolve_pa_history(state, now)
-        if now.hour in PAIR_CONFIG['XAU/USD']['trade_hours']:
-            analyze_gold_pa(state, now)
-        else:
-            print('  [PA] Ngoai session vang, chi resolve ket qua')
-    except Exception as e:
-        print(f'  [PA] Loi: {e}')
-    save_state(state)
+    # XAU Price Action: da tach sang gold_pa_bot.py (he doc lap, chay sau
+    # buoc nay trong cung workflow — xem .github/workflows/main.yml)
 
     # Gold Macro Outlook — ban tin vi mo hang ngay (thong tin, khong phai lenh)
     try:
