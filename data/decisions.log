@@ -1,0 +1,17 @@
+2026-06-08 08:26:30 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-08 08:26:31 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-08 08:27:03 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-08 08:27:04 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-08 08:50:43 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: NONEXISTENT"}}}
+2026-06-08 08:50:43 UTC $NONEXISTENT: possibly delisted; no price data found  (period=1y) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-11 09:36:58 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-11 09:36:59 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-11 09:54:37 UTC [XAU/USD] PA_NONE
+2026-06-11 09:54:37 UTC [XAU/USD] PA_RESOLVED double_bottom BUY TP pips=500.0
+2026-06-11 09:54:37 UTC [REPORT] Weekly performance sent total=5 overall=100%
+2026-06-11 09:56:29 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-11 09:56:30 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-11 09:56:32 UTC [XAU/USD] OUTLOOK sent score=+0.10 h4=BEAR d1=BEAR
+2026-06-11 09:57:06 UTC [XAU/USD] PA_SENT double_bottom BUY stars=3 entry=4568.58 target=4626.07 inval=4490.75
+2026-06-11 09:57:40 UTC [USD/JPY] BLOCKED hurst H=0.339 threshold=0.48 bars=720
+2026-06-11 09:57:40 UTC [USD/JPY] NO_SIGNAL
