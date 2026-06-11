@@ -153,3 +153,11 @@
 2026-06-11 09:30:54 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-06-11 09:30:54 UTC [XAU/USD] BLOCKED macro_mild BUY score=-0.13 votes=2
 2026-06-11 09:30:54 UTC [XAU/USD] NO_SIGNAL
+2026-06-11 09:45:54 UTC [EUR/USD] BLOCKED hurst H=0.466 threshold=0.47 bars=720
+2026-06-11 09:45:54 UTC [EUR/USD] NO_SIGNAL
+2026-06-11 09:45:54 UTC [USD/JPY] BLOCKED hurst H=0.329 threshold=0.48 bars=720
+2026-06-11 09:45:54 UTC [USD/JPY] NO_SIGNAL
+2026-06-11 09:45:55 UTC [WTI/USD] BLOCKED hurst H=0.397 threshold=0.4 bars=720
+2026-06-11 09:45:55 UTC [WTI/USD] NO_SIGNAL
+2026-06-11 09:45:55 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=1 need=4 H4=BEAR
+2026-06-11 09:45:55 UTC [XAU/USD] NO_SIGNAL
