@@ -56,3 +56,10 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: update state + price history [skip ci]"
           git pull --rebase -X theirs origin main
           git push
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT }}" \
+            -d text="🚨 Forex workflow FAILED — run ${{ github.run_id }}. Kiem tra: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true

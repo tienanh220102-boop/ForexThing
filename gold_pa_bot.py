@@ -510,6 +510,7 @@ def send_signal(p, session_lbl, now):
     ]
     if p.get('rec_lot'):
         lines.append(f'📐 Lot đề xuất: {p["rec_lot"]} lot (1% rủi ro / ${fx.ACCOUNT_SIZE:.0f} vốn)')
+    lines.append('📌 Chạm TP1 → dời SL về entry (phần còn lại rủi ro 0)')
     lines += ['', '📝 Lý do:']
     lines += [f'  • {c}' for c in p['confluence']]
     if p.get('wall_warn'):
@@ -592,6 +593,16 @@ def main():
 
     if len(bars) < MIN_BARS:
         print('[PA] Chua du du lieu — thoat')
+        save_state(state)
+        return
+
+    # Thi truong dong (cuoi tuan/holiday): nen cuoi dong bang → cung 1 nen
+    # sweep cu se duoc detect lai sau khi cooldown het han = lenh ao lap lai.
+    # Du lieu cu hon 2.5h = khong co nen moi → chi resolve, khong quet keo.
+    bar_age_h = (now.timestamp() - bars[-1].get('t', 0)) / 3600
+    if bar_age_h > 2.5:
+        print(f'[PA] Du lieu cu {bar_age_h:.1f}h (thi truong dong?) — khong quet keo moi')
+        log.info(f'MARKET_STALE age={bar_age_h:.1f}h')
         save_state(state)
         return
 
