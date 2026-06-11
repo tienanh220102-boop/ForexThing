@@ -1,3 +1,23 @@
 {
-  "signals": []
+  "signals": [
+    {
+      "ts": 1781198142.705846,
+      "date": "2026-06-11",
+      "session": "EU_US",
+      "setup": "sweep_reclaim",
+      "dir": "SELL",
+      "entry": 4074.63032,
+      "sl": 4112.265963233312,
+      "tp1": 4018.1768551500336,
+      "tp2": 3980.541211916722,
+      "stars": 4
+    }
+  ],
+  "cooldowns": {
+    "sweep_reclaim|SELL": 1781198142.705846
+  },
+  "day_count": {
+    "date": "2026-06-11",
+    "n": 1
+  }
 }
