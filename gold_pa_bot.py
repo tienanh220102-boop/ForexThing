@@ -56,6 +56,12 @@ TP1_R           = 1.5    # TP1 = 1.5R
 TP2_R           = 2.5    # TP2 = 2.5R (chart pattern dung measured move neu xa hon)
 WICK_BODY_RATIO = 2.0    # sweep: wick >= 2x than (insight 1)
 SWEEP_MIN_RANGE = 0.75   # nen sweep phai >= 0.75 ATR (loc nen ti hon)
+# Anti-FOMO (12/06/2026): bot chay 15p/lan — nen sweep dong xong gia thuong
+# DA bat xa khoi level truoc khi bot quet. Vao market luc do = entry xau +
+# SL (tai structure) bi keo rong. Gia chay qua nguong → treo LIMIT tai retest level.
+SWEEP_RETEST_ATR = 0.10  # limit dat cach level 0.10 ATR ve phia reclaim
+SWEEP_CHASE_ATR  = 0.35  # gia hien tai vuot diem retest qua nguong nay → dung limit
+LIMIT_EXPIRY_H   = 6     # limit khong khop sau 6h → huy (NOFILL, khong tinh WR)
 MOM_BODY_RATIO  = 1.5    # momentum: 3 nen than > 1.5x trung binh (insight 3)
 MOM_CLOSE_PCT   = 0.30   # momentum: dong cua trong 30% cuc tri cua nen
 MOM_EXPIRY_H    = 12     # momentum regime het han sau 12h khong tai xac nhan
@@ -240,8 +246,12 @@ def detect_sweep_reclaim(closes, highs, lows, atr_val, levels):
         # BUY: quet xuong duoi level roi dong lai TREN level, rau duoi dai
         if lo < lp - 0.05 * atr_val and c > lp and \
            dn_wick >= WICK_BODY_RATIO * body:
+            ideal = lp + SWEEP_RETEST_ATR * atr_val
+            chase = price - ideal > SWEEP_CHASE_ATR * atr_val
             out.append({
-                'setup': 'sweep_reclaim', 'dir': 'BUY', 'entry': price,
+                'setup': 'sweep_reclaim', 'dir': 'BUY',
+                'entry': ideal if chase else price,
+                'entry_type': 'limit' if chase else 'market',
                 'structure': lo, 'level': lp, 'level_strength': strength,
                 'reason': (f'Quét thanh khoản dưới {lbl} (râu dưới '
                            f'{dn_wick:,.1f}$ = {dn_wick/max(body,1e-9):.1f}× thân) '
@@ -250,8 +260,12 @@ def detect_sweep_reclaim(closes, highs, lows, atr_val, levels):
         # SELL: quet len tren level roi dong lai DUOI level, rau tren dai
         if hi > lp + 0.05 * atr_val and c < lp and \
            up_wick >= WICK_BODY_RATIO * body:
+            ideal = lp - SWEEP_RETEST_ATR * atr_val
+            chase = ideal - price > SWEEP_CHASE_ATR * atr_val
             out.append({
-                'setup': 'sweep_reclaim', 'dir': 'SELL', 'entry': price,
+                'setup': 'sweep_reclaim', 'dir': 'SELL',
+                'entry': ideal if chase else price,
+                'entry_type': 'limit' if chase else 'market',
                 'structure': hi, 'level': lp, 'level_strength': strength,
                 'reason': (f'Quét thanh khoản trên {lbl} (râu trên '
                            f'{up_wick:,.1f}$ = {up_wick/max(body,1e-9):.1f}× thân) '
@@ -456,10 +470,26 @@ def resolve_signals(state, now, bars):
     for rec in state.get('signals', []):
         if rec.get('outcome'):
             continue
-        is_buy = rec['dir'] == 'BUY'
+        is_buy   = rec['dir'] == 'BUY'
+        is_limit = rec.get('entry_type') == 'limit'
+        filled   = not is_limit or bool(rec.get('filled_ts'))
         for b in bars:
             if b.get('t', 0) <= rec['ts']:
                 continue
+            # Limit chua khop: cho nen cham gia entry truoc khi dem SL/TP.
+            # Qua han ma chua khop → NOFILL (khong tinh thang/thua).
+            if not filled:
+                touched = (b['l'] <= rec['entry']) if is_buy else (b['h'] >= rec['entry'])
+                if not touched:
+                    if b['t'] - rec['ts'] > LIMIT_EXPIRY_H * 3600:
+                        rec['outcome'] = 'NOFILL'
+                        rec['correct'] = None
+                        rec['pips']    = 0.0
+                        break
+                    continue
+                rec['filled_ts'] = b['t']
+                filled = True
+                # nen khop lenh co the cham ca SL — kiem tra ngay nen nay (SL-first)
             hit_sl  = (b['l'] <= rec['sl'])  if is_buy else (b['h'] >= rec['sl'])
             hit_tp1 = (b['h'] >= rec['tp1']) if is_buy else (b['l'] <= rec['tp1'])
             hit_tp2 = (b['h'] >= rec['tp2']) if is_buy else (b['l'] <= rec['tp2'])
@@ -474,6 +504,12 @@ def resolve_signals(state, now, bars):
                 tp = rec['tp2'] if hit_tp2 else rec['tp1']
                 rec['pips'] = fx.price_to_pips(SYM, (tp - rec['entry']) * (1 if is_buy else -1))
                 break
+        # Limit chua khop + qua han (ke ca khi khong co nen moi — cuoi tuan) → NOFILL
+        if not rec.get('outcome') and is_limit and not filled and \
+                (now.timestamp() - rec['ts']) > LIMIT_EXPIRY_H * 3600:
+            rec['outcome'] = 'NOFILL'
+            rec['correct'] = None
+            rec['pips']    = 0.0
         if not rec.get('outcome') and (now.timestamp() - rec['ts']) > TIMEOUT_DAYS * 86400:
             last_c = bars[-1]['c'] if bars else rec['entry']
             move = (last_c - rec['entry']) * (1 if is_buy else -1)
@@ -503,7 +539,10 @@ def send_signal(p, session_lbl, now):
         f'🧩 Setup: <b>{name}</b>',
         '━━━━━━━━━━━━━━━━━━━━',
         '',
-        f'{emoji} Lệnh: <b>{act}</b> quanh {fx.fmt_price(SYM, p["entry"])}',
+        (f'{emoji} Lệnh: <b>{act} LIMIT</b> @ {fx.fmt_price(SYM, p["entry"])} — '
+         f'giá đã bật khỏi level, KHÔNG đuổi; chờ retest, hủy sau {LIMIT_EXPIRY_H}h nếu chưa khớp'
+         if p.get('entry_type') == 'limit'
+         else f'{emoji} Lệnh: <b>{act}</b> quanh {fx.fmt_price(SYM, p["entry"])}'),
         f'🛑 SL:  {fx.fmt_price(SYM, p["sl"])}  ({p["sl_dist_atr"]}×ATR / -${p["sl_usd"]:.2f})',
         f'🎯 TP1: {fx.fmt_price(SYM, p["tp1"])}  (R:R 1:{p["rr1"]} / +${p["tp1_usd"]:.2f})',
         f'🎯 TP2: {fx.fmt_price(SYM, p["tp2"])}  (R:R 1:{p["rr2"]} / +${p["tp2_usd"]:.2f})',
@@ -524,7 +563,9 @@ def send_signal(p, session_lbl, now):
 
 
 def send_weekly(state, now):
-    done = [x for x in state.get('signals', []) if x.get('outcome')]
+    # NOFILL = limit khong khop, khong phai thang/thua — loai khoi thong ke WR
+    done = [x for x in state.get('signals', [])
+            if x.get('outcome') and x['outcome'] != 'NOFILL']
     if len(done) < 3:
         return
     wins = sum(1 for x in done if x.get('correct'))
@@ -733,8 +774,10 @@ def main():
             'setup': best['setup'], 'dir': best['dir'],
             'entry': best['entry'], 'sl': best['sl'],
             'tp1': best['tp1'], 'tp2': best['tp2'], 'stars': best['stars'],
+            'entry_type': best.get('entry_type', 'market'),
         })
         log.info(f"SENT {best['setup']} {best['dir']} stars={best['stars']} "
+                 f"type={best.get('entry_type', 'market')} "
                  f"entry={best['entry']:.2f} sl={best['sl']:.2f} "
                  f"tp1={best['tp1']:.2f} tp2={best['tp2']:.2f}")
         print(f"[PA] Da gui {best['setup']} {best['dir']} {best['stars']}/5 sao")
