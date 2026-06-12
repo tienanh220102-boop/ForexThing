@@ -62,8 +62,8 @@ LOGIC_VERSION   = '2026-06-03'
 # rsi_buy  : RSI <= nguong nay → phieu MUA  (cang thap → cang chat, tranh false BUY trong trend)
 # rsi_sell : RSI >= nguong nay → phieu BAN  (cang cao → cang chat)
 # hurst_block : H < nguong nay → bo qua (RANGE sau)
-#   Trailing pairs: ha block → cho qua thi truong co H thap hon
-#   Range pairs:    nang block → loc chat hon
+#   12/06/2026: chi con la FALLBACK cold-start — nguong thuc te la dong
+#   (dynamic_hurst_block: percentile 30 lich su 14 ngay, kep [0.35, 0.45])
 # min_votes: so phieu toi thieu (3 = chuan | 4 = yeu cau cao hon cho cap nhieu nhieu)
 PAIR_CONFIG = {
     # === MAJORS ===
@@ -408,6 +408,38 @@ def hurst_exponent(closes):
         return 0.5
     poly = np.polyfit(np.log(np.array(lags)[valid]), np.log(tau[valid]), 1)
     return float(np.clip(poly[0], 0.0, 1.0))
+
+# ── Nguong Hurst dong (12/06/2026) ───────────────────────────
+# Thay hang so tay bang percentile lich su cua CHINH cap do: hang so 0.47
+# (dat 01/06 de giam false signal) bi loi thoi sau khi them cac lop bao ve
+# RANGE+1 phieu / ADX kep / counter_trend / counter_w1 — thanh 2 lop chan
+# trung 1 rui ro. Bang chung decisions.log 08-12/06: EUR bi chan 60 lan
+# o H=0.435-0.467 (sat nut nguong 0.47), 0 signal EUR tu 03/06.
+HURST_HIST_DAYS  = 14    # cua so lich su H
+HURST_HIST_MIN_N = 48    # ~2 ngay mau hourly truoc khi nguong dong co hieu luc
+HURST_DYN_PCT    = 30    # block 30% trang thai H thap nhat cua chinh cap do
+HURST_DYN_FLOOR  = 0.35  # duoi muc nay = mean-revert sau, khong trade trend du percentile noi gi
+HURST_DYN_CAP    = 0.45  # tren muc nay = chan ca NEUTRAL regime (dung loi cua nguong 0.47 cu)
+
+def dynamic_hurst_block(state, sym, H, now_ts, static_block):
+    """Nguong block = percentile 30 cua H 14 ngay gan nhat cua cap, kep
+    [0.35, 0.45]. Moi cap tu thich nghi voi 'tinh cach' rieng (USD/JPY
+    song o H~0.32, EUR/USD o ~0.46) thay vi dung chung thuoc do tuyet doi.
+    Mau luu toi da 1 lan/gio (H tren 200 nen doi cham, mau 15p chi phinh state).
+    Chua du mau → fallback nguong tinh trong PAIR_CONFIG."""
+    if state is None:
+        return static_block
+    hist = state.setdefault('hurst_hist', {}).setdefault(sym, [])
+    if not hist or now_ts - hist[-1][0] >= 3300:
+        hist.append([int(now_ts), round(H, 3)])
+    cutoff = now_ts - HURST_HIST_DAYS * 86400
+    hist = [x for x in hist if x[0] >= cutoff]
+    state['hurst_hist'][sym] = hist
+    if len(hist) < HURST_HIST_MIN_N:
+        return static_block
+    vals = sorted(x[1] for x in hist)
+    pct  = vals[min(int(len(vals) * HURST_DYN_PCT / 100), len(vals) - 1)]
+    return min(max(pct, HURST_DYN_FLOOR), HURST_DYN_CAP)
 
 def fetch_intermarket():
     """Lay DXY (dollar index) va Oil 1 lan, cache cho toan bo phien."""
@@ -1760,7 +1792,7 @@ def build_pa_vol(signal, indicators, rsi_val, h1_phase, m15_signal, m15_phase):
     return '\n'.join(lines)
 
 # ── Phan tich tin hieu (Vote System v4) ──────────────────────
-def analyze(sym, yf_sym, now=None):
+def analyze(sym, yf_sym, now=None, state=None):
     """
     He thong bieu quyet: moi chi bao bau +1 (MUA) / -1 (BAN) / 0 (trung tinh).
     Can it nhat 3/5 phieu cung chieu de phat tin hieu.
@@ -1825,10 +1857,15 @@ def analyze(sym, yf_sym, now=None):
         H      = hurst_exponent(long_closes)
         regime = 'TREND' if H > 0.55 else ('RANGE' if H < 0.45 else 'NEUTRAL')
 
-        # [LOC 3] Block RANGE sau: nguong H rieng tung cap
-        if H < cfg['hurst_block']:
-            print(f'  [D] H={H:.3f} < {cfg["hurst_block"]} RANGE sau ({ln} bars), bo qua')
-            _log.info(f'[{sym}] BLOCKED hurst H={H:.3f} threshold={cfg["hurst_block"]} bars={ln}')
+        # [LOC 3] Block RANGE sau: nguong dong theo percentile lich su cua cap
+        # (fallback nguong tinh PAIR_CONFIG khi chua du 48 mau hourly)
+        eff_block = dynamic_hurst_block(state, sym, H,
+                                        now.timestamp(), cfg['hurst_block'])
+        n_hist  = len(state.get('hurst_hist', {}).get(sym, [])) if state is not None else 0
+        blk_src = 'dyn' if n_hist >= HURST_HIST_MIN_N else 'static'
+        if H < eff_block:
+            print(f'  [D] H={H:.3f} < {eff_block:.3f} ({blk_src}) RANGE sau ({ln} bars), bo qua')
+            _log.info(f'[{sym}] BLOCKED hurst H={H:.3f} threshold={eff_block:.3f} src={blk_src} bars={ln}')
             return None
 
         # [LOC 3b] ADX filter: chan sideways kep — ca ADX lan Hurst deu yeu
@@ -2180,6 +2217,19 @@ def analyze(sym, yf_sym, now=None):
         # Vuot nguong nay = gia da chay xa, entry risk/reward bi xau di ro rang
         chase_limit = price + atr_val * 0.5 if signal == 'BUY' else price - atr_val * 0.5
 
+        # [ANTI-FOMO 12/06/2026] Vote system von lagging — khi du phieu dong thuan,
+        # gia thuong DA chay. Vao market luc do = duoi gia (FOMO co he thong).
+        # Gia cach EMA20 > 1.2 ATR theo huong tin hieu → de xuat LIMIT cho hoi ve
+        # gan EMA20. SL giu nguyen muc cau truc (swing) → R:R tot len, lot to len.
+        # Tracking (pending_validations) van theo gia signal de so sanh duoc voi lich su.
+        ext_atr = (((price - e20) if signal == 'BUY' else (e20 - price)) / atr_val
+                   if atr_val > 0 else 0.0)
+        entry_mode  = 'MARKET'
+        limit_entry = None
+        if ext_atr > 1.2:
+            entry_mode  = 'LIMIT'
+            limit_entry = e20 + 0.3 * atr_val if signal == 'BUY' else e20 - 0.3 * atr_val
+
         _log.info(f'[{sym}] SIGNAL {signal} conf={conf} votes={vote_count}/6 regime={regime} H={H:.3f} ADX={adx_val:.1f}')
         return {
             'sym': sym, 'signal': signal, 'price': price, 'rsi': round(r_val, 1),
@@ -2189,6 +2239,8 @@ def analyze(sym, yf_sym, now=None):
             'sl_pct': sl_pct, 'tp_pct': tp_pct, 'tp2_pct': tp2_pct,
             'rr1': rr1, 'rr2': rr2,
             'entry_low': entry_low, 'entry_high': entry_high, 'chase_limit': chase_limit,
+            'entry_mode': entry_mode, 'limit_entry': limit_entry,
+            'ext_atr': round(ext_atr, 2),
             'm15_dir': m15_dir,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
             'history_bars': ln,
@@ -2814,7 +2866,7 @@ def main():
             continue
 
         print(f'Phan tich {sym}...', end=' ', flush=True)
-        r = analyze(sym, yf_sym, now)
+        r = analyze(sym, yf_sym, now, state)
 
         if not r:
             print('NEUTRAL / loc ATR / khong du lieu')
@@ -3029,9 +3081,13 @@ def main():
             if cal_line:
                 fund_lines.append(cal_line)
 
-        sl_raw  = abs(r['price'] - r['sl'])
-        tp1_raw = abs(r['tp']   - r['price'])
-        tp2_raw = abs(r['tp2']  - r['price'])
+        # LIMIT mode: SL/TP/R:R/lot tinh tu gia limit (SL van o muc cau truc cu)
+        entry_ref = r['limit_entry'] if r.get('entry_mode') == 'LIMIT' else r['price']
+        sl_raw  = abs(entry_ref - r['sl'])
+        tp1_raw = abs(r['tp']   - entry_ref)
+        tp2_raw = abs(r['tp2']  - entry_ref)
+        rr1_disp = round(tp1_raw / sl_raw, 1) if sl_raw > 0 else r['rr1']
+        rr2_disp = round(tp2_raw / sl_raw, 1) if sl_raw > 0 else r['rr2']
 
         sl_pips_val  = price_to_pips(sym, sl_raw)
         tp1_pips_val = price_to_pips(sym, tp1_raw)
@@ -3061,15 +3117,19 @@ def main():
             *(([fib_line, '']) if fib_line else []),
             *(([tl_line]) if tl_line else []),
             *(([dow_line, '']) if dow_line else (([''] if tl_line else []))),
-            f'📍 Entry: {entry_zone}',
+            (f'📍 Entry: ⏳ <b>LIMIT @ {fmt_price(sym, entry_ref)}</b> — giá đã chạy '
+             f'{r["ext_atr"]}×ATR từ EMA20, KHÔNG đuổi; treo lệnh chờ hồi'
+             if r.get('entry_mode') == 'LIMIT' else f'📍 Entry: {entry_zone}'),
             f'🛑 SL:  {fmt_price(sym, r["sl"])}  ({sl_pips_str} / -${sl_usd:.2f})',
-            f'✅ TP1: {fmt_price(sym, r["tp"])} (R:R 1:{r["rr1"]} / +${tp1_usd:.2f})',
-            f'✅ TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{r["rr2"]} / +${tp2_usd:.2f})',
+            f'✅ TP1: {fmt_price(sym, r["tp"])} (R:R 1:{rr1_disp} / +${tp1_usd:.2f})',
+            f'✅ TP2: {fmt_price(sym, r["tp2"])} (R:R 1:{rr2_disp} / +${tp2_usd:.2f})',
             *(([f'📐 Lot đề xuất: {rec_lot} lot  (1% rủi ro / ${ACCOUNT_SIZE:.0f} vốn)']) if rec_lot else []),
             '',
-            ('🚫 Bỏ qua nếu giá đã vượt: ' + fmt_price(sym, r['chase_limit'])
-             if r['signal'] == 'BUY'
-             else '🚫 Bỏ qua nếu giá đã thủng: ' + fmt_price(sym, r['chase_limit'])),
+            ('🚫 Hủy lệnh chờ nếu sau 12h chưa khớp, hoặc giá chạm TP1 trước khi khớp'
+             if r.get('entry_mode') == 'LIMIT' else
+             ('🚫 Bỏ qua nếu giá đã vượt: ' + fmt_price(sym, r['chase_limit'])
+              if r['signal'] == 'BUY'
+              else '🚫 Bỏ qua nếu giá đã thủng: ' + fmt_price(sym, r['chase_limit']))),
             '⚠️ Vô hiệu nếu: ' + inval_text,
             '',
             '💡 Lý do:',
@@ -3104,13 +3164,16 @@ def main():
         if result.get('ok'):
             msg_id = result.get('result', {}).get('message_id')
             state[key] = now.timestamp()
-            _log.info(f'[{sym}] SENT {r["signal"]} conf={conf}% entry={r["price"]:.5f} sl={r["sl"]:.5f} tp={r["tp"]:.5f}')
+            _log.info(f'[{sym}] SENT {r["signal"]} conf={conf}% mode={r.get("entry_mode","MARKET")} '
+                      f'entry={entry_ref:.5f} ext={r.get("ext_atr", 0)} sl={r["sl"]:.5f} tp={r["tp"]:.5f}')
             if 'pending_validations' not in state:
                 state['pending_validations'] = []
             state['pending_validations'].append({
                 'sym':            sym,
                 'signal':         r['signal'],
                 'entry_price':    r['price'],
+                'entry_mode':     r.get('entry_mode', 'MARKET'),
+                'limit_entry':    r.get('limit_entry'),
                 'sl':             r['sl'],
                 'tp':             r['tp'],
                 'sent_at':        now.timestamp(),
