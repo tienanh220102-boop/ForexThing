@@ -14,13 +14,28 @@
       "outcome": "SL",
       "correct": false,
       "pips": -376.4
+    },
+    {
+      "ts": 1781273750.77572,
+      "date": "2026-06-12",
+      "session": "EU_US",
+      "setup": "sweep_reclaim",
+      "dir": "SELL",
+      "entry": 4192.24234,
+      "sl": 4228.934583156953,
+      "tp1": 4137.203975264571,
+      "tp2": 4100.511732107619,
+      "stars": 4,
+      "entry_type": "market",
+      "danger": false,
+      "capit": false
     }
   ],
   "cooldowns": {
-    "sweep_reclaim|SELL": 1781198142.705846
+    "sweep_reclaim|SELL": 1781273750.77572
   },
   "day_count": {
-    "date": "2026-06-11",
+    "date": "2026-06-12",
     "n": 1
   }
 }
