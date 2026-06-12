@@ -441,6 +441,64 @@ def dynamic_hurst_block(state, sym, H, now_ts, static_block):
     pct  = vals[min(int(len(vals) * HURST_DYN_PCT / 100), len(vals) - 1)]
     return min(max(pct, HURST_DYN_FLOOR), HURST_DYN_CAP)
 
+# ── Exhaustion Guard (12/06/2026) ────────────────────────────
+# Nghich ly lagging system: xac nhan dat cuc dai o CUOI trend → he cang
+# "chac chan" thi entry cang gan diem dao chieu. Vu XAU 11/06: SELL conf=81%
+# phat ra khi D1 RSI=28, move -5.9%/5 phien, ngay truoc V-reversal +4%.
+# Nguyen tac: KHONG chan theo huong (van cho trend tiep dien) — chan theo
+# VI TRI: trong vung kiet suc, lenh thuan-move chi duoc phep khi gia dang
+# pha day/dinh moi (trend tu chung minh con song), cam ban bounce/mua dip.
+EXH_RSI_LO       = 28    # D1 RSI duoi muc nay = ban da kiet (cho SELL)
+EXH_RSI_HI       = 72    # D1 RSI tren muc nay = mua da kiet (cho BUY)
+EXH_PCTL_HARD    = 85    # |move 5 phien| vuot percentile nay cua lich su → vung kiet
+EXH_PCTL_SOFT    = 70    # vung canh bao: chi tru confidence, khong chan
+EXH_LOOKBACK_D   = 5     # cua so do move
+EXH_EXTREME_ATR  = 0.3   # gia trong 0.3 ATR-D1 cua day/dinh 5 ngay = "dang pha extreme"
+
+def exhaustion_state(bars):
+    """Do vi tri trong trend tu D1 (resample tu H1 bars cua price_history).
+    Tra ve None neu < 18 ngay du lieu. Percentile cua move la adaptive theo
+    chinh lich su cap do — khong dung nguong % cung.
+    Returns: {'dir': 'DOWN'|'UP'|None, 'soft': bool, 'd1_rsi', 'pctl',
+              'at_extreme': bool (gia dang ep day/dinh 5 ngay)}"""
+    days = {}
+    for b in bars:
+        d = int(b['t'] // 86400)
+        rec = days.get(d)
+        if rec is None:
+            days[d] = {'c': b['c'], 'h': b['h'], 'l': b['l']}
+        else:
+            rec['c'] = b['c']
+            rec['h'] = max(rec['h'], b['h'])
+            rec['l'] = min(rec['l'], b['l'])
+    keys = sorted(days)
+    cl = [days[k]['c'] for k in keys]
+    hi = [days[k]['h'] for k in keys]
+    lo = [days[k]['l'] for k in keys]
+    if len(cl) < 18:
+        return None
+    d1_rsi = rsi(cl)
+    moves  = [abs(cl[i] - cl[i - EXH_LOOKBACK_D]) / cl[i - EXH_LOOKBACK_D]
+              for i in range(EXH_LOOKBACK_D, len(cl))]
+    cur    = (cl[-1] - cl[-1 - EXH_LOOKBACK_D]) / cl[-1 - EXH_LOOKBACK_D]
+    pctl   = sum(1 for m in moves if m <= abs(cur)) / len(moves) * 100
+    atr_d1 = sum(h - l for h, l in zip(hi[-14:], lo[-14:])) / 14
+    price  = cl[-1]
+    exh_dir = None
+    soft    = False
+    at_extreme = False
+    if cur < 0 and d1_rsi < EXH_RSI_LO and pctl >= EXH_PCTL_HARD:
+        exh_dir    = 'DOWN'
+        at_extreme = (price - min(lo[-EXH_LOOKBACK_D:])) <= EXH_EXTREME_ATR * atr_d1
+    elif cur > 0 and d1_rsi > EXH_RSI_HI and pctl >= EXH_PCTL_HARD:
+        exh_dir    = 'UP'
+        at_extreme = (max(hi[-EXH_LOOKBACK_D:]) - price) <= EXH_EXTREME_ATR * atr_d1
+    elif pctl >= EXH_PCTL_SOFT and (d1_rsi < 35 or d1_rsi > 65):
+        soft = True
+    return {'dir': exh_dir, 'soft': soft, 'd1_rsi': round(d1_rsi, 1),
+            'pctl': round(pctl, 0), 'at_extreme': at_extreme,
+            'move_dir': 'DOWN' if cur < 0 else 'UP'}
+
 def fetch_intermarket():
     """Lay DXY (dollar index) va Oil 1 lan, cache cho toan bo phien."""
     global _im_cache
@@ -2034,6 +2092,31 @@ def analyze(sym, yf_sym, now=None, state=None):
             _log.info(f'[{sym}] BLOCKED rsi_extreme RSI={r_val:.0f} {signal} votes={vote_count}')
             return None
 
+        # [LOC 4b — EXHAUSTION GUARD 12/06/2026] Chan lenh thuan-move trong vung
+        # kiet suc, TRU KHI gia dang pha day/dinh moi (trend con song thi van theo).
+        # Khac rsi_extreme (H1, bi override boi 4 phieu): guard nay do D1 + khong
+        # override duoc bang vote — vote cao o cuoi trend chinh la cai bay.
+        exh = exhaustion_state(long_bars)
+        exh_pen  = 0
+        exh_warn = None
+        if exh:
+            sig_into_move = (signal == 'SELL' and exh.get('dir') == 'DOWN') or \
+                            (signal == 'BUY'  and exh.get('dir') == 'UP')
+            if sig_into_move and not exh['at_extreme']:
+                print(f'  [D] Exhaustion: D1 RSI={exh["d1_rsi"]} pctl={exh["pctl"]:.0f}% '
+                      f'— {signal} vao vung kiet ma gia khong pha extreme, bo qua')
+                _log.info(f'[{sym}] BLOCKED exhaustion {signal} d1_rsi={exh["d1_rsi"]} '
+                          f'pctl={exh["pctl"]:.0f} at_extreme=False')
+                return None
+            if sig_into_move:                      # cho phep vi dang pha extreme
+                exh_pen  = 8
+                exh_warn = (f'⚠️ Vùng kiệt sức (D1 RSI {exh["d1_rsi"]}, move 5 phiên '
+                            f'> {exh["pctl"]:.0f}% lịch sử) — chỉ vào vì giá đang phá '
+                            f'đáy/đỉnh mới. Cân nhắc giảm lot, SL kỷ luật.')
+            elif exh['soft'] and ((signal == 'SELL' and exh['move_dir'] == 'DOWN') or
+                                  (signal == 'BUY' and exh['move_dir'] == 'UP')):
+                exh_pen = 5                        # vung canh bao: tru conf, khong chan
+
         # [PAIR MACRO] macro rieng tung cap (tai su dung _gold_cache)
         pair_macro = None
         m_score, m_comps = macro_score(sym)
@@ -2124,7 +2207,8 @@ def analyze(sym, yf_sym, now=None, state=None):
                     break
 
         conf = min(95, base_conf + im_bonus + regime_bonus + history_bonus + mtf_bonus
-                   + sr_bonus + fib_bonus + dow_bonus + tl_bonus + psych_penalty)
+                   + sr_bonus + fib_bonus + dow_bonus + tl_bonus + psych_penalty
+                   - exh_pen)
 
         # Wyckoff phase
         phase_name = wyckoff_phase(regime, signal, r_val)
@@ -2241,6 +2325,7 @@ def analyze(sym, yf_sym, now=None, state=None):
             'entry_low': entry_low, 'entry_high': entry_high, 'chase_limit': chase_limit,
             'entry_mode': entry_mode, 'limit_entry': limit_entry,
             'ext_atr': round(ext_atr, 2),
+            'atr': atr_val, 'exh_warn': exh_warn,
             'm15_dir': m15_dir,
             'phase': phase_name, 'hurst': round(H, 3), 'adx': round(adx_val, 1), 'regime': regime,
             'history_bars': ln,
@@ -2891,6 +2976,22 @@ def main():
             time.sleep(0.5)
             continue
 
+        # [LOC 5b — ANTI-PYRAMID 12/06/2026] Re-send CUNG huong trong 12h chi khi
+        # entry TOT hon lenh truoc >= 0.2 ATR (SELL: gia cao hon / BUY: thap hon).
+        # 11/06: 2 lenh SELL XAU cach 4h tai cung gia 4080 = nhan doi exposure
+        # 1 y tuong ma khong co loi the moi — ca hai cung SL.
+        prev_entry = state.get(key + '|entry')
+        if elapsed < 12 and prev_entry:
+            improve = ((r['price'] - prev_entry) if r['signal'] == 'SELL'
+                       else (prev_entry - r['price']))
+            if improve < 0.2 * r['atr']:
+                print(f'  -> Trung lenh {r["signal"]} {elapsed:.1f}h truoc '
+                      f'(entry cu {prev_entry:.5f}, khong tot hon), bo qua')
+                _log.info(f'[{sym}] DUP_SAMEDIR {r["signal"]} {elapsed:.1f}h '
+                          f'prev={prev_entry:.5f} now={r["price"]:.5f} improve={improve:.5f}')
+                time.sleep(0.5)
+                continue
+
         conf = r['conf']
         if conf < MIN_CONFIDENCE:
             print(f'  -> Do tin cay {conf}% < {MIN_CONFIDENCE}%, bo qua')
@@ -3131,6 +3232,7 @@ def main():
               if r['signal'] == 'BUY'
               else '🚫 Bỏ qua nếu giá đã thủng: ' + fmt_price(sym, r['chase_limit']))),
             '⚠️ Vô hiệu nếu: ' + inval_text,
+            *(([r['exh_warn']]) if r.get('exh_warn') else []),
             '',
             '💡 Lý do:',
             reason,
@@ -3164,6 +3266,7 @@ def main():
         if result.get('ok'):
             msg_id = result.get('result', {}).get('message_id')
             state[key] = now.timestamp()
+            state[key + '|entry'] = r['price']   # cho anti-pyramid guard [LOC 5b]
             _log.info(f'[{sym}] SENT {r["signal"]} conf={conf}% mode={r.get("entry_mode","MARKET")} '
                       f'entry={entry_ref:.5f} ext={r.get("ext_atr", 0)} sl={r["sl"]:.5f} tp={r["tp"]:.5f}')
             if 'pending_validations' not in state:

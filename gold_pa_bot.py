@@ -701,6 +701,31 @@ def main():
     cands += detect_compression_breakout(closes, highs, lows, atr_val)
     cands += detect_chart_patterns(closes, highs, lows)
 
+    # [EXHAUSTION GUARD 12/06/2026] dung chung helper voi forex_notifier:
+    # lenh thuan-move trong vung kiet (D1 RSI cuc doan + move > pctl 85) chi
+    # duoc phep khi gia dang pha day/dinh moi. Vu 11/06: sweep SELL @4074 phat
+    # ra khi D1 RSI=28, gia each day 5 ngay $57 — ban bounce dung day capitulation.
+    exh = None
+    try:
+        exh = fx.exhaustion_state(bars)
+    except Exception as e:
+        log.info(f'EXH_CHECK_FAIL {e}')
+
+    # [CROSS-SYSTEM GUARD 12/06/2026] TA (forex_notifier, chay truoc trong cung
+    # workflow) da gui lenh XAU cung huong trong 8h → PA nhuong, tranh x2-x3
+    # exposure cung 1 y tuong (11/06: 3 lenh SELL XAU trong 4h, ca 3 cung SL).
+    ta_recent = {}
+    try:
+        if os.path.exists(fx.STATE_FILE):
+            with open(fx.STATE_FILE, encoding='utf-8') as f:
+                _ta_state = json.load(f)
+            for _d in ('BUY', 'SELL'):
+                _ts = _ta_state.get(f'{SYM}|{_d}', 0)
+                if (now.timestamp() - _ts) < 8 * 3600:
+                    ta_recent[_d] = _ts
+    except Exception as e:
+        log.info(f'CROSS_CHECK_FAIL {e}')
+
     # Session filter per setup + momentum khoa reversal nguoc chieu (insight 3)
     filtered = []
     for p in cands:
@@ -712,6 +737,20 @@ def main():
             if want != mom_dir:
                 print(f"[PA] {p['setup']} {p['dir']} nguoc momentum {mom_dir} — khoa")
                 log.info(f"MOMENTUM_BLOCK {p['setup']} {p['dir']} regime={mom_dir}")
+                continue
+        if p['dir'] in ta_recent:
+            _age = (now.timestamp() - ta_recent[p['dir']]) / 3600
+            print(f"[PA] {p['setup']} {p['dir']} — TA da gui XAU {p['dir']} {_age:.1f}h truoc, nhuong")
+            log.info(f"CROSS_DUP {p['setup']} {p['dir']} ta_sent={_age:.1f}h")
+            continue
+        if exh and exh.get('dir'):
+            into = (p['dir'] == 'SELL' and exh['dir'] == 'DOWN') or \
+                   (p['dir'] == 'BUY'  and exh['dir'] == 'UP')
+            if into and not exh['at_extreme']:
+                print(f"[PA] {p['setup']} {p['dir']} — vung kiet suc "
+                      f"(D1 RSI={exh['d1_rsi']}, pctl={exh['pctl']:.0f}%), khoa")
+                log.info(f"EXHAUSTION_BLOCK {p['setup']} {p['dir']} "
+                         f"d1_rsi={exh['d1_rsi']} pctl={exh['pctl']:.0f}")
                 continue
         filtered.append(p)
     if not filtered:
