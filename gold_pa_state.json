@@ -28,7 +28,10 @@
       "stars": 4,
       "entry_type": "market",
       "danger": false,
-      "capit": false
+      "capit": false,
+      "outcome": "SL",
+      "correct": false,
+      "pips": -366.9
     }
   ],
   "cooldowns": {
