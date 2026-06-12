@@ -62,6 +62,14 @@ SWEEP_MIN_RANGE = 0.75   # nen sweep phai >= 0.75 ATR (loc nen ti hon)
 SWEEP_RETEST_ATR = 0.10  # limit dat cach level 0.10 ATR ve phia reclaim
 SWEEP_CHASE_ATR  = 0.35  # gia hien tai vuot diem retest qua nguong nay → dung limit
 LIMIT_EXPIRY_H   = 6     # limit khong khop sau 6h → huy (NOFILL, khong tinh WR)
+# Triet ly PA (user, 12/06/2026): muc dich chinh la BAN dinh / MUA day, ke ca
+# dinh/day trong khung sideway. Keo nguy hiem KHONG block — giam rui ro:
+# lot 0.5% (thay 1%) + cap SL chat hon. SL van theo structure (thu ngan SL
+# vao trong structure se bi noise quet truoc khi thesis sai).
+DANGER_SL_CAP    = 1.8   # keo nguy hiem: structure doi SL > 1.8 ATR → bo keo
+DANGER_RISK_PCT  = 0.005 # keo nguy hiem: rui ro 0.5% von thay vi 1%
+RANGE_WINDOW_H   = 48    # dinh/day khung sideway: cuc tri 48h lam level sweep
+RANGE_TOUCH_ATR  = 0.25  # bar cach cuc tri <= 0.25 ATR thi tinh la 1 lan cham
 MOM_BODY_RATIO  = 1.5    # momentum: 3 nen than > 1.5x trung binh (insight 3)
 MOM_CLOSE_PCT   = 0.30   # momentum: dong cua trong 30% cuc tri cua nen
 MOM_EXPIRY_H    = 12     # momentum regime het han sau 12h khong tai xac nhan
@@ -208,13 +216,24 @@ def detect_momentum(closes, highs, lows):
     return None
 
 
-def _gold_levels(closes, highs, lows):
-    """Vung S/R cho sweep: H4 S/R (cluster pivot) + muc tam ly manh (insight 2)."""
+def _gold_levels(closes, highs, lows, atr_val=0.0):
+    """Vung S/R cho sweep: H4 S/R (cluster pivot) + muc tam ly manh (insight 2)
+    + dinh/day khung 48h (12/06/2026 — bat day/dinh trong sideway ma H4 S/R
+    chua kip hinh thanh; strength = so lan cham nen tu dieu tiet: cuc tri
+    1-cham (spike) bi grade() tru sao, bien range cham nhieu duoc cong)."""
     h4_c, h4_h, h4_l = fx.resample_to_h4(closes, highs, lows)
     levels = []
     if len(h4_c) >= 10:
         levels += fx.find_sr_levels(h4_h, h4_l, h4_c, lookback=60)
     levels += [p for p in fx.psychological_levels(closes[-1]) if p['strength'] >= 3]
+    if atr_val > 0 and len(highs) >= RANGE_WINDOW_H:
+        rh = max(highs[-RANGE_WINDOW_H:])
+        rl = min(lows[-RANGE_WINDOW_H:])
+        tol = RANGE_TOUCH_ATR * atr_val
+        levels.append({'price': rh, 'is_range': True,
+                       'touches': sum(1 for h in highs[-RANGE_WINDOW_H:] if rh - h <= tol)})
+        levels.append({'price': rl, 'is_range': True,
+                       'touches': sum(1 for l in lows[-RANGE_WINDOW_H:] if l - rl <= tol)})
     return levels
 
 
@@ -242,6 +261,7 @@ def detect_sweep_reclaim(closes, highs, lows, atr_val, levels):
         is_psych = lv.get('is_psych', False)
         strength = lv.get('touches') or lv.get('strength', 2)
         lbl = (f'mức tâm lý {lp:,.0f}' if is_psych
+               else f'đỉnh/đáy khung 48h {lp:,.1f} ({strength} chạm)' if lv.get('is_range')
                else f'S/R H4 {lp:,.1f} ({strength} chạm)')
         # BUY: quet xuong duoi level roi dong lai TREN level, rau duoi dai
         if lo < lp - 0.05 * atr_val and c > lp and \
@@ -373,7 +393,10 @@ def build_order(p, atr_val, psych_levels):
 
     struct_dist = abs(entry - p['structure']) + SL_BUFFER_ATR * atr_val
     sl_dist     = max(SL_ATR_FLOOR * atr_val, struct_dist)
-    if sl_dist > SL_ATR_CAP * atr_val:
+    # Keo nguy hiem: cap SL chat hon — structure doi SL rong hon nua thi bo keo
+    # (rui ro giam tu TIEN: lot 0.5%, khong thu ngan SL vao trong structure)
+    sl_cap = DANGER_SL_CAP if p.get('danger') else SL_ATR_CAP
+    if sl_dist > sl_cap * atr_val:
         return None
     sl  = entry - sl_dist if is_buy else entry + sl_dist
     tp1 = entry + TP1_R * sl_dist if is_buy else entry - TP1_R * sl_dist
@@ -412,8 +435,9 @@ def build_order(p, atr_val, psych_levels):
     tp1_usd  = round(tp1_pips * fx.LOT_SIZE * 10, 2)
     tp2_usd  = round(tp2_pips * fx.LOT_SIZE * 10, 2)
     rec_lot  = None
+    risk_pct = DANGER_RISK_PCT if p.get('danger') else 0.01
     if fx.ACCOUNT_SIZE > 0 and sl_usd > 0:
-        rec_lot = max(round((fx.ACCOUNT_SIZE * 0.01) / (sl_usd / fx.LOT_SIZE), 2), 0.01)
+        rec_lot = max(round((fx.ACCOUNT_SIZE * risk_pct) / (sl_usd / fx.LOT_SIZE), 2), 0.01)
 
     p.update({
         'sl': sl, 'tp1': tp1, 'tp2': tp2,
@@ -422,6 +446,7 @@ def build_order(p, atr_val, psych_levels):
         'rr1': round(abs(tp1 - entry) / sl_dist, 1),
         'rr2': round(abs(tp2 - entry) / sl_dist, 1),
         'rec_lot': rec_lot, 'wall_warn': wall_warn, 'star_pen': star_pen,
+        'risk_pct': risk_pct,
     })
     return p
 
@@ -458,6 +483,16 @@ def grade(p, mom_dir, h4_dir, dxy_div, dxy_note):
     if mom_dir == want and p['setup'] != 'momentum_pullback':
         stars += 1
         conf.append('Momentum regime thuận chiều')
+    # Bat dinh/day tai vung kiet suc = dung nghe PA (12/06/2026):
+    # mua day capitulation / ban dinh blow-off — phe thuan-move da kiet,
+    # mean-reversion co xac suat bat cao nhat (vd day 4023 ngay 11/06 → +4%)
+    if p.get('capit'):
+        stars += 1
+        conf.append(f'Bắt đỉnh/đáy tại vùng kiệt sức ({p.get("exh_note", "")}) '
+                    f'— phe thuận-move đã kiệt, edge mean-reversion')
+    if p.get('danger'):
+        conf.append(f'⚠️ Kèo nguy hiểm — thuận-move trong vùng kiệt sức '
+                    f'({p.get("exh_note", "")}): lot 0.5%, SL cap 1.8×ATR')
 
     p['stars'] = max(1, min(5, stars))
     p['confluence'] = conf
@@ -548,7 +583,9 @@ def send_signal(p, session_lbl, now):
         f'🎯 TP2: {fx.fmt_price(SYM, p["tp2"])}  (R:R 1:{p["rr2"]} / +${p["tp2_usd"]:.2f})',
     ]
     if p.get('rec_lot'):
-        lines.append(f'📐 Lot đề xuất: {p["rec_lot"]} lot (1% rủi ro / ${fx.ACCOUNT_SIZE:.0f} vốn)')
+        _rp = p.get('risk_pct', 0.01) * 100
+        _danger_tag = ' — kèo nguy hiểm, giảm nửa' if p.get('danger') else ''
+        lines.append(f'📐 Lot đề xuất: {p["rec_lot"]} lot ({_rp:g}% rủi ro{_danger_tag} / ${fx.ACCOUNT_SIZE:.0f} vốn)')
     lines.append('📌 Chạm TP1 → dời SL về entry (phần còn lại rủi ro 0)')
     lines += ['', '📝 Lý do:']
     lines += [f'  • {c}' for c in p['confluence']]
@@ -692,7 +729,7 @@ def main():
     mom_dir = mom_st.get('dir') if \
         (now.timestamp() - mom_st.get('ts', 0)) < MOM_EXPIRY_H * 3600 else None
 
-    levels = _gold_levels(closes, highs, lows)
+    levels = _gold_levels(closes, highs, lows, atr_val)
     psych  = fx.psychological_levels(price)
 
     cands = []
@@ -746,12 +783,19 @@ def main():
         if exh and exh.get('dir'):
             into = (p['dir'] == 'SELL' and exh['dir'] == 'DOWN') or \
                    (p['dir'] == 'BUY'  and exh['dir'] == 'UP')
+            # Triet ly PA (12/06): KHONG block keo nguy hiem — giam rui ro.
+            # Thuan-move khi gia da roi extreme (vd ban bounce sau capitulation)
+            # = nguy hiem: lot 0.5% + cap SL 1.8 ATR (build_order/grade xu ly).
+            # Nguoc-move (mua day capitulation / ban dinh blow-off) = dung nghe
+            # cua PA → cong sao trong grade().
             if into and not exh['at_extreme']:
-                print(f"[PA] {p['setup']} {p['dir']} — vung kiet suc "
-                      f"(D1 RSI={exh['d1_rsi']}, pctl={exh['pctl']:.0f}%), khoa")
-                log.info(f"EXHAUSTION_BLOCK {p['setup']} {p['dir']} "
+                p['danger'] = True
+                p['exh_note'] = f"D1 RSI {exh['d1_rsi']}, move 5 phiên > {exh['pctl']:.0f}% lịch sử"
+                log.info(f"EXHAUSTION_RISK {p['setup']} {p['dir']} "
                          f"d1_rsi={exh['d1_rsi']} pctl={exh['pctl']:.0f}")
-                continue
+            elif not into:
+                p['capit'] = True
+                p['exh_note'] = f"D1 RSI {exh['d1_rsi']}, move 5 phiên > {exh['pctl']:.0f}% lịch sử"
         filtered.append(p)
     if not filtered:
         print('[PA] Khong co setup hop le')
@@ -814,6 +858,7 @@ def main():
             'entry': best['entry'], 'sl': best['sl'],
             'tp1': best['tp1'], 'tp2': best['tp2'], 'stars': best['stars'],
             'entry_type': best.get('entry_type', 'market'),
+            'danger': best.get('danger', False), 'capit': best.get('capit', False),
         })
         log.info(f"SENT {best['setup']} {best['dir']} stars={best['stars']} "
                  f"type={best.get('entry_type', 'market')} "
