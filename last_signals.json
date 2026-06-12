@@ -23,7 +23,7 @@
         {
           "hours": 1,
           "at": 1781284535.485546,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -1285,6 +1285,23 @@
       "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-06-12",
+      "regime": "NEUTRAL",
+      "outcome": "OPEN",
+      "pips": 192.7,
+      "entry": 4220.93012,
+      "exit": 4240.2002,
+      "sl_pips": 521.6,
+      "tp_pips": 833.9,
+      "conf": 69,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -1363,6 +1380,10 @@
       ],
       [
         1781280935,
+        0.287
+      ],
+      [
+        1781284537,
         0.287
       ]
     ],
