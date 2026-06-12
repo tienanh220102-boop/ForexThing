@@ -41,6 +41,11 @@
         pre.log .outlook { color: #8ab4f8; }
         pre.log .error { color: #f28b82; }
 
+        .chart-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .chart-head h2 { flex: 1; }
+        select#chart-symbol { font: inherit; font-size: 14px; padding: 5px 10px; border: 1px solid #dadce0; border-radius: 8px; background: #f8f9fa; color: #202124; }
+        #chart { height: 420px; }
+
         .muted { color: #9aa0a6; font-size: 13px; }
         .error-box { background: #fce8e6; color: #c5221f; padding: 12px 16px; border-radius: 10px; font-size: 14px; }
         .footer { text-align: center; color: #9aa0a6; font-size: 12px; margin-top: 10px; }
@@ -57,6 +62,19 @@
         <div class="card">
             <h2>📊 Thống kê hiệu suất</h2>
             <div id="stats" class="stat-grid"><span class="muted">Đang tải…</span></div>
+        </div>
+
+        <div class="card">
+            <div class="chart-head">
+                <h2>📈 Biểu đồ H1 (30 ngày)</h2>
+                <select id="chart-symbol"></select>
+            </div>
+            <div id="chart"><span class="muted">Đang tải…</span></div>
+            <div class="muted" style="margin-top:8px">
+                Nến: open ≈ close nến trước (nguồn chỉ lưu H/L/C) · EMA20 xanh dương ·
+                mũi tên = tín hiệu đã gửi (TA = hệ vote, PA = Gold Price Action) ·
+                đường gạch = entry/SL/TP của kèo PA gần nhất
+            </div>
         </div>
 
         <div class="card">
@@ -81,6 +99,7 @@
 
         <div class="footer">ForexThing · GitHub Pages · tự làm mới mỗi 5 phút</div>
     </div>
+    <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
