@@ -8,7 +8,48 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [],
+  "pending_validations": [
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "entry_price": 4220.93012,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 4168.76731,
+      "tp": 4304.321704800001,
+      "sent_at": 1781280935.485546,
+      "message_id": 418,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1781284535.485546,
+          "done": false
+        },
+        {
+          "hours": 4,
+          "at": 1781295335.485546,
+          "done": false
+        }
+      ],
+      "expires_at": 1781316935.485546,
+      "indicators": {
+        "rsi": -1,
+        "ema": 1,
+        "macd": -0.07,
+        "bb": 0,
+        "mom": 0.2,
+        "inter": 0.31,
+        "tl": 1
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.495,
+      "conf": 69,
+      "aligned": 3,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "XAUUSD_1781280935"
+    }
+  ],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1779449021.271658,
@@ -1250,7 +1291,7 @@
   "XAG/USD|SELL": 1779951664.755662,
   "EUR/USD|BUY": 1779010248.217127,
   "GBP/USD|BUY": 1780245649.560464,
-  "XAU/USD|BUY": 1780245649.560464,
+  "XAU/USD|BUY": 1781280935.485546,
   "USD/CHF|SELL": 1780659056.268735,
   "USD/JPY|SELL": 1780237855.188667,
   "USD/CAD|SELL": 1778972458.279356,
@@ -1318,6 +1359,10 @@
       ],
       [
         1781277340,
+        0.287
+      ],
+      [
+        1781280935,
         0.287
       ]
     ],
@@ -1447,5 +1492,6 @@
         0.334
       ]
     ]
-  }
+  },
+  "XAU/USD|BUY|entry": 4220.93012
 }
