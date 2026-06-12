@@ -3,20 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Giám Sát & Phân Tích</title>
+    <title>ForexThing — Dashboard Giám Sát & Phân Tích</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f0f2f5; color: #333; }
-        .container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
-        h1 { color: #1a73e8; margin-bottom: 10px; }
-        p { color: #666; font-size: 16px; }
-        .status-badge { display: inline-block; padding: 6px 12px; background-color: #e6f4ea; color: #137333; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 15px; }
+        .container { max-width: 1100px; margin: 20px auto; }
+        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h1 { color: #1a73e8; margin: 0 0 6px 0; font-size: 26px; }
+        h2 { color: #202124; font-size: 18px; margin: 0 0 14px 0; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; }
+        p.sub { color: #666; font-size: 14px; margin: 0; }
+        .status-badge { display: inline-block; padding: 6px 12px; background-color: #e6f4ea; color: #137333; border-radius: 20px; font-weight: bold; font-size: 13px; margin-top: 10px; }
+        .status-badge.stale { background-color: #fce8e6; color: #c5221f; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+        .stat { background: #f8f9fa; border-radius: 10px; padding: 14px; text-align: center; }
+        .stat .value { font-size: 26px; font-weight: 700; color: #1a73e8; }
+        .stat .label { font-size: 12px; color: #5f6368; margin-top: 4px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: left; color: #5f6368; font-weight: 600; padding: 8px 10px; border-bottom: 2px solid #e8eaed; white-space: nowrap; }
+        td { padding: 8px 10px; border-bottom: 1px solid #f1f3f4; white-space: nowrap; }
+        tr:hover td { background: #f8f9fa; }
+        .table-wrap { overflow-x: auto; }
+
+        .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+        .pill.buy { background: #e6f4ea; color: #137333; }
+        .pill.sell { background: #fce8e6; color: #c5221f; }
+        .pill.win { background: #e6f4ea; color: #137333; }
+        .pill.loss { background: #fce8e6; color: #c5221f; }
+        .pill.open { background: #e8f0fe; color: #1a73e8; }
+        .pill.regime { background: #f1f3f4; color: #5f6368; }
+        .pos { color: #137333; font-weight: 600; }
+        .neg { color: #c5221f; font-weight: 600; }
+
+        pre.log { background: #202124; color: #e8eaed; border-radius: 10px; padding: 14px; font-size: 12px; line-height: 1.6; overflow-x: auto; max-height: 320px; overflow-y: auto; margin: 0; }
+        pre.log .blocked { color: #9aa0a6; }
+        pre.log .signal { color: #81c995; font-weight: 700; }
+        pre.log .outlook { color: #8ab4f8; }
+        pre.log .error { color: #f28b82; }
+
+        .muted { color: #9aa0a6; font-size: 13px; }
+        .error-box { background: #fce8e6; color: #c5221f; padding: 12px 16px; border-radius: 10px; font-size: 14px; }
+        .footer { text-align: center; color: #9aa0a6; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Dashboard Phân Tích Dữ Liệu</h1>
-        <p>Giao diện Web App đã được khởi tạo và gộp nhánh thành công.</p>
-        <div class="status-badge">Sẵn sàng kết nối dữ liệu máy chủ</div>
+        <div class="card">
+            <h1>ForexThing — Dashboard Phân Tích</h1>
+            <p class="sub">Bot quét mỗi 15 phút qua GitHub Actions · dữ liệu tự cập nhật sau mỗi lần push</p>
+            <div id="last-update" class="status-badge">Đang tải dữ liệu…</div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Thống kê hiệu suất</h2>
+            <div id="stats" class="stat-grid"><span class="muted">Đang tải…</span></div>
+        </div>
+
+        <div class="card">
+            <h2>🔔 Tín hiệu đã gửi gần nhất (theo từng cặp)</h2>
+            <div id="active-signals" class="table-wrap"><span class="muted">Đang tải…</span></div>
+        </div>
+
+        <div class="card">
+            <h2>📜 Kết quả 20 lệnh gần nhất</h2>
+            <div id="results" class="table-wrap"><span class="muted">Đang tải…</span></div>
+        </div>
+
+        <div class="card">
+            <h2>🥇 Gold Price Action Bot (XAU/USD)</h2>
+            <div id="gold-pa" class="table-wrap"><span class="muted">Đang tải…</span></div>
+        </div>
+
+        <div class="card">
+            <h2>🖥️ Nhật ký quyết định (mới nhất ở trên)</h2>
+            <pre id="decisions-log" class="log">Đang tải…</pre>
+        </div>
+
+        <div class="footer">ForexThing · GitHub Pages · tự làm mới mỗi 5 phút</div>
     </div>
+    <script src="app.js"></script>
 </body>
 </html>

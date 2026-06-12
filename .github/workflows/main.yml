@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # de dispatch workflow deploy Pages sau khi push state
 
 concurrency:
   group: forex-notifier
@@ -53,9 +54,22 @@ jobs:
           git add data/decisions.log || true
           git add gold_pa_state.json || true
           git add data/gold_pa.log || true
-          git diff --staged --quiet || git commit -m "chore: update state + price history [skip ci]"
-          git pull --rebase -X theirs origin main
-          git push
+          if git diff --staged --quiet; then
+            echo "Khong co thay doi state, bo qua commit"
+          else
+            git commit -m "chore: update state + price history [skip ci]"
+            git pull --rebase -X theirs origin main
+            git push
+            echo "STATE_PUSHED=1" >> "$GITHUB_ENV"
+          fi
+
+      # Push bang GITHUB_TOKEN khong tu trigger workflow khac (chong vong lap),
+      # nen phai dispatch thu cong de Pages deploy du lieu moi
+      - name: Trigger Pages redeploy
+        if: env.STATE_PUSHED == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run static.yml --ref main
 
       - name: Notify on failure
         if: failure()
