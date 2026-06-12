@@ -31,6 +31,7 @@ Bo loc sinh tu (moi signal phai qua het):
                     (qua cap → bo keo, khong duoc nong SL)
 """
 import json, os, sys, time, logging
+import requests
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -560,6 +561,17 @@ def resolve_signals(state, now, bars):
 
 
 # ── BROADCASTER ──────────────────────────────────────────────
+def send_photo(path, caption='', reply_to=None):
+    """Gui anh chart qua Telegram sendPhoto (multipart). Loi khong duoc lam
+    hong flow gui tin hieu — caller phai wrap try/except."""
+    url  = f'https://api.telegram.org/bot{fx.TELEGRAM_TOKEN}/sendPhoto'
+    data = {'chat_id': fx.TELEGRAM_CHAT, 'caption': caption, 'parse_mode': 'HTML'}
+    if reply_to:
+        data['reply_to_message_id'] = reply_to
+    with open(path, 'rb') as f:
+        return requests.post(url, data=data, files={'photo': f}, timeout=20).json()
+
+
 def send_signal(p, session_lbl, now):
     is_buy   = p['dir'] == 'BUY'
     emoji    = '🟢' if is_buy else '🔴'
@@ -865,6 +877,28 @@ def main():
                  f"entry={best['entry']:.2f} sl={best['sl']:.2f} "
                  f"tp1={best['tp1']:.2f} tp2={best['tp2']:.2f}")
         print(f"[PA] Da gui {best['setup']} {best['dir']} {best['stars']}/5 sao")
+        # Chart kem tin hieu (12/06/2026): ve nen + vung S/R + level + setup
+        # de user kiem tra PA bang mat truoc khi vao lenh. Loi ve chart khong
+        # anh huong tin hieu da gui (lazy import — local thieu matplotlib van chay).
+        try:
+            import chart_render
+            overlay = [{'ts': now.timestamp(), 'dir': best['dir'],
+                        'entry': best['entry'], 'sl': best['sl'],
+                        'tp1': best['tp1'], 'tp2': best['tp2'],
+                        'setup': best['setup'],
+                        'entry_type': best.get('entry_type')}]
+            cpath = chart_render.render_chart(
+                bars, levels=levels, signals=overlay, n_bars=110,
+                atr_val=atr_val,
+                note=f"{best['setup']} {best['dir']} {best['stars']}/5 sao | phien {session}")
+            if cpath:
+                pr = send_photo(cpath,
+                                caption=f"🥇 Chart: {best['setup']} {best['dir']} — "
+                                        f"vùng cản/KC + setup đánh dấu trên nến H1",
+                                reply_to=result.get('result', {}).get('message_id'))
+                log.info('CHART_SENT' if pr.get('ok') else f'CHART_TG_FAIL {pr}')
+        except Exception as e:
+            log.info(f'CHART_FAIL {e}')
     else:
         print(f'[PA] Loi Telegram: {result}')
     save_state(state)
