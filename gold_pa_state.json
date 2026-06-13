@@ -40,5 +40,12 @@
   "day_count": {
     "date": "2026-06-12",
     "n": 1
-  }
+  },
+  "pa_knowledge": {
+    "adjust": {},
+    "updated": 1781314242.404369,
+    "n_resolved": 2,
+    "lessons": []
+  },
+  "last_learn": 1781314242.404369
 }
