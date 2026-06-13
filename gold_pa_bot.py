@@ -29,6 +29,14 @@ Bo loc sinh tu (moi signal phai qua het):
                     het; 21 UTC rollover → OFF
   Tram 3 — ATR SL:  SL dong = max(structure + 0.25*ATR, 1.5*ATR), cap 2.5*ATR
                     (qua cap → bo keo, khong duoc nong SL)
+
+Nang cap 13/06/2026 (user feedback "PA khong don gian nhu the"):
+  - market_structure(): trend doc bang swing + BOS/CHoCH (SMC/Al Brooks) —
+    nen DONG pha swing moi tinh, CHoCH = canh bao chua phai xac nhan
+  - Probe & Pyramid: keo chua duoc cau truc xac nhan → SL BE do duong (0.6-1.2
+    ATR, 0.5% von) + check_addons() nhac NHOI khi H1 dong pha can xac nhan
+  - update_knowledge(): learning loop 1 lan/ngay — gom keo da chot theo bucket,
+    dieu chinh sao adaptive (Laplace, min n=8, kep ±1) → moi ngay thong minh hon
 """
 import json, os, sys, time, logging
 import requests
@@ -83,6 +91,30 @@ MIN_STARS       = 3      # chat luong toi thieu de gui
 TIMEOUT_DAYS    = 5      # keo khong cham SL/TP sau 5 ngay → het han (EXP)
 MIN_BARS        = 120    # du lieu H1 toi thieu
 
+# ── Probe & Pyramid (13/06/2026 — user: "SL bé dò đường, phá cản mới đánh đuổi") ──
+# Lenh chua duoc CAU TRUC xac nhan (BOS — close pha swing) = lenh PHAN DOAN →
+# KHONG dat SL rong tai structure nua: danh SL BE de do duong (chap nhan bi
+# quet som, mat it tien), kem ke hoach NHOI (add-on) khi nen H1 DONG pha
+# can/swing xac nhan trend. Ghi de mot phan triet ly 12/06 ("SL theo structure")
+# — ap dung cho lenh CHUA xac nhan; lenh da xac nhan van giu SL structure.
+SWING_K          = 3      # pivot fractal H1: cuc tri so voi 3 nen moi ben
+SWING_K_H4       = 2      # H4 it nen hon → 2 nen moi ben
+PROBE_SL_FLOOR   = 0.6    # SL do duong toi thieu 0.6 ATR (chong noise tic/spread)
+PROBE_SL_BUFFER  = 0.20   # dem sau structure gan (vd rau nen sweep)
+PROBE_SL_CAP     = 1.2    # SL do duong toi da 1.2 ATR — cat trong structure neu
+                          # can: do duong CHAP NHAN bi quet, bu lai vao lai khi pha can
+PROBE_RISK_PCT   = 0.005  # lenh do: rui ro 0.5% von
+ADDON_SL_ATR     = 0.5    # lenh nhoi: SL sau level vua pha 0.5 ATR (can pha = ho tro moi)
+
+# ── Learning loop (13/06/2026 — "moi ngay thong minh hon") ──
+# Lance Beggs (YTC): thong ke → diem manh/yeu → dieu chinh. Moi ngay 1 lan gom
+# keo da chot theo bucket (setup, setup|session, mode, align); bucket du mau
+# → dieu chinh sao adaptive ap vao grade() (kep ±1, Laplace smoothing — Gap 1
+# sample size, khong overfit theo chuoi ngan).
+LEARN_MIN_N      = 8      # bucket >= 8 keo moi duoc dieu chinh
+LEARN_WR_GOOD    = 0.55   # WR Laplace >= 55% + ky vong R duong → +1 sao
+LEARN_WR_BAD     = 0.30   # WR <= 30% hoac ky vong <= -0.30R → -1 sao
+
 _SETUP_NAMES = {
     'sweep_reclaim': 'Sweep & Reclaim (quét thanh khoản + rút râu)',
     'momentum_pullback': 'Momentum Pullback (hồi về EMA20 trong trend mạnh)',
@@ -91,6 +123,7 @@ _SETUP_NAMES = {
     'double_bottom': 'Hai đáy (Double Bottom) — H4',
     'hs_top': 'Vai-Đầu-Vai (H&S) — H4',
     'hs_inv': 'Vai-Đầu-Vai ngược (iH&S) — H4',
+    'addon': 'Nhồi lệnh (đánh đuổi sau phá cản)',
 }
 
 # ── Logging rieng (Quy tac An toan Code: khong dung print cho su kien) ──
@@ -187,6 +220,124 @@ def _avg_body(closes, n=24):
     """Than nen trung binh (open xap xi = close truoc — thi truong lien tuc)."""
     bodies = [abs(closes[i] - closes[i-1]) for i in range(len(closes)-n, len(closes))]
     return sum(bodies) / len(bodies) if bodies else 0.0
+
+
+# ── BRAIN: Market Structure (BOS/CHoCH) — 13/06/2026 ────────
+# Thay the loi so sanh "max 10 nen truoc vs max 10 nen sau" (qua don gian —
+# user feedback 13/06). Chuan SMC/Al Brooks:
+#   - Swing = pivot fractal DA XAC NHAN (k nen dong moi ben)
+#   - BOS  (Break of Structure): nen DONG pha swing THUAN trend → xac nhan tiep dien
+#   - CHoCH (Change of Character): nen DONG pha swing NGUOC trend → canh bao dao
+#     chieu, trend doi huong nhung confirmed=False cho den khi co BOS theo huong moi
+#   - Pha bang rau (wick) khong tinh — chi close moi tinh
+def find_swings(highs, lows, k=SWING_K):
+    """Pivot fractal da xac nhan: cuc tri so voi k nen moi ben.
+    Tra ve list [bar_index, price, 'H'|'L'] theo thoi gian; swing cung loai
+    lien tiep giu cai cuc doan hon (loc nhieu pivot trong 1 song)."""
+    sw = []
+    n = len(highs)
+    for i in range(k, n - k):
+        if highs[i] >= max(highs[i-k:i+k+1]):
+            sw.append([i, highs[i], 'H'])
+        if lows[i] <= min(lows[i-k:i+k+1]):
+            sw.append([i, lows[i], 'L'])
+    out = []
+    for s in sw:
+        if out and out[-1][2] == s[2]:
+            if (s[2] == 'H' and s[1] >= out[-1][1]) or \
+               (s[2] == 'L' and s[1] <= out[-1][1]):
+                out[-1] = s
+        else:
+            out.append(s)
+    return out
+
+
+def market_structure(closes, highs, lows, k=SWING_K):
+    """Trend theo cau truc swing + BOS/CHoCH, walk tung nen de khong look-ahead
+    (swing chi 'ton tai' sau khi k nen ben phai da dong).
+
+    Returns dict:
+      trend      'UP'|'DOWN'|'RANGE'
+      confirmed  True chi khi co BOS thuan huong (CHoCH/pha range lan dau = False
+                 — Al Brooks: phan lon breakout fail, can follow-through)
+      last_event 'BOS_UP'|'CHOCH_UP'|'BOS_DOWN'|'CHOCH_DOWN'|''
+      swing_hi/swing_lo  swing gan nhat CHUA bi pha (None = vua pha xong)
+      hi_list/lo_list    cac swing gan day (de tim can lam add-trigger)
+      note       mo ta tieng Viet cho confluence/message
+    """
+    res = {'trend': 'RANGE', 'confirmed': False, 'last_event': '',
+           'swing_hi': None, 'swing_lo': None, 'hi_list': [], 'lo_list': [],
+           'note': 'chưa đủ swing để đọc cấu trúc'}
+    swings = find_swings(highs, lows, k)
+    if len(swings) < 2:
+        return res
+    trend, confirmed, last_event = 'RANGE', False, ''
+    sh = sl_ = None
+    j = 0
+    for i in range(swings[0][0] + k + 1, len(closes)):
+        while j < len(swings) and swings[j][0] + k < i:
+            _, sp, typ = swings[j]
+            if typ == 'H':
+                sh = sp
+                res['hi_list'].append(sp)
+            else:
+                sl_ = sp
+                res['lo_list'].append(sp)
+            j += 1
+        c = closes[i]
+        if sh is not None and c > sh:
+            if trend == 'DOWN':
+                trend, confirmed, last_event = 'UP', False, 'CHOCH_UP'
+            elif trend == 'UP':
+                confirmed, last_event = True, 'BOS_UP'
+            else:                       # RANGE: pha lan dau, cho follow-through
+                trend, confirmed, last_event = 'UP', False, 'BOS_UP'
+            sh = None
+        elif sl_ is not None and c < sl_:
+            if trend == 'UP':
+                trend, confirmed, last_event = 'DOWN', False, 'CHOCH_DOWN'
+            elif trend == 'DOWN':
+                confirmed, last_event = True, 'BOS_DOWN'
+            else:
+                trend, confirmed, last_event = 'DOWN', False, 'BOS_DOWN'
+            sl_ = None
+    res.update({'trend': trend, 'confirmed': confirmed, 'last_event': last_event,
+                'swing_hi': sh, 'swing_lo': sl_,
+                'hi_list': res['hi_list'][-6:], 'lo_list': res['lo_list'][-6:]})
+    vn = {'UP': 'TĂNG', 'DOWN': 'GIẢM', 'RANGE': 'SIDEWAY'}[trend]
+    ev = {'BOS_UP': 'BOS lên', 'CHOCH_UP': 'CHoCH lên',
+          'BOS_DOWN': 'BOS xuống', 'CHOCH_DOWN': 'CHoCH xuống', '': ''}[last_event]
+    res['note'] = (f'{vn} đã xác nhận ({ev})' if confirmed
+                   else f'{vn} CHƯA xác nhận' + (f' (mới {ev} — chờ BOS)' if ev else ''))
+    return res
+
+
+def add_trigger_for(p, s1):
+    """Can/swing ma neu nen H1 DONG pha qua thi trend xac nhan theo huong lenh
+    do → diem 'danh duoi'. BUY: swing high gan nhat TREN entry; SELL: swing low
+    gan nhat DUOI entry."""
+    entry = p['entry']
+    if p['dir'] == 'BUY':
+        cands = [h for h in (s1['hi_list'] + ([s1['swing_hi']] if s1['swing_hi'] else []))
+                 if h > entry]
+        return min(cands) if cands else None
+    cands = [l for l in (s1['lo_list'] + ([s1['swing_lo']] if s1['swing_lo'] else []))
+             if l < entry]
+    return max(cands) if cands else None
+
+
+def classify_probe(p, s1, s4):
+    """Lenh DO (probe) vs lenh DAY DU. User 13/06: 'giao dich nguy hiem va
+    phan doan thi danh SL be do duong, pha can moi danh duoi theo'.
+    - sweep_reclaim = keo mean-reversion → do theo cau truc H1 (dao chieu chi
+      'that' khi H1 da CHoCH + BOS theo huong lenh)
+    - setup trend-following → do theo cau truc H4
+    - keo danger (thuan-move vung kiet) luon la probe"""
+    if p.get('danger'):
+        return True
+    want = 'UP' if p['dir'] == 'BUY' else 'DOWN'
+    st = s1 if p['setup'] == 'sweep_reclaim' else s4
+    return not (st['trend'] == want and st['confirmed'])
 
 
 def detect_momentum(closes, highs, lows):
@@ -388,17 +539,25 @@ def detect_chart_patterns(closes, highs, lows):
 # ── BRAIN: SL/TP dong (Tram 3) + tuong so tron (insight 2) ───
 def build_order(p, atr_val, psych_levels):
     """Tinh SL/TP/lot. Tra ve None neu SL bat buoc qua rong (> cap) —
-    thay vi nong SL, bo keo (quan ly rui ro truoc, keo sau)."""
+    thay vi nong SL, bo keo (quan ly rui ro truoc, keo sau).
+
+    Probe (13/06/2026): lenh chua duoc cau truc xac nhan → SL BE do duong
+    (floor 0.6 ATR, cap cung 1.2 ATR — cat trong structure neu can, chap nhan
+    bi quet som) + rui ro 0.5%; bu lai co ke hoach nhoi khi pha can."""
     is_buy = p['dir'] == 'BUY'
     entry  = p['entry']
 
-    struct_dist = abs(entry - p['structure']) + SL_BUFFER_ATR * atr_val
-    sl_dist     = max(SL_ATR_FLOOR * atr_val, struct_dist)
-    # Keo nguy hiem: cap SL chat hon — structure doi SL rong hon nua thi bo keo
-    # (rui ro giam tu TIEN: lot 0.5%, khong thu ngan SL vao trong structure)
-    sl_cap = DANGER_SL_CAP if p.get('danger') else SL_ATR_CAP
-    if sl_dist > sl_cap * atr_val:
-        return None
+    if p.get('probe'):
+        struct_dist = abs(entry - p['structure']) + PROBE_SL_BUFFER * atr_val
+        sl_dist = max(PROBE_SL_FLOOR * atr_val,
+                      min(struct_dist, PROBE_SL_CAP * atr_val))
+    else:
+        struct_dist = abs(entry - p['structure']) + SL_BUFFER_ATR * atr_val
+        sl_dist     = max(SL_ATR_FLOOR * atr_val, struct_dist)
+        # Keo nguy hiem (da la probe o tren — nhanh nay chi con phong thu)
+        sl_cap = DANGER_SL_CAP if p.get('danger') else SL_ATR_CAP
+        if sl_dist > sl_cap * atr_val:
+            return None
     sl  = entry - sl_dist if is_buy else entry + sl_dist
     tp1 = entry + TP1_R * sl_dist if is_buy else entry - TP1_R * sl_dist
     tp2 = entry + TP2_R * sl_dist if is_buy else entry - TP2_R * sl_dist
@@ -436,7 +595,7 @@ def build_order(p, atr_val, psych_levels):
     tp1_usd  = round(tp1_pips * fx.LOT_SIZE * 10, 2)
     tp2_usd  = round(tp2_pips * fx.LOT_SIZE * 10, 2)
     rec_lot  = None
-    risk_pct = DANGER_RISK_PCT if p.get('danger') else 0.01
+    risk_pct = PROBE_RISK_PCT if (p.get('probe') or p.get('danger')) else 0.01
     if fx.ACCOUNT_SIZE > 0 and sl_usd > 0:
         rec_lot = max(round((fx.ACCOUNT_SIZE * risk_pct) / (sl_usd / fx.LOT_SIZE), 2), 0.01)
 
@@ -452,8 +611,11 @@ def build_order(p, atr_val, psych_levels):
     return p
 
 
-def grade(p, mom_dir, h4_dir, dxy_div, dxy_note):
+def grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge=None):
     """Cham 1-5 sao theo confluence. Base 3 (setup hop le + qua het bo loc).
+
+    13/06/2026: xu huong doc bang market_structure (BOS/CHoCH) thay vi
+    h4_trend max-cua-so; them dieu chinh adaptive tu learning loop.
 
     Backtest 30 ngay (n=23, chi mang tinh dinh huong):
       - Sweep tai level manh (>=3 cham): 46% vs level yeu 29% → location la
@@ -463,6 +625,7 @@ def grade(p, mom_dir, h4_dir, dxy_div, dxy_note):
     stars = 3 - p.get('star_pen', 0)
     conf  = [p['reason']]
     want  = 'BULL' if p['dir'] == 'BUY' else 'BEAR'
+    want_t = 'UP' if p['dir'] == 'BUY' else 'DOWN'
 
     if p['setup'] == 'sweep_reclaim':
         if p.get('level_strength', 0) >= 3:
@@ -471,19 +634,30 @@ def grade(p, mom_dir, h4_dir, dxy_div, dxy_note):
         else:
             stars -= 1
             conf.append('Level ít xác nhận — cần thêm confluence')
+        conf.append(f'Cấu trúc H1: {s1["note"]}')
     if dxy_div == want:
         stars += 1
         conf.append(f'DXY phân kỳ thuận chiều: {dxy_note}')
-    if h4_dir == want and p['setup'] != 'sweep_reclaim':
-        stars += 1
-        conf.append('Xu hướng H4 thuận chiều')
-    elif h4_dir not in (None, 'NEUTRAL') and h4_dir != want and \
-            p['setup'] != 'sweep_reclaim':
-        stars -= 1                      # trend setup nguoc H4 = nguy hiem
-        conf.append('H4 ngược chiều — trừ điểm')
+    if p['setup'] != 'sweep_reclaim':
+        if s4['trend'] == want_t and s4['confirmed']:
+            stars += 1
+            conf.append(f'Cấu trúc H4 thuận chiều: {s4["note"]}')
+        elif s4['trend'] not in ('RANGE', want_t) and s4['confirmed']:
+            stars -= 1                  # trend setup nguoc cau truc da xac nhan
+            conf.append(f'Ngược cấu trúc H4 đã xác nhận ({s4["note"]}) — trừ điểm')
+        else:
+            conf.append(f'Cấu trúc H4: {s4["note"]} — chưa đứng về phe nào')
     if mom_dir == want and p['setup'] != 'momentum_pullback':
         stars += 1
         conf.append('Momentum regime thuận chiều')
+    # Dieu chinh adaptive tu learning loop (kep ±1 tong — chong overfit)
+    kn = (knowledge or {}).get('adjust', {})
+    adj = sum(kn.get(k, 0) for k in
+              (f"setup:{p['setup']}", f"setup:{p['setup']}|sess:{session}"))
+    adj = max(-1, min(1, adj))
+    if adj:
+        stars += adj
+        conf.append(f'📚 Học từ lịch sử kèo đã chốt: {adj:+d} sao')
     # Bat dinh/day tai vung kiet suc = dung nghe PA (12/06/2026):
     # mua day capitulation / ban dinh blow-off — phe thuan-move da kiet,
     # mean-reversion co xac suat bat cao nhat (vd day 4023 ngay 11/06 → +4%)
@@ -493,7 +667,10 @@ def grade(p, mom_dir, h4_dir, dxy_div, dxy_note):
                     f'— phe thuận-move đã kiệt, edge mean-reversion')
     if p.get('danger'):
         conf.append(f'⚠️ Kèo nguy hiểm — thuận-move trong vùng kiệt sức '
-                    f'({p.get("exh_note", "")}): lot 0.5%, SL cap 1.8×ATR')
+                    f'({p.get("exh_note", "")})')
+    if p.get('probe'):
+        conf.append('🔎 Kèo PHÁN ĐOÁN (trend chưa được cấu trúc xác nhận) — '
+                    'đánh SL bé dò đường, phá cản mới nhồi thêm')
 
     p['stars'] = max(1, min(5, stars))
     p['confluence'] = conf
@@ -560,6 +737,145 @@ def resolve_signals(state, now, bars):
     state['signals'] = state.get('signals', [])[-200:]
 
 
+# ── Probe add-on: "đánh đuổi" sau khi phá cản (13/06/2026) ───
+def check_addons(state, now, bars, atr_val):
+    """Lenh do (probe) dang mo + nen H1 DONG pha qua add_trigger (swing/can
+    xac nhan trend) → goi y NHOI 0.5% von, SL sau can vua pha (can pha = ho
+    tro/khang cu moi). Moi probe nhoi toi da 1 lan; lenh nhoi tracking rieng
+    (setup='addon') de learning loop do duoc danh duoi co an khong."""
+    for rec in state.get('signals', []):
+        if not rec.get('probe') or rec.get('add_sent') or rec.get('outcome'):
+            continue
+        trig = rec.get('add_trigger')
+        if not trig:
+            continue
+        if rec.get('entry_type') == 'limit' and not rec.get('filled_ts'):
+            continue                          # probe chua khop thi chua nhoi
+        is_buy = rec['dir'] == 'BUY'
+        for b in bars[:-1]:                   # chi xet nen DA DONG
+            if b.get('t', 0) <= rec['ts']:
+                continue
+            if not (b['c'] > trig if is_buy else b['c'] < trig):
+                continue
+            price = bars[-1]['c']
+            tp    = rec['tp2']
+            # gia da chay qua/gan het duong den TP2 → nhoi vo nghia
+            if (is_buy and price >= tp - 0.3 * atr_val) or \
+               (not is_buy and price <= tp + 0.3 * atr_val):
+                rec['add_sent'] = -1          # danh dau bo qua, khong xet lai
+                log.info(f"ADDON_SKIP_LATE {rec['setup']} {rec['dir']} trig={trig:.1f}")
+                break
+            sl  = trig - ADDON_SL_ATR * atr_val if is_buy else trig + ADDON_SL_ATR * atr_val
+            sl_pips = fx.price_to_pips(SYM, abs(price - sl))
+            sl_usd  = round(sl_pips * fx.LOT_SIZE * 10, 2)
+            lot = None
+            if fx.ACCOUNT_SIZE > 0 and sl_usd > 0:
+                lot = max(round((fx.ACCOUNT_SIZE * PROBE_RISK_PCT) / (sl_usd / fx.LOT_SIZE), 2), 0.01)
+            emoji = '🟢' if is_buy else '🔴'
+            act   = 'BUY (MUA)' if is_buy else 'SELL (BÁN)'
+            lines = [
+                f'🔼 <b>NHỒI LỆNH — XAU/USD (đánh đuổi sau phá cản)</b>',
+                f'Lệnh dò {rec["dir"]} @ {fx.fmt_price(SYM, rec["entry"])} '
+                f'({datetime.fromtimestamp(rec["ts"], VN_TZ).strftime("%d/%m %H:%M")}) '
+                f'đã được xác nhận:',
+                f'✅ H1 đóng cửa phá {"trên cản" if is_buy else "dưới hỗ trợ"} '
+                f'{fx.fmt_price(SYM, trig)} — trend xác nhận theo hướng lệnh dò',
+                '',
+                f'{emoji} Lệnh: <b>{act}</b> quanh {fx.fmt_price(SYM, price)}',
+                f'🛑 SL:  {fx.fmt_price(SYM, sl)}  (sau cản vừa phá / -${sl_usd:.2f})',
+                f'🎯 TP:  {fx.fmt_price(SYM, tp)}  (TP2 của lệnh dò)',
+            ]
+            if lot:
+                lines.append(f'📐 Lot đề xuất: {lot} lot (0.5% rủi ro / ${fx.ACCOUNT_SIZE:.0f} vốn)')
+            lines += ['', '📌 Lệnh dò gốc: dời SL về entry (hòa vốn) — tổng vị thế giờ rủi ro tối thiểu']
+            try:
+                r = fx.send_telegram('\n'.join(lines))
+            except Exception as e:
+                log.info(f'ADDON_TG_FAIL {e}')
+                break
+            if r.get('ok'):
+                rec['add_sent'] = now.timestamp()
+                state.setdefault('signals', []).append({
+                    'ts': now.timestamp(), 'date': now.strftime('%Y-%m-%d'),
+                    'session': rec.get('session'), 'setup': 'addon',
+                    'dir': rec['dir'], 'entry': price, 'sl': sl,
+                    'tp1': tp, 'tp2': tp, 'stars': rec.get('stars', 3),
+                    'entry_type': 'market', 'probe': False,
+                    'parent_ts': rec['ts'],
+                })
+                log.info(f"ADDON_SENT {rec['dir']} trig={trig:.1f} entry={price:.2f} sl={sl:.2f}")
+                print(f"[PA] Nhoi lenh {rec['dir']} sau pha can {trig:.1f}")
+            break
+
+
+# ── Learning loop: moi ngay thong minh hon (13/06/2026) ─────
+def _bucket_keys(rec):
+    keys = [f"setup:{rec.get('setup')}",
+            f"setup:{rec.get('setup')}|sess:{rec.get('session', '?')}"]
+    if rec.get('probe'):
+        keys.append('mode:probe')
+    if rec.get('danger'):
+        keys.append('mode:danger')
+    if rec.get('capit'):
+        keys.append('mode:capit')
+    if rec.get('align'):
+        keys.append(f"align:{rec['align']}")
+    return keys
+
+
+def update_knowledge(state, now):
+    """Vong lap hoc 1 lan/ngay (Lance Beggs YTC: thong ke → manh/yeu → dieu
+    chinh). Gom keo da chot theo bucket; bucket >= LEARN_MIN_N keo: WR Laplace
+    + ky vong R quyet dinh dieu chinh sao (chi ap dung bucket setup:*, cac
+    bucket khac chi ghi bai hoc). Khac biet vs hardcode: nguong tu data chinh
+    he nay, co floor (min n) va cap (±1 sao) — [[feedback-adaptive-over-fixed]].
+    Thay doi dieu chinh → bao Telegram ngan de user biet bot vua 'hoc' gi."""
+    done = [x for x in state.get('signals', [])
+            if x.get('outcome') and x['outcome'] != 'NOFILL']
+    stats = {}
+    for rec in done:
+        sl_pips = fx.price_to_pips(SYM, abs(rec.get('entry', 0) - rec.get('sl', 0)))
+        for k in _bucket_keys(rec):
+            s = stats.setdefault(k, {'n': 0, 'w': 0, 'r': 0.0})
+            s['n'] += 1
+            s['w'] += 1 if rec.get('correct') else 0
+            if sl_pips:
+                s['r'] += (rec.get('pips') or 0.0) / sl_pips
+    adjust, lessons = {}, []
+    for k in sorted(stats):
+        s = stats[k]
+        if s['n'] < LEARN_MIN_N:
+            continue
+        wr    = (s['w'] + 1) / (s['n'] + 2)          # Laplace smoothing
+        exp_r = s['r'] / s['n']
+        verdict = ''
+        if k.startswith('setup:'):
+            if wr >= LEARN_WR_GOOD and exp_r > 0:
+                adjust[k] = 1
+                verdict = ' → +1 sao'
+            elif wr <= LEARN_WR_BAD or exp_r <= -0.30:
+                adjust[k] = -1
+                verdict = ' → -1 sao'
+        lessons.append(f"{k}: {s['w']}/{s['n']} thắng, kỳ vọng {exp_r:+.2f}R{verdict}")
+    old = state.get('pa_knowledge', {}).get('adjust', {})
+    state['pa_knowledge'] = {'adjust': adjust, 'updated': now.timestamp(),
+                             'n_resolved': len(done), 'lessons': lessons[-40:]}
+    state['last_learn'] = now.timestamp()
+    log.info(f'LEARN n={len(done)} adjust={adjust}')
+    if adjust != old:
+        diff = []
+        for k in sorted(set(adjust) | set(old)):
+            if adjust.get(k, 0) != old.get(k, 0):
+                diff.append(f'  {k}: {old.get(k, 0):+d} → {adjust.get(k, 0):+d} sao')
+        try:
+            fx.send_telegram('\n'.join(
+                ['📚 <b>Gold PA Bot — học từ dữ liệu mới</b>',
+                 f'(dựa trên {len(done)} kèo đã chốt, bucket ≥{LEARN_MIN_N} kèo mới được điều chỉnh)']
+                + diff))
+        except Exception as e:
+            log.info(f'LEARN_TG_FAIL {e}')
+
+
 # ── BROADCASTER ──────────────────────────────────────────────
 def send_photo(path, caption='', reply_to=None):
     """Gui anh chart qua Telegram sendPhoto (multipart). Loi khong duoc lam
@@ -580,9 +896,10 @@ def send_signal(p, session_lbl, now):
     name     = _SETUP_NAMES.get(p['setup'], p['setup'])
     now_vn   = now.astimezone(VN_TZ)
 
+    mode = ' | 🔎 LỆNH DÒ' if p.get('probe') else ''
     lines = [
         f'🥇 <b>TÍN HIỆU GOLD PA — XAU/USD</b>',
-        f'⏱ Khung: H1 | Phiên: {session_lbl} | {star_bar} ({p["stars"]}/5)',
+        f'⏱ Khung: H1 | Phiên: {session_lbl} | {star_bar} ({p["stars"]}/5){mode}',
         f'🧩 Setup: <b>{name}</b>',
         '━━━━━━━━━━━━━━━━━━━━',
         '',
@@ -596,9 +913,18 @@ def send_signal(p, session_lbl, now):
     ]
     if p.get('rec_lot'):
         _rp = p.get('risk_pct', 0.01) * 100
-        _danger_tag = ' — kèo nguy hiểm, giảm nửa' if p.get('danger') else ''
-        lines.append(f'📐 Lot đề xuất: {p["rec_lot"]} lot ({_rp:g}% rủi ro{_danger_tag} / ${fx.ACCOUNT_SIZE:.0f} vốn)')
+        _tag = (' — lệnh dò, đánh nhỏ' if p.get('probe')
+                else ' — kèo nguy hiểm, giảm nửa' if p.get('danger') else '')
+        lines.append(f'📐 Lot đề xuất: {p["rec_lot"]} lot ({_rp:g}% rủi ro{_tag} / ${fx.ACCOUNT_SIZE:.0f} vốn)')
     lines.append('📌 Chạm TP1 → dời SL về entry (phần còn lại rủi ro 0)')
+    if p.get('probe'):
+        trig = p.get('add_trigger')
+        side = 'trên cản' if is_buy else 'dưới hỗ trợ'
+        lines.append(
+            f'🔼 Kế hoạch nhồi: nến H1 đóng {side} {fx.fmt_price(SYM, trig)} '
+            f'→ trend xác nhận, vào thêm 0.5% (bot sẽ nhắn khi phá)'
+            if trig else
+            '🔎 Lệnh dò: SL bé chấp nhận bị quét sớm — sai thì mất ít, đúng thì giữ kèo')
     lines += ['', '📝 Lý do:']
     lines += [f'  • {c}' for c in p['confluence']]
     if p.get('wall_warn'):
@@ -681,6 +1007,13 @@ def main():
         except Exception as e:
             log.info(f'WEEKLY_FAIL {e}')
 
+    # Learning loop 1 lan/ngay: gom keo da chot → dieu chinh sao adaptive
+    if (now.timestamp() - state.get('last_learn', 0)) >= 86400:
+        try:
+            update_knowledge(state, now)
+        except Exception as e:
+            log.info(f'LEARN_FAIL {e}')
+
     if len(bars) < MIN_BARS:
         print('[PA] Chua du du lieu — thoat')
         save_state(state)
@@ -706,6 +1039,18 @@ def main():
         save_state(state)
         return
 
+    atr_val = fx.atr(highs, lows, closes)
+    if not atr_val or atr_val <= 0:
+        save_state(state)
+        return
+
+    # Danh duoi (13/06/2026): probe da khop + H1 dong pha can xac nhan → goi y
+    # nhoi. Chay TRUOC session gate — pha can co the xay ra o bat ky phien nao.
+    try:
+        check_addons(state, now, bars, atr_val)
+    except Exception as e:
+        log.info(f'ADDON_FAIL {e}')
+
     # [TRAM 2] Session
     session, session_lbl = get_session(now)
     allowed = _SESSION_ALLOWED[session]
@@ -725,11 +1070,6 @@ def main():
             return
     except Exception as e:
         log.info(f'NEWS_CHECK_FAIL {e}')
-
-    atr_val = fx.atr(highs, lows, closes)
-    if not atr_val or atr_val <= 0:
-        save_state(state)
-        return
 
     # [BRAIN] momentum regime (insight 3) — luu state de pullback dung lai
     mom_now = detect_momentum(closes, highs, lows)
@@ -815,18 +1155,32 @@ def main():
         save_state(state)
         return
 
-    # [TRAM 3] SL/TP dong + tuong so tron
-    h4_dir, _, _ = fx.h4_trend(closes, highs, lows)
+    # [TRAM 3] Cau truc BOS/CHoCH (13/06/2026 — thay fx.h4_trend max-cua-so):
+    # H1 cho sweep/mean-reversion, H4 cho trend setup. SL/TP dong + tuong so tron.
+    s1 = market_structure(closes[:-1], highs[:-1], lows[:-1], k=SWING_K)
+    h4_c, h4_h, h4_l = fx.resample_to_h4(closes, highs, lows)
+    s4 = market_structure(h4_c, h4_h, h4_l, k=SWING_K_H4)
+    print(f"[PA] Cau truc H1: {s1['trend']} conf={s1['confirmed']} | "
+          f"H4: {s4['trend']} conf={s4['confirmed']}")
     dxy = fetch_dxy_bars()
     dxy_div, dxy_note = dxy_divergence(highs, lows, dxy)
 
     ready = []
+    knowledge = state.get('pa_knowledge')
     for p in filtered:
+        want_t = 'UP' if p['dir'] == 'BUY' else 'DOWN'
+        st = s1 if p['setup'] == 'sweep_reclaim' else s4
+        p['align'] = ('with' if (st['trend'] == want_t and st['confirmed'])
+                      else 'against' if st['trend'] not in ('RANGE', want_t)
+                      else 'neutral')
+        p['probe'] = classify_probe(p, s1, s4)
+        if p['probe']:
+            p['add_trigger'] = add_trigger_for(p, s1)
         p = build_order(p, atr_val, psych)
         if p is None:
             log.info('SL_TOO_WIDE skip')
             continue
-        ready.append(grade(p, mom_dir, h4_dir, dxy_div, dxy_note))
+        ready.append(grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge))
 
     # Cooldown + daily cap + chat luong
     today = now.strftime('%Y-%m-%d')
@@ -871,6 +1225,9 @@ def main():
             'tp1': best['tp1'], 'tp2': best['tp2'], 'stars': best['stars'],
             'entry_type': best.get('entry_type', 'market'),
             'danger': best.get('danger', False), 'capit': best.get('capit', False),
+            'probe': best.get('probe', False), 'align': best.get('align'),
+            'add_trigger': best.get('add_trigger'),
+            'sl_dist_atr': best.get('sl_dist_atr'),
         })
         log.info(f"SENT {best['setup']} {best['dir']} stars={best['stars']} "
                  f"type={best.get('entry_type', 'market')} "
