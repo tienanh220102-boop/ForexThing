@@ -77,3 +77,27 @@ jobs:
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT }}" \
             -d text="🚨 Forex workflow FAILED — run ${{ github.run_id }}. Kiem tra: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true
+
+      # ── DEAD-MAN'S SWITCH (chong "he chet am tham") ──────────────────
+      # 'Notify on failure' chi bao khi job CHAY ROI LOI. No KHONG cuu duoc ca
+      # job khong chay lan nao (cron-job.org chet / GitHub drop / outage) —
+      # dung kieu hong da gay vu XAU 11/06.
+      # Cach bat:
+      #   1. Tao 1 check mien phi tai https://healthchecks.io (Period=15m, Grace=45m)
+      #   2. Cau hinh Integration -> Telegram (hoac email) de nhan canh bao
+      #   3. Copy ping URL (vd https://hc-ping.com/<uuid>) vao GitHub Secret
+      #      ten HEALTHCHECK_URL  (Settings -> Secrets -> Actions)
+      # Khi run khoe manh -> ping. Ping ngat qua 15m+grace -> healthchecks.io
+      # tu bao bạn. Chua set secret -> buoc nay tu bo qua, khong anh huong gi.
+      - name: Heartbeat ping (dead-man's switch)
+        if: success()
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+        run: |
+          if [ -n "$HEALTHCHECK_URL" ]; then
+            curl -fsS -m 10 --retry 3 "$HEALTHCHECK_URL" > /dev/null \
+              && echo "Heartbeat OK — da ping healthchecks.io" \
+              || echo "Heartbeat ping that bai (non-fatal, khong chan run)"
+          else
+            echo "HEALTHCHECK_URL chua set — bo qua heartbeat. Xem comment phia tren de bat dead-man switch."
+          fi
