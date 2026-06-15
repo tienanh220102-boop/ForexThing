@@ -50,7 +50,11 @@
       "probe": true,
       "align": "against",
       "add_trigger": 4215.22866,
-      "sl_dist_atr": 1.09
+      "sl_dist_atr": 1.09,
+      "filled_ts": 1781510400,
+      "outcome": "TP2",
+      "correct": true,
+      "pips": 241.7
     }
   ],
   "cooldowns": {
@@ -62,9 +66,10 @@
   },
   "pa_knowledge": {
     "adjust": {},
-    "updated": 1781400644.595705,
-    "n_resolved": 2,
+    "updated": 1781487052.521555,
+    "n_resolved": 3,
     "lessons": []
   },
-  "last_learn": 1781400644.595705
+  "last_learn": 1781487052.521555,
+  "last_weekly": 1781487052.521555
 }
