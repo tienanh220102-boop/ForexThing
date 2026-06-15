@@ -2502,3 +2502,13 @@
 2026-06-15 11:01:02 UTC [WTI/USD] NO_SIGNAL
 2026-06-15 11:01:05 UTC [XAU/USD] BLOCKED counter_w1 BUY W1=BEAR H=0.588
 2026-06-15 11:01:05 UTC [XAU/USD] NO_SIGNAL
+2026-06-15 11:15:50 UTC [EUR/USD] BLOCKED hurst H=0.166 threshold=0.470 src=static bars=720
+2026-06-15 11:15:50 UTC [EUR/USD] NO_SIGNAL
+2026-06-15 11:15:50 UTC [USD/JPY] BLOCKED hurst H=0.220 threshold=0.350 src=dyn bars=720
+2026-06-15 11:15:50 UTC [USD/JPY] NO_SIGNAL
+2026-06-15 11:15:51 UTC [WTI/USD] BLOCKED hurst H=0.371 threshold=0.400 src=static bars=720
+2026-06-15 11:15:51 UTC [WTI/USD] NO_SIGNAL
+2026-06-15 11:15:52 UTC [XAU/USD] BLOCKED counter_w1 BUY W1=BEAR H=0.589
+2026-06-15 11:15:52 UTC [XAU/USD] NO_SIGNAL
+2026-06-15 11:15:55 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-06-15 11:15:55 UTC generated new fontManager
