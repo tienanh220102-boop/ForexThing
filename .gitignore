@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
 data/chart_*.png
+
+# Secret files — KHONG bao gio commit .env that (chi giu .env.example)
+.env
+.env.*
+!.env.example
