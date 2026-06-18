@@ -8,10 +8,51 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [],
+  "pending_validations": [
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "entry_price": 1.14684,
+      "entry_mode": "LIMIT",
+      "limit_entry": 1.1501228026532806,
+      "sl": 1.15297,
+      "tp": 1.1345800000000001,
+      "sent_at": 1781788539.768624,
+      "message_id": 447,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1781792139.768624,
+          "done": false
+        },
+        {
+          "hours": 4,
+          "at": 1781802939.768624,
+          "done": false
+        }
+      ],
+      "expires_at": 1781824539.768624,
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.1,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -1.0,
+        "tl": -1
+      },
+      "regime": "RANGE",
+      "hurst": 0.355,
+      "conf": 95,
+      "aligned": 4,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "EURUSD_1781788539"
+    }
+  ],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
-  "EUR/USD|SELL": 1779449021.271658,
+  "EUR/USD|SELL": 1781788539.768624,
   "AUD/USD|BUY": 1780275662.631774,
   "EUR/JPY|SELL": 1779381057.554533,
   "GBP/JPY|BUY": 1779059689.579696,
@@ -1913,6 +1954,10 @@
       [
         1781784943,
         0.21
+      ],
+      [
+        1781788539,
+        0.214
       ]
     ],
     "XAU/USD": [
@@ -2303,6 +2348,10 @@
       [
         1781784943,
         0.298
+      ],
+      [
+        1781788539,
+        0.303
       ]
     ],
     "EUR/USD": [
@@ -2665,6 +2714,10 @@
       [
         1781784943,
         0.34
+      ],
+      [
+        1781788539,
+        0.355
       ]
     ],
     "WTI/USD": [
@@ -3023,9 +3076,14 @@
       [
         1781784943,
         0.414
+      ],
+      [
+        1781788539,
+        0.416
       ]
     ]
   },
   "XAU/USD|BUY|entry": 4330.10642,
-  "WTI/USD|SELL|entry": 74.38999938964844
+  "WTI/USD|SELL|entry": 74.38999938964844,
+  "EUR/USD|SELL|entry": 1.14684
 }
