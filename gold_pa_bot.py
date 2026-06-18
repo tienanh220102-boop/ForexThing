@@ -122,6 +122,12 @@ PROBE_SL_BUFFER  = 0.20   # dem sau structure gan (vd rau nen sweep)
 PROBE_SL_CAP     = 1.2    # SL do duong toi da 1.2 ATR — cat trong structure neu
                           # can: do duong CHAP NHAN bi quet, bu lai vao lai khi pha can
 PROBE_RISK_PCT   = 0.005  # lenh do: rui ro 0.5% von
+# Phan tang sizing (18/06): sweep "high-conviction" = Level manh >=3 cham + GIO
+# VANG (00-07 UTC) -> risk 3% thay vi 1%. Backtest train/test (workshop/hyp13+15):
+# nhom nay exp +0.148R (gap 2.4x), WR 61%, BEN tren held-out (test>train); danh 3x
+# rieng nhom nay -> tong lai gap ~3.4x baseline, loi/DD tot hon (5.2->8.1) =
+# HIEU QUA, khong chi don bay. Probe/danger VAN giu 0.5% (an toan truoc).
+HIGH_CONV_RISK_PCT = 0.03
 ADDON_SL_ATR     = 0.5    # lenh nhoi: SL sau level vua pha 0.5 ATR (can pha = ho tro moi)
 
 # ── Learning loop (13/06/2026 — "moi ngay thong minh hon") ──
@@ -616,7 +622,12 @@ def build_order(p, atr_val, psych_levels):
     tp1_usd  = round(tp1_pips * fx.LOT_SIZE * 10, 2)
     tp2_usd  = round(tp2_pips * fx.LOT_SIZE * 10, 2)
     rec_lot  = None
-    risk_pct = PROBE_RISK_PCT if (p.get('probe') or p.get('danger')) else 0.01
+    if p.get('probe') or p.get('danger'):
+        risk_pct = PROBE_RISK_PCT                  # 0.5% — an toan truoc
+    elif p.get('high_conviction'):
+        risk_pct = HIGH_CONV_RISK_PCT              # 3% — sweep Level>=3 + gio vang
+    else:
+        risk_pct = 0.01                            # 1% mac dinh
     if fx.ACCOUNT_SIZE > 0 and sl_usd > 0:
         rec_lot = max(round((fx.ACCOUNT_SIZE * risk_pct) / (sl_usd / fx.LOT_SIZE), 2), 0.01)
 
@@ -692,6 +703,10 @@ def grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge=None):
     if p.get('probe'):
         conf.append('🔎 Kèo PHÁN ĐOÁN (trend chưa được cấu trúc xác nhận) — '
                     'đánh SL bé dò đường, phá cản mới nhồi thêm')
+
+    if p.get('high_conviction'):
+        conf.append('⭐ HIGH-CONVICTION: Level mạnh + giờ vàng (phiên Á) — '
+                    f'rủi ro {HIGH_CONV_RISK_PCT*100:.0f}% (edge dày nhất, đã kiểm chứng OOS)')
 
     # Validated-edge tier: setup chưa chứng minh edge (backtest 5.8 năm) bị trừ
     # sao → cần confluence mạnh hơn mới đạt MIN_STARS. Sweep (đã validate) giữ nguyên.
@@ -1204,6 +1219,12 @@ def main():
         p['probe'] = classify_probe(p, s1, s4)
         if p['probe']:
             p['add_trigger'] = add_trigger_for(p, s1)
+        # Phan tang sizing: sweep Level>=3 + gio vang (00-07 UTC) = high-conviction
+        # -> risk 3% (build_order doc co nay). Khong ap cho lenh do/nguy hiem.
+        p['high_conviction'] = (p['setup'] == 'sweep_reclaim'
+                                and p.get('level_strength', 0) >= 3
+                                and 0 <= now.hour < 7
+                                and not p.get('probe') and not p.get('danger'))
         p = build_order(p, atr_val, psych)
         if p is None:
             log.info('SL_TOO_WIDE skip')
