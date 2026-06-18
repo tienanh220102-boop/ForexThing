@@ -61,9 +61,16 @@ VN_TZ       = timezone(timedelta(hours=7))
 SL_ATR_FLOOR    = 1.5    # SL toi thieu 1.5x ATR (Tram 3 — chong quet rau)
 SL_ATR_CAP      = 2.5    # SL qua 2.5x ATR → bo keo
 SL_BUFFER_ATR   = 0.25   # dem them sau structure
-TP1_R           = 1.5    # TP1 = 1.5R
+TP1_R           = 1.5    # TP1 = 1.5R (mac dinh cac setup)
 TP2_R           = 2.5    # TP2 = 2.5R (chart pattern dung measured move neu xa hon)
-WICK_BODY_RATIO = 2.0    # sweep: wick >= 2x than (insight 1)
+# Sweep_reclaim — toi uu OUT-OF-SAMPLE (workshop/hyp08, train60/test40 tren 5.8
+# nam): TP1_R=1.0 cho test +0.143R significant (WR ~60%), trong khi 1.5 thi test
+# KHONG significant; sweep la mean-reversion -> chot nhanh. TP2 runner xa (2.5R)
+# LAM GIAM edge (nua runner hay bi quet ve BE) -> keo TP2 sweep ve gan (1.5R).
+SWEEP_TP1_R     = 1.0
+SWEEP_TP2_R     = 1.5
+WICK_BODY_RATIO = 1.5    # sweep: wick >= 1.5x than. Ha tu 2.0 -> 1.5 (hyp08: nhieu
+                         # lenh hon + test van significant; 2.0 thi test khong sig).
 SWEEP_MIN_RANGE = 0.75   # nen sweep phai >= 0.75 ATR (loc nen ti hon)
 # Anti-FOMO (12/06/2026): bot chay 15p/lan — nen sweep dong xong gia thuong
 # DA bat xa khoi level truoc khi bot quet. Vao market luc do = entry xau +
@@ -570,8 +577,11 @@ def build_order(p, atr_val, psych_levels):
         if sl_dist > sl_cap * atr_val:
             return None
     sl  = entry - sl_dist if is_buy else entry + sl_dist
-    tp1 = entry + TP1_R * sl_dist if is_buy else entry - TP1_R * sl_dist
-    tp2 = entry + TP2_R * sl_dist if is_buy else entry - TP2_R * sl_dist
+    # TP per-setup: sweep chốt nhanh (1.0R / 1.5R — validated OOS); còn lại 1.5R / 2.5R
+    _tp1_r = SWEEP_TP1_R if p['setup'] == 'sweep_reclaim' else TP1_R
+    _tp2_r = SWEEP_TP2_R if p['setup'] == 'sweep_reclaim' else TP2_R
+    tp1 = entry + _tp1_r * sl_dist if is_buy else entry - _tp1_r * sl_dist
+    tp2 = entry + _tp2_r * sl_dist if is_buy else entry - _tp2_r * sl_dist
     # Chart pattern: TP2 = measured move neu xa hon TP1 (muc tieu cau truc)
     mm = p.get('measured_move')
     if mm and ((is_buy and mm > tp1) or (not is_buy and mm < tp1)):
