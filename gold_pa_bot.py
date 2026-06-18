@@ -88,6 +88,17 @@ WALL_BLOCK_ATR  = 0.30   # tuong qua sat (< 0.3 ATR truoc mat) → tru 1 sao
 COOLDOWN_H      = 4      # 1 setup+huong: toi da 1 lenh / 4h
 DAILY_CAP       = 3      # toi da 3 lenh / ngay (chong choppy day spam)
 MIN_STARS       = 3      # chat luong toi thieu de gui
+
+# ── Validated-edge tier (18/06/2026) ─────────────────────────
+# Backtest TRUNG THUC 5.8 nam vang sach (n=2899, workshop/hyp06+hyp07, import
+# chinh code nay): CHI 'sweep_reclaim' co edge that — exp +0.10R sau spread,
+# CI95>0, walk-forward on dinh (duong dau/giua/cuoi), random-entry p=0.000
+# (timing hon han vao ngau nhien cung SL/TP = KY NANG, khong phai cau truc R:R).
+# Cac setup khac chua chung minh edge (momentum_pullback -0.09R, compression
+# -0.06R, patterns mau nho CI om 0) -> tru sao de can confluence manh hon moi
+# phat. Khi setup nao validate duoc thi them vao VALIDATED_SETUPS.
+VALIDATED_SETUPS    = {'sweep_reclaim'}
+UNVALIDATED_PENALTY = 1
 TIMEOUT_DAYS    = 5      # keo khong cham SL/TP sau 5 ngay → het han (EXP)
 MIN_BARS        = 120    # du lieu H1 toi thieu
 
@@ -671,6 +682,13 @@ def grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge=None):
     if p.get('probe'):
         conf.append('🔎 Kèo PHÁN ĐOÁN (trend chưa được cấu trúc xác nhận) — '
                     'đánh SL bé dò đường, phá cản mới nhồi thêm')
+
+    # Validated-edge tier: setup chưa chứng minh edge (backtest 5.8 năm) bị trừ
+    # sao → cần confluence mạnh hơn mới đạt MIN_STARS. Sweep (đã validate) giữ nguyên.
+    if p['setup'] not in VALIDATED_SETUPS:
+        stars -= UNVALIDATED_PENALTY
+        conf.append(f'⚖️ Setup chưa chứng minh edge trên backtest 5.8 năm '
+                    f'(−{UNVALIDATED_PENALTY} sao — cần confluence mạnh để phát)')
 
     p['stars'] = max(1, min(5, stars))
     p['confluence'] = conf
