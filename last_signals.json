@@ -8,48 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.14614,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.148002629409366,
-      "tp": 1.1424147411812677,
-      "sent_at": 1781876742.003495,
-      "message_id": 459,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1781880342.003495,
-          "done": true
-        },
-        {
-          "hours": 4,
-          "at": 1781891142.003495,
-          "done": false
-        }
-      ],
-      "expires_at": 1781912742.003495,
-      "indicators": {
-        "rsi": -1,
-        "ema": -1,
-        "macd": 0.4,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -1.0,
-        "tl": 0
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.525,
-      "conf": 91,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1781876742"
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1781876742.003495,
@@ -1472,6 +1431,23 @@
       "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-06-19",
+      "regime": "NEUTRAL",
+      "outcome": "OPEN",
+      "pips": -18.3,
+      "entry": 1.14614,
+      "exit": 1.14797,
+      "sl_pips": 18.6,
+      "tp_pips": 37.3,
+      "conf": 91,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -2143,6 +2119,10 @@
       [
         1781888449,
         0.346
+      ],
+      [
+        1781892058,
+        0.348
       ]
     ],
     "XAU/USD": [
@@ -2613,6 +2593,10 @@
       [
         1781888449,
         0.469
+      ],
+      [
+        1781892058,
+        0.476
       ]
     ],
     "EUR/USD": [
@@ -3051,6 +3035,10 @@
       [
         1781888449,
         0.525
+      ],
+      [
+        1781892058,
+        0.525
       ]
     ],
     "WTI/USD": [
@@ -3484,6 +3472,10 @@
       ],
       [
         1781888449,
+        0.439
+      ],
+      [
+        1781892058,
         0.439
       ]
     ]
