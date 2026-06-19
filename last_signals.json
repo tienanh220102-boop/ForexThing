@@ -23,7 +23,7 @@
         {
           "hours": 1,
           "at": 1781896546.938185,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -1486,6 +1486,23 @@
       "sl_pips": 18.6,
       "tp_pips": 37.3,
       "conf": 91,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-06-20",
+      "regime": "RANGE",
+      "outcome": "OPEN",
+      "pips": -2.8,
+      "entry": 161.2847,
+      "exit": 161.257,
+      "sl_pips": 18.7,
+      "tp_pips": 37.5,
+      "conf": 85,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
