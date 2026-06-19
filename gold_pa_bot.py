@@ -38,7 +38,7 @@ Nang cap 13/06/2026 (user feedback "PA khong don gian nhu the"):
   - update_knowledge(): learning loop 1 lan/ngay — gom keo da chot theo bucket,
     dieu chinh sao adaptive (Laplace, min n=8, kep ±1) → moi ngay thong minh hon
 """
-import json, os, sys, time, logging
+import json, os, sys, time, logging, math, statistics
 import requests
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -174,6 +174,12 @@ VALIDATION_EVERY = 50     # bao cao moi 50 keo da chot (loai NOFILL)
 BACKTEST_EXP_R   = 0.06   # ky vong backtest thuc te (mo hinh limit-fill 8h)
 KILL_EXP_R       = -0.10  # exp thuc < -0.1R o 1 moc -> canh bao kill-switch
 KILL_DD_R        = 15.0   # drawdown duong equity > 15R -> canh bao
+# SPRT (Wald) thay nguong chon tay: H0 khong edge (mu=0) vs H1 edge backtest (+0.06R).
+# Toan 1 (workshop/math1_validation): SPRT can ~1841 keo o muc edge thuc te -> 50 keo
+# chi du bat THAM HOA, chua du xac nhan. Bien A/B tu alpha=beta=0.05.
+SPRT_MU0, SPRT_MU1 = 0.0, BACKTEST_EXP_R
+SPRT_A = math.log((1 - 0.05) / 0.05)      # LLR >= +2.94 -> xac nhan CO edge
+SPRT_B = math.log(0.05 / (1 - 0.05))      # LLR <= -2.94 -> bac edge (kill co co so)
 
 _SETUP_NAMES = {
     'sweep_reclaim': 'Sweep & Reclaim (quét thanh khoản + rút râu)',
@@ -1013,6 +1019,27 @@ def _trade_r(rec):
     return (rec.get('pips') or 0.0) / sl_pips
 
 
+_SPRT_LBL = {'CONFIRM_EDGE': '✅ đã xác nhận có edge',
+             'REJECT_EDGE': '🛑 đã bác (edge âm)',
+             'CHUA_DU': '⏳ chưa đủ bằng chứng'}
+
+
+def _sprt_verdict(rs):
+    """SPRT (Wald) tren chuoi R thuc: tich luy log-likelihood-ratio H1(+0.06R) vs
+    H0(0R), Normal sd uoc tu data. Tra (trang_thai, llr). Co co so thay nguong tay."""
+    if len(rs) < 5:
+        return 'CHUA_DU', 0.0
+    sd = statistics.pstdev(rs) or 1.0
+    coef = (SPRT_MU1 - SPRT_MU0) / (sd ** 2)
+    mid  = (SPRT_MU0 + SPRT_MU1) / 2
+    llr = sum(coef * (r - mid) for r in rs)
+    if llr >= SPRT_A:
+        return 'CONFIRM_EDGE', llr
+    if llr <= SPRT_B:
+        return 'REJECT_EDGE', llr
+    return 'CHUA_DU', llr
+
+
 def check_live_validation(state, now):
     """Ky luat kiem chung live: moi VALIDATION_EVERY keo da chot, so WR/exp THUC
     voi backtest -> Telegram canh bao neu lech (kill-switch). Chay moi run; chi
@@ -1035,11 +1062,14 @@ def check_live_validation(state, now):
         peak = max(peak, eq)
         dd = min(dd, eq - peak)
     max_dd = -dd
+    sprt_state, sprt_llr = _sprt_verdict(rs)
 
-    # Phan quyet EDGE theo expectancy (drawdown KHONG de len day — xet rieng ben duoi)
-    if exp_r < KILL_EXP_R:
+    # Phan quyet EDGE: SPRT (co co so) bac edge HOAC exp am ro -> kill-switch.
+    if sprt_state == 'REJECT_EDGE' or exp_r < KILL_EXP_R:
         head = '🛑 <b>KILL-SWITCH — Gold PA edge ÂM</b>'
-        tail = ('Kỳ vọng thực âm rõ rệt — KHÔNG còn là nhiễu. ĐỀ NGHỊ TẠM DỪNG, '
+        _why = ('SPRT đã bác giả thuyết có edge' if sprt_state == 'REJECT_EDGE'
+                else f'kỳ vọng thực {exp_r:+.3f}R dưới ngưỡng {KILL_EXP_R:+.2f}R')
+        tail = (f'Edge âm rõ rệt ({_why}) — KHÔNG còn là nhiễu. ĐỀ NGHỊ TẠM DỪNG, '
                 'mổ xẻ nguyên nhân trước khi đánh tiếp (không gồng).')
     elif exp_r < 0:
         head = '⚠️ <b>Kiểm chứng PA — DƯỚI hòa vốn</b>'
@@ -1056,6 +1086,8 @@ def check_live_validation(state, now):
            f'• Tỷ lệ thắng (WR): <b>{wr:.0%}</b>',
            f'• Kỳ vọng thực: <b>{exp_r:+.3f}R</b>/lệnh',
            f'• Tổng: {total_r:+.1f}R | Drawdown lớn nhất: {max_dd:.1f}R',
+           f'• SPRT (xác nhận edge): {_SPRT_LBL.get(sprt_state, sprt_state)} '
+           f'(LLR={sprt_llr:+.2f}; cần ±{SPRT_A:.2f} để kết luận)',
            '', tail]
     # Canh bao BAO TOAN VON rieng (mỗi 1R ≈ 1% vốn ở rủi ro mặc định): drawdown lớn
     # đáng dừng-soát kể cả khi expectancy còn dương.
