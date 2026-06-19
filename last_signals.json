@@ -23,7 +23,7 @@
         {
           "hours": 1,
           "at": 1781878542.947405,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -1459,6 +1459,23 @@
       "tp_pips": 122.6,
       "conf": 95,
       "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-06-19",
+      "regime": "NEUTRAL",
+      "outcome": "OPEN",
+      "pips": 58.3,
+      "entry": 4173.32856,
+      "exit": 4167.5,
+      "sl_pips": 281.0,
+      "tp_pips": 562.1,
+      "conf": 77,
+      "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
