@@ -155,7 +155,13 @@ PROBE_RISK_PCT   = 0.005  # lenh do: rui ro 0.5% von
 # gần nhất LỖ — sweep bị regime trend mạnh của vàng 2025-26 hại; đánh 3× lúc edge
 # đang không chạy = nhân lỗ. Giữ cờ high_conviction + nhãn ⭐ (vô hại); bật lại 0.03
 # khi hệ KẾT HỢP (sweep+trend theo regime) được validate cho lời đều hàng tháng.
-HIGH_CONV_RISK_PCT = 0.01
+# [SIZING 19/06 — Toan 2] User chon 1.5%/lenh (khau vi: doi drawdown lon hon lay
+# tang truong). Toan 2 (math2_sizing): 1.5% ~ DD trung vi 18% tren mo hinh lac quan,
+# edge thuc te chia ~2 -> DD nhinh hon. CAP CUNG 1.5% — KHONG lenh nao vuot, ke ca
+# high-conviction (edge mong, chua xac nhan SPRT ~1841 keo). probe van 0.5%.
+DEFAULT_RISK_PCT   = 0.015
+HIGH_CONV_RISK_PCT = 0.015    # bang default — khong cho single trade vuot 1.5%
+RISK_CAP_PCT       = 0.015    # tran cung moi lenh
 ADDON_SL_ATR     = 0.5    # lenh nhoi: SL sau level vua pha 0.5 ATR (can pha = ho tro moi)
 
 # ── Learning loop (13/06/2026 — "moi ngay thong minh hon") ──
@@ -717,9 +723,10 @@ def build_order(p, atr_val, psych_levels):
     if p.get('probe') or p.get('danger'):
         risk_pct = PROBE_RISK_PCT                  # 0.5% — an toan truoc
     elif p.get('high_conviction'):
-        risk_pct = HIGH_CONV_RISK_PCT              # 3% — sweep Level>=3 + gio vang
+        risk_pct = HIGH_CONV_RISK_PCT              # 1.5% — = default (khong cho vuot)
     else:
-        risk_pct = 0.01                            # 1% mac dinh
+        risk_pct = DEFAULT_RISK_PCT                # 1.5% mac dinh (user chon, Toan 2)
+    risk_pct = min(risk_pct, RISK_CAP_PCT)         # tran cung: khong lenh nao > 1.5%
     if fx.ACCOUNT_SIZE > 0 and sl_usd > 0:
         rec_lot = max(round((fx.ACCOUNT_SIZE * risk_pct) / (sl_usd / fx.LOT_SIZE), 2), 0.01)
 
@@ -798,7 +805,7 @@ def grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge=None):
 
     if p.get('high_conviction'):
         conf.append('⭐ HIGH-CONVICTION: Level mạnh + giờ vàng (phiên Á) — '
-                    f'rủi ro {HIGH_CONV_RISK_PCT*100:.0f}% (edge dày nhất, đã kiểm chứng OOS)')
+                    f'rủi ro {HIGH_CONV_RISK_PCT*100:g}% (= mức mặc định, không vượt trần)')
 
     # Validated-edge tier: setup chưa chứng minh edge (backtest 5.8 năm) bị trừ
     # sao → cần confluence mạnh hơn mới đạt MIN_STARS. Sweep (đã validate) giữ nguyên.
@@ -1139,7 +1146,7 @@ def send_signal(p, session_lbl, now):
         f'🎯 TP2: {fx.fmt_price(SYM, p["tp2"])}  (R:R 1:{p["rr2"]} / +${p["tp2_usd"]:.2f})',
     ]
     if p.get('rec_lot'):
-        _rp = p.get('risk_pct', 0.01) * 100
+        _rp = p.get('risk_pct', DEFAULT_RISK_PCT) * 100
         _tag = (' — lệnh dò, đánh nhỏ' if p.get('probe')
                 else ' — kèo nguy hiểm, giảm nửa' if p.get('danger') else '')
         lines.append(f'📐 Lot đề xuất: {p["rec_lot"]} lot ({_rp:g}% rủi ro{_tag} / ${fx.ACCOUNT_SIZE:.0f} vốn)')
