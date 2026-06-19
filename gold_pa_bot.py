@@ -127,7 +127,11 @@ PROBE_RISK_PCT   = 0.005  # lenh do: rui ro 0.5% von
 # nhom nay exp +0.148R (gap 2.4x), WR 61%, BEN tren held-out (test>train); danh 3x
 # rieng nhom nay -> tong lai gap ~3.4x baseline, loi/DD tot hon (5.2->8.1) =
 # HIEU QUA, khong chi don bay. Probe/danger VAN giu 0.5% (an toan truoc).
-HIGH_CONV_RISK_PCT = 0.03
+# REVERT 18/06: hạ 3% -> 1% (= bằng thường) vì backtest theo tháng cho thấy năm
+# gần nhất LỖ — sweep bị regime trend mạnh của vàng 2025-26 hại; đánh 3× lúc edge
+# đang không chạy = nhân lỗ. Giữ cờ high_conviction + nhãn ⭐ (vô hại); bật lại 0.03
+# khi hệ KẾT HỢP (sweep+trend theo regime) được validate cho lời đều hàng tháng.
+HIGH_CONV_RISK_PCT = 0.01
 ADDON_SL_ATR     = 0.5    # lenh nhoi: SL sau level vua pha 0.5 ATR (can pha = ho tro moi)
 
 # ── Learning loop (13/06/2026 — "moi ngay thong minh hon") ──
