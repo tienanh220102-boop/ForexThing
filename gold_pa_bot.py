@@ -104,8 +104,23 @@ MIN_STARS       = 3      # chat luong toi thieu de gui
 # Cac setup khac chua chung minh edge (momentum_pullback -0.09R, compression
 # -0.06R, patterns mau nho CI om 0) -> tru sao de can confluence manh hon moi
 # phat. Khi setup nao validate duoc thi them vao VALIDATED_SETUPS.
-VALIDATED_SETUPS    = {'sweep_reclaim'}
+VALIDATED_SETUPS    = {'sweep_reclaim', 'breakout'}
 UNVALIDATED_PENALTY = 1
+
+# ── REGIME-SWITCH (18/06/2026) ───────────────────────────────
+# Phat hien gia tri nhat ca phien (workshop/hyp17-23): sweep (mean-reversion) AN
+# trong thi truong RANGE, CHET trong thang trend manh (vang chay >10%); con
+# breakout (trend-following) nguoc lai. ML (RandomForest) xac nhan: yeu to quyet
+# dinh la DO-TREND (momentum/EMA-dist/daily-ER), khong phai level strength.
+# -> Cong tac theo Efficiency Ratio KHUNG NGAY (20 ngay): ngay TREND -> chi danh
+# breakout; ngay RANGE -> chi danh sweep. Edge ket hop MONG nhung nhat quan hon
+# (vá nam lo). REGIME_ER tu nen ngay DA DONG (khong look-ahead).
+REGIME_ER_N      = 20     # Efficiency Ratio tren 20 nen NGAY
+REGIME_ER_TREND  = 0.40   # dailyER >= 0.40 -> coi la TREND day
+# Breakout (trend tool): Donchian N + loc EMA50, SL/TP co dinh theo ATR (R:R 2)
+BREAKOUT_N       = 20     # pha dinh/day 20 nen H1 TRUOC
+BREAKOUT_SL_ATR  = 1.0    # SL = 1.0 ATR
+BREAKOUT_TP_R    = 2.0    # TP = 2.0 R (R:R 2:1) — trend can R:R lon
 TIMEOUT_DAYS    = 5      # keo khong cham SL/TP sau 5 ngay → het han (EXP)
 MIN_BARS        = 120    # du lieu H1 toi thieu
 
@@ -145,6 +160,7 @@ LEARN_WR_BAD     = 0.30   # WR <= 30% hoac ky vong <= -0.30R → -1 sao
 
 _SETUP_NAMES = {
     'sweep_reclaim': 'Sweep & Reclaim (quét thanh khoản + rút râu)',
+    'breakout': 'Breakout (phá đỉnh/đáy theo trend — chỉ ngày TREND)',
     'momentum_pullback': 'Momentum Pullback (hồi về EMA20 trong trend mạnh)',
     'compression_breakout': 'Compression Breakout (nén rồi bùng nổ)',
     'double_top': 'Hai đỉnh (Double Top) — H4',
@@ -206,7 +222,7 @@ def get_session(now):
 
 _SESSION_ALLOWED = {
     'ASIAN': {'sweep_reclaim'},                      # chi reversal
-    'EU_US': {'sweep_reclaim', 'momentum_pullback',  # cho het
+    'EU_US': {'sweep_reclaim', 'breakout', 'momentum_pullback',  # cho het
               'compression_breakout',
               'double_top', 'double_bottom', 'hs_top', 'hs_inv'},
     'OFF':   set(),
@@ -564,6 +580,49 @@ def detect_chart_patterns(closes, highs, lows):
     return out
 
 
+def detect_breakout(closes, highs, lows, atr_val):
+    """Trend tool (validated workshop/hyp18-21): nen H1 DONG gan nhat pha dinh/day
+    BREAKOUT_N nen TRUOC + thuan EMA50 -> vao theo huong pha. SL/TP co dinh ATR
+    (build_order xu ly rieng setup='breakout'). Chi danh trong NGAY TREND (main gate)."""
+    n = BREAKOUT_N
+    if len(closes) < n + 55 or atr_val <= 0:
+        return []
+    c = closes[-2]                              # nen H1 da DONG gan nhat (-1 dang hinh)
+    dhi = max(highs[-n-2:-2])                   # dinh N nen TRUOC nen -2 (KHONG gom -2/-1)
+    dlo = min(lows[-n-2:-2])
+    e50 = fx.ema(closes[:-1], 50)
+    price = closes[-1]
+    out = []
+    if c > dhi and c > e50:
+        out.append({'setup': 'breakout', 'dir': 'BUY', 'entry': price,
+                    'structure': price - BREAKOUT_SL_ATR * atr_val, 'level': dhi,
+                    'reason': f'H1 đóng cửa phá đỉnh {n} nến {dhi:,.1f} + trên EMA50 — trend tiếp diễn'})
+    elif c < dlo and c < e50:
+        out.append({'setup': 'breakout', 'dir': 'SELL', 'entry': price,
+                    'structure': price + BREAKOUT_SL_ATR * atr_val, 'level': dlo,
+                    'reason': f'H1 đóng cửa phá đáy {n} nến {dlo:,.1f} + dưới EMA50 — trend tiếp diễn'})
+    return out
+
+
+def daily_er_regime(bars):
+    """Efficiency Ratio tren NEN NGAY (gop H1->ngay), CHI dung ngay DA DONG ->
+    no look-ahead. Tra ve (er, is_trend). er cao = vang dang trend nhieu tuan."""
+    by_day = {}
+    for b in bars:
+        d = datetime.fromtimestamp(b.get('t', 0), timezone.utc).strftime('%Y-%m-%d')
+        by_day[d] = b['c']                      # close cuoi cung trong ngay
+    ks = sorted(by_day)
+    if len(ks) < REGIME_ER_N + 2:
+        return 0.0, False
+    cl = [by_day[k] for k in ks[:-1]]           # BO ngay hom nay (chua dong)
+    if len(cl) < REGIME_ER_N + 1:
+        return 0.0, False
+    change = abs(cl[-1] - cl[-1 - REGIME_ER_N])
+    vol = sum(abs(cl[j] - cl[j - 1]) for j in range(len(cl) - REGIME_ER_N, len(cl)))
+    er = change / vol if vol > 0 else 0.0
+    return round(er, 3), er >= REGIME_ER_TREND
+
+
 # ── BRAIN: SL/TP dong (Tram 3) + tuong so tron (insight 2) ───
 def build_order(p, atr_val, psych_levels):
     """Tinh SL/TP/lot. Tra ve None neu SL bat buoc qua rong (> cap) —
@@ -575,7 +634,9 @@ def build_order(p, atr_val, psych_levels):
     is_buy = p['dir'] == 'BUY'
     entry  = p['entry']
 
-    if p.get('probe'):
+    if p['setup'] == 'breakout':
+        sl_dist = BREAKOUT_SL_ATR * atr_val          # SL co dinh 1 ATR (validated)
+    elif p.get('probe'):
         struct_dist = abs(entry - p['structure']) + PROBE_SL_BUFFER * atr_val
         sl_dist = max(PROBE_SL_FLOOR * atr_val,
                       min(struct_dist, PROBE_SL_CAP * atr_val))
@@ -587,9 +648,13 @@ def build_order(p, atr_val, psych_levels):
         if sl_dist > sl_cap * atr_val:
             return None
     sl  = entry - sl_dist if is_buy else entry + sl_dist
-    # TP per-setup: sweep chốt nhanh (1.0R / 1.5R — validated OOS); còn lại 1.5R / 2.5R
-    _tp1_r = SWEEP_TP1_R if p['setup'] == 'sweep_reclaim' else TP1_R
-    _tp2_r = SWEEP_TP2_R if p['setup'] == 'sweep_reclaim' else TP2_R
+    # TP per-setup: breakout R:R 2 (trend); sweep chốt nhanh 1.0/1.5 (validated); còn lại 1.5/2.5
+    if p['setup'] == 'breakout':
+        _tp1_r, _tp2_r = BREAKOUT_TP_R, BREAKOUT_TP_R + 1.0
+    elif p['setup'] == 'sweep_reclaim':
+        _tp1_r, _tp2_r = SWEEP_TP1_R, SWEEP_TP2_R
+    else:
+        _tp1_r, _tp2_r = TP1_R, TP2_R
     tp1 = entry + _tp1_r * sl_dist if is_buy else entry - _tp1_r * sl_dist
     tp2 = entry + _tp2_r * sl_dist if is_buy else entry - _tp2_r * sl_dist
     # Chart pattern: TP2 = measured move neu xa hon TP1 (muc tieu cau truc)
@@ -1131,11 +1196,22 @@ def main():
     levels = _gold_levels(closes, highs, lows, atr_val)
     psych  = fx.psychological_levels(price)
 
+    # [REGIME-SWITCH 18/06] Efficiency Ratio khung NGAY quyet dinh che do:
+    #   TREND day  -> chi danh BREAKOUT (trend tool); sweep chet trong trend.
+    #   RANGE day  -> chi danh SWEEP (mean-reversion); + cac setup phu (downweight).
+    er_day, is_trend = daily_er_regime(bars)
+    regime_lbl = f"TREND (dailyER={er_day})" if is_trend else f"RANGE (dailyER={er_day})"
+    print(f'[PA] Regime ngay: {regime_lbl}')
+    log.info(f'REGIME er={er_day} trend={is_trend}')
+
     cands = []
-    cands += detect_sweep_reclaim(closes, highs, lows, atr_val, levels)
-    cands += detect_momentum_pullback(closes, highs, lows, atr_val, mom_dir)
-    cands += detect_compression_breakout(closes, highs, lows, atr_val)
-    cands += detect_chart_patterns(closes, highs, lows)
+    if is_trend:
+        cands += detect_breakout(closes, highs, lows, atr_val)
+    else:
+        cands += detect_sweep_reclaim(closes, highs, lows, atr_val, levels)
+        cands += detect_momentum_pullback(closes, highs, lows, atr_val, mom_dir)
+        cands += detect_compression_breakout(closes, highs, lows, atr_val)
+        cands += detect_chart_patterns(closes, highs, lows)
 
     # [EXHAUSTION GUARD 12/06/2026] dung chung helper voi forex_notifier:
     # lenh thuan-move trong vung kiet (D1 RSI cuc doan + move > pctl 85) chi
@@ -1220,7 +1296,7 @@ def main():
         p['align'] = ('with' if (st['trend'] == want_t and st['confirmed'])
                       else 'against' if st['trend'] not in ('RANGE', want_t)
                       else 'neutral')
-        p['probe'] = classify_probe(p, s1, s4)
+        p['probe'] = False if p['setup'] == 'breakout' else classify_probe(p, s1, s4)
         if p['probe']:
             p['add_trigger'] = add_trigger_for(p, s1)
         # Phan tang sizing: sweep Level>=3 + gio vang (00-07 UTC) = high-conviction
