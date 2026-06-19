@@ -10,46 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "entry_price": 4173.32856,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4201.431599577506,
-      "tp": 4117.122480844989,
-      "sent_at": 1781874942.947405,
-      "message_id": 457,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1781878542.947405,
-          "done": true
-        },
-        {
-          "hours": 4,
-          "at": 1781889342.947405,
-          "done": false
-        }
-      ],
-      "expires_at": 1781910942.947405,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.18,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -1.0,
-        "tl": 0
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.456,
-      "conf": 77,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1781874942"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "SELL",
       "entry_price": 1.14614,
@@ -1493,6 +1453,23 @@
       "tp_pips": 37.3,
       "conf": 91,
       "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-06-19",
+      "regime": "NEUTRAL",
+      "outcome": "OPEN",
+      "pips": 58.3,
+      "entry": 4173.32856,
+      "exit": 4167.5,
+      "sl_pips": 281.0,
+      "tp_pips": 562.1,
+      "conf": 77,
+      "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
