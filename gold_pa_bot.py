@@ -167,6 +167,14 @@ LEARN_MIN_N      = 8      # bucket >= 8 keo moi duoc dieu chinh
 LEARN_WR_GOOD    = 0.55   # WR Laplace >= 55% + ky vong R duong → +1 sao
 LEARN_WR_BAD     = 0.30   # WR <= 30% hoac ky vong <= -0.30R → -1 sao
 
+# [KIEM CHUNG LIVE 19/06] Bao cao tu dong moi 50 keo da chot: so WR/exp THUC vs
+# backtest -> canh bao neu lech (kill-switch). Edge backtest thuc te ~+0.06R/lenh
+# (mo hinh limit-fill). Duoi KILL_EXP_R hoac drawdown > KILL_DD_R -> de nghi DUNG.
+VALIDATION_EVERY = 50     # bao cao moi 50 keo da chot (loai NOFILL)
+BACKTEST_EXP_R   = 0.06   # ky vong backtest thuc te (mo hinh limit-fill 8h)
+KILL_EXP_R       = -0.10  # exp thuc < -0.1R o 1 moc -> canh bao kill-switch
+KILL_DD_R        = 15.0   # drawdown duong equity > 15R -> canh bao
+
 _SETUP_NAMES = {
     'sweep_reclaim': 'Sweep & Reclaim (quét thanh khoản + rút râu)',
     'breakout': 'Breakout (phá đỉnh/đáy theo trend — chỉ ngày TREND)',
@@ -997,6 +1005,72 @@ def update_knowledge(state, now):
             log.info(f'LEARN_TG_FAIL {e}')
 
 
+def _trade_r(rec):
+    """R thuc cua 1 keo da chot = pips ket qua / sl_pips (giong learning loop)."""
+    sl_pips = fx.price_to_pips(SYM, abs(rec.get('entry', 0) - rec.get('sl', 0)))
+    if not sl_pips:
+        return None
+    return (rec.get('pips') or 0.0) / sl_pips
+
+
+def check_live_validation(state, now):
+    """Ky luat kiem chung live: moi VALIDATION_EVERY keo da chot, so WR/exp THUC
+    voi backtest -> Telegram canh bao neu lech (kill-switch). Chay moi run; chi
+    BAN khi vuot moc 50 moi. Khong dieu chinh logic — chi GIAM SAT + canh bao."""
+    done = [x for x in state.get('signals', [])
+            if x.get('outcome') and x['outcome'] != 'NOFILL']
+    n = len(done)
+    milestone = (n // VALIDATION_EVERY) * VALIDATION_EVERY
+    if milestone < VALIDATION_EVERY or milestone <= state.get('last_validation_n', 0):
+        return
+    rs = [r for r in (_trade_r(x) for x in done) if r is not None]
+    if len(rs) < VALIDATION_EVERY:
+        return
+    exp_r   = sum(rs) / len(rs)
+    wr      = sum(1 for x in done if x.get('correct')) / len(done)
+    total_r = sum(rs)
+    eq = peak = dd = 0.0                       # max drawdown tren duong equity R
+    for r in rs:
+        eq += r
+        peak = max(peak, eq)
+        dd = min(dd, eq - peak)
+    max_dd = -dd
+
+    # Phan quyet EDGE theo expectancy (drawdown KHONG de len day — xet rieng ben duoi)
+    if exp_r < KILL_EXP_R:
+        head = '🛑 <b>KILL-SWITCH — Gold PA edge ÂM</b>'
+        tail = ('Kỳ vọng thực âm rõ rệt — KHÔNG còn là nhiễu. ĐỀ NGHỊ TẠM DỪNG, '
+                'mổ xẻ nguyên nhân trước khi đánh tiếp (không gồng).')
+    elif exp_r < 0:
+        head = '⚠️ <b>Kiểm chứng PA — DƯỚI hòa vốn</b>'
+        tail = 'Kỳ vọng thực đang âm nhẹ — theo dõi sát mốc kế tiếp, cân nhắc giảm rủi ro.'
+    elif exp_r < BACKTEST_EXP_R * 0.5:
+        head = '🟡 <b>Kiểm chứng PA — yếu hơn backtest</b>'
+        tail = 'Còn dương nhưng dưới nửa kỳ vọng backtest — bình thường ở mẫu nhỏ, tiếp tục theo dõi.'
+    else:
+        head = '✅ <b>Kiểm chứng PA — bám kế hoạch</b>'
+        tail = 'Edge thực còn dương, khớp backtest — tiếp tục đánh nhỏ kỷ luật.'
+
+    msg = [head,
+           f'Mốc <b>{n}</b> kèo đã chốt (backtest exp≈+{BACKTEST_EXP_R:.2f}R/lệnh):',
+           f'• Tỷ lệ thắng (WR): <b>{wr:.0%}</b>',
+           f'• Kỳ vọng thực: <b>{exp_r:+.3f}R</b>/lệnh',
+           f'• Tổng: {total_r:+.1f}R | Drawdown lớn nhất: {max_dd:.1f}R',
+           '', tail]
+    # Canh bao BAO TOAN VON rieng (mỗi 1R ≈ 1% vốn ở rủi ro mặc định): drawdown lớn
+    # đáng dừng-soát kể cả khi expectancy còn dương.
+    if max_dd > KILL_DD_R:
+        msg += ['', f'🩸 <b>Cảnh báo vốn:</b> drawdown {max_dd:.1f}R (~{max_dd:.0f}% vốn nếu '
+                    f'1%/lệnh) đã vượt {KILL_DD_R:.0f}R — cân nhắc GIẢM SIZE / tạm nghỉ dù edge còn dương.']
+    msg += ['<i>Báo tự động mỗi 50 kèo — kỷ luật kiểm chứng live</i>']
+    try:
+        fx.send_telegram('\n'.join(msg))
+    except Exception as e:
+        log.info(f'VALIDATION_TG_FAIL {e}')
+    state['last_validation_n'] = milestone
+    log.info(f'VALIDATION n={n} exp={exp_r:.3f} wr={wr:.2f} dd={max_dd:.1f}R')
+
+
 # ── BROADCASTER ──────────────────────────────────────────────
 def send_photo(path, caption='', reply_to=None):
     """Gui anh chart qua Telegram sendPhoto (multipart). Loi khong duoc lam
@@ -1120,6 +1194,12 @@ def main():
 
     # Chot ket qua keo cu (chay moi run, ke ca ngoai phien)
     resolve_signals(state, now, bars)
+
+    # Kiem chung live: moi 50 keo da chot -> so WR/exp thuc vs backtest, canh bao
+    try:
+        check_live_validation(state, now)
+    except Exception as e:
+        log.info(f'VALIDATION_FAIL {e}')
 
     # Bao cao tuan rieng cua he PA
     if (now.timestamp() - state.get('last_weekly', 0)) >= 7 * 86400:
