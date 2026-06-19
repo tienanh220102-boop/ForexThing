@@ -121,6 +121,15 @@ REGIME_ER_TREND  = 0.40   # dailyER >= 0.40 -> coi la TREND day
 BREAKOUT_N       = 20     # pha dinh/day 20 nen H1 TRUOC
 BREAKOUT_SL_ATR  = 1.0    # SL = 1.0 ATR
 BREAKOUT_TP_R    = 2.0    # TP = 2.0 R (R:R 2:1) — trend can R:R lon
+# [BIAS 19/06] Veto MEM tuy chon — user cap huong trend ngan han (tin tuc/PT ca nhan).
+#   UP   -> chi danh BUY  (bo lenh SELL nguoc bias)
+#   DOWN -> chi danh SELL (bo lenh BUY nguoc bias)
+#   SIDE / OFF -> chay binh thuong, GIU CA 2 CHIEU (mac dinh).
+# Oracle test (workshop/hyp24): bias chi HON baseline khi doan dung >~72%/tuan;
+# tuan sideway PHAI giu lenh (san nha cua sweep, +275R). Dat qua bien moi truong BIAS.
+BIAS = os.environ.get('BIAS', 'OFF').strip().upper()
+if BIAS not in ('UP', 'DOWN', 'SIDE', 'OFF'):
+    BIAS = 'OFF'
 TIMEOUT_DAYS    = 5      # keo khong cham SL/TP sau 5 ngay → het han (EXP)
 MIN_BARS        = 120    # du lieu H1 toi thieu
 
@@ -1203,6 +1212,9 @@ def main():
     regime_lbl = f"TREND (dailyER={er_day})" if is_trend else f"RANGE (dailyER={er_day})"
     print(f'[PA] Regime ngay: {regime_lbl}')
     log.info(f'REGIME er={er_day} trend={is_trend}')
+    if BIAS in ('UP', 'DOWN'):
+        print(f"[PA] BIAS thu cong = {BIAS} -> chi danh {'BUY' if BIAS == 'UP' else 'SELL'}")
+        log.info(f'BIAS_ACTIVE {BIAS}')
 
     cands = []
     if is_trend:
@@ -1243,6 +1255,11 @@ def main():
     for p in cands:
         if p['setup'] not in allowed:
             log.info(f"SESSION_SKIP {p['setup']} {p['dir']} session={session}")
+            continue
+        # [BIAS] veto mem: bo lenh nguoc huong user cung cap (SIDE/OFF = khong loc)
+        if (BIAS == 'UP' and p['dir'] == 'SELL') or (BIAS == 'DOWN' and p['dir'] == 'BUY'):
+            print(f"[PA] {p['setup']} {p['dir']} nguoc BIAS={BIAS} — bo (veto thu cong)")
+            log.info(f"BIAS_VETO {p['setup']} {p['dir']} bias={BIAS}")
             continue
         if mom_dir and p['setup'] != 'momentum_pullback':
             want = 'BULL' if p['dir'] == 'BUY' else 'BEAR'
