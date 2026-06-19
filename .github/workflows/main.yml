@@ -43,6 +43,7 @@ jobs:
           TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
           TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}
           ACCOUNT_SIZE:     ${{ secrets.ACCOUNT_SIZE }}
+          BIAS:             ${{ vars.BIAS }}   # huong trend user cap: UP|DOWN|SIDE|OFF (trong rong = OFF)
         run: python gold_pa_bot.py
 
       - name: Save signal state and price history
