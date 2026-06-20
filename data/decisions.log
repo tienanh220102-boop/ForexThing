@@ -5196,3 +5196,9 @@
 2026-06-20 06:15:43 UTC [USD/JPY] NO_SIGNAL
 2026-06-20 06:15:44 UTC [XAU/USD] BLOCKED counter_trend H=0.559 H4=BEAR
 2026-06-20 06:15:44 UTC [XAU/USD] NO_SIGNAL
+2026-06-20 06:30:48 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-20 06:30:48 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-20 06:30:49 UTC [USD/JPY] SIGNAL BUY conf=91 votes=3/6 regime=RANGE H=0.407 ADX=18.8
+2026-06-20 06:30:50 UTC [USD/JPY] SENT BUY conf=91% mode=MARKET entry=161.29200 ext=0.21 sl=161.19275 tp=161.49049
+2026-06-20 06:30:51 UTC [XAU/USD] BLOCKED counter_trend H=0.559 H4=BEAR
+2026-06-20 06:30:51 UTC [XAU/USD] NO_SIGNAL
