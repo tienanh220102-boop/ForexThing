@@ -4,7 +4,7 @@
   "USD/CAD|BUY": 1779978655.726155,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
-  "XAU/USD|SELL": 1781874942.947405,
+  "XAU/USD|SELL": 1781954143.281161,
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
@@ -23,7 +23,7 @@
         {
           "hours": 1,
           "at": 1781954138.325105,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -48,6 +48,46 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "EURUSD_1781950538"
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "entry_price": 4156.61954,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 4163.774379003327,
+      "tp": 4142.309861993345,
+      "sent_at": 1781954143.281161,
+      "message_id": 474,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1781957743.281161,
+          "done": false
+        },
+        {
+          "hours": 4,
+          "at": 1781968543.281161,
+          "done": false
+        }
+      ],
+      "expires_at": 1781990143.281161,
+      "indicators": {
+        "rsi": 0,
+        "ema": -1,
+        "macd": 0.29,
+        "bb": 0,
+        "mom": -0.2,
+        "inter": -1.0,
+        "tl": 0
+      },
+      "regime": "TREND",
+      "hurst": 0.565,
+      "conf": 74,
+      "aligned": 2,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "XAUUSD_1781954143"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -1557,6 +1597,23 @@
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-06-20",
+      "regime": "TREND",
+      "outcome": "OPEN",
+      "pips": 5.3,
+      "entry": 1.14745,
+      "exit": 1.14692,
+      "sl_pips": 11.6,
+      "tp_pips": 23.1,
+      "conf": 95,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -1572,7 +1629,7 @@
   "AUD/JPY|BUY": 1780119052.907226,
   "CAD/JPY|SELL": 1779962477.127064,
   "AUD/JPY|SELL": 1780869663.443352,
-  "last_weekly_report": 1781348455.739935,
+  "last_weekly_report": 1781954153.736238,
   "WTI/USD|SELL": 1781769651.108566,
   "last_gold_outlook": 1781939743.891786,
   "hurst_hist": {
@@ -3736,6 +3793,6 @@
   "XAU/USD|BUY|entry": 4330.10642,
   "WTI/USD|SELL|entry": 74.38999938964844,
   "EUR/USD|SELL|entry": 1.14745,
-  "XAU/USD|SELL|entry": 4173.32856,
+  "XAU/USD|SELL|entry": 4156.61954,
   "USD/JPY|BUY|entry": 161.292
 }
