@@ -23,7 +23,7 @@
         {
           "hours": 1,
           "at": 1781984778.262106,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -1625,6 +1625,23 @@
       "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-06-21",
+      "regime": "RANGE",
+      "outcome": "OPEN",
+      "pips": -2.1,
+      "entry": 161.30116,
+      "exit": 161.28,
+      "sl_pips": 6.3,
+      "tp_pips": 12.7,
+      "conf": 91,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -2388,6 +2405,10 @@
       [
         1781982057,
         0.419
+      ],
+      [
+        1781985660,
+        0.419
       ]
     ],
     "XAU/USD": [
@@ -2926,6 +2947,10 @@
       [
         1781982057,
         0.574
+      ],
+      [
+        1781985660,
+        0.575
       ]
     ],
     "EUR/USD": [
@@ -3428,6 +3453,10 @@
       [
         1781982057,
         0.564
+      ],
+      [
+        1781985660,
+        0.565
       ]
     ],
     "WTI/USD": [
@@ -3925,6 +3954,10 @@
       ],
       [
         1781982057,
+        0.439
+      ],
+      [
+        1781985660,
         0.439
       ]
     ]
