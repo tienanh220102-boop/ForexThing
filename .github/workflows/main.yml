@@ -68,9 +68,18 @@ jobs:
       # nen phai dispatch thu cong de Pages deploy du lieu moi
       - name: Trigger Pages redeploy
         if: env.STATE_PUSHED == '1'
+        continue-on-error: true   # 500 tu GitHub API = tam thoi; KHONG duoc lam ca run FAILED
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run static.yml --ref main
+        run: |
+          for i in 1 2 3; do
+            if gh workflow run static.yml --ref main; then
+              echo "Dispatched static.yml (lan $i)"; exit 0
+            fi
+            echo "Dispatch loi (lan $i, thuong HTTP 500 tam thoi) — thu lai sau 5s"
+            sleep 5
+          done
+          echo "Pages redeploy dispatch fail sau 3 lan (non-fatal) — Pages se cap nhat o run sau"
 
       - name: Notify on failure
         if: failure()
