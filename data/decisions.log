@@ -6445,3 +6445,5 @@
 2026-06-21 21:42:39 UTC [WTI/USD] NO_SIGNAL
 2026-06-21 21:45:42 UTC [WTI/USD] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
 2026-06-21 21:45:42 UTC [WTI/USD] NO_SIGNAL
+2026-06-21 23:15:43 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-06-21 23:15:43 UTC generated new fontManager
