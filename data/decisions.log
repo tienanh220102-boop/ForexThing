@@ -6826,3 +6826,13 @@
 2026-06-22 13:31:01 UTC [WTI/USD] NO_SIGNAL
 2026-06-22 13:31:04 UTC [XAU/USD] BLOCKED few_votes BUY=1 BEAR=1
 2026-06-22 13:31:04 UTC [XAU/USD] NO_SIGNAL
+2026-06-22 13:45:58 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-22 13:45:58 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-22 13:45:58 UTC [EUR/USD] BLOCKED macro_strong BUY score=-0.51
+2026-06-22 13:45:58 UTC [EUR/USD] NO_SIGNAL
+2026-06-22 13:46:03 UTC [USD/JPY] BLOCKED rsi_extreme RSI=80 BUY votes=3
+2026-06-22 13:46:03 UTC [USD/JPY] NO_SIGNAL
+2026-06-22 13:46:05 UTC [WTI/USD] BLOCKED adx_hurst ADX=14.9 H=0.436
+2026-06-22 13:46:05 UTC [WTI/USD] NO_SIGNAL
+2026-06-22 13:46:09 UTC [XAU/USD] BLOCKED few_votes BUY=1 BEAR=1
+2026-06-22 13:46:09 UTC [XAU/USD] NO_SIGNAL
