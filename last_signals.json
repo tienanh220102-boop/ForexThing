@@ -23,7 +23,7 @@
         {
           "hours": 1,
           "at": 1782140457.605559,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -1829,6 +1829,23 @@
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "WTI/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-06-22",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -29.0,
+      "entry": 73.64,
+      "exit": 76.54,
+      "sl_pips": 29.0,
+      "tp_pips": 58.0,
+      "conf": 86,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -2740,6 +2757,10 @@
       [
         1782136857,
         0.366
+      ],
+      [
+        1782140466,
+        0.356
       ]
     ],
     "XAU/USD": [
@@ -3378,6 +3399,10 @@
       [
         1782136857,
         0.484
+      ],
+      [
+        1782140466,
+        0.484
       ]
     ],
     "EUR/USD": [
@@ -3972,6 +3997,10 @@
       [
         1782136857,
         0.534
+      ],
+      [
+        1782140466,
+        0.532
       ]
     ],
     "WTI/USD": [
@@ -4562,6 +4591,10 @@
       [
         1782136857,
         0.435
+      ],
+      [
+        1782140466,
+        0.434
       ]
     ]
   },
