@@ -7170,3 +7170,7 @@
 2026-06-23 01:30:50 UTC [USD/JPY] NO_SIGNAL
 2026-06-23 01:45:41 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=2 need=3 H4=BULL
 2026-06-23 01:45:41 UTC [USD/JPY] NO_SIGNAL
+2026-06-23 01:49:19 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-23 01:49:19 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-23 01:49:19 UTC [USD/JPY] SIGNAL BUY conf=95 votes=3/6 regime=RANGE H=0.360 ADX=32.9
+2026-06-23 01:49:19 UTC [USD/JPY] COOLDOWN BUY 1.8h/6h
