@@ -10,46 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.13875,
-      "entry_mode": "LIMIT",
-      "limit_entry": 1.1411052698000106,
-      "sl": 1.14386,
-      "tp": 1.1285299999999996,
-      "sent_at": 1782220541.426785,
-      "message_id": 525,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1782224141.426785,
-          "done": true
-        },
-        {
-          "hours": 4,
-          "at": 1782234941.426785,
-          "done": false
-        }
-      ],
-      "expires_at": 1782256541.426785,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.24,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.79,
-        "tl": -1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.531,
-      "conf": 95,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1782220541"
-    },
-    {
       "sym": "USD/JPY",
       "signal": "BUY",
       "entry_price": 161.5842,
@@ -2050,6 +2010,23 @@
       "pips": 0.6,
       "entry": 1.13875,
       "exit": 1.13869,
+      "sl_pips": 51.1,
+      "tp_pips": 102.2,
+      "conf": 95,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-06-23",
+      "regime": "NEUTRAL",
+      "outcome": "OPEN",
+      "pips": 4.5,
+      "entry": 1.13875,
+      "exit": 1.1383,
       "sl_pips": 51.1,
       "tp_pips": 102.2,
       "conf": 95,
