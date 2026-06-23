@@ -7634,3 +7634,13 @@
 2026-06-23 16:31:12 UTC [WTI/USD] DUP_SAMEDIR SELL 8.5h prev=73.10000 now=73.20000 improve=0.10000
 2026-06-23 16:31:13 UTC [XAU/USD] BLOCKED hurst H=0.446 threshold=0.450 src=dyn bars=720
 2026-06-23 16:31:13 UTC [XAU/USD] NO_SIGNAL
+2026-06-23 16:45:56 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-23 16:45:56 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-23 16:45:57 UTC [EUR/USD] BLOCKED macro_strong BUY score=-0.76
+2026-06-23 16:45:57 UTC [EUR/USD] NO_SIGNAL
+2026-06-23 16:45:57 UTC [USD/JPY] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
+2026-06-23 16:45:57 UTC [USD/JPY] NO_SIGNAL
+2026-06-23 16:45:58 UTC [WTI/USD] SIGNAL SELL conf=95 votes=3/6 regime=RANGE H=0.386 ADX=35.9
+2026-06-23 16:45:58 UTC [WTI/USD] DUP_SAMEDIR SELL 8.7h prev=73.10000 now=72.93000 improve=-0.17000
+2026-06-23 16:46:00 UTC [XAU/USD] BLOCKED hurst H=0.445 threshold=0.450 src=dyn bars=720
+2026-06-23 16:46:00 UTC [XAU/USD] NO_SIGNAL
