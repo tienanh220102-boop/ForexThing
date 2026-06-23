@@ -23,7 +23,7 @@
         {
           "hours": 1,
           "at": 1782224141.426785,
-          "done": false
+          "done": true
         },
         {
           "hours": 4,
@@ -1997,6 +1997,23 @@
       "tp_pips": 39.1,
       "conf": 83,
       "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-06-23",
+      "regime": "NEUTRAL",
+      "outcome": "OPEN",
+      "pips": 0.6,
+      "entry": 1.13875,
+      "exit": 1.13869,
+      "sl_pips": 51.1,
+      "tp_pips": 102.2,
+      "conf": 95,
+      "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
