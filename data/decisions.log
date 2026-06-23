@@ -7152,3 +7152,7 @@
 2026-06-22 21:30:50 UTC [WTI/USD] NO_SIGNAL
 2026-06-22 21:45:45 UTC [WTI/USD] BLOCKED low_votes BUY=2 BEAR=1 need=5 H4=BEAR
 2026-06-22 21:45:45 UTC [WTI/USD] NO_SIGNAL
+2026-06-23 00:00:57 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-23 00:00:58 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-23 00:00:58 UTC [USD/JPY] SIGNAL BUY conf=93 votes=3/6 regime=RANGE H=0.358 ADX=37.2
+2026-06-23 00:00:59 UTC [USD/JPY] SENT BUY conf=93% mode=MARKET entry=161.58341 ext=0.05 sl=161.07385 tp=162.60253

@@ -1,6 +1,6 @@
 {
   "GBP/USD|SELL": 1780056069.457483,
-  "USD/JPY|BUY": 1782096343.541221,
+  "USD/JPY|BUY": 1782172852.714779,
   "USD/CAD|BUY": 1779978655.726155,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
@@ -8,7 +8,48 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [],
+  "pending_validations": [
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "entry_price": 161.58341,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 161.07385,
+      "tp": 162.60252999999997,
+      "sent_at": 1782172852.714779,
+      "message_id": 518,
+      "checkpoints": [
+        {
+          "hours": 1,
+          "at": 1782176452.714779,
+          "done": false
+        },
+        {
+          "hours": 4,
+          "at": 1782187252.714779,
+          "done": false
+        }
+      ],
+      "expires_at": 1782208852.714779,
+      "indicators": {
+        "rsi": 0,
+        "ema": 1,
+        "macd": -0.44,
+        "bb": 0,
+        "mom": 0.2,
+        "inter": 0.79,
+        "tl": 1
+      },
+      "regime": "RANGE",
+      "hurst": 0.358,
+      "conf": 93,
+      "aligned": 3,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "USDJPY_1782172852"
+    }
+  ],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1782119745.030226,
@@ -2825,6 +2866,10 @@
       [
         1782158459,
         0.352
+      ],
+      [
+        1782172852,
+        0.358
       ]
     ],
     "XAU/USD": [
@@ -4730,5 +4775,5 @@
   "WTI/USD|SELL|entry": 74.08999633789062,
   "EUR/USD|SELL|entry": 1.14575,
   "XAU/USD|SELL|entry": 4187.13001,
-  "USD/JPY|BUY|entry": 161.52271
+  "USD/JPY|BUY|entry": 161.58341
 }
