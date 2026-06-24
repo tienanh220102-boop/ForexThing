@@ -7890,3 +7890,11 @@
 2026-06-24 06:45:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-06-24 06:45:42 UTC [XAU/USD] SIGNAL SELL conf=80 votes=2/6 regime=NEUTRAL H=0.450 ADX=41.2
 2026-06-24 06:45:42 UTC [XAU/USD] DUP_SAMEDIR SELL 11.7h prev=4116.60813 now=4093.12708 improve=-23.48105
+2026-06-24 07:01:11 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-24 07:01:11 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-24 07:01:11 UTC [EUR/USD] BLOCKED macro_strong BUY score=-0.72
+2026-06-24 07:01:11 UTC [EUR/USD] NO_SIGNAL
+2026-06-24 07:01:13 UTC [USD/JPY] BLOCKED adx_hurst ADX=10.8 H=0.393
+2026-06-24 07:01:13 UTC [USD/JPY] NO_SIGNAL
+2026-06-24 07:01:15 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=4 H4=BEAR
+2026-06-24 07:01:15 UTC [XAU/USD] NO_SIGNAL
