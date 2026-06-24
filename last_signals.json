@@ -10,46 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "WTI/USD",
-      "signal": "SELL",
-      "entry_price": 71.94000244140625,
-      "entry_mode": "LIMIT",
-      "limit_entry": 72.56997859943844,
-      "sl": 73.16999816894531,
-      "tp": 69.48001098632812,
-      "sent_at": 1782291656.519259,
-      "message_id": 537,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1782295256.519259,
-          "done": true
-        },
-        {
-          "hours": 4,
-          "at": 1782306056.519259,
-          "done": false
-        }
-      ],
-      "expires_at": 1782327656.519259,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.1,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.89,
-        "tl": 0
-      },
-      "regime": "RANGE",
-      "hurst": 0.416,
-      "conf": 86,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "WTIUSD_1782291656"
-    },
-    {
       "sym": "USD/JPY",
       "signal": "BUY",
       "entry_price": 161.71658,
@@ -2230,6 +2190,23 @@
       "tp_pips": 74.4,
       "conf": 95,
       "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "WTI/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-06-24",
+      "regime": "RANGE",
+      "outcome": "OPEN",
+      "pips": 14.3,
+      "entry": 71.94,
+      "exit": 70.51,
+      "sl_pips": 12.3,
+      "tp_pips": 24.6,
+      "conf": 86,
+      "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
