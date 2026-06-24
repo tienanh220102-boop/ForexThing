@@ -334,14 +334,14 @@
   },
   "pa_knowledge": {
     "adjust": {},
-    "updated": 1782180079.437359,
-    "n_resolved": 13,
+    "updated": 1782267343.447673,
+    "n_resolved": 14,
     "lessons": [
-      "mode:probe: 5/10 thắng, kỳ vọng +0.35R",
-      "setup:sweep_reclaim: 5/11 thắng, kỳ vọng +0.23R",
+      "mode:probe: 6/11 thắng, kỳ vọng +0.45R",
+      "setup:sweep_reclaim: 6/12 thắng, kỳ vọng +0.33R",
       "setup:sweep_reclaim|sess:EU_US: 4/10 thắng, kỳ vọng +0.00R"
     ]
   },
-  "last_learn": 1782180079.437359,
+  "last_learn": 1782267343.447673,
   "last_weekly": 1782091853.898015
 }
