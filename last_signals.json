@@ -54,13 +54,6 @@
       "regime": "NEUTRAL"
     },
     {
-      "sym": "NZD/USD",
-      "signal": "SELL",
-      "correct": true,
-      "date": "2026-05-15",
-      "regime": "TREND"
-    },
-    {
       "sym": "AUD/USD",
       "signal": "SELL",
       "correct": false,
@@ -120,13 +113,6 @@
       "sym": "EUR/USD",
       "signal": "BUY",
       "correct": true,
-      "date": "2026-05-16",
-      "regime": "NEUTRAL"
-    },
-    {
-      "sym": "GBP/USD",
-      "signal": "BUY",
-      "correct": false,
       "date": "2026-05-16",
       "regime": "NEUTRAL"
     },
@@ -194,34 +180,6 @@
       "regime": "RANGE"
     },
     {
-      "sym": "EUR/GBP",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-05-17",
-      "regime": "RANGE"
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "correct": true,
-      "date": "2026-05-17",
-      "regime": "RANGE"
-    },
-    {
-      "sym": "GBP/USD",
-      "signal": "BUY",
-      "correct": false,
-      "date": "2026-05-17",
-      "regime": "RANGE"
-    },
-    {
-      "sym": "EUR/GBP",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-05-17",
-      "regime": "RANGE"
-    },
-    {
       "sym": "GBP/JPY",
       "signal": "SELL",
       "correct": false,
@@ -233,13 +191,6 @@
       "signal": "BUY",
       "correct": true,
       "date": "2026-05-18",
-      "regime": "RANGE"
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "correct": true,
-      "date": "2026-05-17",
       "regime": "RANGE"
     },
     {
@@ -390,20 +341,6 @@
       "regime": "NEUTRAL"
     },
     {
-      "sym": "EUR/JPY",
-      "signal": "SELL",
-      "correct": true,
-      "date": "2026-05-20",
-      "regime": "RANGE"
-    },
-    {
-      "sym": "AUD/USD",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-05-20",
-      "regime": "NEUTRAL"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "SELL",
       "correct": false,
@@ -472,13 +409,6 @@
       "correct": false,
       "date": "2026-05-21",
       "regime": "TREND"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "correct": true,
-      "date": "2026-05-21",
-      "regime": "NEUTRAL"
     },
     {
       "sym": "USD/CHF",
@@ -502,13 +432,6 @@
       "regime": "NEUTRAL"
     },
     {
-      "sym": "XAG/USD",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-05-21",
-      "regime": "TREND"
-    },
-    {
       "sym": "AUD/USD",
       "signal": "BUY",
       "correct": true,
@@ -570,13 +493,6 @@
       "correct": true,
       "date": "2026-05-22",
       "regime": "NEUTRAL"
-    },
-    {
-      "sym": "GBP/USD",
-      "signal": "BUY",
-      "correct": false,
-      "date": "2026-05-22",
-      "regime": "TREND"
     },
     {
       "sym": "XAU/USD",
@@ -635,13 +551,6 @@
       "regime": "RANGE"
     },
     {
-      "sym": "UKOIL/USD",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-05-23",
-      "regime": "RANGE"
-    },
-    {
       "sym": "USD/CAD",
       "signal": "BUY",
       "correct": true,
@@ -663,13 +572,6 @@
       "regime": "RANGE"
     },
     {
-      "sym": "CAD/JPY",
-      "signal": "SELL",
-      "correct": true,
-      "date": "2026-05-24",
-      "regime": "RANGE"
-    },
-    {
       "sym": "USD/CHF",
       "signal": "SELL",
       "correct": false,
@@ -680,13 +582,6 @@
       "sym": "USD/CAD",
       "signal": "BUY",
       "correct": false,
-      "date": "2026-05-24",
-      "regime": "RANGE"
-    },
-    {
-      "sym": "CAD/JPY",
-      "signal": "SELL",
-      "correct": true,
       "date": "2026-05-24",
       "regime": "RANGE"
     },
@@ -745,13 +640,6 @@
       "correct": false,
       "date": "2026-05-26",
       "regime": "TREND"
-    },
-    {
-      "sym": "USD/CAD",
-      "signal": "BUY",
-      "correct": false,
-      "date": "2026-05-26",
-      "regime": "RANGE"
     },
     {
       "sym": "XAU/USD",
@@ -827,13 +715,6 @@
       "sym": "USD/CHF",
       "signal": "BUY",
       "correct": true,
-      "date": "2026-05-28",
-      "regime": "RANGE"
-    },
-    {
-      "sym": "CAD/JPY",
-      "signal": "SELL",
-      "correct": false,
       "date": "2026-05-28",
       "regime": "RANGE"
     },
@@ -917,13 +798,6 @@
     {
       "sym": "AUD/USD",
       "signal": "BUY",
-      "correct": false,
-      "date": "2026-05-30",
-      "regime": "NEUTRAL"
-    },
-    {
-      "sym": "AUD/USD",
-      "signal": "BUY",
       "correct": true,
       "date": "2026-05-31",
       "regime": "NEUTRAL"
@@ -941,27 +815,6 @@
       "correct": true,
       "date": "2026-05-31",
       "regime": "RANGE"
-    },
-    {
-      "sym": "AUD/USD",
-      "signal": "BUY",
-      "correct": true,
-      "date": "2026-05-31",
-      "regime": "NEUTRAL"
-    },
-    {
-      "sym": "AUD/USD",
-      "signal": "BUY",
-      "correct": true,
-      "date": "2026-05-31",
-      "regime": "NEUTRAL"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "SELL",
-      "correct": true,
-      "date": "2026-05-31",
-      "regime": "TREND"
     },
     {
       "sym": "GBP/USD",
@@ -1230,23 +1083,6 @@
     },
     {
       "sym": "XAU/USD",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-06-12",
-      "regime": "NEUTRAL",
-      "outcome": "SL",
-      "pips": -379.7,
-      "entry": 4080.34307,
-      "exit": 4118.31176,
-      "sl_pips": 379.7,
-      "tp_pips": 759.4,
-      "conf": 81,
-      "votes": 2,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "XAU/USD",
       "signal": "BUY",
       "correct": true,
       "date": "2026-06-12",
@@ -1275,23 +1111,6 @@
       "sl_pips": 521.6,
       "tp_pips": 833.9,
       "conf": 69,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "correct": true,
-      "date": "2026-06-17",
-      "regime": "NEUTRAL",
-      "outcome": "TP",
-      "pips": 335.8,
-      "entry": 4330.10642,
-      "exit": 4363.6847,
-      "sl_pips": 167.9,
-      "tp_pips": 335.8,
-      "conf": 74,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
@@ -1365,23 +1184,6 @@
       "actual_pnl_pips": null
     },
     {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-06-18",
-      "regime": "RANGE",
-      "outcome": "OPEN",
-      "pips": -6.1,
-      "entry": 1.14684,
-      "exit": 1.14745,
-      "sl_pips": 61.3,
-      "tp_pips": 122.6,
-      "conf": 95,
-      "votes": 4,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
       "sym": "XAU/USD",
       "signal": "SELL",
       "correct": true,
@@ -1412,23 +1214,6 @@
       "tp_pips": 37.3,
       "conf": 91,
       "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "correct": true,
-      "date": "2026-06-19",
-      "regime": "NEUTRAL",
-      "outcome": "OPEN",
-      "pips": 58.3,
-      "entry": 4173.32856,
-      "exit": 4167.5,
-      "sl_pips": 281.0,
-      "tp_pips": 562.1,
-      "conf": 77,
-      "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     },
@@ -1501,57 +1286,6 @@
       "actual_pnl_pips": null
     },
     {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "correct": false,
-      "date": "2026-06-20",
-      "regime": "RANGE",
-      "outcome": "OPEN",
-      "pips": -1.2,
-      "entry": 161.292,
-      "exit": 161.28,
-      "sl_pips": 9.9,
-      "tp_pips": 19.8,
-      "conf": 91,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "correct": true,
-      "date": "2026-06-20",
-      "regime": "TREND",
-      "outcome": "OPEN",
-      "pips": 5.3,
-      "entry": 1.14745,
-      "exit": 1.14692,
-      "sl_pips": 11.6,
-      "tp_pips": 23.1,
-      "conf": 95,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-06-20",
-      "regime": "TREND",
-      "outcome": "SL",
-      "pips": -71.5,
-      "entry": 4156.61954,
-      "exit": 4163.77438,
-      "sl_pips": 71.5,
-      "tp_pips": 143.1,
-      "conf": 74,
-      "votes": 2,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
       "sym": "EUR/USD",
       "signal": "SELL",
       "correct": true,
@@ -1609,40 +1343,6 @@
       "date": "2026-06-21",
       "regime": "RANGE",
       "outcome": "OPEN",
-      "pips": -2.1,
-      "entry": 161.30116,
-      "exit": 161.28,
-      "sl_pips": 6.3,
-      "tp_pips": 12.7,
-      "conf": 91,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "correct": false,
-      "date": "2026-06-21",
-      "regime": "RANGE",
-      "outcome": "OPEN",
-      "pips": -1.4,
-      "entry": 161.29424,
-      "exit": 161.28,
-      "sl_pips": 4.9,
-      "tp_pips": 9.7,
-      "conf": 95,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "correct": false,
-      "date": "2026-06-21",
-      "regime": "RANGE",
-      "outcome": "OPEN",
       "pips": -1.4,
       "entry": 161.29424,
       "exit": 161.28,
@@ -1666,40 +1366,6 @@
       "sl_pips": 8.5,
       "tp_pips": 17.0,
       "conf": 91,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "correct": true,
-      "date": "2026-06-21",
-      "regime": "TREND",
-      "outcome": "OPEN",
-      "pips": 6.4,
-      "entry": 1.14756,
-      "exit": 1.14692,
-      "sl_pips": 8.5,
-      "tp_pips": 17.0,
-      "conf": 91,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "correct": false,
-      "date": "2026-06-21",
-      "regime": "RANGE",
-      "outcome": "OPEN",
-      "pips": -3.1,
-      "entry": 161.31101,
-      "exit": 161.28,
-      "sl_pips": 6.5,
-      "tp_pips": 13.0,
-      "conf": 86,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
@@ -1785,23 +1451,6 @@
       "sl_pips": 15.9,
       "tp_pips": 31.8,
       "conf": 85,
-      "votes": 3,
-      "entry_confirmed": null,
-      "actual_pnl_pips": null
-    },
-    {
-      "sym": "WTI/USD",
-      "signal": "SELL",
-      "correct": false,
-      "date": "2026-06-22",
-      "regime": "RANGE",
-      "outcome": "SL",
-      "pips": -29.0,
-      "entry": 73.64,
-      "exit": 76.54,
-      "sl_pips": 29.0,
-      "tp_pips": 58.0,
-      "conf": 86,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
