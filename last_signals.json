@@ -8,48 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 161.77512,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 161.66450991746805,
-      "tp": 161.99634016506383,
-      "sent_at": 1782345652.70108,
-      "message_id": 546,
-      "checkpoints": [
-        {
-          "hours": 1,
-          "at": 1782349252.70108,
-          "done": true
-        },
-        {
-          "hours": 4,
-          "at": 1782360052.70108,
-          "done": false
-        }
-      ],
-      "expires_at": 1782381652.70108,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": -0.06,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.64,
-        "tl": 1
-      },
-      "regime": "RANGE",
-      "hurst": 0.395,
-      "conf": 90,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1782345652"
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1782299748.977983,
@@ -2214,6 +2173,23 @@
       "pips": -6.9,
       "entry": 161.77512,
       "exit": 161.70599,
+      "sl_pips": 11.1,
+      "tp_pips": 22.1,
+      "conf": 90,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-06-25",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -11.1,
+      "entry": 161.77512,
+      "exit": 161.66451,
       "sl_pips": 11.1,
       "tp_pips": 22.1,
       "conf": 90,
