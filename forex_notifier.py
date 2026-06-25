@@ -74,12 +74,6 @@ PAIR_CONFIG = {
     'USD/JPY':   {'rsi_buy': 38, 'rsi_sell': 62, 'hurst_block': 0.48, 'min_votes': 3,
                   'trade_hours': set(range(0, 21))},
 
-    # === HANG HOA ===
-    # WTI/USD: energy bucket — doc lap voi FX, driver: DXY inverse + risk sentiment + yield
-    # Phase 2 (09/06/2026): thay the USD/CAD proxy bang WTI truc tiep
-    'WTI/USD':   {'rsi_buy': 42, 'rsi_sell': 58, 'hurst_block': 0.40, 'min_votes': 3,
-                  'trade_hours': set(range(8, 22)), 'cooldown_hours': 4},
-
     # === KIM LOAI QUY — TRONG TAM CHINH ===
     # XAU/USD: PRIMARY PAIR — macro 5-factor (DXY/TIPS/TNX/VIX/Oil)
     # hurst_block 0.39: vang thuong co H thap hon forex nhung van trend tot
@@ -90,6 +84,8 @@ PAIR_CONFIG = {
     # === PAIRS DA LOAI ===
     # USD/CHF: loai 09/06/2026 — correlation ~0.70 voi USD/JPY (ca hai safe haven USD/JPY du dien)
     # USD/CAD: loai 09/06/2026 — proxy oil, thay bang WTI truc tiep (Phase 2)
+    # WTI/USD: loai 25/06/2026 — backtest OOS exp -0.53R negative_significant (prob_le_0=1.0),
+    #          random-entry p=0.12 = zero skill, spread 8 pips cao nhat. Them lai neu dung duoc edge rieng.
     # EUR/JPY: loai 09/06/2026 — synthetic EUR/USD × USD/JPY, khong doc lap
     # NZD/USD: loai 09/06/2026 — correlation cao voi risk-on bucket, sample size chua du
     # XAG/USD: loai (0% WR, 7 lenh thua — 2026-06-03); industrial demand kho model
@@ -117,8 +113,7 @@ _USD_SHORT = {
 SYMBOLS = {
     # Majors
     'EUR/USD': 'EURUSD=X', 'USD/JPY': 'USDJPY=X',
-    # Hang hoa
-    'WTI/USD': 'CL=F',
+    # WTI/USD: LOAI 25/06/2026 — backtest OOS exp -0.53R negative_significant, zero skill (random p=0.12)
     # Kim loai quy — TRONG TAM CHINH
     'XAU/USD': 'GC=F',
 }
@@ -176,10 +171,9 @@ _BEARISH_WORDS = [
 _RISK_ON_BUYS  = {'EUR/USD', 'WTI/USD'}
 _RISK_OFF_BUYS = {'USD/JPY', 'XAU/USD'}
 
-# Symbol mapping cho Twelve Data API (4 cap × 96 lan/ngay = 384 req — trong quota free 800)
+# Symbol mapping cho Twelve Data API (3 cap × 96 lan/ngay = 288 req — trong quota free 800)
 TWELVE_DATA_SYMBOLS = {
     'EUR/USD': 'EUR/USD', 'USD/JPY': 'USD/JPY',
-    'WTI/USD': 'WTI/USD',
     'XAU/USD': 'XAU/USD',
 }
 
