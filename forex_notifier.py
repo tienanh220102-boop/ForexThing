@@ -49,7 +49,7 @@ COOLDOWN_HOURS  = 6
 LOT_SIZE        = 0.01   # Lot size thuc te moi lenh — chinh khi scale von
 ACCOUNT_SIZE    = float(os.environ.get('ACCOUNT_SIZE', '1000'))  # Von tai khoan (USD) — dung tinh lot de xuat
 STATE_FILE      = str(_ROOT / 'last_signals.json')
-CHECKPOINTS_H   = [1, 4]  # Xac nhan tai +1h va +4h — du lieu win rate phong phu hon
+MONITOR_HOURS   = 48     # Theo doi lien tuc moi 15p cho den khi cham TP/SL; qua nguong nay -> dong theo doi (khop gioi han data 2 ngay)
 MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de dat 65
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
@@ -2430,6 +2430,45 @@ def fetch_price_range(yf_sym, since_ts, hours=1):
     except Exception:
         return None, None
 
+def check_tp_sl(yf_sym, since_ts, entry, sl, tp, signal):
+    """Quet nen 5m tu since_ts -> now, tra ve cu CHAM TP hay SL DAU TIEN.
+    Tra: (outcome, exit_price, cur_price, win_high, win_low)
+      outcome: 'TP' | 'SL' | None (chua cham cai nao)
+    Neu mot nen cham ca TP lan SL -> gia dinh SL truoc (pessimistic, chuan backtest).
+    """
+    try:
+        df = yf.Ticker(yf_sym).history(period='2d', interval='5m')
+    except Exception:
+        return None, None, None, None, None
+    if df is None or len(df) == 0:
+        return None, None, None, None, None
+    if df.index.tzinfo is None:
+        df.index = df.index.tz_localize('UTC')
+    else:
+        df.index = df.index.tz_convert('UTC')
+    start  = pd.Timestamp(since_ts, unit='s', tz='UTC')
+    window = df.loc[df.index >= start]
+    if len(window) == 0:
+        return None, None, float(df['Close'].iloc[-1]), None, None
+    cur_price = float(window['Close'].iloc[-1])
+    win_high  = float(window['High'].max())
+    win_low   = float(window['Low'].min())
+    for _, row in window.iterrows():
+        hi = float(row['High']); lo = float(row['Low'])
+        if signal == 'BUY':
+            tp_bar = hi >= tp
+            sl_bar = lo <= sl
+        else:
+            tp_bar = lo <= tp
+            sl_bar = hi >= sl
+        if tp_bar and sl_bar:
+            return 'SL', sl, cur_price, win_high, win_low   # cung nen -> SL truoc
+        if tp_bar:
+            return 'TP', tp, cur_price, win_high, win_low
+        if sl_bar:
+            return 'SL', sl, cur_price, win_high, win_low
+    return None, None, cur_price, win_high, win_low
+
 # ── Format ────────────────────────────────────────────────────
 def fmt_price(sym, price):
     if 'JPY' in sym:    return f'{price:,.3f}'
@@ -2580,217 +2619,133 @@ def process_callbacks(state):
             print(f'  [callback] {sym_key} -> {label}')
 
 
-# ── Xac nhan 3 moc ───────────────────────────────────────────
+# ── Theo doi den khi cham TP/SL ───────────────────────────────
 def run_validations(state, now):
+    """Theo doi MOI LENH dang cho cho den khi gia THUC SU cham TP hoac SL,
+    roi moi bao 1 lan duy nhat. KHONG con bao 'dung huong/sai huong'.
+    Lenh chua cham TP/SL sau MONITOR_HOURS -> dong theo doi (tin trung tinh)."""
     pending   = state.get('pending_validations', [])
     remaining = []
 
     for v in pending:
-        # Bo qua signal format cu (khong co checkpoints)
-        if 'checkpoints' not in v:
+        sym    = v['sym']
+        signal = v['signal']
+        entry  = v.get('entry_price')
+        sl_val = v.get('sl')
+        tp_val = v.get('tp')
+        yf_sym = SYMBOLS.get(sym)
+
+        # Bo qua format cu / thieu thong tin can thiet
+        if not yf_sym or entry is None or sl_val is None or tp_val is None:
             continue
 
-        for cp in v.get('checkpoints', []):
-            if cp['done']:
-                continue
-            # Bo qua checkpoint khong con trong CHECKPOINTS_H (don dep gia cu)
-            if cp['hours'] not in CHECKPOINTS_H:
-                cp['done'] = True
-                continue
+        elapsed_h  = (now.timestamp() - v['sent_at']) / 3600
+        sent_dt    = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
+        now_vn_val = now.astimezone(VN_TZ)
 
-            # [FIX 1A] Het han: qua 6h sau checkpoint → bao cao va bo qua, khong retry mai mai
-            expires_at = v.get('expires_at', cp['at'] + 6 * 3600)
-            if now.timestamp() > expires_at:
-                sym_e  = v['sym']
-                sent_e = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
-                overdue_h = (now.timestamp() - cp['at']) / 3600
-                print(f'  [+{cp["hours"]}h] {sym_e} het han ({overdue_h:.1f}h qua han), bo qua')
+        print(f'[theo doi] {signal} {sym} ({elapsed_h:.1f}h)...', end=' ', flush=True)
+        outcome, exit_price, cur_price, win_high, win_low = check_tp_sl(
+            yf_sym, v['sent_at'], entry, sl_val, tp_val, signal)
+
+        # ── Chua cham TP lan SL ──────────────────────────────────
+        if outcome is None:
+            if elapsed_h >= MONITOR_HOURS:
+                print('het han theo doi, dong')
                 send_telegram(
-                    f'⏰ <b>Hết hạn xác nhận +{cp["hours"]}h</b>\n'
-                    f'📍 {sym_e} {v["signal"]} @ {fmt_price(sym_e, v["entry_price"])}\n'
-                    f'⏱ {sent_e.strftime("%d/%m %H:%M")} — không lấy được kết quả',
+                    f'⏰ <b>Đóng theo dõi — chưa chạm TP/SL sau {int(MONITOR_HOURS)}h</b>\n'
+                    f'📍 {sym} {signal} @ {fmt_price(sym, entry)}\n'
+                    f'⏱ Đặt lệnh: {sent_dt.strftime("%d/%m %H:%M")} (Giờ VN)\n'
+                    f'— Lệnh không chạm TP hay SL trong {int(MONITOR_HOURS)}h, ngừng theo dõi (không tính kết quả).',
                     reply_to=v.get('message_id'),
                 )
-                cp['done'] = True
-                continue
-
-            if now.timestamp() < cp['at']:
-                continue
-
-            sym    = v['sym']
-            yf_sym = SYMBOLS.get(sym)
-            if not yf_sym:
-                cp['done'] = True
-                continue
-
-            print(f'[+{cp["hours"]}h] Xac nhan {v["signal"]} {sym}...', end=' ', flush=True)
-            current = fetch_current_price(yf_sym)
-            if current is None:
-                print('Khong lay duoc gia, thu lai sau')
-                continue
-            h1_high, h1_low = fetch_price_range(yf_sym, v['sent_at'], hours=cp['hours'])
-
-            entry   = v['entry_price']
-            signal  = v['signal']
-            sl_val  = v.get('sl')
-            tp_val  = v.get('tp')
-
-            # Kiem tra TP/SL tu HIGH/LOW trong khung gio (chinh xac hon gia hien tai)
-            # Su dung h1_high/h1_low de biet TP hay SL da duoc cham trong khung gio
-            tp_hit = sl_hit = False
-            if sl_val and tp_val and h1_high is not None and h1_low is not None:
-                # Trong khung gio: gia co dat toi TP hay SL khong?
-                tp_hit = (h1_high >= tp_val) if signal == 'BUY' else (h1_low <= tp_val)
-                sl_hit = (h1_low  <= sl_val) if signal == 'BUY' else (h1_high >= sl_val)
-            elif sl_val and tp_val:
-                # Fallback: dung gia hien tai
-                tp_hit = (current >= tp_val) if signal == 'BUY' else (current <= tp_val)
-                sl_hit = (current <= sl_val) if signal == 'BUY' else (current >= sl_val)
-
-            # correct = TP hit (thang) > SL hit (thua) > direction (tham khao)
-            # Day la metric chinh xac: phan anh P&L thuc te cua giao dich
-            if tp_hit and not sl_hit:
-                correct = True    # TP dat truoc SL → thang
-            elif sl_hit and not tp_hit:
-                correct = False   # SL bi cham truoc TP → thua
-            elif tp_hit and sl_hit:
-                # Ca hai trong khung: can xem cai nao den truoc — dung direction lam tiebreak
-                diff_direction = current - entry if signal == 'BUY' else entry - current
-                correct = diff_direction > 0
+                time.sleep(1)
+                # KHONG ghi vao results — chi TP/SL moi tinh ket qua
             else:
-                # Khong cham ca hai: dung direction tai thoi diem check
-                diff    = current - entry if signal == 'BUY' else entry - current
-                correct = diff > 0
+                print('chua cham, theo doi tiep')
+                remaining.append(v)   # giu lai, check lai o lan chay sau
+            continue
 
-            diff = current - entry if signal == 'BUY' else entry - current
-            pct  = abs(diff/entry) * 100
+        # ── Da cham TP hoac SL -> bao 1 lan duy nhat ─────────────
+        if outcome == 'TP':
+            correct       = True
+            verdict_emoji = '🎉'; verdict = 'CHỐT LỜI (TP)'
+            pip_result    = price_to_pips(sym,  abs(tp_val - entry))   # luon duong
+            move_text     = f'TP chạm! +{abs(tp_val-entry)/entry*100:.3f}%'
+            tp_sl_line    = f'🎉 ĐÃ CHẠM TP ({fmt_price(sym, tp_val)}) — CHỐT LỜI!'
+        else:  # SL
+            correct       = False
+            verdict_emoji = '💸'; verdict = 'DỪNG LỖ (SL)'
+            pip_result    = price_to_pips(sym, -abs(sl_val - entry))   # luon am
+            move_text     = f'SL chạm! -{abs(sl_val-entry)/entry*100:.3f}%'
+            tp_sl_line    = f'💸 ĐÃ CHẠM SL ({fmt_price(sym, sl_val)}) — DỪNG LỖ!'
 
-            if tp_hit and not sl_hit:
-                verdict_emoji = '🎉'; verdict = 'CHỐT LỜI (TP)'
-                move_text = f'TP chạm! +{abs(tp_val-entry)/entry*100:.3f}%'
-            elif sl_hit and not tp_hit:
-                verdict_emoji = '💸'; verdict = 'DỪNG LỖ (SL)'
-                move_text = f'SL chạm! -{abs(sl_val-entry)/entry*100:.3f}%'
-            elif diff > 0:
-                verdict_emoji = '✅'; verdict = 'ĐÚNG HƯỚNG'
-                move_text = f'{"Tăng" if signal=="BUY" else "Giảm"} {pct:.3f}%'
-            else:
-                verdict_emoji = '❌'; verdict = 'SAI HƯỚNG'
-                move_text = f'{"Giảm" if signal=="BUY" else "Tăng"} {pct:.3f}%'
+        _chk_usd = round(pip_result * LOT_SIZE * 10, 2)
+        _sign    = '+' if _chk_usd >= 0 else ''
+        _usd_str = f'{_sign}{_chk_usd:.2f} USD ({pip_result:+.1f} pips × {LOT_SIZE} lot)'
 
-            inds    = v.get('indicators', {})
-            regime  = v.get('regime', '?')
-            H       = v.get('hurst', 0.5)
-            aligned = v.get('aligned', '?')
-            ind_str = (f"RSI{_icon(inds.get('rsi',0))} EMA{_icon(inds.get('ema',0))} "
-                      f"MACD{_icon(inds.get('macd',0))} BB{_icon(inds.get('bb',0))} "
-                      f"Mom{_icon(inds.get('mom',0))} IM{_icon(inds.get('inter',0))}")
-            sent_dt    = datetime.fromtimestamp(v['sent_at'], tz=timezone.utc).astimezone(VN_TZ)
-            now_vn_val = now.astimezone(VN_TZ)
+        inds    = v.get('indicators', {})
+        regime  = v.get('regime', '?')
+        H       = v.get('hurst', 0.5)
+        aligned = v.get('aligned', '?')
+        ind_str = (f"RSI{_icon(inds.get('rsi',0))} EMA{_icon(inds.get('ema',0))} "
+                  f"MACD{_icon(inds.get('macd',0))} BB{_icon(inds.get('bb',0))} "
+                  f"Mom{_icon(inds.get('mom',0))} IM{_icon(inds.get('inter',0))}")
 
-            # TP/SL status line
-            if sl_val and tp_val:
-                if tp_hit and not sl_hit:
-                    tp_sl_line = f'🎉 ĐÃ CHẠM TP ({fmt_price(sym, tp_val)}) — CHỐT LỜI!'
-                elif sl_hit and not tp_hit:
-                    tp_sl_line = f'💸 ĐÃ CHẠM SL ({fmt_price(sym, sl_val)}) — DỪNG LỖ!'
-                else:
-                    d_tp = abs(tp_val - current) / entry * 100
-                    d_sl = abs(current - sl_val) / entry * 100
-                    tp_sl_line = (f'TP {fmt_price(sym, tp_val)} (còn {d_tp:.3f}%) | '
-                                  f'SL {fmt_price(sym, sl_val)} (còn {d_sl:.3f}%)')
-            else:
-                tp_sl_line = ''
+        if win_high is not None and win_low is not None:
+            range_line = (f'📉 Đáy: <b>{fmt_price(sym, win_low)}</b> | '
+                          f'📈 Đỉnh: <b>{fmt_price(sym, win_high)}</b>')
+        else:
+            range_line = ''
 
-            if h1_high is not None and h1_low is not None:
-                range_line = (
-                    f'📉 Đáy {cp["hours"]}h: <b>{fmt_price(sym, h1_low)}</b> | '
-                    f'📈 Đỉnh {cp["hours"]}h: <b>{fmt_price(sym, h1_high)}</b>'
-                )
-            else:
-                range_line = ''
+        msg_lines = [
+            f'{verdict_emoji} <b>Kết quả — {verdict}</b>',
+            '',
+            f'📈 Cặp: <b>{sym}</b>',
+            f'📌 {signal} @ {fmt_price(sym, entry)} → {fmt_price(sym, exit_price)}',
+            f'📊 Biến động: <b>{move_text}</b>',
+            f'💰 P&L: <b>{_usd_str}</b>',
+        ]
+        if range_line:
+            msg_lines.append(range_line)
+        msg_lines.append(f'🎯 {tp_sl_line}')
+        msg_lines += [
+            f'🌊 Regime khi đặt: {regime} (Hurst={H:.2f})',
+            f'🔍 {ind_str} | {aligned}/5 đồng thuận',
+            '',
+            f'⏱ Đặt lệnh: {sent_dt.strftime("%d/%m %H:%M")} (Giờ VN)',
+            f'⏱ Kết quả:  {now_vn_val.strftime("%d/%m %H:%M")} (Giờ VN)',
+        ]
+        msg = '\n'.join(msg_lines)
 
-            dir_m = 1 if signal == 'BUY' else -1
-            if tp_hit and not sl_hit:
-                _chk_pips = price_to_pips(sym,  abs(tp_val - entry))
-            elif sl_hit and not tp_hit:
-                _chk_pips = price_to_pips(sym, -abs(sl_val - entry))
-            else:
-                _chk_pips = price_to_pips(sym, dir_m * (current - entry))
-            _chk_usd = round(_chk_pips * LOT_SIZE * 10, 2)
-            _sign     = '+' if _chk_usd >= 0 else ''
-            _usd_str  = f'{_sign}{_chk_usd:.2f} USD ({_chk_pips:+.1f} pips × {LOT_SIZE} lot)'
-
-            msg_lines = [
-                f'{verdict_emoji} <b>Kết quả +{cp["hours"]}h — {verdict}</b>',
-                '',
-                f'📈 Cặp: <b>{sym}</b>',
-                f'📌 {signal} @ {fmt_price(sym, entry)} → {fmt_price(sym, current)}',
-                f'📊 Biến động: <b>{move_text}</b>',
-                f'💰 P&L: <b>{_usd_str}</b>',
-            ]
-            if range_line:
-                msg_lines.append(range_line)
-            if tp_sl_line:
-                msg_lines.append(f'🎯 {tp_sl_line}')
-            msg_lines += [
-                f'🌊 Regime khi đặt: {regime} (Hurst={H:.2f})',
-                f'🔍 {ind_str} | {aligned}/5 đồng thuận',
-                '',
-                f'⏱ Đặt lệnh: {sent_dt.strftime("%d/%m %H:%M")} (Giờ VN)',
-                f'⏱ Kết quả:  {now_vn_val.strftime("%d/%m %H:%M")} (Giờ VN)',
-            ]
-            msg = '\n'.join(msg_lines)
-
-            result = send_telegram(msg, reply_to=v.get('message_id'))
-            # [FIX 1C] Neu reply_to that bai (tin nhan goc bi xoa / bot bi han), gui lai khong reply
-            if not result.get('ok') and v.get('message_id'):
-                result = send_telegram(msg)
-            if result.get('ok'):
-                cp['done'] = True
-                print(f'{verdict} OK')
-                # Ghi ket qua theo doi win rate + pip P&L
-                dir_mult = 1 if signal == 'BUY' else -1
-                if tp_hit and not sl_hit:
-                    outcome    = 'TP'
-                    exit_price = tp_val
-                    pip_result = price_to_pips(sym,  abs(tp_val - entry))   # luon duong
-                elif sl_hit and not tp_hit:
-                    outcome    = 'SL'
-                    exit_price = sl_val
-                    pip_result = price_to_pips(sym, -abs(sl_val - entry))   # luon am
-                else:
-                    outcome    = 'OPEN'
-                    exit_price = current
-                    pip_result = price_to_pips(sym, dir_mult * (current - entry))
-
-                sl_pips = price_to_pips(sym, abs(entry - sl_val)) if sl_val else None
-                tp_pips = price_to_pips(sym, abs(tp_val - entry)) if tp_val else None
-
-                confirmed = v.get('entry_confirmed')
-                state.setdefault('results', []).append({
-                    'sym':             sym,     'signal':  signal,  'correct': correct,
-                    'date':            sent_dt.strftime('%Y-%m-%d'),
-                    'regime':          v.get('regime', '?'),
-                    'outcome':         outcome,
-                    'pips':            pip_result,
-                    'entry':           round(entry,      5),
-                    'exit':            round(exit_price, 5),
-                    'sl_pips':         sl_pips,
-                    'tp_pips':         tp_pips,
-                    'conf':            v.get('conf', 0),
-                    'votes':           v.get('aligned', 0),
-                    'entry_confirmed': confirmed,
-                    'actual_pnl_pips': pip_result if confirmed is True else None,
-                })
-            else:
-                print(f'Loi Telegram: {result}')
-            time.sleep(1)
-
-        # [FIX 1B] Tinh lai any_undone SAU khi xu ly — tranh giu signal da done them 1 vong
-        any_undone = any(not cp['done'] for cp in v.get('checkpoints', []))
-        if any_undone:
-            remaining.append(v)
+        result = send_telegram(msg, reply_to=v.get('message_id'))
+        # Neu reply_to that bai (tin goc bi xoa / bot bi han), gui lai khong reply
+        if not result.get('ok') and v.get('message_id'):
+            result = send_telegram(msg)
+        if result.get('ok'):
+            print(f'{verdict} OK')
+            sl_pips   = price_to_pips(sym, abs(entry - sl_val))
+            tp_pips   = price_to_pips(sym, abs(tp_val - entry))
+            confirmed = v.get('entry_confirmed')
+            state.setdefault('results', []).append({
+                'sym':             sym,     'signal':  signal,  'correct': correct,
+                'date':            sent_dt.strftime('%Y-%m-%d'),
+                'regime':          v.get('regime', '?'),
+                'outcome':         outcome,
+                'pips':            pip_result,
+                'entry':           round(entry,      5),
+                'exit':            round(exit_price, 5),
+                'sl_pips':         sl_pips,
+                'tp_pips':         tp_pips,
+                'conf':            v.get('conf', 0),
+                'votes':           v.get('aligned', 0),
+                'entry_confirmed': confirmed,
+                'actual_pnl_pips': pip_result if confirmed is True else None,
+            })
+            # Lenh da dong -> KHONG dua lai vao remaining
+        else:
+            print(f'Loi Telegram: {result}')
+            remaining.append(v)   # gui that bai -> giu lai, thu lai lan sau
+        time.sleep(1)
 
     state['pending_validations'] = remaining
 
@@ -3281,11 +3236,6 @@ def main():
                 'tp':             r['tp'],
                 'sent_at':        now.timestamp(),
                 'message_id':     msg_id,
-                'checkpoints': [
-                    {'hours': h, 'at': now.timestamp()+h*3600, 'done': False}
-                    for h in CHECKPOINTS_H
-                ],
-                'expires_at':     now.timestamp() + (max(CHECKPOINTS_H) + 6) * 3600,
                 'indicators':     r['indicators'],
                 'regime':         r['regime'],
                 'hurst':          r['hurst'],
@@ -3296,7 +3246,7 @@ def main():
                 'cb_key':         f'{sym_key}_{ts_key}',
             })
             sent += 1
-            print(f'  -> Telegram OK | +1h xac nhan | {r["vote_count"]}/6 phieu | conf={conf}%')
+            print(f'  -> Telegram OK | theo doi den khi cham TP/SL | {r["vote_count"]}/6 phieu | conf={conf}%')
         else:
             print(f'  -> Loi Telegram: {result}')
 
