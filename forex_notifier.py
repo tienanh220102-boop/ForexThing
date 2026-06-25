@@ -51,6 +51,12 @@ ACCOUNT_SIZE    = float(os.environ.get('ACCOUNT_SIZE', '1000'))  # Von tai khoan
 STATE_FILE      = str(_ROOT / 'last_signals.json')
 MONITOR_HOURS   = 48     # Theo doi lien tuc moi 15p cho den khi cham TP/SL; qua nguong nay -> dong theo doi (khop gioi han data 2 ngay)
 MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de dat 65
+# VOTING_MODE: 'info' (mac dinh) = he Phan tich CHUA co edge kiem chung (mọi cap CI om 0)
+#   -> chi gui tin THAM KHAO co banner canh bao + KHONG nut "Da vao lenh", KHONG moi vao lenh;
+#   van ghi pending_validations de tiep tuc thu data WR. 'live' = bat lai tin hieu actionable.
+#   Doi qua GitHub Repo Variable vars.VOTING_MODE (giong vars.BIAS). Quyet dinh 25/06: PA la he
+#   duy nhat qua moi cong kiem chung -> voting chay info-only cho den khi co edge.
+VOTING_MODE     = os.environ.get('VOTING_MODE', 'info').strip().lower()
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
 # Cap nhat moi khi co thay doi lon ve thuat toan (ADX filter, session filter, swing SL)
@@ -3157,6 +3163,10 @@ def main():
             rec_lot = max(rec_lot, 0.01)  # floor micro lot
 
         msg_parts = [
+            *(['⚠️ <b>THAM KHẢO — KHÔNG PHẢI LỆNH</b>',
+               'Hệ Phân tích chưa có edge kiểm chứng (CI ôm 0). Đang thu thập dữ liệu; '
+               'đừng vào lệnh theo tín hiệu này. (PA vàng vẫn là hệ chính.)',
+               ''] if VOTING_MODE != 'live' else []),
             f'{emoji} <b>{sym} — {direction}</b> | {conf}% tin cậy',
             f'<code>{bar}</code>  {conf_10}/10',
             '',
@@ -3207,10 +3217,13 @@ def main():
 
         sym_key = sym.replace('/', '')
         ts_key  = int(now.timestamp())
-        keyboard = [[
-            {'text': '✅ Đã vào lệnh', 'callback_data': f'confirm_yes_{sym_key}_{ts_key}'},
-            {'text': '❌ Bỏ qua',      'callback_data': f'confirm_no_{sym_key}_{ts_key}'},
-        ]]
+        # Info mode: KHONG nut "Da vao lenh" (khong moi vao lenh). Live mode moi co keyboard.
+        keyboard = None
+        if VOTING_MODE == 'live':
+            keyboard = [[
+                {'text': '✅ Đã vào lệnh', 'callback_data': f'confirm_yes_{sym_key}_{ts_key}'},
+                {'text': '❌ Bỏ qua',      'callback_data': f'confirm_no_{sym_key}_{ts_key}'},
+            ]]
         result = send_telegram(msg, keyboard=keyboard)
         if result.get('ok'):
             msg_id = result.get('result', {}).get('message_id')
