@@ -35,6 +35,7 @@ jobs:
           TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
           TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}
           ACCOUNT_SIZE:     ${{ secrets.ACCOUNT_SIZE }}
+          VOTING_MODE:      ${{ vars.VOTING_MODE }}   # info (mac dinh/rong) = tham khao, khong actionable | live = bat lai
         run: python forex_notifier.py
 
       - name: Run Gold PA Bot (he Price Action doc lap cho XAU)
