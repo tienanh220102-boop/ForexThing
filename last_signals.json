@@ -35,6 +35,33 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "XAUUSD_1782495938"
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "entry_price": 1.13888,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 1.1368871294061647,
+      "tp": 1.1428657411876701,
+      "sent_at": 1782504936.968334,
+      "message_id": null,
+      "indicators": {
+        "rsi": 1,
+        "ema": 0,
+        "macd": -0.32,
+        "bb": 0,
+        "mom": 0.2,
+        "inter": -0.06,
+        "tl": 1
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.528,
+      "conf": 81,
+      "aligned": 3,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "EURUSD_1782504936"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -1962,7 +1989,7 @@
   ],
   "AUD/USD|SELL": 1779332463.119578,
   "XAG/USD|SELL": 1779951664.755662,
-  "EUR/USD|BUY": 1782457256.483979,
+  "EUR/USD|BUY": 1782504936.968334,
   "GBP/USD|BUY": 1780245649.560464,
   "XAU/USD|BUY": 1782495938.241048,
   "USD/CHF|SELL": 1780659056.268735,
@@ -5527,5 +5554,5 @@
   "EUR/USD|SELL|entry": 1.13403,
   "XAU/USD|SELL|entry": 4026.20618,
   "USD/JPY|BUY|entry": 161.87727,
-  "EUR/USD|BUY|entry": 1.1377
+  "EUR/USD|BUY|entry": 1.13888
 }
