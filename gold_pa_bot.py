@@ -186,6 +186,9 @@ KILL_DD_R        = 15.0   # drawdown duong equity > 15R -> canh bao
 SPRT_MU0, SPRT_MU1 = 0.0, BACKTEST_EXP_R
 SPRT_A = math.log((1 - 0.05) / 0.05)      # LLR >= +2.94 -> xac nhan CO edge
 SPRT_B = math.log(0.05 / (1 - 0.05))      # LLR <= -2.94 -> bac edge (kill co co so)
+# Bao cao tong R thang/thua tinh TU NGAY NAY (user yeu cau 26/06): bang diem sach,
+# dem moi keo PA co date >= moc nay. Gui moi khi co keo moi chot (khong spam moi 15p).
+REPORT_SINCE = os.environ.get('PA_REPORT_SINCE', '2026-06-26').strip()
 
 _SETUP_NAMES = {
     'sweep_reclaim': 'Sweep & Reclaim (quét thanh khoản + rút râu)',
@@ -877,6 +880,7 @@ def resolve_signals(state, now, bars):
     if res:
         print(f'[PA] Da chot {res} keo')
     state['signals'] = state.get('signals', [])[-200:]
+    return res
 
 
 # ── Probe add-on: "đánh đuổi" sau khi phá cản (13/06/2026) ───
@@ -1024,6 +1028,33 @@ def _trade_r(rec):
     if not sl_pips:
         return None
     return (rec.get('pips') or 0.0) / sl_pips
+
+
+def report_running_r(state, now):
+    """Bang diem SACH tu REPORT_SINCE: tong R thang/thua cua PA tinh tu ngay do.
+    Goi khi co keo MOI chot (khong spam moi 15p). NOFILL khong tinh (khong vao lenh)."""
+    done = [x for x in state.get('signals', [])
+            if x.get('date', '') >= REPORT_SINCE
+            and x.get('outcome') and x['outcome'] != 'NOFILL']
+    if not done:
+        return
+    rs = [(_trade_r(x) or 0.0) for x in done]
+    total  = sum(rs)
+    wins   = sum(1 for x in done if x.get('correct'))
+    losses = sum(1 for x in done if x.get('correct') is False)
+    head   = '🟢' if total >= 0 else '🔴'
+    lines  = [f'{head} <b>PA — Tổng R từ {REPORT_SINCE}</b>',
+              f'Tổng: <b>{total:+.2f}R</b>   ({wins}W / {losses}L · {len(done)} lệnh)',
+              '']
+    for x in done[-12:]:                      # liet ke toi da 12 keo gan nhat
+        r   = _trade_r(x) or 0.0
+        ico = '✅' if x.get('correct') else ('❌' if x.get('correct') is False else '➖')
+        lines.append(f"{ico} {x.get('date')} {x.get('setup')} {x.get('dir')} "
+                     f"{x.get('outcome')}  <b>{r:+.2f}R</b>")
+    try:
+        fx.send_telegram('\n'.join(lines))
+    except Exception as e:
+        log.info(f'REPORT_FAIL {e}')
 
 
 _SPRT_LBL = {'CONFIRM_EDGE': '✅ đã xác nhận có edge',
@@ -1232,7 +1263,11 @@ def main():
     print(f'[PA] {len(bars)} bars H1')
 
     # Chot ket qua keo cu (chay moi run, ke ca ngoai phien)
-    resolve_signals(state, now, bars)
+    n_closed = resolve_signals(state, now, bars)
+
+    # Co keo MOI chot -> gui bang diem tong R tu REPORT_SINCE (khong spam moi run)
+    if n_closed:
+        report_running_r(state, now)
 
     # Kiem chung live: moi 50 keo da chot -> so WR/exp thuc vs backtest, canh bao
     try:

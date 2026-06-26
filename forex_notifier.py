@@ -54,9 +54,13 @@ MIN_CONFIDENCE  = 65     # 3/5 phieu = 60 (truoc bonus) | can bonus H4/Fib/SR de
 # VOTING_MODE: 'info' (mac dinh) = he Phan tich CHUA co edge kiem chung (mọi cap CI om 0)
 #   -> chi gui tin THAM KHAO co banner canh bao + KHONG nut "Da vao lenh", KHONG moi vao lenh;
 #   van ghi pending_validations de tiep tuc thu data WR. 'live' = bat lai tin hieu actionable.
+#   'off' (26/06, user yeu cau) = TAT HET thong bao Telegram phia Vote (tin hieu, validations,
+#   gold outlook, weekly). He van CHAY NGAM: cap nhat price_history.json (PA phu thuoc) + thu
+#   data WR im lang -> dao nguoc tuc thi bang cach doi lai 'info'/'live'. CHI con PA bao tin.
 #   Doi qua GitHub Repo Variable vars.VOTING_MODE (giong vars.BIAS). Quyet dinh 25/06: PA la he
 #   duy nhat qua moi cong kiem chung -> voting chay info-only cho den khi co edge.
 VOTING_MODE     = os.environ.get('VOTING_MODE', 'info').strip().lower()
+SILENT_VOTE     = (VOTING_MODE == 'off')   # tat moi thong bao phia Vote, van chay ngam
 VN_TZ          = timezone(timedelta(hours=7))   # Gio Viet Nam (UTC+7)
 # Ngay bat dau logic hien tai — chi dem ket qua tu ngay nay tro di de danh gia
 # Cap nhat moi khi co thay doi lon ve thuat toan (ADX filter, session filter, swing SL)
@@ -2517,6 +2521,14 @@ def send_telegram(msg, reply_to=None, keyboard=None):
     resp = requests.post(url, json=payload, timeout=10)
     return resp.json()
 
+def _vote_emit(msg, reply_to=None, keyboard=None):
+    """Gui tin phia he VOTE. Khi VOTING_MODE='off' (SILENT_VOTE) -> KHONG gui gi,
+    nhung tra dict ok=True de logic ghi results/state phia sau van chay binh thuong
+    (he van thu data WR im lang, dao nguoc tuc thi bang cach doi lai 'info'/'live')."""
+    if SILENT_VOTE:
+        return {'ok': True, 'result': {}}
+    return send_telegram(msg, reply_to=reply_to, keyboard=keyboard)
+
 def get_tg_updates(offset=None):
     """Lay callback_query tu nguoi dung (nut xac nhan vao/bo qua lenh)."""
     url    = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates'
@@ -2651,7 +2663,7 @@ def run_validations(state, now):
         if outcome is None:
             if elapsed_h >= MONITOR_HOURS:
                 print('het han theo doi, dong')
-                send_telegram(
+                _vote_emit(
                     f'⏰ <b>Đóng theo dõi — chưa chạm TP/SL sau {int(MONITOR_HOURS)}h</b>\n'
                     f'📍 {sym} {signal} @ {fmt_price(sym, entry)}\n'
                     f'⏱ Đặt lệnh: {sent_dt.strftime("%d/%m %H:%M")} (Giờ VN)\n'
@@ -2717,10 +2729,10 @@ def run_validations(state, now):
         ]
         msg = '\n'.join(msg_lines)
 
-        result = send_telegram(msg, reply_to=v.get('message_id'))
+        result = _vote_emit(msg, reply_to=v.get('message_id'))
         # Neu reply_to that bai (tin goc bi xoa / bot bi han), gui lai khong reply
         if not result.get('ok') and v.get('message_id'):
-            result = send_telegram(msg)
+            result = _vote_emit(msg)
         if result.get('ok'):
             print(f'{verdict} OK')
             sl_pips   = price_to_pips(sym, abs(entry - sl_val))
@@ -3224,7 +3236,7 @@ def main():
                 {'text': '✅ Đã vào lệnh', 'callback_data': f'confirm_yes_{sym_key}_{ts_key}'},
                 {'text': '❌ Bỏ qua',      'callback_data': f'confirm_no_{sym_key}_{ts_key}'},
             ]]
-        result = send_telegram(msg, keyboard=keyboard)
+        result = _vote_emit(msg, keyboard=keyboard)
         if result.get('ok'):
             msg_id = result.get('result', {}).get('message_id')
             state[key] = now.timestamp()
@@ -3265,16 +3277,17 @@ def main():
     # buoc nay trong cung workflow — xem .github/workflows/main.yml)
 
     # Gold Macro Outlook — ban tin vi mo hang ngay (thong tin, khong phai lenh)
-    try:
-        send_gold_outlook(state, now)
-    except Exception as e:
-        print(f'  [OUTLOOK] Loi: {e}')
-    save_state(state)
+    if not SILENT_VOTE:
+        try:
+            send_gold_outlook(state, now)
+        except Exception as e:
+            print(f'  [OUTLOOK] Loi: {e}')
+        save_state(state)
 
     # Bao cao tuan (moi 7 ngay) — gui qua Telegram neu du du lieu
     last_rpt  = state.get('last_weekly_report', 0)
     days_since = (now.timestamp() - last_rpt) / 86400
-    if days_since >= 7 and len(state.get('results', [])) >= 5:
+    if not SILENT_VOTE and days_since >= 7 and len(state.get('results', [])) >= 5:
         print('\n=== Bao cao hieu suat tuan ===')
         send_weekly_report(state)
         save_state(state)
