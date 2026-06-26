@@ -9072,3 +9072,7 @@
 2026-06-26 06:15:51 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-06-26 06:15:51 UTC [XAU/USD] SIGNAL SELL conf=78 votes=3/6 regime=NEUTRAL H=0.503 ADX=19.6
 2026-06-26 06:15:51 UTC [XAU/USD] DUP_SAMEDIR SELL 10.2h prev=4026.20618 now=4007.30174 improve=-18.90444
+2026-06-26 06:30:52 UTC [USD/JPY] BLOCKED hurst H=0.179 threshold=0.350 src=dyn bars=720
+2026-06-26 06:30:52 UTC [USD/JPY] NO_SIGNAL
+2026-06-26 06:30:52 UTC [XAU/USD] BLOCKED few_votes BUY=1 BEAR=1
+2026-06-26 06:30:52 UTC [XAU/USD] NO_SIGNAL
