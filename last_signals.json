@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "entry_price": 4026.20618,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4059.4827189899224,
-      "tp": 3959.6531020201555,
-      "sent_at": 1782417650.122405,
-      "message_id": 556,
-      "indicators": {
-        "rsi": -1,
-        "ema": 0,
-        "macd": 1.0,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.21,
-        "tl": 0
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.454,
-      "conf": 76,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1782417650"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "BUY",
       "entry_price": 1.1377,
@@ -1951,6 +1924,23 @@
       "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-06-26",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -332.8,
+      "entry": 4026.20618,
+      "exit": 4059.48272,
+      "sl_pips": 332.8,
+      "tp_pips": 665.5,
+      "conf": 76,
+      "votes": 2,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -1971,10 +1961,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1781255743,
-        0.282
-      ],
       [
         1781259335,
         0.285
