@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4077.61723,
-      "entry_mode": "LIMIT",
-      "limit_entry": 4055.8982352882945,
-      "sl": 4025.60283,
-      "tp": 4181.64603,
-      "sent_at": 1782495938.241048,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.44,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": -0.08,
-        "tl": 0
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.506,
-      "conf": 77,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1782495938"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "BUY",
       "entry_price": 1.13888,
