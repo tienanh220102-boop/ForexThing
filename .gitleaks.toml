@@ -1,0 +1,23 @@
+# Cau hinh gitleaks cho repo ForexThing.
+# Muc dich: tat false positive cua rule generic-api-key tren truong "cb_key".
+#
+# cb_key la callback key cho nut inline Telegram, sinh boi forex_notifier.py:
+#     'cb_key': f'{sym_key}_{ts_key}'   ->  vd "XAUUSD_1782417650"
+# (symbol viet hoa + unix timestamp). KHONG phai API key/secret.
+# Rule generic-api-key bao nham vi ten truong chua "key" + value entropy cao.
+#
+# useDefault = true: giu nguyen toan bo rule mac dinh cua gitleaks,
+# chi them allowlist ben duoi -> cac secret that o noi khac van bi bat.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "cb_key la callback key Telegram (symbol_timestamp), khong phai secret"
+# Chi mien tru trong state file may sinh, va chi voi dung pattern cb_key.
+paths = [
+  '''last_signals\.json$''',
+]
+regexes = [
+  '''^[A-Z]{3,8}_\d{10}$''',
+]
