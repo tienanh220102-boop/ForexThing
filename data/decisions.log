@@ -10683,3 +10683,11 @@
 2026-06-29 13:00:51 UTC [USD/JPY] NO_SIGNAL
 2026-06-29 13:00:52 UTC [XAU/USD] BLOCKED counter_trend H=0.600 H4=BEAR
 2026-06-29 13:00:52 UTC [XAU/USD] NO_SIGNAL
+2026-06-29 13:15:46 UTC [EUR/USD] BLOCKED counter_w1 BUY W1=BEAR H=0.570
+2026-06-29 13:15:46 UTC [EUR/USD] NO_SIGNAL
+2026-06-29 13:15:49 UTC [USD/JPY] BLOCKED hurst H=0.171 threshold=0.350 src=dyn bars=720
+2026-06-29 13:15:49 UTC [USD/JPY] NO_SIGNAL
+2026-06-29 13:15:51 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-06-29 13:15:51 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-29 13:15:52 UTC [XAU/USD] BLOCKED fear_greed SELL F&G=25 (Extreme Fear) — thi truong so, risk-on gap rui ro
+2026-06-29 13:15:52 UTC [XAU/USD] NO_SIGNAL
