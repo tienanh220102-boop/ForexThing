@@ -11395,3 +11395,5 @@
 2026-06-30 20:45:44 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-06-30 20:45:45 UTC [XAU/USD] SIGNAL SELL conf=91 votes=3/6 regime=TREND H=0.560 ADX=24.5
 2026-06-30 20:45:45 UTC [XAU/USD] COOLDOWN SELL 2.0h/4h
+2026-07-01 00:00:50 UTC [USD/JPY] BLOCKED rsi_extreme RSI=75 BUY votes=2
+2026-07-01 00:00:50 UTC [USD/JPY] NO_SIGNAL
