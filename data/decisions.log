@@ -11475,3 +11475,9 @@
 2026-07-01 07:15:39 UTC [XAU/USD] NO_SIGNAL
 2026-07-01 07:15:42 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
 2026-07-01 07:15:42 UTC generated new fontManager
+2026-07-01 07:30:47 UTC [EUR/USD] BLOCKED hurst H=0.325 threshold=0.450 src=dyn bars=720
+2026-07-01 07:30:47 UTC [EUR/USD] NO_SIGNAL
+2026-07-01 07:30:48 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=3 need=4 H4=BULL
+2026-07-01 07:30:48 UTC [USD/JPY] NO_SIGNAL
+2026-07-01 07:30:49 UTC [XAU/USD] BLOCKED rsi_extreme RSI=33 SELL votes=3
+2026-07-01 07:30:49 UTC [XAU/USD] NO_SIGNAL
