@@ -3384,3 +3384,7 @@
 2026-07-01 15:16:00 UTC CROSS_DUP sweep_reclaim SELL ta_sent=7.2h
 2026-07-01 15:16:01 UTC SENT sweep_reclaim BUY stars=5 type=market entry=4084.15 sl=4070.85 tp1=4097.45 tp2=4104.09
 2026-07-01 15:16:05 UTC CHART_SENT
+2026-07-01 15:31:02 UTC RESOLVED sweep_reclaim BUY SL pips=-133.0
+2026-07-01 15:31:03 UTC REGIME er=0.005 trend=False
+2026-07-01 15:31:03 UTC CROSS_DUP sweep_reclaim SELL ta_sent=7.5h
+2026-07-01 15:31:04 UTC COOLDOWN sweep_reclaim|BUY
