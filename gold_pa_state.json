@@ -360,7 +360,10 @@
       "probe": true,
       "align": "neutral",
       "add_trigger": null,
-      "sl_dist_atr": 1.2
+      "sl_dist_atr": 1.2,
+      "outcome": "SL",
+      "correct": false,
+      "pips": -264.4
     }
   ],
   "cooldowns": {
