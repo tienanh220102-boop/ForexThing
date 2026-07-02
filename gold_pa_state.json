@@ -400,14 +400,15 @@
   },
   "pa_knowledge": {
     "adjust": {},
-    "updated": 1782875736.545417,
-    "n_resolved": 14,
+    "updated": 1782962139.817331,
+    "n_resolved": 17,
     "lessons": [
-      "mode:probe: 6/11 thắng, kỳ vọng +0.45R",
-      "setup:sweep_reclaim: 6/12 thắng, kỳ vọng +0.33R",
-      "setup:sweep_reclaim|sess:EU_US: 4/10 thắng, kỳ vọng +0.00R"
+      "align:against: 7/8 thắng, kỳ vọng +1.31R",
+      "mode:probe: 7/14 thắng, kỳ vọng +0.32R",
+      "setup:sweep_reclaim: 7/14 thắng, kỳ vọng +0.32R",
+      "setup:sweep_reclaim|sess:EU_US: 5/12 thắng, kỳ vọng +0.04R"
     ]
   },
-  "last_learn": 1782875736.545417,
+  "last_learn": 1782962139.817331,
   "last_weekly": 1782697540.366902
 }
