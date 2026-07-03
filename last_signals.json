@@ -8,35 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "USD/JPY",
-      "signal": "SELL",
-      "entry_price": 161.41551,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 161.7259068712606,
-      "tp": 160.79471625747883,
-      "sent_at": 1783037738.305546,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": 0,
-        "macd": 0.26,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.34,
-        "tl": -1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.487,
-      "conf": 71,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1783037738"
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1782549043.477192,
@@ -2126,6 +2098,23 @@
       "tp_pips": 79.1,
       "conf": 95,
       "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-07-03",
+      "regime": "NEUTRAL",
+      "outcome": "TP",
+      "pips": 62.1,
+      "entry": 161.41551,
+      "exit": 160.79472,
+      "sl_pips": 31.0,
+      "tp_pips": 62.1,
+      "conf": 71,
+      "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
