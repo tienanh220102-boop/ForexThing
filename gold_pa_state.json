@@ -444,7 +444,7 @@
   },
   "pa_knowledge": {
     "adjust": {},
-    "updated": 1783048541.036658,
+    "updated": 1783135851.439625,
     "n_resolved": 19,
     "lessons": [
       "align:against: 7/8 thắng, kỳ vọng +1.31R",
@@ -454,6 +454,6 @@
       "setup:sweep_reclaim|sess:EU_US: 5/12 thắng, kỳ vọng +0.04R"
     ]
   },
-  "last_learn": 1783048541.036658,
+  "last_learn": 1783135851.439625,
   "last_weekly": 1782697540.366902
 }
