@@ -13764,3 +13764,11 @@
 2026-07-05 11:15:44 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-05 11:15:45 UTC [XAU/USD] SIGNAL BUY conf=77 votes=3/6 regime=NEUTRAL H=0.532 ADX=32.9
 2026-07-05 11:15:45 UTC [XAU/USD] SENT BUY conf=77% mode=MARKET entry=4174.98675 ext=0.2 sl=4173.31820 tp=4178.32384
+2026-07-05 11:30:57 UTC [EUR/USD] BLOCKED hurst H=0.353 threshold=0.353 src=dyn bars=720
+2026-07-05 11:30:57 UTC [EUR/USD] NO_SIGNAL
+2026-07-05 11:30:58 UTC [USD/JPY] BLOCKED counter_w1 SELL W1=BULL H=0.605
+2026-07-05 11:30:58 UTC [USD/JPY] NO_SIGNAL
+2026-07-05 11:30:59 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-05 11:30:59 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-05 11:30:59 UTC [XAU/USD] SIGNAL BUY conf=77 votes=3/6 regime=NEUTRAL H=0.532 ADX=32.9
+2026-07-05 11:30:59 UTC [XAU/USD] COOLDOWN BUY 0.3h/4h
