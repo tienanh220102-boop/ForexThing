@@ -116,33 +116,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "USDJPY_1783232135"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 160.92712,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 160.74303,
-      "tp": 161.2953,
-      "sent_at": 1783254653.731318,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -1.0,
-        "bb": 1,
-        "mom": -0.2,
-        "inter": -0.34,
-        "tl": -1
-      },
-      "regime": "TREND",
-      "hurst": 0.595,
-      "conf": 81,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1783254653"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -2285,6 +2258,23 @@
       "tp_pips": 33.4,
       "conf": 77,
       "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-07-05",
+      "regime": "TREND",
+      "outcome": "TP",
+      "pips": 36.8,
+      "entry": 160.92712,
+      "exit": 161.2953,
+      "sl_pips": 18.4,
+      "tp_pips": 36.8,
+      "conf": 81,
+      "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
