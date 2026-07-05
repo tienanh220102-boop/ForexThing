@@ -37,33 +37,6 @@
       "cb_key": "USDJPY_1783123256"
     },
     {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4174.99907,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4168.774570719674,
-      "tp": 4187.448068560653,
-      "sent_at": 1783160135.098646,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.28,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.34,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.513,
-      "conf": 72,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1783160135"
-    },
-    {
       "sym": "USD/JPY",
       "signal": "BUY",
       "entry_price": 161.3094,
@@ -143,33 +116,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "USDJPY_1783232135"
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4174.98675,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4173.318202620432,
-      "tp": 4178.323844759135,
-      "sent_at": 1783250138.669344,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": -0.31,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": 0.34,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.532,
-      "conf": 77,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1783250138"
     },
     {
       "sym": "USD/JPY",
@@ -2305,6 +2251,40 @@
       "tp_pips": 62.1,
       "conf": 71,
       "votes": 2,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-07-04",
+      "regime": "NEUTRAL",
+      "outcome": "TP",
+      "pips": 124.5,
+      "entry": 4174.99907,
+      "exit": 4187.44807,
+      "sl_pips": 62.2,
+      "tp_pips": 124.5,
+      "conf": 72,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-07-05",
+      "regime": "NEUTRAL",
+      "outcome": "TP",
+      "pips": 33.4,
+      "entry": 4174.98675,
+      "exit": 4178.32384,
+      "sl_pips": 16.7,
+      "tp_pips": 33.4,
+      "conf": 77,
+      "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
