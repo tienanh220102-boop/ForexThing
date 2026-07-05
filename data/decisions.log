@@ -13576,3 +13576,7 @@
 2026-07-05 04:40:31 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-05 04:40:31 UTC [USD/JPY] SIGNAL BUY conf=78 votes=2/6 regime=TREND H=0.604 ADX=43.9
 2026-07-05 04:40:31 UTC [USD/JPY] COOLDOWN BUY 4.7h/6h
+2026-07-05 04:45:37 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-05 04:45:37 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-05 04:45:37 UTC [USD/JPY] SIGNAL BUY conf=78 votes=2/6 regime=TREND H=0.604 ADX=43.9
+2026-07-05 04:45:37 UTC [USD/JPY] COOLDOWN BUY 4.7h/6h
