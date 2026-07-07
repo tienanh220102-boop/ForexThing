@@ -15092,3 +15092,11 @@
 2026-07-07 17:46:44 UTC [USD/JPY] COOLDOWN BUY 1.5h/6h
 2026-07-07 17:46:51 UTC [XAU/USD] BLOCKED hurst H=0.435 threshold=0.450 src=dyn bars=720
 2026-07-07 17:46:51 UTC [XAU/USD] NO_SIGNAL
+2026-07-07 18:01:36 UTC [EUR/USD] BLOCKED hurst H=0.339 threshold=0.350 src=dyn bars=720
+2026-07-07 18:01:36 UTC [EUR/USD] NO_SIGNAL
+2026-07-07 18:02:17 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-07 18:02:18 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-07 18:02:18 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.522 ADX=18.4
+2026-07-07 18:02:18 UTC [USD/JPY] COOLDOWN BUY 1.8h/6h
+2026-07-07 18:02:56 UTC [XAU/USD] BLOCKED hurst H=0.308 threshold=0.450 src=dyn bars=720
+2026-07-07 18:02:56 UTC [XAU/USD] NO_SIGNAL
