@@ -15224,3 +15224,7 @@
 2026-07-08 01:15:39 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-08 01:15:39 UTC [USD/JPY] BLOCKED sentiment_strong BUY sent=-0.50
 2026-07-08 01:15:39 UTC [USD/JPY] NO_SIGNAL
+2026-07-08 01:31:03 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-08 01:31:03 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-08 01:31:03 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.527 ADX=19.9
+2026-07-08 01:31:03 UTC [USD/JPY] DUP_SAMEDIR BUY 9.3h prev=161.88750 now=162.41046 improve=-0.52296
