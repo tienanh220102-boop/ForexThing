@@ -15324,3 +15324,17 @@
 2026-07-08 06:31:04 UTC [USD/JPY] COOLDOWN BUY 2.3h/6h
 2026-07-08 06:31:04 UTC [XAU/USD] BLOCKED hurst H=0.449 threshold=0.450 src=dyn bars=720
 2026-07-08 06:31:04 UTC [XAU/USD] NO_SIGNAL
+2026-07-08 06:45:39 UTC Failed to get ticker 'UUP' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-08 06:45:39 UTC Failed to get ticker 'CL=F' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-08 06:45:41 UTC $USDJPY=X: possibly delisted; no price data found  (period=2d)
+2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-08 06:45:41 UTC $USDJPY=X: possibly delisted; no price data found  (period=180d)
+2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-08 06:45:41 UTC $USDJPY=X: possibly delisted; no price data found  (period=1y)
+2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-08 06:45:42 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-08 06:45:42 UTC [USD/JPY] BLOCKED sentiment_mild BUY sent=-0.33 votes=2
+2026-07-08 06:45:42 UTC [USD/JPY] NO_SIGNAL
+2026-07-08 06:45:43 UTC [XAU/USD] BLOCKED hurst H=0.450 threshold=0.450 src=dyn bars=720
+2026-07-08 06:45:43 UTC [XAU/USD] NO_SIGNAL
