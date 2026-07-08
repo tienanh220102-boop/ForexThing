@@ -15750,3 +15750,12 @@
 2026-07-08 18:31:15 UTC [USD/JPY] COOLDOWN BUY 2.0h/6h
 2026-07-08 18:31:16 UTC [XAU/USD] BLOCKED few_votes BUY=1 BEAR=1
 2026-07-08 18:31:16 UTC [XAU/USD] NO_SIGNAL
+2026-07-08 18:45:37 UTC Failed to get ticker 'UUP' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-08 18:45:41 UTC [EUR/USD] BLOCKED low_votes BUY=2 BEAR=2 need=4 H4=NEUTRAL
+2026-07-08 18:45:41 UTC [EUR/USD] NO_SIGNAL
+2026-07-08 18:45:42 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-08 18:45:42 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-08 18:45:43 UTC [USD/JPY] SIGNAL BUY conf=90 votes=3/6 regime=NEUTRAL H=0.524 ADX=22.0
+2026-07-08 18:45:43 UTC [USD/JPY] COOLDOWN BUY 2.2h/6h
+2026-07-08 18:45:44 UTC [XAU/USD] BLOCKED sentiment_mild SELL sent=0.23 votes=2
+2026-07-08 18:45:44 UTC [XAU/USD] NO_SIGNAL
