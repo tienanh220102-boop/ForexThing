@@ -35,33 +35,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "USDJPY_1783484137"
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "entry_price": 4117.16738,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4137.5597618233205,
-      "tp": 4076.3826163533577,
-      "sent_at": 1783498534.490139,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.22,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.05,
-        "tl": -1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.457,
-      "conf": 83,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1783498534"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -2393,6 +2366,23 @@
       "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-07-08",
+      "regime": "NEUTRAL",
+      "outcome": "TP",
+      "pips": 407.8,
+      "entry": 4117.16738,
+      "exit": 4076.38262,
+      "sl_pips": 203.9,
+      "tp_pips": 407.8,
+      "conf": 83,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -2413,10 +2403,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1782291656,
-        0.393
-      ],
       [
         1782295254,
         0.394
@@ -3560,13 +3546,13 @@
       [
         1783497664,
         0.523
+      ],
+      [
+        1783501267,
+        0.522
       ]
     ],
     "XAU/USD": [
-      [
-        1782291656,
-        0.452
-      ],
       [
         1782295254,
         0.453
@@ -4406,13 +4392,13 @@
       [
         1783497664,
         0.455
+      ],
+      [
+        1783501267,
+        0.451
       ]
     ],
     "EUR/USD": [
-      [
-        1782291656,
-        0.52
-      ],
       [
         1782295254,
         0.52
@@ -5196,6 +5182,10 @@
       [
         1783497664,
         0.336
+      ],
+      [
+        1783501267,
+        0.337
       ]
     ],
     "WTI/USD": [
