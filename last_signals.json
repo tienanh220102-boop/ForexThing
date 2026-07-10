@@ -10,87 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 162.35441,
-      "entry_mode": "LIMIT",
-      "limit_entry": 162.20073981673067,
-      "sl": 161.99043,
-      "tp": 163.08237,
-      "sent_at": 1783484137.72615,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.49,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.05,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.524,
-      "conf": 95,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1783484137"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 162.64117,
-      "entry_mode": "LIMIT",
-      "limit_entry": 162.44853922800544,
-      "sl": 162.18049,
-      "tp": 163.56252999999998,
-      "sent_at": 1783528265.177503,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.15,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.24,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.523,
-      "conf": 95,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1783528265"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 162.37929,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 162.20579659053058,
-      "tp": 162.72627681893883,
-      "sent_at": 1783576870.912266,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": -0.49,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.08,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.503,
-      "conf": 80,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1783576870"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "BUY",
       "entry_price": 1.14271,
@@ -2542,6 +2461,57 @@
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-07-08",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -36.4,
+      "entry": 162.35441,
+      "exit": 161.99043,
+      "sl_pips": 36.4,
+      "tp_pips": 72.8,
+      "conf": 95,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-07-08",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -46.1,
+      "entry": 162.64117,
+      "exit": 162.18049,
+      "sl_pips": 46.1,
+      "tp_pips": 92.1,
+      "conf": 95,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-07-09",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -17.3,
+      "entry": 162.37929,
+      "exit": 162.2058,
+      "sl_pips": 17.3,
+      "tp_pips": 34.7,
+      "conf": 80,
+      "votes": 2,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -2562,10 +2532,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1782435644,
-        0.226
-      ],
       [
         1782439249,
         0.214
@@ -3709,6 +3675,10 @@
       [
         1783641657,
         0.347
+      ],
+      [
+        1783645255,
+        0.336
       ]
     ],
     "XAU/USD": [
