@@ -515,7 +515,10 @@
       "probe": true,
       "align": "against",
       "add_trigger": 4116.41214,
-      "sl_dist_atr": 0.72
+      "sl_dist_atr": 0.72,
+      "outcome": "TP2",
+      "correct": true,
+      "pips": 127.1
     }
   ],
   "cooldowns": {
