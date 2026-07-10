@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "entry_price": 1.14271,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.141263659667756,
-      "tp": 1.1456026806644877,
-      "sent_at": 1783587680.033153,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": 1,
-        "macd": 0.24,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.08,
-        "tl": -1
-      },
-      "regime": "RANGE",
-      "hurst": 0.357,
-      "conf": 73,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1783587680"
-    },
-    {
       "sym": "XAU/USD",
       "signal": "BUY",
       "entry_price": 4127.90777,
@@ -2510,6 +2483,23 @@
       "tp_pips": 34.7,
       "conf": 80,
       "votes": 2,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-07-09",
+      "regime": "RANGE",
+      "outcome": "TP",
+      "pips": 28.9,
+      "entry": 1.14271,
+      "exit": 1.1456,
+      "sl_pips": 14.5,
+      "tp_pips": 28.9,
+      "conf": 73,
+      "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
