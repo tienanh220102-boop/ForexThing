@@ -8,35 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4127.90777,
-      "entry_mode": "LIMIT",
-      "limit_entry": 4112.744435703739,
-      "sl": 4094.83641,
-      "tp": 4194.05049,
-      "sent_at": 1783620937.566664,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.56,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": 0.11,
-        "tl": 0
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.453,
-      "conf": 66,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1783620937"
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1783523734.916155,
@@ -2500,6 +2472,23 @@
       "tp_pips": 28.9,
       "conf": 73,
       "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-07-10",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -330.7,
+      "entry": 4127.90777,
+      "exit": 4094.83641,
+      "sl_pips": 330.7,
+      "tp_pips": 661.4,
+      "conf": 66,
+      "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
