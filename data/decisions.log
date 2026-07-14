@@ -18699,3 +18699,11 @@
 2026-07-14 15:01:17 UTC [USD/JPY] FLIP_BLOCK SELL 7.8h votes=3/6
 2026-07-14 15:01:19 UTC [XAU/USD] BLOCKED hurst H=0.365 threshold=0.367 src=dyn bars=720
 2026-07-14 15:01:19 UTC [XAU/USD] NO_SIGNAL
+2026-07-14 15:15:39 UTC [EUR/USD] BLOCKED hurst H=0.175 threshold=0.350 src=dyn bars=720
+2026-07-14 15:15:39 UTC [EUR/USD] NO_SIGNAL
+2026-07-14 15:15:41 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-14 15:15:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-14 15:15:42 UTC [USD/JPY] SIGNAL SELL conf=82 votes=3/6 regime=NEUTRAL H=0.459 ADX=29.2
+2026-07-14 15:15:42 UTC [USD/JPY] FLIP_BLOCK SELL 8.0h votes=3/6
+2026-07-14 15:15:43 UTC [XAU/USD] BLOCKED hurst H=0.358 threshold=0.367 src=dyn bars=720
+2026-07-14 15:15:43 UTC [XAU/USD] NO_SIGNAL
