@@ -18912,3 +18912,7 @@
 2026-07-15 00:15:40 UTC [USD/JPY] NO_SIGNAL
 2026-07-15 00:30:59 UTC [USD/JPY] BLOCKED low_votes BUY=0 BEAR=2 need=3 H4=NEUTRAL
 2026-07-15 00:30:59 UTC [USD/JPY] NO_SIGNAL
+2026-07-15 00:45:40 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-15 00:45:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-15 00:45:41 UTC [USD/JPY] BLOCKED sentiment_strong BUY sent=-1.00
+2026-07-15 00:45:41 UTC [USD/JPY] NO_SIGNAL
