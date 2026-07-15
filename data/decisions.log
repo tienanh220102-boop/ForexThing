@@ -18950,3 +18950,7 @@
 2026-07-15 03:01:07 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-15 03:01:07 UTC [USD/JPY] SIGNAL SELL conf=82 votes=3/6 regime=NEUTRAL H=0.467 ADX=26.0
 2026-07-15 03:01:07 UTC [USD/JPY] FLIP_BLOCK SELL 9.8h votes=3/6
+2026-07-15 03:15:38 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-15 03:15:39 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-15 03:15:39 UTC [USD/JPY] SIGNAL SELL conf=76 votes=3/6 regime=NEUTRAL H=0.466 ADX=26.5
+2026-07-15 03:15:39 UTC [USD/JPY] FLIP_BLOCK SELL 10.0h votes=3/6
