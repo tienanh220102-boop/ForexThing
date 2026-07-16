@@ -12,33 +12,6 @@
     {
       "sym": "USD/JPY",
       "signal": "BUY",
-      "entry_price": 162.19346,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 161.64103,
-      "tp": 163.29831999999996,
-      "sent_at": 1784049340.296561,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": -1.0,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": -0.09,
-        "tl": -1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.459,
-      "conf": 74,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1784049340"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
       "entry_price": 162.42042,
       "entry_mode": "LIMIT",
       "limit_entry": 162.2580612030615,
@@ -2652,10 +2625,6 @@
   "hurst_hist": {
     "USD/JPY": [
       [
-        1783011658,
-        0.413
-      ],
-      [
         1783015255,
         0.426
       ],
@@ -3838,10 +3807,6 @@
     ],
     "XAU/USD": [
       [
-        1783011658,
-        0.381
-      ],
-      [
         1783015255,
         0.388
       ],
@@ -4687,10 +4652,6 @@
       ]
     ],
     "EUR/USD": [
-      [
-        1783011658,
-        0.214
-      ],
       [
         1783015255,
         0.212
