@@ -608,10 +608,29 @@
       "outcome": "TP2",
       "correct": true,
       "pips": 83.6
+    },
+    {
+      "ts": 1784513737.310672,
+      "date": "2026-07-20",
+      "session": "ASIAN",
+      "setup": "sweep_reclaim",
+      "dir": "SELL",
+      "entry": 4011.417060728775,
+      "sl": 4017.536811983473,
+      "tp1": 4005.2973094740773,
+      "tp2": 4002.2374338467284,
+      "stars": 4,
+      "entry_type": "limit",
+      "danger": false,
+      "capit": false,
+      "probe": true,
+      "align": "neutral",
+      "add_trigger": 4010.47643,
+      "sl_dist_atr": 1.2
     }
   ],
   "cooldowns": {
-    "sweep_reclaim|SELL": 1784210482.586933,
+    "sweep_reclaim|SELL": 1784513737.310672,
     "sweep_reclaim|BUY": 1784511054.667321,
     "double_bottom|BUY": 1782991847.599438,
     "double_top|SELL": 1781720152.354436,
@@ -619,7 +638,7 @@
   },
   "day_count": {
     "date": "2026-07-20",
-    "n": 1
+    "n": 2
   },
   "pa_knowledge": {
     "adjust": {},
@@ -634,7 +653,7 @@
     ]
   },
   "last_learn": 1784438143.259684,
-  "last_weekly": 1783907141.939318,
+  "last_weekly": 1784513737.310672,
   "momentum": {
     "dir": "BEAR",
     "ts": 1783461672.023709
