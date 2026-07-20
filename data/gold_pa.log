@@ -7473,3 +7473,5 @@
 2026-07-20 18:01:01 UTC REGIME er=0.036 trend=False
 2026-07-20 18:01:01 UTC COOLDOWN sweep_reclaim|SELL
 2026-07-20 18:01:01 UTC LOW_QUALITY momentum_pullback stars=2
+2026-07-20 18:15:46 UTC REGIME er=0.036 trend=False
+2026-07-20 18:15:46 UTC LOW_QUALITY momentum_pullback stars=2
