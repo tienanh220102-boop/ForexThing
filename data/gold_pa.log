@@ -7423,3 +7423,7 @@
 2026-07-20 13:45:43 UTC LOW_QUALITY momentum_pullback stars=2
 2026-07-20 14:00:56 UTC REGIME er=0.036 trend=False
 2026-07-20 14:00:57 UTC LOW_QUALITY momentum_pullback stars=2
+2026-07-20 14:15:46 UTC REGIME er=0.036 trend=False
+2026-07-20 14:15:47 UTC LOW_QUALITY momentum_pullback stars=1
+2026-07-20 14:15:48 UTC SENT sweep_reclaim SELL stars=5 type=limit entry=4010.93 sl=4018.54 tp1=4003.32 tp2=3999.52
+2026-07-20 14:15:51 UTC CHART_SENT
