@@ -21886,3 +21886,5 @@
 2026-07-21 02:15:33 UTC [USD/JPY] NO_SIGNAL
 2026-07-21 02:15:36 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
 2026-07-21 02:15:36 UTC generated new fontManager
+2026-07-21 02:30:44 UTC [USD/JPY] BLOCKED hurst H=0.170 threshold=0.350 src=dyn bars=720
+2026-07-21 02:30:44 UTC [USD/JPY] NO_SIGNAL
