@@ -690,7 +690,7 @@
   },
   "pa_knowledge": {
     "adjust": {},
-    "updated": 1784612740.553848,
+    "updated": 1784700048.28811,
     "n_resolved": 29,
     "lessons": [
       "align:against: 11/13 thắng, kỳ vọng +1.15R",
@@ -700,7 +700,7 @@
       "setup:sweep_reclaim|sess:EU_US: 7/17 thắng, kỳ vọng +0.00R"
     ]
   },
-  "last_learn": 1784612740.553848,
+  "last_learn": 1784700048.28811,
   "last_weekly": 1784513737.310672,
   "momentum": {
     "dir": "BEAR",
