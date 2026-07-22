@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4114.93717,
-      "entry_mode": "LIMIT",
-      "limit_entry": 4097.95146957749,
-      "sl": 4075.31176,
-      "tp": 4194.18799,
-      "sent_at": 1784703641.228483,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.12,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": -0.48,
-        "tl": 1
-      },
-      "regime": "RANGE",
-      "hurst": 0.402,
-      "conf": 88,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1784703641"
-    },
-    {
       "sym": "USD/JPY",
       "signal": "BUY",
       "entry_price": 163.07738,
@@ -2680,6 +2653,23 @@
       "tp_pips": 25.1,
       "conf": 95,
       "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-07-22",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -396.3,
+      "entry": 4114.93717,
+      "exit": 4075.31176,
+      "sl_pips": 396.3,
+      "tp_pips": 792.5,
+      "conf": 88,
+      "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
