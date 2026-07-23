@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 163.07738,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 162.83745,
-      "tp": 163.55724000000004,
-      "sent_at": 1784727040.088311,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": -0.31,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.18,
-        "tl": 1
-      },
-      "regime": "RANGE",
-      "hurst": 0.351,
-      "conf": 90,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1784727040"
-    },
-    {
       "sym": "XAU/USD",
       "signal": "SELL",
       "entry_price": 4111.55723,
@@ -2713,6 +2686,23 @@
       "sl_pips": 10.8,
       "tp_pips": 21.5,
       "conf": 91,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-07-22",
+      "regime": "RANGE",
+      "outcome": "TP",
+      "pips": 48.0,
+      "entry": 163.07738,
+      "exit": 163.55724,
+      "sl_pips": 24.0,
+      "tp_pips": 48.0,
+      "conf": 90,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
