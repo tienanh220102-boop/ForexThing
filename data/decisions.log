@@ -23524,3 +23524,10 @@
 2026-07-24 10:45:34 UTC [USD/JPY] NO_SIGNAL
 2026-07-24 10:45:34 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=4 H4=BEAR
 2026-07-24 10:45:34 UTC [XAU/USD] NO_SIGNAL
+2026-07-24 11:01:22 UTC Failed to get ticker 'CL=F' reason: Failed to perform, curl: (28) Operation timed out after 10002 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-07-24 11:01:25 UTC [EUR/USD] BLOCKED hurst H=0.164 threshold=0.350 src=dyn bars=720
+2026-07-24 11:01:25 UTC [EUR/USD] NO_SIGNAL
+2026-07-24 11:01:26 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=2 need=3 H4=BULL
+2026-07-24 11:01:26 UTC [USD/JPY] NO_SIGNAL
+2026-07-24 11:01:27 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=4 H4=BEAR
+2026-07-24 11:01:27 UTC [XAU/USD] NO_SIGNAL
