@@ -712,17 +712,17 @@
   },
   "pa_knowledge": {
     "adjust": {},
-    "updated": 1784786448.528904,
-    "n_resolved": 29,
+    "updated": 1784872851.27143,
+    "n_resolved": 30,
     "lessons": [
-      "align:against: 11/13 thắng, kỳ vọng +1.15R",
+      "align:against: 12/14 thắng, kỳ vọng +1.18R",
       "align:neutral: 0/12 thắng, kỳ vọng -1.00R",
-      "mode:probe: 11/25 thắng, kỳ vọng +0.12R",
-      "setup:sweep_reclaim: 11/23 thắng, kỳ vọng +0.22R",
-      "setup:sweep_reclaim|sess:EU_US: 7/17 thắng, kỳ vọng +0.00R"
+      "mode:probe: 12/26 thắng, kỳ vọng +0.17R",
+      "setup:sweep_reclaim: 12/24 thắng, kỳ vọng +0.27R",
+      "setup:sweep_reclaim|sess:EU_US: 8/18 thắng, kỳ vọng +0.08R"
     ]
   },
-  "last_learn": 1784786448.528904,
+  "last_learn": 1784872851.27143,
   "last_weekly": 1784513737.310672,
   "momentum": {
     "dir": "BEAR",
