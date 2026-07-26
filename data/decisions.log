@@ -24807,3 +24807,11 @@
 2026-07-26 20:00:40 UTC [USD/JPY] COOLDOWN BUY 1.3h/6h
 2026-07-26 20:00:41 UTC [XAU/USD] BLOCKED counter_trend H=0.600 H4=BEAR
 2026-07-26 20:00:41 UTC [XAU/USD] NO_SIGNAL
+2026-07-26 20:15:32 UTC [EUR/USD] BLOCKED hurst H=0.246 threshold=0.350 src=dyn bars=720
+2026-07-26 20:15:32 UTC [EUR/USD] NO_SIGNAL
+2026-07-26 20:15:33 UTC [USD/JPY] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
+2026-07-26 20:15:33 UTC [USD/JPY] NO_SIGNAL
+2026-07-26 20:15:33 UTC [XAU/USD] BLOCKED counter_trend H=0.600 H4=BEAR
+2026-07-26 20:15:33 UTC [XAU/USD] NO_SIGNAL
+2026-07-26 20:15:37 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-07-26 20:15:37 UTC generated new fontManager
