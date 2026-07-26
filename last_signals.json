@@ -12,33 +12,6 @@
     {
       "sym": "XAU/USD",
       "signal": "SELL",
-      "entry_price": 4052.10629,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4080.69327,
-      "tp": 3994.93233,
-      "sent_at": 1784918733.630173,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.82,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.33,
-        "tl": -1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.543,
-      "conf": 90,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1784918733"
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "SELL",
       "entry_price": 4055.90133,
       "entry_mode": "MARKET",
       "limit_entry": null,
@@ -4033,6 +4006,10 @@
       [
         1785088840,
         0.422
+      ],
+      [
+        1785092435,
+        0.421
       ]
     ],
     "XAU/USD": [
@@ -4875,6 +4852,10 @@
       [
         1785088840,
         0.6
+      ],
+      [
+        1785092435,
+        0.6
       ]
     ],
     "EUR/USD": [
@@ -5660,6 +5641,10 @@
       ],
       [
         1785088840,
+        0.246
+      ],
+      [
+        1785092435,
         0.246
       ]
     ],
