@@ -1118,7 +1118,7 @@ def _count_tl_touches(side_prices, idx1, p1, slope, tol=0.003):
     return touches
 
 
-def find_trendlines(closes, highs, lows, lookback=80, lb=5):
+def find_trendlines(closes, highs, lows, lookback=80, lb=5, atr_val=None):
     """
     Phat hien Trendline tu swing points (sach: Technical Analysis for Mega Profit Bab 5).
     - Uptrend  : noi 2 swing low gan nhat co Higher Low (doc len)
@@ -1186,8 +1186,18 @@ def find_trendlines(closes, highs, lows, lookback=80, lb=5):
             dn_tl = {'value': value, 'valid': valid, 'slope': slope, 'touches': touches}
             break
 
-    tol_touch = 0.005   # 0.5%: dang cham trendline
-    tol_break = 0.015   # 1.5%: batas toleransi — valid break
+    # [27/07/2026] Nguong theo % chi dung cho FOREX. Voi vang $4100 thi
+    # 1.5% = $61 trong khi ATR H1 chi ~$10-20 -> break gan nhu khong bao gio
+    # kich hoat. Truyen atr_val -> chuyen sang thang ATR (quy ve ti le tren gia
+    # de phan so sanh 'dist' ben duoi khong phai viet lai).
+    # KHONG truyen atr_val -> giu nguyen hanh vi cu (forex_notifier live dung
+    # duong nay, khong duoc doi).
+    if atr_val and atr_val > 0 and price > 0:
+        tol_touch = (TL_TOUCH_ATR * atr_val) / price
+        tol_break = (TL_BREAK_ATR * atr_val) / price
+    else:
+        tol_touch = 0.005   # 0.5%: dang cham trendline
+        tol_break = 0.015   # 1.5%: batas toleransi — valid break
 
     tl_vote = 0
     tl_label = 'NO_TL'
@@ -1315,6 +1325,17 @@ def psychological_levels(price, n_near=4):
 # Nghien cuu Bulkowski (thepatternsite.com): failure rate thap nhat thuoc ve
 #   Inverse H&S (~11%), H&S top (~14%), Double Bottom/Top, Ascending Triangle.
 # He Price Action XAU doc lap nam o gold_pa_bot.py — import cac detector nay.
+
+# Nguong trendline theo ATR — chi ap dung khi goi find_trendlines(atr_val=...).
+# Dung cho vang/PA; forex_notifier live khong truyen atr_val nen giu thang %.
+# Ban than viec sua thang do la DUNG (1.5% = $61 vs ATR $11 = sai 6 lan), da
+# verify khong-truyen-atr cho ket qua y het truoc. NHUNG dung no lam confluence
+# cho PA thi KHONG co gia tri: workshop/hyp31_trendline_confluence.py tren 2366
+# keo sweep -> THUAN trendline +0.104R vs phan con lai, chenh chi +0.038R,
+# permutation p=0.487 = NHIEU. => KHONG sua grade(), khong cong/tru sao theo
+# trendline. (Đay la de xuat sua grade thu 4 bi bac, sau phien/2-cham/5+.)
+TL_TOUCH_ATR    = 0.30    # cach trendline <= 0.30 ATR = dang cham
+TL_BREAK_ATR    = 0.50    # dong cua vuot >= 0.50 ATR = break hop le
 
 PA_PIVOT_LB     = 3       # pivot H4: cao/thap hon 3 nen moi ben (~12h)
 PA_PEAK_TOL     = 0.0035  # 2 dinh/day coi la "bang nhau" neu chenh < 0.35%

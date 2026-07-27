@@ -86,6 +86,29 @@ DANGER_SL_CAP    = 1.8   # keo nguy hiem: structure doi SL > 1.8 ATR → bo keo
 DANGER_RISK_PCT  = 0.005 # keo nguy hiem: rui ro 0.5% von thay vi 1%
 RANGE_WINDOW_H   = 48    # dinh/day khung sideway: cuc tri 48h lam level sweep
 RANGE_TOUCH_ATR  = 0.25  # bar cach cuc tri <= 0.25 ATR thi tinh la 1 lan cham
+# ── Tam giac / pha trendline (27/07/2026) ────────────────────
+# Moi nguong theo ATR, KHONG theo % (find_trendlines cua notifier dung 1.5%
+# = $61 voi vang $4100 trong khi ATR H1 ~$10-20 -> khong bao gio break).
+#
+# !!! DA TEST VA BAC BO — KHONG WIRE VAO LUONG PHAT LENH !!!
+# workshop/hyp30_triangle.py, 5.8 nam vang, 1984 keo (~348 keo/nam, thua du
+# mau nen KHONG phai van de small-n):
+#   full-sample  -0.090R CI95[-0.142,-0.037]  = THUA CO Y NGHIA THONG KE
+#   SELL rieng   -0.164R CI95[-0.236,-0.090]  = thua nang (short trong bull vang)
+#   held-out 40% -0.015R CI om 0              = khong duong
+#   ngay TREND   -0.048R CI om 0 | ngay RANGE -0.100R THUA
+#   random-entry: that -0.090R vs ngau nhien -0.110R, p=0.225
+#     -> KHONG phan biet duoc voi vao lenh ngau nhien = mo hinh KHONG mang
+#        thong tin. Lo la do cau truc R:R + spread, khong phai do "doc sai".
+# Giu ham lai de khoi ai dung lai tu dau; muon hoi sinh thi phai co GIA THUYET
+# MOI (vd danh RETEST sau khi pha thay vi danh luc pha), khong phai van tham so.
+TRI_WINDOW      = 60     # so nen H1 soi tim tam giac
+TRI_MIN_PIVOTS  = 2      # can >= 2 swing high VA 2 swing low
+TRI_CONVERGE    = 0.65   # be rong hien tai <= 65% be rong dau -> coi la khep
+TRI_MIN_WIDTH   = 1.0    # be rong dau >= 1.0 ATR (bo tam giac ti hon = nhieu)
+TRI_MAX_WIDTH   = 6.0    # be rong dau <= 6.0 ATR (to hon = khong con la tam giac)
+TRI_BREAK_ATR   = 0.10   # dong cua phai vuot bien >= 0.10 ATR moi tinh la pha
+TRI_FRESH       = 3      # trong 3 nen truoc do phai con nen dong TRONG tam giac
 MOM_BODY_RATIO  = 1.5    # momentum: 3 nen than > 1.5x trung binh (insight 3)
 MOM_CLOSE_PCT   = 0.30   # momentum: dong cua trong 30% cuc tri cua nen
 MOM_EXPIRY_H    = 12     # momentum regime het han sau 12h khong tai xac nhan
@@ -603,6 +626,107 @@ def detect_compression_breakout(closes, highs, lows, atr_val):
                        f'thân nến {abs(body):,.1f}$ (Marubozu) đóng dưới {rng_lo:,.1f}'),
         }]
     return []
+
+
+def _tri_line(i1, p1, i2, p2, x):
+    """Gia tri duong thang qua 2 pivot (i1,p1)-(i2,p2) tai hoanh do x."""
+    if i2 == i1:
+        return p2
+    return p2 + (p2 - p1) / (i2 - i1) * (x - i2)
+
+
+def detect_triangle_breakout(closes, highs, lows, atr_val):
+    """[27/07/2026 — user] TAM GIAC (2 duong bien HOI TU) pha bang gia DONG CUA.
+
+    Khac cac detector san co:
+      - detect_compression_breakout = vung nen NGANG (range co dinh)
+      - detect_breakout             = Donchian N nen (khong co hinh hoc bien)
+      - find_trendlines (notifier)  = 1 duong, va chi dung lam diem cong tu tin
+    O day: bien tren noi 2 swing high, bien duoi noi 2 swing low, YEU CAU chung
+    dang khep lai (be rong thu hep) -> tam giac tang/giam/can.
+
+    THANG DO = ATR, KHONG phai %. find_trendlines dung 1.5% lam nguong break;
+    voi vang $4100 thi 1.5% = $61 trong khi ATR H1 chi ~$10-20 -> bat khong bao
+    gio break. Moi nguong duoi day deu tinh theo ATR.
+
+    Xac nhan = nen H1 DA DONG (index -2) dong cua vuot han bien >= TRI_BREAK_ATR,
+    va phai MOI (TRI_FRESH nen truoc do con dong trong tam giac) — tranh bat lai
+    cai break da chay xa. SL neo RAU cua chinh nen pha (dung luat SL 27/07).
+    """
+    n = len(closes)
+    if n < TRI_WINDOW + 2 or atr_val <= 0:
+        return []
+    W = TRI_WINDOW
+    c, h, l = closes[-W:], highs[-W:], lows[-W:]
+    sw = find_swings(h, l, k=SWING_K)
+    peaks   = [s for s in sw if s[2] == 'H']
+    troughs = [s for s in sw if s[2] == 'L']
+    if len(peaks) < TRI_MIN_PIVOTS or len(troughs) < TRI_MIN_PIVOTS:
+        return []
+
+    (i1, p1, _), (i2, p2, _) = peaks[-2], peaks[-1]      # bien TREN
+    (j1, q1, _), (j2, q2, _) = troughs[-2], troughs[-1]  # bien DUOI
+    if i2 == i1 or j2 == j1:
+        return []
+    slope_hi = (p2 - p1) / (i2 - i1)
+    slope_lo = (q2 - q1) / (j2 - j1)
+    # Hoi tu = bien duoi di len nhanh hon bien tren (2 duong tien lai gan nhau)
+    if slope_lo <= slope_hi:
+        return []
+
+    start = min(i1, j1)
+    bo    = W - 2                       # nen DA DONG gan nhat
+    w_start = _tri_line(i1, p1, i2, p2, start) - _tri_line(j1, q1, j2, q2, start)
+    w_now   = _tri_line(i1, p1, i2, p2, bo)    - _tri_line(j1, q1, j2, q2, bo)
+    if w_now <= 0:                      # 2 bien da cat nhau -> qua dinh, het han
+        return []
+    if not (TRI_MIN_WIDTH * atr_val <= w_start <= TRI_MAX_WIDTH * atr_val):
+        return []
+    if w_now > TRI_CONVERGE * w_start:  # chua khep du -> chua phai tam giac
+        return []
+
+    up_bo = _tri_line(i1, p1, i2, p2, bo)
+    lo_bo = _tri_line(j1, q1, j2, q2, bo)
+    buf   = TRI_BREAK_ATR * atr_val
+    price = closes[-1]
+
+    # Break phai MOI: TRI_FRESH nen truoc nen pha van con dong TRONG tam giac
+    def _fresh(up):
+        for x in range(max(bo - TRI_FRESH, start), bo):
+            hi_x = _tri_line(i1, p1, i2, p2, x)
+            lo_x = _tri_line(j1, q1, j2, q2, x)
+            inside = lo_x <= c[x] <= hi_x
+            if inside:
+                return True
+        return False
+
+    # Ten tam giac theo do doc (nguong 'phang' = 0.05 ATR/nen)
+    flat = 0.05 * atr_val
+    if abs(slope_hi) <= flat and slope_lo > flat:
+        kind = 'tam giác tăng (đỉnh phẳng, đáy nâng dần)'
+    elif abs(slope_lo) <= flat and slope_hi < -flat:
+        kind = 'tam giác giảm (đáy phẳng, đỉnh hạ dần)'
+    else:
+        kind = 'tam giác cân (hai biên cùng khép)'
+
+    out = []
+    if c[bo] > up_bo + buf and _fresh(True):
+        out.append({
+            'setup': 'triangle_breakout', 'dir': 'BUY', 'entry': price,
+            'structure': l[bo], 'level': up_bo,
+            'reason': (f'{kind} — nến H1 đóng cửa {c[bo]:,.1f} phá biên trên '
+                       f'{up_bo:,.1f}; bề rộng khép {w_start/max(atr_val,1e-9):.1f}→'
+                       f'{w_now/max(atr_val,1e-9):.1f} ATR'),
+        })
+    elif c[bo] < lo_bo - buf and _fresh(False):
+        out.append({
+            'setup': 'triangle_breakout', 'dir': 'SELL', 'entry': price,
+            'structure': h[bo], 'level': lo_bo,
+            'reason': (f'{kind} — nến H1 đóng cửa {c[bo]:,.1f} phá biên dưới '
+                       f'{lo_bo:,.1f}; bề rộng khép {w_start/max(atr_val,1e-9):.1f}→'
+                       f'{w_now/max(atr_val,1e-9):.1f} ATR'),
+        })
+    return out
 
 
 def detect_chart_patterns(closes, highs, lows):
