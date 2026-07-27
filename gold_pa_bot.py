@@ -141,10 +141,16 @@ MIN_BARS        = 120    # du lieu H1 toi thieu
 # — ap dung cho lenh CHUA xac nhan; lenh da xac nhan van giu SL structure.
 SWING_K          = 3      # pivot fractal H1: cuc tri so voi 3 nen moi ben
 SWING_K_H4       = 2      # H4 it nen hon → 2 nen moi ben
-PROBE_SL_FLOOR   = 0.6    # SL do duong toi thieu 0.6 ATR (chong noise tic/spread)
-PROBE_SL_BUFFER  = 0.20   # dem sau structure gan (vd rau nen sweep)
-PROBE_SL_CAP     = 1.2    # SL do duong toi da 1.2 ATR — cat trong structure neu
-                          # can: do duong CHAP NHAN bi quet, bu lai vao lai khi pha can
+PROBE_SL_FLOOR   = 0.6    # SL lenh do toi thieu 0.6 ATR (chong noise tic/spread).
+                          # San nay chi NOI RONG khi rau qua sat entry -> khong
+                          # bao gio dat SL vao trong rau. GIU (hyp29: nang len
+                          # 1.5 lam mat trang thai EDGE o nua sau mau).
+# [BO HIEU LUC 27/07/2026 — hyp29] 2 hang so duoi KHONG con duoc build_order dung.
+# PROBE_SL_CAP tung kep sl_dist = min(struct, 1.2 ATR) -> CAT VAO TRONG rau nen
+# sweep. Do 5.8y: rieng 233 keo bi cat do co exp -0.155R CI95[-0.290,-0.017] =
+# THUA CO Y NGHIA THONG KE; bo kep thi CI het significant. Dung dung lai.
+PROBE_SL_BUFFER  = 0.20   # (deprecated — dung SL_BUFFER_ATR 0.25)
+PROBE_SL_CAP     = 1.2    # (deprecated — xem tren)
 PROBE_RISK_PCT   = 0.005  # lenh do: rui ro 0.5% von
 # Phan tang sizing (18/06): sweep "high-conviction" = Level manh >=3 cham + GIO
 # VANG (00-07 UTC) -> risk 3% thay vi 1%. Backtest train/test (workshop/hyp13+15):
@@ -577,18 +583,22 @@ def detect_compression_breakout(closes, highs, lows, atr_val):
     if abs(body) < MOM_BODY_RATIO * avg_b or abs(body) < 0.7 * full:
         return []                                  # nen yeu / nhieu wick
     price = closes[-1]
-    mid   = (rng_hi + rng_lo) / 2
+    # [27/07/2026] structure = RAU cua chinh nen bung no (chan rau cho BUY /
+    # dinh rau cho SELL) thay vi mid-range. Mid nam GIUA cac rau -> SL bi quet
+    # ngay khi gia hoi ve test lai vung nen, trong khi thesis chua he sai.
+    # (Da thu neo vao day/dinh RANGE: dung nguyen tac nhung SL > cap 2.5 ATR ->
+    #  bo mat 9/14 keo. Rau nen bung no chat hon ma van khong nam trong rau.)
     if body > 0 and c[-1] > rng_hi:
         return [{
             'setup': 'compression_breakout', 'dir': 'BUY', 'entry': price,
-            'structure': mid, 'level': rng_hi,
+            'structure': l[-1], 'level': rng_hi,
             'reason': (f'Nén {12} nến trong {rng_hi-rng_lo:,.1f}$ rồi bùng nổ '
                        f'thân nến {abs(body):,.1f}$ (Marubozu) đóng trên {rng_hi:,.1f}'),
         }]
     if body < 0 and c[-1] < rng_lo:
         return [{
             'setup': 'compression_breakout', 'dir': 'SELL', 'entry': price,
-            'structure': mid, 'level': rng_lo,
+            'structure': h[-1], 'level': rng_lo,
             'reason': (f'Nén {12} nến trong {rng_hi-rng_lo:,.1f}$ rồi bùng nổ '
                        f'thân nến {abs(body):,.1f}$ (Marubozu) đóng dưới {rng_lo:,.1f}'),
         }]
@@ -625,13 +635,17 @@ def detect_breakout(closes, highs, lows, atr_val):
     e50 = fx.ema(closes[:-1], 50)
     price = closes[-1]
     out = []
+    # [27/07/2026] structure = RAU nen pha can (chan rau cho BUY / dinh rau cho
+    # SELL), khong con la price -/+ 1 ATR (gia tao, mu cau truc). build_order lay
+    # max(1 ATR, khoang cach toi rau + dem) -> giu san da validate, chi noi them
+    # khi rau sau hon.
     if c > dhi and c > e50:
         out.append({'setup': 'breakout', 'dir': 'BUY', 'entry': price,
-                    'structure': price - BREAKOUT_SL_ATR * atr_val, 'level': dhi,
+                    'structure': lows[-2], 'level': dhi,
                     'reason': f'H1 đóng cửa phá đỉnh {n} nến {dhi:,.1f} + trên EMA50 — trend tiếp diễn'})
     elif c < dlo and c < e50:
         out.append({'setup': 'breakout', 'dir': 'SELL', 'entry': price,
-                    'structure': price + BREAKOUT_SL_ATR * atr_val, 'level': dlo,
+                    'structure': highs[-2], 'level': dlo,
                     'reason': f'H1 đóng cửa phá đáy {n} nến {dlo:,.1f} + dưới EMA50 — trend tiếp diễn'})
     return out
 
@@ -666,19 +680,35 @@ def build_order(p, atr_val, psych_levels):
     is_buy = p['dir'] == 'BUY'
     entry  = p['entry']
 
+    # [27/07/2026 — user] SL LUON neo NGOAI RAU NEN (structure) + dem, KHONG
+    # bao gio cat vao trong rau. Bo nhanh probe cu:
+    #     sl_dist = max(0.6 ATR, min(struct_dist, 1.2 ATR))
+    # cai min() do KEP SL vao TRONG rau nen sweep (rau sweep >= 0.75 ATR range,
+    # thuong sau hon 1.2 ATR) -> bi quet boi dao dong binh thuong truoc khi
+    # thesis kip sai. 73% lenh live di qua nhanh nay (11/15 tin hieu that trong
+    # gold_pa_state.json; 4 lenh dinh tran 1.2 ATR -> 3 SL / 1 TP1).
+    # QUAN TRONG: moi harness backtest (hyp06/24/27) goi build_order tren output
+    # THO cua detector, khong co key 'probe' -> mo con so da validate (+0.099R,
+    # +0.061R limit-fill, TP1_R=1.0) deu do TREN NHANH NEO-RAU NAY. Sua nay dua
+    # bot live ve dung cai da kiem chung, khong phai them gia thuyet moi.
+    # Probe VAN ton tai — giu risk 0.5% + ke hoach nhoi (add_trigger); chi rieng
+    # SL thoi khong con bi cat ngan. Ghi de triet ly "SL be do duong" 13/06.
+    # SAN chi de chong noise tic/spread khi rau qua SAT entry — san LUON <= hoac
+    # noi rong hon rau, khong bao gio keo SL vao trong rau. Giu san theo tung
+    # loai lenh y nhu truoc (hyp29: nang san probe 0.6 -> 1.5 lam MAT trang thai
+    # EDGE o nua sau mau -> sua qua tay, da bo).
+    struct_dist = abs(entry - p['structure']) + SL_BUFFER_ATR * atr_val
     if p['setup'] == 'breakout':
-        sl_dist = BREAKOUT_SL_ATR * atr_val          # SL co dinh 1 ATR (validated)
+        floor = BREAKOUT_SL_ATR        # 1.0 ATR (validated hyp18-21)
     elif p.get('probe'):
-        struct_dist = abs(entry - p['structure']) + PROBE_SL_BUFFER * atr_val
-        sl_dist = max(PROBE_SL_FLOOR * atr_val,
-                      min(struct_dist, PROBE_SL_CAP * atr_val))
+        floor = PROBE_SL_FLOOR         # 0.6 ATR — lenh do van danh nho
     else:
-        struct_dist = abs(entry - p['structure']) + SL_BUFFER_ATR * atr_val
-        sl_dist     = max(SL_ATR_FLOOR * atr_val, struct_dist)
-        # Keo nguy hiem (da la probe o tren — nhanh nay chi con phong thu)
-        sl_cap = DANGER_SL_CAP if p.get('danger') else SL_ATR_CAP
-        if sl_dist > sl_cap * atr_val:
-            return None
+        floor = SL_ATR_FLOOR           # 1.5 ATR
+    sl_dist = max(floor * atr_val, struct_dist)
+    # Cap = BO KEO (quan ly rui ro truoc), KHONG phai thu ngan SL vao trong rau.
+    sl_cap = DANGER_SL_CAP if p.get('danger') else SL_ATR_CAP
+    if sl_dist > sl_cap * atr_val:
+        return None
     sl  = entry - sl_dist if is_buy else entry + sl_dist
     # TP per-setup: breakout R:R 2 (trend); sweep chốt nhanh 1.0/1.5 (validated); còn lại 1.5/2.5
     if p['setup'] == 'breakout':
