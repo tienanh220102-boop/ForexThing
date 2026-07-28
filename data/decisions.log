@@ -25301,3 +25301,7 @@
 2026-07-27 20:45:33 UTC [USD/JPY] NO_SIGNAL
 2026-07-27 20:45:33 UTC [XAU/USD] BLOCKED few_votes BUY=1 BEAR=1
 2026-07-27 20:45:33 UTC [XAU/USD] NO_SIGNAL
+2026-07-28 00:00:44 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-07-28 00:00:44 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-07-28 00:00:44 UTC [USD/JPY] SIGNAL BUY conf=76 votes=2/6 regime=NEUTRAL H=0.472 ADX=21.1
+2026-07-28 00:00:44 UTC [USD/JPY] DUP_SAMEDIR BUY 11.8h prev=163.68395 now=163.77744 improve=-0.09349
