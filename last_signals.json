@@ -35,33 +35,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "USDJPY_1785300338"
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "SELL",
-      "entry_price": 4031.70815,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4047.76361,
-      "tp": 3999.59723,
-      "sent_at": 1785320130.024056,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.49,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.1,
-        "tl": -1
-      },
-      "regime": "RANGE",
-      "hurst": 0.448,
-      "conf": 79,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1785320130"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -2917,6 +2890,23 @@
       "sl_pips": 199.6,
       "tp_pips": 399.1,
       "conf": 88,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-07-29",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -160.6,
+      "entry": 4031.70815,
+      "exit": 4047.76361,
+      "sl_pips": 160.6,
+      "tp_pips": 321.1,
+      "conf": 79,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
