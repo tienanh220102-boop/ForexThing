@@ -25911,3 +25911,7 @@
 2026-07-29 01:45:33 UTC [USD/JPY] NO_SIGNAL
 2026-07-29 02:00:47 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=1 need=5 H4=BEAR
 2026-07-29 02:00:47 UTC [USD/JPY] NO_SIGNAL
+2026-07-29 02:15:37 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=1 need=5 H4=BEAR
+2026-07-29 02:15:37 UTC [USD/JPY] NO_SIGNAL
+2026-07-29 02:15:41 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-07-29 02:15:41 UTC generated new fontManager
