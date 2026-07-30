@@ -26531,3 +26531,5 @@
 2026-07-30 04:00:45 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-30 04:00:45 UTC [USD/JPY] SIGNAL SELL conf=76 votes=3/6 regime=RANGE H=0.399 ADX=29.6
 2026-07-30 04:00:45 UTC [USD/JPY] COOLDOWN SELL 3.0h/6h
+2026-07-30 04:15:39 UTC [USD/JPY] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
+2026-07-30 04:15:39 UTC [USD/JPY] NO_SIGNAL
