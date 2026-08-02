@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/JPY",
-      "signal": "SELL",
-      "entry_price": 158.22703,
-      "entry_mode": "LIMIT",
-      "limit_entry": 159.65823066400623,
-      "sl": 160.51318,
-      "tp": 153.65473000000003,
-      "sent_at": 1785519934.524043,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.11,
-        "bb": 1,
-        "mom": -0.6,
-        "inter": -1.0,
-        "tl": -1
-      },
-      "regime": "RANGE",
-      "hurst": 0.392,
-      "conf": 87,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1785519934"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "BUY",
       "entry_price": 1.15307,
@@ -4349,6 +4322,10 @@
       [
         1785690036,
         0.46
+      ],
+      [
+        1785693641,
+        0.46
       ]
     ],
     "XAU/USD": [
@@ -5191,6 +5168,10 @@
       [
         1785690036,
         0.402
+      ],
+      [
+        1785693641,
+        0.4
       ]
     ],
     "EUR/USD": [
@@ -5977,6 +5958,10 @@
       [
         1785690036,
         0.445
+      ],
+      [
+        1785693641,
+        0.446
       ]
     ],
     "WTI/USD": [
