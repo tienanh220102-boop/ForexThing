@@ -28077,3 +28077,7 @@
 2026-08-02 04:30:41 UTC [USD/JPY] SENT BUY conf=85% mode=MARKET entry=157.62798 ext=-0.22 sl=157.03928 tp=158.80538
 2026-08-02 04:45:32 UTC [USD/JPY] BLOCKED low_votes BUY=3 BEAR=1 need=4 H4=BEAR
 2026-08-02 04:45:32 UTC [USD/JPY] NO_SIGNAL
+2026-08-02 05:01:50 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-02 05:01:51 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-02 05:01:51 UTC [USD/JPY] SIGNAL BUY conf=82 votes=4/6 regime=NEUTRAL H=0.465 ADX=40.1
+2026-08-02 05:01:51 UTC [USD/JPY] COOLDOWN BUY 0.5h/6h
