@@ -28185,3 +28185,11 @@
 2026-08-02 09:15:34 UTC [USD/JPY] NO_SIGNAL
 2026-08-02 09:15:35 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=5 H4=BEAR
 2026-08-02 09:15:35 UTC [XAU/USD] NO_SIGNAL
+2026-08-02 09:30:40 UTC [EUR/USD] BLOCKED low_votes BUY=2 BEAR=3 need=5 H4=BULL
+2026-08-02 09:30:40 UTC [EUR/USD] NO_SIGNAL
+2026-08-02 09:30:42 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-02 09:30:42 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-02 09:30:43 UTC [USD/JPY] SIGNAL BUY conf=90 votes=4/6 regime=NEUTRAL H=0.463 ADX=38.5
+2026-08-02 09:30:43 UTC [USD/JPY] COOLDOWN BUY 5.0h/6h
+2026-08-02 09:30:43 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=5 H4=BEAR
+2026-08-02 09:30:43 UTC [XAU/USD] NO_SIGNAL
