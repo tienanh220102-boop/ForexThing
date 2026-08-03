@@ -809,18 +809,37 @@
       "outcome": "SL",
       "correct": false,
       "pips": -262.4
+    },
+    {
+      "ts": 1785723349.383656,
+      "date": "2026-08-03",
+      "session": "ASIAN",
+      "setup": "sweep_reclaim",
+      "dir": "SELL",
+      "entry": 4054.94761,
+      "sl": 4063.355476185244,
+      "tp1": 4046.5397438147565,
+      "tp2": 4042.335810722135,
+      "stars": 4,
+      "entry_type": "market",
+      "danger": false,
+      "capit": false,
+      "probe": true,
+      "align": "against",
+      "add_trigger": 4042.61874,
+      "sl_dist_atr": 1.12
     }
   ],
   "cooldowns": {
-    "sweep_reclaim|SELL": 1785399340.516293,
+    "sweep_reclaim|SELL": 1785723349.383656,
     "sweep_reclaim|BUY": 1785428146.33918,
     "double_bottom|BUY": 1782991847.599438,
     "double_top|SELL": 1781720152.354436,
     "momentum_pullback|SELL": 1783494949.495335
   },
   "day_count": {
-    "date": "2026-07-30",
-    "n": 2
+    "date": "2026-08-03",
+    "n": 1
   },
   "pa_knowledge": {
     "adjust": {},
@@ -835,7 +854,7 @@
     ]
   },
   "last_learn": 1785654942.561788,
-  "last_weekly": 1785118539.23865,
+  "last_weekly": 1785723349.383656,
   "momentum": {
     "dir": "BEAR",
     "ts": 1784534459.706671
