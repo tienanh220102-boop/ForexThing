@@ -64,33 +64,6 @@
       "cb_key": "XAUUSD_1785739536"
     },
     {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "entry_price": 1.15319,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.1515804985496882,
-      "tp": 1.1564090029006233,
-      "sent_at": 1785758440.157244,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": 1,
-        "macd": -0.89,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.68,
-        "tl": -1
-      },
-      "regime": "RANGE",
-      "hurst": 0.443,
-      "conf": 66,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1785758440"
-    },
-    {
       "sym": "USD/JPY",
       "signal": "SELL",
       "entry_price": 156.59518,
@@ -3192,6 +3165,23 @@
       "sl_pips": 78.6,
       "tp_pips": 111.5,
       "conf": 81,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-08-03",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -16.1,
+      "entry": 1.15319,
+      "exit": 1.15158,
+      "sl_pips": 16.1,
+      "tp_pips": 32.2,
+      "conf": 66,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
