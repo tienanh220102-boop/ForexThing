@@ -872,7 +872,24 @@
       "probe": true,
       "align": "against",
       "add_trigger": 4042.61874,
-      "sl_dist_atr": 1.66
+      "sl_dist_atr": 1.66,
+      "filled_ts": 1785819600,
+      "add_sent": 1785806137.933117
+    },
+    {
+      "ts": 1785806137.933117,
+      "date": "2026-08-04",
+      "session": "ASIAN",
+      "setup": "addon",
+      "dir": "SELL",
+      "entry": 4048.47695,
+      "sl": 4047.7858219846485,
+      "tp1": 4029.554656983475,
+      "tp2": 4029.554656983475,
+      "stars": 3,
+      "entry_type": "market",
+      "probe": false,
+      "parent_ts": 1785805645.609018
     }
   ],
   "cooldowns": {
