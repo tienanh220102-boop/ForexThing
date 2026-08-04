@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4064.93885,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4022.31329,
-      "tp": 4150.189969999999,
-      "sent_at": 1785739536.472768,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.42,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": 0.68,
-        "tl": 0
-      },
-      "regime": "RANGE",
-      "hurst": 0.381,
-      "conf": 82,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1785739536"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "BUY",
       "entry_price": 1.15095,
@@ -3226,6 +3199,23 @@
       "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-08-03",
+      "regime": "RANGE",
+      "outcome": "TP",
+      "pips": 852.5,
+      "entry": 4064.93885,
+      "exit": 4150.18997,
+      "sl_pips": 426.3,
+      "tp_pips": 852.5,
+      "conf": 82,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -4425,6 +4415,10 @@
       [
         1785848443,
         0.421
+      ],
+      [
+        1785852047,
+        0.421
       ]
     ],
     "XAU/USD": [
@@ -5271,6 +5265,10 @@
       [
         1785848443,
         0.365
+      ],
+      [
+        1785852047,
+        0.359
       ]
     ],
     "EUR/USD": [
@@ -6061,6 +6059,10 @@
       [
         1785848443,
         0.466
+      ],
+      [
+        1785852047,
+        0.467
       ]
     ],
     "WTI/USD": [
