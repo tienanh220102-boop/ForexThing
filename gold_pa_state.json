@@ -936,7 +936,10 @@
       "probe": true,
       "align": "against",
       "add_trigger": 4150.27668,
-      "sl_dist_atr": 1.21
+      "sl_dist_atr": 1.21,
+      "outcome": "NOFILL",
+      "correct": null,
+      "pips": 0.0
     }
   ],
   "cooldowns": {
