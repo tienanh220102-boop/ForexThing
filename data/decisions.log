@@ -29994,9 +29994,9 @@
 2026-08-06 06:00:39 UTC [USD/JPY] NO_SIGNAL
 2026-08-06 06:00:40 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=3 need=4 H4=BULL
 2026-08-06 06:00:40 UTC [XAU/USD] NO_SIGNAL
-2026-08-06 06:15:31 UTC [USD/JPY] BLOCKED adx_hurst ADX=8.2 H=0.455
-2026-08-06 06:15:31 UTC [USD/JPY] NO_SIGNAL
-2026-08-06 06:15:31 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=3 need=4 H4=BULL
-2026-08-06 06:15:31 UTC [XAU/USD] NO_SIGNAL
-2026-08-06 06:15:35 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
-2026-08-06 06:15:35 UTC generated new fontManager
+2026-08-06 06:16:10 UTC [USD/JPY] BLOCKED adx_hurst ADX=8.2 H=0.455
+2026-08-06 06:16:10 UTC [USD/JPY] NO_SIGNAL
+2026-08-06 06:16:10 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=3 need=4 H4=BULL
+2026-08-06 06:16:10 UTC [XAU/USD] NO_SIGNAL
+2026-08-06 06:16:15 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-08-06 06:16:16 UTC generated new fontManager
