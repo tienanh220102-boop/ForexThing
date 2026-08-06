@@ -35,87 +35,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "EURUSD_1785870936"
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "entry_price": 1.15481,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.1533503391548638,
-      "tp": 1.157729321690272,
-      "sent_at": 1785958241.275562,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.02,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": 0.19,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.471,
-      "conf": 83,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1785958241"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 157.93639,
-      "entry_mode": "LIMIT",
-      "limit_entry": 157.82767968883024,
-      "sl": 157.71481,
-      "tp": 158.37954999999997,
-      "sent_at": 1786023930.887253,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 0.26,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": -0.09,
-        "tl": 1
-      },
-      "regime": "RANGE",
-      "hurst": 0.448,
-      "conf": 94,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1786023930"
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "entry_price": 1.15434,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.1532145409576533,
-      "tp": 1.156590918084693,
-      "sent_at": 1786024845.598721,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": -1.0,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.12,
-        "tl": 1
-      },
-      "regime": "RANGE",
-      "hurst": 0.386,
-      "conf": 95,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1786024845"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -3365,6 +3284,57 @@
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-08-06",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -14.6,
+      "entry": 1.15481,
+      "exit": 1.15335,
+      "sl_pips": 14.6,
+      "tp_pips": 29.2,
+      "conf": 83,
+      "votes": 2,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-08-06",
+      "regime": "RANGE",
+      "outcome": "TP",
+      "pips": 44.3,
+      "entry": 157.93639,
+      "exit": 158.37955,
+      "sl_pips": 22.2,
+      "tp_pips": 44.3,
+      "conf": 94,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-08-06",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -11.3,
+      "entry": 1.15434,
+      "exit": 1.15321,
+      "sl_pips": 11.3,
+      "tp_pips": 22.5,
+      "conf": 95,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -3385,10 +3355,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1784819734,
-        0.346
-      ],
       [
         1784823334,
         0.346
@@ -4572,10 +4538,6 @@
     ],
     "XAU/USD": [
       [
-        1784818851,
-        0.463
-      ],
-      [
         1784822448,
         0.46
       ],
@@ -5421,10 +5383,6 @@
       ]
     ],
     "EUR/USD": [
-      [
-        1784818851,
-        0.135
-      ],
       [
         1784822448,
         0.127
