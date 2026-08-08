@@ -979,7 +979,7 @@
     "adjust": {
       "setup:sweep_reclaim|sess:ASIAN": 1
     },
-    "updated": 1786089661.888271,
+    "updated": 1786176215.889277,
     "n_resolved": 39,
     "lessons": [
       "align:against: 15/18 thắng, kỳ vọng +1.03R",
@@ -990,7 +990,7 @@
       "setup:sweep_reclaim|sess:EU_US: 9/23 thắng, kỳ vọng -0.07R"
     ]
   },
-  "last_learn": 1786089661.888271,
+  "last_learn": 1786176215.889277,
   "last_weekly": 1785723349.383656,
   "momentum": {
     "dir": "BULL",
