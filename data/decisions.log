@@ -1,5 +1,3 @@
-2026-06-12 19:15:41 UTC [WTI/USD] NO_SIGNAL
-2026-06-12 19:15:43 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-06-12 19:15:43 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-06-12 19:15:43 UTC [XAU/USD] SIGNAL BUY conf=54 votes=2/6 regime=NEUTRAL H=0.513 ADX=18.6
 2026-06-12 19:15:43 UTC [XAU/USD] COOLDOWN BUY 3.0h/4h
@@ -29998,3 +29996,5 @@
 2026-08-08 05:27:09 UTC [USD/JPY] NO_SIGNAL
 2026-08-08 05:30:41 UTC [USD/JPY] BLOCKED hurst H=0.378 threshold=0.420 src=dyn bars=720
 2026-08-08 05:30:41 UTC [USD/JPY] NO_SIGNAL
+2026-08-08 05:45:30 UTC [USD/JPY] BLOCKED hurst H=0.378 threshold=0.420 src=dyn bars=720
+2026-08-08 05:45:30 UTC [USD/JPY] NO_SIGNAL
