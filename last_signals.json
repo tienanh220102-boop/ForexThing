@@ -35,33 +35,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "EURUSD_1786345238"
-    },
-    {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4341.87718,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4313.50559,
-      "tp": 4398.620360000002,
-      "sent_at": 1786356038.183699,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": 1.0,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.37,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.55,
-      "conf": 72,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1786356038"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -3444,6 +3417,23 @@
       "sl_pips": 356.1,
       "tp_pips": 712.3,
       "conf": 88,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-08-10",
+      "regime": "NEUTRAL",
+      "outcome": "TP",
+      "pips": 567.4,
+      "entry": 4341.87718,
+      "exit": 4398.62036,
+      "sl_pips": 283.7,
+      "tp_pips": 567.4,
+      "conf": 72,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
