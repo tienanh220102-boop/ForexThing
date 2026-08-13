@@ -29998,3 +29998,5 @@
 2026-08-13 20:45:41 UTC [USD/JPY] DUP_SAMEDIR BUY 10.8h prev=159.33803 now=159.55806 improve=-0.22003
 2026-08-13 20:45:41 UTC [XAU/USD] BLOCKED hurst H=0.280 threshold=0.373 src=dyn bars=720
 2026-08-13 20:45:41 UTC [XAU/USD] NO_SIGNAL
+2026-08-13 23:03:06 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-08-13 23:03:06 UTC generated new fontManager
