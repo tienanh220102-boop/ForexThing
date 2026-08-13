@@ -1,11 +1,3 @@
-2026-06-18 18:15:45 UTC [WTI/USD] BLOCKED low_votes BUY=2 BEAR=1 need=5 H4=BEAR
-2026-06-18 18:15:45 UTC [WTI/USD] NO_SIGNAL
-2026-06-18 18:15:46 UTC [XAU/USD] BLOCKED hurst H=0.340 threshold=0.450 src=dyn bars=720
-2026-06-18 18:15:46 UTC [XAU/USD] NO_SIGNAL
-2026-06-18 18:30:52 UTC [EUR/USD] BLOCKED rsi_extreme RSI=32 SELL votes=3
-2026-06-18 18:30:52 UTC [EUR/USD] NO_SIGNAL
-2026-06-18 18:30:54 UTC [USD/JPY] BLOCKED hurst H=0.248 threshold=0.350 src=dyn bars=720
-2026-06-18 18:30:54 UTC [USD/JPY] NO_SIGNAL
 2026-06-18 18:30:55 UTC [WTI/USD] BLOCKED low_votes BUY=2 BEAR=1 need=5 H4=BEAR
 2026-06-18 18:30:55 UTC [WTI/USD] NO_SIGNAL
 2026-06-18 18:30:56 UTC [XAU/USD] BLOCKED hurst H=0.340 threshold=0.450 src=dyn bars=720
@@ -29998,3 +29990,11 @@
 2026-08-13 16:00:51 UTC [USD/JPY] DUP_SAMEDIR BUY 6.0h prev=159.33803 now=159.35767 improve=-0.01964
 2026-08-13 16:00:52 UTC [XAU/USD] BLOCKED hurst H=0.243 threshold=0.373 src=dyn bars=720
 2026-08-13 16:00:52 UTC [XAU/USD] NO_SIGNAL
+2026-08-13 16:03:44 UTC [EUR/USD] BLOCKED hurst H=0.278 threshold=0.360 src=dyn bars=720
+2026-08-13 16:03:44 UTC [EUR/USD] NO_SIGNAL
+2026-08-13 16:03:49 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-13 16:03:49 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-13 16:03:50 UTC [USD/JPY] SIGNAL BUY conf=91 votes=3/6 regime=NEUTRAL H=0.497 ADX=23.9
+2026-08-13 16:03:50 UTC [USD/JPY] DUP_SAMEDIR BUY 6.1h prev=159.33803 now=159.36554 improve=-0.02751
+2026-08-13 16:03:51 UTC [XAU/USD] BLOCKED hurst H=0.247 threshold=0.373 src=dyn bars=720
+2026-08-13 16:03:51 UTC [XAU/USD] NO_SIGNAL
