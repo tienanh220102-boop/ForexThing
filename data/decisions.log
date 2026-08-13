@@ -1,5 +1,3 @@
-2026-06-18 03:30:45 UTC [USD/JPY] NO_SIGNAL
-2026-06-18 03:45:43 UTC [USD/JPY] BLOCKED hurst H=0.196 threshold=0.350 src=dyn bars=720
 2026-06-18 03:45:43 UTC [USD/JPY] NO_SIGNAL
 2026-06-18 04:00:49 UTC [USD/JPY] BLOCKED hurst H=0.196 threshold=0.350 src=dyn bars=720
 2026-06-18 04:00:49 UTC [USD/JPY] NO_SIGNAL
@@ -29998,3 +29996,5 @@
 2026-08-13 00:15:34 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-08-13 00:15:34 UTC [USD/JPY] SIGNAL BUY conf=75 votes=2/6 regime=NEUTRAL H=0.493 ADX=22.6
 2026-08-13 00:15:34 UTC [USD/JPY] DUP_SAMEDIR BUY 11.2h prev=158.88032 now=159.35310 improve=-0.47278
+2026-08-13 00:30:35 UTC [USD/JPY] BLOCKED few_votes BUY=1 BEAR=1
+2026-08-13 00:30:35 UTC [USD/JPY] NO_SIGNAL
