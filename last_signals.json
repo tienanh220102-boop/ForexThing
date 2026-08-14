@@ -11,33 +11,6 @@
   "pending_validations": [
     {
       "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 159.43563,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 159.03591,
-      "tp": 160.23507,
-      "sent_at": 1786665638.686144,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": 0.26,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.14,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.491,
-      "conf": 72,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1786665638"
-    },
-    {
-      "sym": "USD/JPY",
       "signal": "SELL",
       "entry_price": 159.13103,
       "entry_mode": "LIMIT",
@@ -3649,6 +3622,23 @@
       "tp_pips": 39.4,
       "conf": 77,
       "votes": 2,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-08-14",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -40.0,
+      "entry": 159.43563,
+      "exit": 159.03591,
+      "sl_pips": 40.0,
+      "tp_pips": 79.9,
+      "conf": 72,
+      "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
