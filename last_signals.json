@@ -35,6 +35,33 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "USDJPY_1786706369"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "SELL",
+      "entry_price": 159.29677,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 159.47660129918586,
+      "tp": 158.9371074016283,
+      "sent_at": 1786752034.639048,
+      "message_id": null,
+      "indicators": {
+        "rsi": 0,
+        "ema": 0,
+        "macd": 0.91,
+        "bb": 0,
+        "mom": -0.6,
+        "inter": -0.11,
+        "tl": -1
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.498,
+      "conf": 73,
+      "aligned": 2,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "USDJPY_1786752034"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -3649,7 +3676,7 @@
   "GBP/USD|BUY": 1780245649.560464,
   "XAU/USD|BUY": 1786522530.096067,
   "USD/CHF|SELL": 1780659056.268735,
-  "USD/JPY|SELL": 1786706369.914806,
+  "USD/JPY|SELL": 1786752034.639048,
   "USD/CAD|SELL": 1778972458.279356,
   "EUR/GBP|BUY": 1779057049.881722,
   "EUR/JPY|BUY": 1779679852.520935,
@@ -4828,6 +4855,10 @@
       [
         1786738546,
         0.493
+      ],
+      [
+        1786752034,
+        0.498
       ]
     ],
     "XAU/USD": [
@@ -7183,5 +7214,5 @@
   "XAU/USD|SELL|entry": 4031.70815,
   "USD/JPY|BUY|entry": 159.43563,
   "EUR/USD|BUY|entry": 1.15551,
-  "USD/JPY|SELL|entry": 159.13103
+  "USD/JPY|SELL|entry": 159.29677
 }
