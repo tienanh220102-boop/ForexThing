@@ -8,35 +8,7 @@
   "XAG/USD|BUY": 1779802260.848845,
   "UKOIL/USD|BUY": 1780509674.581685,
   "USOIL/USD|BUY": 1779067852.924825,
-  "pending_validations": [
-    {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "entry_price": 1.15953,
-      "entry_mode": "LIMIT",
-      "limit_entry": 1.158355621786424,
-      "sl": 1.15703,
-      "tp": 1.1645299999999998,
-      "sent_at": 1787122839.020926,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 1,
-        "macd": 1.0,
-        "bb": -1,
-        "mom": 1.0,
-        "inter": -0.07,
-        "tl": 1
-      },
-      "regime": "RANGE",
-      "hurst": 0.361,
-      "conf": 95,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1787122839"
-    }
-  ],
+  "pending_validations": [],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
   "EUR/USD|SELL": 1786518045.474496,
@@ -3811,6 +3783,23 @@
       "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-08-19",
+      "regime": "RANGE",
+      "outcome": "TP",
+      "pips": 50.0,
+      "entry": 1.15953,
+      "exit": 1.16453,
+      "sl_pips": 25.0,
+      "tp_pips": 50.0,
+      "conf": 95,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -4994,6 +4983,10 @@
       [
         1787140837,
         0.178
+      ],
+      [
+        1787144438,
+        0.179
       ]
     ],
     "XAU/USD": [
@@ -5824,6 +5817,10 @@
       [
         1787140837,
         0.357
+      ],
+      [
+        1787144438,
+        0.336
       ]
     ],
     "EUR/USD": [
@@ -6598,6 +6595,10 @@
       [
         1787140837,
         0.339
+      ],
+      [
+        1787144438,
+        0.324
       ]
     ],
     "WTI/USD": [
