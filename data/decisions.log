@@ -1,9 +1,3 @@
-2026-06-24 13:36:25 UTC [WTI/USD] BLOCKED rsi_extreme RSI=23 SELL votes=3
-2026-06-24 13:36:25 UTC [WTI/USD] NO_SIGNAL
-2026-06-24 13:36:27 UTC [XAU/USD] BLOCKED macro_strong BUY score=-0.34
-2026-06-24 13:36:27 UTC [XAU/USD] NO_SIGNAL
-2026-06-24 13:45:43 UTC [EUR/USD] BLOCKED exhaustion SELL d1_rsi=23.9 pctl=92 at_extreme=False
-2026-06-24 13:45:43 UTC [EUR/USD] NO_SIGNAL
 2026-06-24 13:45:46 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-06-24 13:45:47 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-06-24 13:45:47 UTC [USD/JPY] SIGNAL BUY conf=95 votes=3/6 regime=RANGE H=0.396 ADX=15.1
@@ -29998,3 +29992,11 @@
 2026-08-19 15:00:42 UTC [USD/JPY] NO_SIGNAL
 2026-08-19 15:00:44 UTC [XAU/USD] BLOCKED hurst H=0.265 threshold=0.350 src=dyn bars=720
 2026-08-19 15:00:44 UTC [XAU/USD] NO_SIGNAL
+2026-08-19 15:02:21 UTC [EUR/USD] BLOCKED hurst H=0.278 threshold=0.350 src=dyn bars=720
+2026-08-19 15:02:21 UTC [EUR/USD] NO_SIGNAL
+2026-08-19 15:02:23 UTC [USD/JPY] BLOCKED hurst H=0.204 threshold=0.350 src=dyn bars=720
+2026-08-19 15:02:23 UTC [USD/JPY] NO_SIGNAL
+2026-08-19 15:02:24 UTC [XAU/USD] BLOCKED hurst H=0.247 threshold=0.350 src=dyn bars=720
+2026-08-19 15:02:24 UTC [XAU/USD] NO_SIGNAL
+2026-08-19 15:02:29 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-08-19 15:02:30 UTC generated new fontManager
