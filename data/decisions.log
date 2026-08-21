@@ -1,9 +1,3 @@
-2026-06-26 01:00:47 UTC [USD/JPY] NO_SIGNAL
-2026-06-26 01:15:39 UTC [USD/JPY] BLOCKED hurst H=0.214 threshold=0.350 src=dyn bars=720
-2026-06-26 01:15:39 UTC [USD/JPY] NO_SIGNAL
-2026-06-26 01:30:46 UTC [USD/JPY] BLOCKED hurst H=0.214 threshold=0.350 src=dyn bars=720
-2026-06-26 01:30:46 UTC [USD/JPY] NO_SIGNAL
-2026-06-26 01:45:39 UTC [USD/JPY] BLOCKED hurst H=0.214 threshold=0.350 src=dyn bars=720
 2026-06-26 01:45:39 UTC [USD/JPY] NO_SIGNAL
 2026-06-26 02:00:52 UTC [USD/JPY] BLOCKED hurst H=0.214 threshold=0.350 src=dyn bars=720
 2026-06-26 02:00:52 UTC [USD/JPY] NO_SIGNAL
@@ -30000,3 +29994,7 @@
 2026-08-21 06:15:33 UTC [XAU/USD] NO_SIGNAL
 2026-08-21 06:15:37 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
 2026-08-21 06:15:37 UTC generated new fontManager
+2026-08-21 06:30:35 UTC [USD/JPY] BLOCKED adx_hurst ADX=12.3 H=0.437
+2026-08-21 06:30:35 UTC [USD/JPY] NO_SIGNAL
+2026-08-21 06:30:36 UTC [XAU/USD] BLOCKED rsi_extreme RSI=70 BUY votes=3
+2026-08-21 06:30:36 UTC [XAU/USD] NO_SIGNAL
