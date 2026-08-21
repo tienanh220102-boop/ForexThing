@@ -1250,6 +1250,25 @@
       "outcome": "SL",
       "correct": false,
       "pips": -219.4
+    },
+    {
+      "ts": 1787328942.896314,
+      "date": "2026-08-21",
+      "session": "EU_US",
+      "setup": "breakout",
+      "dir": "BUY",
+      "entry": 4614.90709,
+      "sl": 4583.601620268731,
+      "tp1": 4677.518029462539,
+      "tp2": 4708.823499193808,
+      "stars": 4,
+      "entry_type": "market",
+      "danger": false,
+      "capit": false,
+      "probe": false,
+      "align": "with",
+      "add_trigger": null,
+      "sl_dist_atr": 1.65
     }
   ],
   "cooldowns": {
@@ -1259,11 +1278,11 @@
     "double_top|SELL": 1781720152.354436,
     "momentum_pullback|SELL": 1783494949.495335,
     "breakout|SELL": 1787084137.841188,
-    "breakout|BUY": 1787292934.96971
+    "breakout|BUY": 1787328942.896314
   },
   "day_count": {
     "date": "2026-08-21",
-    "n": 1
+    "n": 2
   },
   "pa_knowledge": {
     "adjust": {
