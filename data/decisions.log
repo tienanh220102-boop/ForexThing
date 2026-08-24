@@ -1,11 +1,3 @@
-2026-06-30 16:30:52 UTC [XAU/USD] NO_SIGNAL
-2026-06-30 16:45:41 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-06-30 16:45:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-06-30 16:45:41 UTC [EUR/USD] SIGNAL BUY conf=92 votes=4/6 regime=NEUTRAL H=0.464 ADX=26.1
-2026-06-30 16:45:41 UTC [EUR/USD] COOLDOWN BUY 3.2h/6h
-2026-06-30 16:45:42 UTC [USD/JPY] BLOCKED hurst H=0.334 threshold=0.350 src=dyn bars=720
-2026-06-30 16:45:42 UTC [USD/JPY] NO_SIGNAL
-2026-06-30 16:45:43 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=1 need=3 H4=NEUTRAL
 2026-06-30 16:45:43 UTC [XAU/USD] NO_SIGNAL
 2026-06-30 16:56:18 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-06-30 16:56:18 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
@@ -29998,3 +29990,11 @@
 2026-08-24 08:30:38 UTC [USD/JPY] DUP_SAMEDIR BUY 8.0h prev=158.76781 now=159.25173 improve=-0.48392
 2026-08-24 08:30:39 UTC [XAU/USD] SIGNAL BUY conf=65 votes=2/6 regime=NEUTRAL H=0.471 ADX=57.2
 2026-08-24 08:30:39 UTC [XAU/USD] COOLDOWN BUY 0.8h/4h
+2026-08-24 08:45:33 UTC [EUR/USD] BLOCKED counter_trend H=0.570 H4=BEAR
+2026-08-24 08:45:33 UTC [EUR/USD] NO_SIGNAL
+2026-08-24 08:45:35 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-24 08:45:35 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-24 08:45:36 UTC [USD/JPY] SIGNAL BUY conf=91 votes=4/6 regime=NEUTRAL H=0.490 ADX=60.2
+2026-08-24 08:45:36 UTC [USD/JPY] DUP_SAMEDIR BUY 8.2h prev=158.76781 now=159.22714 improve=-0.45933
+2026-08-24 08:45:37 UTC [XAU/USD] BLOCKED rsi_extreme RSI=72 BUY votes=3
+2026-08-24 08:45:37 UTC [XAU/USD] NO_SIGNAL
