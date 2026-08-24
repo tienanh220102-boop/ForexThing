@@ -1,11 +1,3 @@
-2026-06-30 15:15:56 UTC [XAU/USD] NO_SIGNAL
-2026-06-30 15:30:49 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-06-30 15:30:50 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-06-30 15:30:50 UTC [EUR/USD] SIGNAL BUY conf=94 votes=4/6 regime=NEUTRAL H=0.469 ADX=26.9
-2026-06-30 15:30:50 UTC [EUR/USD] COOLDOWN BUY 2.0h/6h
-2026-06-30 15:30:53 UTC [USD/JPY] BLOCKED hurst H=0.319 threshold=0.350 src=dyn bars=720
-2026-06-30 15:30:53 UTC [USD/JPY] NO_SIGNAL
-2026-06-30 15:30:56 UTC [XAU/USD] BLOCKED counter_trend H=0.573 H4=BEAR
 2026-06-30 15:30:56 UTC [XAU/USD] NO_SIGNAL
 2026-06-30 15:45:42 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-06-30 15:45:42 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
@@ -29998,3 +29990,11 @@
 2026-08-24 07:37:29 UTC [USD/JPY] DUP_SAMEDIR BUY 7.1h prev=158.76781 now=159.09385 improve=-0.32604
 2026-08-24 07:37:30 UTC [XAU/USD] BLOCKED rsi_extreme RSI=76 BUY votes=3
 2026-08-24 07:37:30 UTC [XAU/USD] NO_SIGNAL
+2026-08-24 07:45:30 UTC [EUR/USD] BLOCKED counter_trend H=0.571 H4=BEAR
+2026-08-24 07:45:30 UTC [EUR/USD] NO_SIGNAL
+2026-08-24 07:45:31 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-24 07:45:31 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-24 07:45:32 UTC [USD/JPY] SIGNAL BUY conf=91 votes=4/6 regime=NEUTRAL H=0.493 ADX=63.8
+2026-08-24 07:45:32 UTC [USD/JPY] DUP_SAMEDIR BUY 7.2h prev=158.76781 now=159.17645 improve=-0.40864
+2026-08-24 07:45:32 UTC [XAU/USD] SIGNAL BUY conf=78 votes=3/6 regime=NEUTRAL H=0.472 ADX=58.5
+2026-08-24 07:45:32 UTC [XAU/USD] SENT BUY conf=78% mode=MARKET entry=4637.15452 ext=1.02 sl=4596.85575 tp=4717.75206
