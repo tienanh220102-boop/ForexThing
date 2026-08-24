@@ -1,11 +1,3 @@
-2026-06-30 15:45:51 UTC [XAU/USD] NO_SIGNAL
-2026-06-30 16:01:03 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-06-30 16:01:03 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-06-30 16:01:04 UTC [EUR/USD] SIGNAL BUY conf=95 votes=5/6 regime=NEUTRAL H=0.471 ADX=26.9
-2026-06-30 16:01:04 UTC [EUR/USD] COOLDOWN BUY 2.5h/6h
-2026-06-30 16:01:11 UTC [USD/JPY] BLOCKED hurst H=0.319 threshold=0.350 src=dyn bars=720
-2026-06-30 16:01:11 UTC [USD/JPY] NO_SIGNAL
-2026-06-30 16:01:15 UTC [XAU/USD] BLOCKED counter_trend H=0.573 H4=BEAR
 2026-06-30 16:01:15 UTC [XAU/USD] NO_SIGNAL
 2026-06-30 16:15:39 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-06-30 16:15:40 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
@@ -29998,3 +29990,11 @@
 2026-08-24 08:00:44 UTC [USD/JPY] DUP_SAMEDIR BUY 7.5h prev=158.76781 now=159.14807 improve=-0.38026
 2026-08-24 08:00:46 UTC [XAU/USD] BLOCKED rsi_extreme RSI=71 BUY votes=3
 2026-08-24 08:00:46 UTC [XAU/USD] NO_SIGNAL
+2026-08-24 08:16:04 UTC [EUR/USD] BLOCKED counter_trend H=0.570 H4=BEAR
+2026-08-24 08:16:04 UTC [EUR/USD] NO_SIGNAL
+2026-08-24 08:16:06 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-24 08:16:06 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-24 08:16:07 UTC [USD/JPY] SIGNAL BUY conf=91 votes=4/6 regime=NEUTRAL H=0.490 ADX=60.6
+2026-08-24 08:16:07 UTC [USD/JPY] DUP_SAMEDIR BUY 7.8h prev=158.76781 now=159.23666 improve=-0.46885
+2026-08-24 08:16:09 UTC [XAU/USD] SIGNAL BUY conf=62 votes=2/6 regime=NEUTRAL H=0.471 ADX=57.2
+2026-08-24 08:16:09 UTC [XAU/USD] COOLDOWN BUY 0.5h/4h
