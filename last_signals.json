@@ -12,33 +12,6 @@
     {
       "sym": "EUR/USD",
       "signal": "BUY",
-      "entry_price": 1.16815,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.16605154339631,
-      "tp": 1.1723469132073805,
-      "sent_at": 1787390131.142126,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": 1,
-        "macd": -0.02,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.25,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.538,
-      "conf": 90,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1787390131"
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "BUY",
       "entry_price": 1.1684,
       "entry_mode": "MARKET",
       "limit_entry": null,
@@ -4134,10 +4107,6 @@
   "hurst_hist": {
     "USD/JPY": [
       [
-        1786352441,
-        0.25
-      ],
-      [
         1786356038,
         0.245
       ],
@@ -5320,10 +5289,6 @@
     ],
     "XAU/USD": [
       [
-        1786352441,
-        0.55
-      ],
-      [
         1786356038,
         0.55
       ],
@@ -6169,10 +6134,6 @@
       ]
     ],
     "EUR/USD": [
-      [
-        1786352441,
-        0.375
-      ],
       [
         1786356038,
         0.372
