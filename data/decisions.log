@@ -1,11 +1,3 @@
-2026-07-01 20:45:41 UTC [XAU/USD] BLOCKED hurst H=0.414 threshold=0.450 src=dyn bars=720
-2026-07-01 20:45:41 UTC [XAU/USD] NO_SIGNAL
-2026-07-02 00:00:50 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-02 00:00:51 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-07-02 00:00:51 UTC [USD/JPY] SIGNAL BUY conf=76 votes=2/6 regime=NEUTRAL H=0.547 ADX=29.0
-2026-07-02 00:00:51 UTC [USD/JPY] DUP_SAMEDIR BUY 6.5h prev=162.48393 now=162.55480 improve=-0.07087
-2026-07-02 00:15:41 UTC [USD/JPY] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=NEUTRAL
-2026-07-02 00:15:41 UTC [USD/JPY] NO_SIGNAL
 2026-07-02 00:30:44 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-07-02 00:30:45 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-02 00:30:45 UTC [USD/JPY] SIGNAL BUY conf=86 votes=3/6 regime=NEUTRAL H=0.547 ADX=27.8
@@ -29998,3 +29990,11 @@
 2026-08-25 08:30:48 UTC [USD/JPY] DUP_SAMEDIR BUY 8.0h prev=159.14913 now=159.41336 improve=-0.26423
 2026-08-25 08:30:51 UTC [XAU/USD] BLOCKED low_votes BUY=0 BEAR=2 need=4 H4=NEUTRAL
 2026-08-25 08:30:51 UTC [XAU/USD] NO_SIGNAL
+2026-08-25 08:42:48 UTC [EUR/USD] BLOCKED counter_trend H=0.610 H4=BEAR
+2026-08-25 08:42:48 UTC [EUR/USD] NO_SIGNAL
+2026-08-25 08:42:49 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-25 08:42:49 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-25 08:42:49 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.482 ADX=24.7
+2026-08-25 08:42:49 UTC [USD/JPY] DUP_SAMEDIR BUY 8.2h prev=159.14913 now=159.38745 improve=-0.23832
+2026-08-25 08:42:50 UTC [XAU/USD] BLOCKED low_votes BUY=0 BEAR=2 need=4 H4=NEUTRAL
+2026-08-25 08:42:50 UTC [XAU/USD] NO_SIGNAL
