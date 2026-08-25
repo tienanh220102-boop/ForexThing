@@ -29990,11 +29990,11 @@
 2026-08-25 09:45:39 UTC [USD/JPY] DUP_SAMEDIR BUY 9.2h prev=159.14913 now=159.29227 improve=-0.14314
 2026-08-25 09:45:40 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
 2026-08-25 09:45:40 UTC [XAU/USD] NO_SIGNAL
-2026-08-25 10:00:43 UTC [EUR/USD] BLOCKED counter_trend H=0.610 H4=BEAR
-2026-08-25 10:00:43 UTC [EUR/USD] NO_SIGNAL
-2026-08-25 10:00:46 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-08-25 10:00:46 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-08-25 10:00:47 UTC [USD/JPY] SIGNAL BUY conf=75 votes=3/6 regime=NEUTRAL H=0.481 ADX=23.0
-2026-08-25 10:00:47 UTC [USD/JPY] DUP_SAMEDIR BUY 9.5h prev=159.14913 now=159.26998 improve=-0.12085
-2026-08-25 10:00:49 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
-2026-08-25 10:00:49 UTC [XAU/USD] NO_SIGNAL
+2026-08-25 10:01:28 UTC [EUR/USD] BLOCKED counter_trend H=0.611 H4=BEAR
+2026-08-25 10:01:28 UTC [EUR/USD] NO_SIGNAL
+2026-08-25 10:01:31 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-25 10:01:31 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-25 10:01:32 UTC [USD/JPY] SIGNAL BUY conf=75 votes=3/6 regime=NEUTRAL H=0.480 ADX=21.4
+2026-08-25 10:01:32 UTC [USD/JPY] DUP_SAMEDIR BUY 9.5h prev=159.14913 now=159.28544 improve=-0.13631
+2026-08-25 10:01:34 UTC [XAU/USD] BLOCKED low_votes BUY=0 BEAR=2 need=3 H4=BEAR
+2026-08-25 10:01:34 UTC [XAU/USD] NO_SIGNAL
