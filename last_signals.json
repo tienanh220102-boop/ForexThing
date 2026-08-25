@@ -39,33 +39,6 @@
     {
       "sym": "USD/JPY",
       "signal": "BUY",
-      "entry_price": 158.93917,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 158.71771446889895,
-      "tp": 159.38208106220208,
-      "sent_at": 1787574633.206144,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": 0,
-        "macd": 0.57,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.25,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.485,
-      "conf": 73,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1787574633"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "BUY",
       "entry_price": 159.14913,
       "entry_mode": "MARKET",
       "limit_entry": null,
@@ -4154,6 +4127,23 @@
       "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-08-24",
+      "regime": "NEUTRAL",
+      "outcome": "TP",
+      "pips": 44.3,
+      "entry": 158.93917,
+      "exit": 159.38208,
+      "sl_pips": 22.1,
+      "tp_pips": 44.3,
+      "conf": 73,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -4174,10 +4164,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1786417239,
-        0.327
-      ],
       [
         1786420838,
         0.337
@@ -5353,6 +5339,10 @@
       [
         1787623237,
         0.48
+      ],
+      [
+        1787626841,
+        0.479
       ]
     ],
     "XAU/USD": [
