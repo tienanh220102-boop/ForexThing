@@ -1,11 +1,3 @@
-2026-07-02 11:30:49 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
-2026-07-02 11:30:49 UTC generated new fontManager
-2026-07-02 11:45:40 UTC [EUR/USD] BLOCKED hurst H=0.241 threshold=0.450 src=dyn bars=720
-2026-07-02 11:45:40 UTC [EUR/USD] NO_SIGNAL
-2026-07-02 11:45:40 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=2 need=5 H4=BEAR
-2026-07-02 11:45:40 UTC [USD/JPY] NO_SIGNAL
-2026-07-02 11:45:41 UTC [XAU/USD] BLOCKED hurst H=0.367 threshold=0.450 src=dyn bars=720
-2026-07-02 11:45:41 UTC [XAU/USD] NO_SIGNAL
 2026-07-02 11:56:38 UTC [EUR/USD] BLOCKED hurst H=0.241 threshold=0.450 src=dyn bars=720
 2026-07-02 11:56:38 UTC [EUR/USD] NO_SIGNAL
 2026-07-02 11:56:38 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=2 need=5 H4=BEAR
@@ -29998,3 +29990,13 @@
 2026-08-25 14:00:58 UTC [USD/JPY] NO_SIGNAL
 2026-08-25 14:01:04 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=5 H4=BEAR
 2026-08-25 14:01:04 UTC [XAU/USD] NO_SIGNAL
+2026-08-25 14:15:33 UTC [EUR/USD] BLOCKED low_votes BUY=2 BEAR=2 need=3 H4=NEUTRAL
+2026-08-25 14:15:33 UTC [EUR/USD] NO_SIGNAL
+2026-08-25 14:15:38 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-25 14:15:39 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-25 14:15:39 UTC [USD/JPY] SIGNAL BUY conf=83 votes=3/6 regime=NEUTRAL H=0.480 ADX=18.9
+2026-08-25 14:15:39 UTC [USD/JPY] SENT BUY conf=83% mode=MARKET entry=159.25605 ext=0.01 sl=159.08001 tp=159.60812
+2026-08-25 14:15:42 UTC [XAU/USD] BLOCKED few_votes BUY=1 BEAR=1
+2026-08-25 14:15:42 UTC [XAU/USD] NO_SIGNAL
+2026-08-25 14:15:49 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-08-25 14:15:49 UTC generated new fontManager
