@@ -1,11 +1,3 @@
-2026-07-02 01:00:49 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-02 01:00:49 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-07-02 01:00:49 UTC [USD/JPY] SIGNAL BUY conf=86 votes=3/6 regime=NEUTRAL H=0.547 ADX=27.8
-2026-07-02 01:00:49 UTC [USD/JPY] DUP_SAMEDIR BUY 7.5h prev=162.48393 now=162.57110 improve=-0.08717
-2026-07-02 01:15:34 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-02 01:15:34 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-07-02 01:15:34 UTC [USD/JPY] SIGNAL BUY conf=86 votes=3/6 regime=NEUTRAL H=0.547 ADX=26.7
-2026-07-02 01:15:34 UTC [USD/JPY] DUP_SAMEDIR BUY 7.7h prev=162.48393 now=162.57356 improve=-0.08963
 2026-07-02 01:30:47 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-07-02 01:30:48 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-02 01:30:48 UTC [USD/JPY] SIGNAL BUY conf=86 votes=3/6 regime=NEUTRAL H=0.547 ADX=26.7
@@ -29998,3 +29990,11 @@
 2026-08-25 08:45:41 UTC [USD/JPY] DUP_SAMEDIR BUY 8.2h prev=159.14913 now=159.37563 improve=-0.22650
 2026-08-25 08:45:42 UTC [XAU/USD] BLOCKED low_votes BUY=0 BEAR=2 need=4 H4=NEUTRAL
 2026-08-25 08:45:42 UTC [XAU/USD] NO_SIGNAL
+2026-08-25 09:00:38 UTC [EUR/USD] BLOCKED counter_trend H=0.610 H4=BEAR
+2026-08-25 09:00:38 UTC [EUR/USD] NO_SIGNAL
+2026-08-25 09:00:41 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-25 09:00:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-25 09:00:41 UTC [USD/JPY] SIGNAL BUY conf=90 votes=4/6 regime=NEUTRAL H=0.482 ADX=24.7
+2026-08-25 09:00:41 UTC [USD/JPY] DUP_SAMEDIR BUY 8.5h prev=159.14913 now=159.36978 improve=-0.22065
+2026-08-25 09:00:43 UTC [XAU/USD] BLOCKED low_votes BUY=0 BEAR=2 need=4 H4=NEUTRAL
+2026-08-25 09:00:43 UTC [XAU/USD] NO_SIGNAL
