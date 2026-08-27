@@ -1,9 +1,3 @@
-2026-07-04 14:52:25 UTC [EUR/USD] BLOCKED hurst H=0.329 threshold=0.442 src=dyn bars=720
-2026-07-04 14:52:25 UTC [EUR/USD] NO_SIGNAL
-2026-07-04 14:52:26 UTC [USD/JPY] BLOCKED few_votes BUY=1 BEAR=1
-2026-07-04 14:52:26 UTC [USD/JPY] NO_SIGNAL
-2026-07-04 14:52:27 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-04 14:52:27 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-04 14:52:27 UTC [XAU/USD] BLOCKED macro_mild SELL score=0.22 votes=4
 2026-07-04 14:52:27 UTC [XAU/USD] NO_SIGNAL
 2026-07-04 15:00:58 UTC [EUR/USD] BLOCKED hurst H=0.329 threshold=0.440 src=dyn bars=720
@@ -29998,3 +29992,9 @@
 2026-08-27 14:33:21 UTC [USD/JPY] NO_SIGNAL
 2026-08-27 14:33:23 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
 2026-08-27 14:33:23 UTC [XAU/USD] NO_SIGNAL
+2026-08-27 14:45:40 UTC [EUR/USD] BLOCKED hurst H=0.275 threshold=0.362 src=dyn bars=720
+2026-08-27 14:45:40 UTC [EUR/USD] NO_SIGNAL
+2026-08-27 14:45:42 UTC [USD/JPY] BLOCKED hurst H=0.113 threshold=0.428 src=dyn bars=720
+2026-08-27 14:45:42 UTC [USD/JPY] NO_SIGNAL
+2026-08-27 14:45:44 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
+2026-08-27 14:45:44 UTC [XAU/USD] NO_SIGNAL
