@@ -1,11 +1,3 @@
-2026-07-05 06:30:52 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-05 06:30:53 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-07-05 06:30:53 UTC [USD/JPY] SIGNAL BUY conf=78 votes=2/6 regime=TREND H=0.604 ADX=46.2
-2026-07-05 06:30:53 UTC [USD/JPY] COOLDOWN BUY 0.3h/6h
-2026-07-05 06:30:54 UTC [XAU/USD] BLOCKED macro_mild SELL score=0.15 votes=4
-2026-07-05 06:30:54 UTC [XAU/USD] NO_SIGNAL
-2026-07-05 06:45:38 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-05 06:45:38 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-05 06:45:38 UTC [USD/JPY] SIGNAL BUY conf=78 votes=2/6 regime=TREND H=0.604 ADX=46.2
 2026-07-05 06:45:38 UTC [USD/JPY] COOLDOWN BUY 0.5h/6h
 2026-07-05 06:45:39 UTC [XAU/USD] BLOCKED macro_mild SELL score=0.15 votes=4
@@ -29998,3 +29990,11 @@
 2026-08-28 09:15:36 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-08-28 09:15:36 UTC [XAU/USD] SIGNAL SELL conf=78 votes=3/6 regime=NEUTRAL H=0.456 ADX=16.8
 2026-08-28 09:15:36 UTC [XAU/USD] COOLDOWN SELL 3.2h/4h
+2026-08-28 09:30:37 UTC [EUR/USD] BLOCKED hurst H=0.120 threshold=0.362 src=dyn bars=720
+2026-08-28 09:30:37 UTC [EUR/USD] NO_SIGNAL
+2026-08-28 09:30:38 UTC [USD/JPY] BLOCKED hurst H=0.139 threshold=0.400 src=dyn bars=720
+2026-08-28 09:30:38 UTC [USD/JPY] NO_SIGNAL
+2026-08-28 09:30:41 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-28 09:30:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-28 09:30:41 UTC [XAU/USD] SIGNAL SELL conf=78 votes=3/6 regime=NEUTRAL H=0.456 ADX=16.8
+2026-08-28 09:30:41 UTC [XAU/USD] COOLDOWN SELL 3.5h/4h
