@@ -16134,3 +16134,5 @@
 2026-08-28 10:15:38 UTC LEARN n=56 adjust={'setup:breakout': -1, 'setup:breakout|sess:EU_US': -1, 'setup:sweep_reclaim|sess:ASIAN': 1}
 2026-08-28 10:15:39 UTC REGIME er=0.352 trend=False
 2026-08-28 10:15:39 UTC NO_SETUP
+2026-08-28 10:30:42 UTC REGIME er=0.352 trend=False
+2026-08-28 10:30:42 UTC NO_SETUP
