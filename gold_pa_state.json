@@ -1359,20 +1359,20 @@
       "setup:breakout|sess:EU_US": -1,
       "setup:sweep_reclaim|sess:ASIAN": 1
     },
-    "updated": 1787824851.35838,
-    "n_resolved": 54,
+    "updated": 1787912138.284031,
+    "n_resolved": 56,
     "lessons": [
-      "align:against: 17/23 thắng, kỳ vọng +0.80R",
+      "align:against: 17/25 thắng, kỳ vọng +0.66R",
       "align:neutral: 2/22 thắng, kỳ vọng -0.77R",
-      "mode:probe: 19/39 thắng, kỳ vọng +0.19R",
+      "mode:probe: 19/41 thắng, kỳ vọng +0.13R",
       "setup:breakout: 0/8 thắng, kỳ vọng -1.00R → -1 sao",
       "setup:breakout|sess:EU_US: 0/8 thắng, kỳ vọng -1.00R → -1 sao",
-      "setup:sweep_reclaim: 20/39 thắng, kỳ vọng +0.24R",
+      "setup:sweep_reclaim: 20/41 thắng, kỳ vọng +0.18R",
       "setup:sweep_reclaim|sess:ASIAN: 7/11 thắng, kỳ vọng +0.55R → +1 sao",
-      "setup:sweep_reclaim|sess:EU_US: 13/28 thắng, kỳ vọng +0.13R"
+      "setup:sweep_reclaim|sess:EU_US: 13/30 thắng, kỳ vọng +0.05R"
     ]
   },
-  "last_learn": 1787824851.35838,
+  "last_learn": 1787912138.284031,
   "last_weekly": 1787539571.544408,
   "momentum": {
     "dir": "BULL",
