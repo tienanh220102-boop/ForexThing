@@ -1,5 +1,3 @@
-2026-07-04 20:15:42 UTC [EUR/USD] BLOCKED hurst H=0.343 threshold=0.398 src=dyn bars=720
-2026-07-04 20:15:42 UTC [EUR/USD] NO_SIGNAL
 2026-07-04 20:15:43 UTC [USD/JPY] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=NEUTRAL
 2026-07-04 20:15:43 UTC [USD/JPY] NO_SIGNAL
 2026-07-04 20:15:45 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
@@ -29998,3 +29996,5 @@
 2026-08-28 02:45:34 UTC [USD/JPY] NO_SIGNAL
 2026-08-28 03:00:39 UTC [USD/JPY] BLOCKED hurst H=0.185 threshold=0.416 src=dyn bars=720
 2026-08-28 03:00:39 UTC [USD/JPY] NO_SIGNAL
+2026-08-28 03:30:37 UTC [USD/JPY] BLOCKED hurst H=0.174 threshold=0.416 src=dyn bars=720
+2026-08-28 03:30:37 UTC [USD/JPY] NO_SIGNAL
