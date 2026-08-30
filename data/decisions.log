@@ -1,11 +1,3 @@
-2026-07-06 13:45:47 UTC [XAU/USD] SIGNAL SELL conf=78 votes=3/6 regime=NEUTRAL H=0.495 ADX=25.9
-2026-07-06 13:45:47 UTC [XAU/USD] DUP_SAMEDIR SELL 6.0h prev=4163.17559 now=4144.73151 improve=-18.44408
-2026-07-06 14:01:12 UTC [EUR/USD] BLOCKED rsi_extreme RSI=33 SELL votes=3
-2026-07-06 14:01:12 UTC [EUR/USD] NO_SIGNAL
-2026-07-06 14:01:17 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-06 14:01:18 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-07-06 14:01:18 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.548 ADX=36.4
-2026-07-06 14:01:18 UTC [USD/JPY] COOLDOWN BUY 1.5h/6h
 2026-07-06 14:01:21 UTC [XAU/USD] SIGNAL SELL conf=78 votes=3/6 regime=NEUTRAL H=0.495 ADX=25.9
 2026-07-06 14:01:21 UTC [XAU/USD] DUP_SAMEDIR SELL 6.3h prev=4163.17559 now=4140.92288 improve=-22.25271
 2026-07-06 14:15:44 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
@@ -29998,3 +29990,11 @@
 2026-08-30 07:30:36 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-08-30 07:30:36 UTC [XAU/USD] BLOCKED macro_mild BUY score=-0.21 votes=4
 2026-08-30 07:30:36 UTC [XAU/USD] NO_SIGNAL
+2026-08-30 07:45:34 UTC [EUR/USD] BLOCKED low_votes BUY=3 BEAR=2 need=5 H4=BEAR
+2026-08-30 07:45:34 UTC [EUR/USD] NO_SIGNAL
+2026-08-30 07:45:36 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-08-30 07:45:36 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-08-30 07:45:37 UTC [USD/JPY] SIGNAL BUY conf=90 votes=3/6 regime=RANGE H=0.376 ADX=27.9
+2026-08-30 07:45:37 UTC [USD/JPY] DUP_SAMEDIR BUY 11.5h prev=160.09572 now=160.10509 improve=-0.00937
+2026-08-30 07:45:38 UTC [XAU/USD] BLOCKED macro_mild BUY score=-0.21 votes=4
+2026-08-30 07:45:38 UTC [XAU/USD] NO_SIGNAL
