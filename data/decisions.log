@@ -1,10 +1,4 @@
 2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-2026-07-08 06:45:41 UTC $USDJPY=X: possibly delisted; no price data found  (period=2d)
-2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-2026-07-08 06:45:41 UTC $USDJPY=X: possibly delisted; no price data found  (period=180d)
-2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-2026-07-08 06:45:41 UTC $USDJPY=X: possibly delisted; no price data found  (period=1y)
-2026-07-08 06:45:41 UTC Failed to get ticker 'USDJPY=X' reason: Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'fc.yahoo.com'. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
 2026-07-08 06:45:42 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-08 06:45:42 UTC [USD/JPY] BLOCKED sentiment_mild BUY sent=-0.33 votes=2
 2026-07-08 06:45:42 UTC [USD/JPY] NO_SIGNAL
@@ -29998,3 +29992,9 @@
 2026-08-31 19:30:50 UTC [USD/JPY] NO_SIGNAL
 2026-08-31 19:30:52 UTC [XAU/USD] BLOCKED low_votes BUY=3 BEAR=0 need=5 H4=BEAR
 2026-08-31 19:30:52 UTC [XAU/USD] NO_SIGNAL
+2026-08-31 19:45:36 UTC [EUR/USD] BLOCKED hurst H=0.335 threshold=0.350 src=dyn bars=720
+2026-08-31 19:45:36 UTC [EUR/USD] NO_SIGNAL
+2026-08-31 19:45:37 UTC [USD/JPY] BLOCKED low_votes BUY=2 BEAR=2 need=4 H4=NEUTRAL
+2026-08-31 19:45:37 UTC [USD/JPY] NO_SIGNAL
+2026-08-31 19:45:44 UTC [XAU/USD] BLOCKED low_votes BUY=3 BEAR=0 need=5 H4=BEAR
+2026-08-31 19:45:44 UTC [XAU/USD] NO_SIGNAL
