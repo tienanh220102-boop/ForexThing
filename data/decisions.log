@@ -1,11 +1,3 @@
-2026-07-08 17:01:11 UTC [EUR/USD] NO_SIGNAL
-2026-07-08 17:01:13 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-08 17:01:13 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-07-08 17:01:13 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.523 ADX=23.4
-2026-07-08 17:01:13 UTC [USD/JPY] COOLDOWN BUY 0.5h/6h
-2026-07-08 17:01:14 UTC [XAU/USD] SIGNAL SELL conf=80 votes=3/6 regime=NEUTRAL H=0.468 ADX=28.3
-2026-07-08 17:01:14 UTC [XAU/USD] DUP_SAMEDIR SELL 8.8h prev=4117.16738 now=4063.41711 improve=-53.75027
-2026-07-08 17:09:45 UTC [EUR/USD] BLOCKED low_votes BUY=2 BEAR=1 need=4 H4=NEUTRAL
 2026-07-08 17:09:45 UTC [EUR/USD] NO_SIGNAL
 2026-07-08 17:09:46 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-07-08 17:09:47 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
@@ -29998,3 +29990,11 @@
 2026-09-01 13:45:41 UTC [USD/JPY] DUP_SAMEDIR BUY 8.7h prev=159.87138 now=160.03817 improve=-0.16679
 2026-09-01 13:45:49 UTC [XAU/USD] BLOCKED hurst H=0.321 threshold=0.365 src=dyn bars=720
 2026-09-01 13:45:49 UTC [XAU/USD] NO_SIGNAL
+2026-09-01 14:00:45 UTC [EUR/USD] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=BEAR
+2026-09-01 14:00:45 UTC [EUR/USD] NO_SIGNAL
+2026-09-01 14:01:02 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-09-01 14:01:02 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-09-01 14:01:02 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.464 ADX=23.5
+2026-09-01 14:01:02 UTC [USD/JPY] DUP_SAMEDIR BUY 9.0h prev=159.87138 now=160.06884 improve=-0.19746
+2026-09-01 14:01:10 UTC [XAU/USD] BLOCKED hurst H=0.321 threshold=0.365 src=dyn bars=720
+2026-09-01 14:01:10 UTC [XAU/USD] NO_SIGNAL
