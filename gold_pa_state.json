@@ -1419,8 +1419,8 @@
   "last_learn": 1788172242.071894,
   "last_weekly": 1788145243.356007,
   "momentum": {
-    "dir": "BULL",
-    "ts": 1787155248.670083
+    "dir": "BEAR",
+    "ts": 1788254139.8206
   },
   "last_validation_n": 50
 }
