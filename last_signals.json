@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 159.87138,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 159.6411,
-      "tp": 160.33193999999997,
-      "sent_at": 1788238938.050519,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": 0,
-        "macd": 0.65,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": 0.1,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.455,
-      "conf": 83,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1788238938"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "SELL",
       "entry_price": 1.1588,
@@ -4491,6 +4464,23 @@
       "sl_pips": 364.3,
       "tp_pips": 728.6,
       "conf": 69,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": true,
+      "date": "2026-09-01",
+      "regime": "NEUTRAL",
+      "outcome": "TP",
+      "pips": 46.1,
+      "entry": 159.87138,
+      "exit": 160.33194,
+      "sl_pips": 23.0,
+      "tp_pips": 46.1,
+      "conf": 83,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
