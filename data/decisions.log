@@ -1,7 +1,3 @@
-2026-07-09 08:01:31 UTC [EUR/USD] LOW_CONF BUY 64%<65% votes=3/6
-2026-07-09 08:01:31 UTC [USD/JPY] BLOCKED low_votes BUY=1 BEAR=2 need=3 H4=NEUTRAL
-2026-07-09 08:01:31 UTC [USD/JPY] NO_SIGNAL
-2026-07-09 08:01:32 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=1 need=4 H4=BEAR
 2026-07-09 08:01:32 UTC [XAU/USD] NO_SIGNAL
 2026-07-09 08:15:42 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-07-09 08:15:42 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
@@ -29998,3 +29994,7 @@
 2026-09-02 03:00:46 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-09-02 03:00:47 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.468 ADX=19.7
 2026-09-02 03:00:47 UTC [USD/JPY] DUP_SAMEDIR BUY 9.5h prev=160.19350 now=160.26966 improve=-0.07616
+2026-09-02 03:15:33 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-09-02 03:15:33 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-09-02 03:15:33 UTC [USD/JPY] SIGNAL BUY conf=95 votes=3/6 regime=NEUTRAL H=0.469 ADX=20.0
+2026-09-02 03:15:33 UTC [USD/JPY] DUP_SAMEDIR BUY 9.7h prev=160.19350 now=160.26599 improve=-0.07249
