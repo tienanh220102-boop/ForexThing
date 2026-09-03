@@ -11,33 +11,6 @@
   "pending_validations": [
     {
       "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.1588,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.16079,
-      "tp": 1.1548200000000002,
-      "sent_at": 1788282935.094966,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -1.0,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.48,
-        "tl": 0
-      },
-      "regime": "RANGE",
-      "hurst": 0.41,
-      "conf": 69,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1788282935"
-    },
-    {
-      "sym": "EUR/USD",
       "signal": "BUY",
       "entry_price": 1.15914,
       "entry_mode": "MARKET",
@@ -4566,6 +4539,23 @@
       "sl_pips": 30.8,
       "tp_pips": 61.5,
       "conf": 88,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-09-02",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -19.9,
+      "entry": 1.1588,
+      "exit": 1.16079,
+      "sl_pips": 19.9,
+      "tp_pips": 39.8,
+      "conf": 69,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
