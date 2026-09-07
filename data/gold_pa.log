@@ -18125,3 +18125,6 @@
 2026-09-07 10:45:39 UTC SL_TOO_WIDE skip
 2026-09-07 11:00:58 UTC REGIME er=0.023 trend=False
 2026-09-07 11:00:58 UTC SL_TOO_WIDE skip
+2026-09-07 11:15:41 UTC LEARN n=61 adjust={'setup:breakout': -1, 'setup:breakout|sess:EU_US': -1, 'setup:sweep_reclaim|sess:ASIAN': 1}
+2026-09-07 11:15:42 UTC REGIME er=0.023 trend=False
+2026-09-07 11:15:42 UTC SL_TOO_WIDE skip
