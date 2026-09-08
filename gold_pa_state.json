@@ -1490,7 +1490,10 @@
       "align": "neutral",
       "add_trigger": 4385.96491,
       "sl_dist_atr": 1.07,
-      "filled_ts": 1788886800
+      "filled_ts": 1788886800,
+      "outcome": "TP2",
+      "correct": true,
+      "pips": 229.6
     }
   ],
   "cooldowns": {
