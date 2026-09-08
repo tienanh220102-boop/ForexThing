@@ -37,33 +37,6 @@
       "cb_key": "EURUSD_1788681641"
     },
     {
-      "sym": "EUR/USD",
-      "signal": "BUY",
-      "entry_price": 1.16232,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.1613404382904038,
-      "tp": 1.1642791234191923,
-      "sent_at": 1788808535.872807,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": 1,
-        "macd": 0.04,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.06,
-        "tl": 1
-      },
-      "regime": "RANGE",
-      "hurst": 0.362,
-      "conf": 83,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1788808535"
-    },
-    {
       "sym": "USD/JPY",
       "signal": "SELL",
       "entry_price": 153.33792,
@@ -4851,6 +4824,23 @@
       "sl_pips": 31.2,
       "tp_pips": 62.3,
       "conf": 76,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-09-08",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -9.8,
+      "entry": 1.16232,
+      "exit": 1.16134,
+      "sl_pips": 9.8,
+      "tp_pips": 19.6,
+      "conf": 83,
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
