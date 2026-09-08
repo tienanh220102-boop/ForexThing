@@ -1,5 +1,3 @@
-2026-07-15 03:35:04 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-07-15 03:35:04 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-07-15 03:35:05 UTC [USD/JPY] SIGNAL SELL conf=70 votes=3/6 regime=NEUTRAL H=0.466 ADX=26.2
 2026-07-15 03:35:05 UTC [USD/JPY] FLIP_BLOCK SELL 10.3h votes=3/6
 2026-07-15 03:45:37 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
@@ -29998,3 +29996,5 @@
 2026-09-08 01:30:41 UTC [USD/JPY] NO_SIGNAL
 2026-09-08 01:45:37 UTC [USD/JPY] BLOCKED rsi_extreme RSI=17 SELL votes=2
 2026-09-08 01:45:37 UTC [USD/JPY] NO_SIGNAL
+2026-09-08 02:00:46 UTC [USD/JPY] BLOCKED counter_w1 BUY W1=BEAR H=0.607
+2026-09-08 02:00:46 UTC [USD/JPY] NO_SIGNAL
