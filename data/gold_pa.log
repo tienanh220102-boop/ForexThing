@@ -18331,3 +18331,7 @@
 2026-09-08 11:07:58 UTC REGIME er=0.009 trend=False
 2026-09-08 11:07:58 UTC CROSS_DUP double_top SELL ta_sent=3.1h
 2026-09-08 11:07:58 UTC NO_SETUP
+2026-09-08 11:15:41 UTC LEARN n=61 adjust={'setup:breakout': -1, 'setup:breakout|sess:EU_US': -1, 'setup:sweep_reclaim|sess:ASIAN': 1}
+2026-09-08 11:15:42 UTC REGIME er=0.009 trend=False
+2026-09-08 11:15:42 UTC CROSS_DUP double_top SELL ta_sent=3.2h
+2026-09-08 11:15:42 UTC NO_SETUP
