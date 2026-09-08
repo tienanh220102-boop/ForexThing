@@ -37,33 +37,6 @@
       "cb_key": "USDJPY_1788840931"
     },
     {
-      "sym": "XAU/USD",
-      "signal": "BUY",
-      "entry_price": 4420.03306,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 4397.62905,
-      "tp": 4464.84108,
-      "sent_at": 1788847204.941887,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": 1,
-        "macd": 1.0,
-        "bb": 0,
-        "mom": 0.2,
-        "inter": -0.06,
-        "tl": 1
-      },
-      "regime": "TREND",
-      "hurst": 0.575,
-      "conf": 89,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "XAUUSD_1788847204"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "BUY",
       "entry_price": 1.16192,
@@ -4912,6 +4885,23 @@
       "sl_pips": 484.9,
       "tp_pips": 969.8,
       "conf": 72,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-09-08",
+      "regime": "TREND",
+      "outcome": "SL",
+      "pips": -224.0,
+      "entry": 4420.03306,
+      "exit": 4397.62905,
+      "sl_pips": 224.0,
+      "tp_pips": 448.1,
+      "conf": 89,
       "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
