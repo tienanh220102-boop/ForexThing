@@ -89,6 +89,33 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "USDJPY_1788840931"
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "entry_price": 4420.03306,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 4397.62905,
+      "tp": 4464.84108,
+      "sent_at": 1788847204.941887,
+      "message_id": null,
+      "indicators": {
+        "rsi": 0,
+        "ema": 1,
+        "macd": 1.0,
+        "bb": 0,
+        "mom": 0.2,
+        "inter": -0.06,
+        "tl": 1
+      },
+      "regime": "TREND",
+      "hurst": 0.575,
+      "conf": 89,
+      "aligned": 4,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "XAUUSD_1788847204"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -4806,7 +4833,7 @@
   "XAG/USD|SELL": 1779951664.755662,
   "EUR/USD|BUY": 1788808535.872807,
   "GBP/USD|BUY": 1780245649.560464,
-  "XAU/USD|BUY": 1788615037.134041,
+  "XAU/USD|BUY": 1788847204.941887,
   "USD/CHF|SELL": 1780659056.268735,
   "USD/JPY|SELL": 1788840931.366542,
   "USD/CAD|SELL": 1778972458.279356,
@@ -4820,10 +4847,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1787637476,
-        0.483
-      ],
       [
         1787641257,
         0.482
@@ -5995,6 +6018,10 @@
       [
         1788843651,
         0.605
+      ],
+      [
+        1788847204,
+        0.606
       ]
     ],
     "XAU/USD": [
@@ -6837,6 +6864,10 @@
       [
         1788811241,
         0.537
+      ],
+      [
+        1788847204,
+        0.575
       ]
     ],
     "EUR/USD": [
@@ -8360,7 +8391,7 @@
       ]
     ]
   },
-  "XAU/USD|BUY|entry": 4429.05533,
+  "XAU/USD|BUY|entry": 4420.03306,
   "WTI/USD|SELL|entry": 71.94000244140625,
   "EUR/USD|SELL|entry": 1.15732,
   "XAU/USD|SELL|entry": 4325.53167,
