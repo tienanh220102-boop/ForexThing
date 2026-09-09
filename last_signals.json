@@ -170,6 +170,33 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "XAUUSD_1788960677"
+    },
+    {
+      "sym": "XAU/USD",
+      "signal": "BUY",
+      "entry_price": 4414.34067,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 4373.41071,
+      "tp": 4496.200589999999,
+      "sent_at": 1788975935.824193,
+      "message_id": null,
+      "indicators": {
+        "rsi": 0,
+        "ema": 0,
+        "macd": 1.0,
+        "bb": 0,
+        "mom": 0.6,
+        "inter": 0.34,
+        "tl": 0
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.502,
+      "conf": 65,
+      "aligned": 2,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "XAUUSD_1788975935"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -4972,7 +4999,7 @@
   "XAG/USD|SELL": 1779951664.755662,
   "EUR/USD|BUY": 1788940842.962748,
   "GBP/USD|BUY": 1780245649.560464,
-  "XAU/USD|BUY": 1788960677.684275,
+  "XAU/USD|BUY": 1788975935.824193,
   "USD/CHF|SELL": 1780659056.268735,
   "USD/JPY|SELL": 1788942641.025464,
   "USD/CAD|SELL": 1778972458.279356,
@@ -8526,7 +8553,7 @@
       ]
     ]
   },
-  "XAU/USD|BUY|entry": 4428.92448,
+  "XAU/USD|BUY|entry": 4414.34067,
   "WTI/USD|SELL|entry": 71.94000244140625,
   "EUR/USD|SELL|entry": 1.15732,
   "XAU/USD|SELL|entry": 4394.7113,
