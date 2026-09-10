@@ -12,33 +12,6 @@
     {
       "sym": "USD/JPY",
       "signal": "SELL",
-      "entry_price": 153.33792,
-      "entry_mode": "LIMIT",
-      "limit_entry": 154.09453423775813,
-      "sl": 154.5002,
-      "tp": 151.01335999999998,
-      "sent_at": 1788840931.366542,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.11,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.06,
-        "tl": -1
-      },
-      "regime": "TREND",
-      "hurst": 0.605,
-      "conf": 95,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1788840931"
-    },
-    {
-      "sym": "USD/JPY",
-      "signal": "SELL",
       "entry_price": 153.77128,
       "entry_mode": "MARKET",
       "limit_entry": null,
