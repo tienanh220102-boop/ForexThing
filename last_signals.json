@@ -91,33 +91,6 @@
       "cb_key": "EURUSD_1788896736"
     },
     {
-      "sym": "USD/JPY",
-      "signal": "SELL",
-      "entry_price": 153.54029,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 154.0065125104573,
-      "tp": 152.6078449790854,
-      "sent_at": 1788942641.025464,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": -0.08,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": -0.3,
-        "tl": 1
-      },
-      "regime": "TREND",
-      "hurst": 0.554,
-      "conf": 75,
-      "aligned": 2,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1788942641"
-    },
-    {
       "sym": "XAU/USD",
       "signal": "BUY",
       "entry_price": 4428.92448,
@@ -5018,6 +4991,23 @@
       "tp_pips": 35.2,
       "conf": 95,
       "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-09-09",
+      "regime": "TREND",
+      "outcome": "SL",
+      "pips": -46.6,
+      "entry": 153.54029,
+      "exit": 154.00651,
+      "sl_pips": 46.6,
+      "tp_pips": 93.2,
+      "conf": 75,
+      "votes": 2,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
