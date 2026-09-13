@@ -64,33 +64,6 @@
       "cb_key": "USDJPY_1789227037"
     },
     {
-      "sym": "USD/JPY",
-      "signal": "BUY",
-      "entry_price": 153.57142,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 153.45284394820143,
-      "tp": 153.8085721035971,
-      "sent_at": 1789272055.298315,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": 0.31,
-        "bb": 0,
-        "mom": 0.6,
-        "inter": 0.27,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.514,
-      "conf": 68,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1789272055"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "SELL",
       "entry_price": 1.15993,
@@ -5117,6 +5090,23 @@
       "tp_pips": 133.7,
       "conf": 94,
       "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "correct": false,
+      "date": "2026-09-13",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -11.9,
+      "entry": 153.57142,
+      "exit": 153.45284,
+      "sl_pips": 11.9,
+      "tp_pips": 23.7,
+      "conf": 68,
+      "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
     }
