@@ -1,6 +1,6 @@
 {
   "GBP/USD|SELL": 1780056069.457483,
-  "USD/JPY|BUY": 1789272055.298315,
+  "USD/JPY|BUY": 1789304442.109311,
   "USD/CAD|BUY": 1779978655.726155,
   "EUR/GBP|SELL": 1779019262.791257,
   "GBP/JPY|SELL": 1779022857.748863,
@@ -170,6 +170,33 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "EURUSD_1789284637"
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "BUY",
+      "entry_price": 153.49938,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 152.93935,
+      "tp": 154.61944000000003,
+      "sent_at": 1789304442.109311,
+      "message_id": null,
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": 0.08,
+        "bb": 1,
+        "mom": 0.2,
+        "inter": 0.27,
+        "tl": 1
+      },
+      "regime": "NEUTRAL",
+      "hurst": 0.519,
+      "conf": 95,
+      "aligned": 5,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "USDJPY_1789304442"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -5140,10 +5167,6 @@
   "hurst_hist": {
     "USD/JPY": [
       [
-        1788094841,
-        0.369
-      ],
-      [
         1788098438,
         0.367
       ],
@@ -6310,13 +6333,13 @@
       [
         1789300845,
         0.514
+      ],
+      [
+        1789304442,
+        0.519
       ]
     ],
     "XAU/USD": [
-      [
-        1788094841,
-        0.456
-      ],
       [
         1788098438,
         0.455
@@ -7152,13 +7175,13 @@
       [
         1789300845,
         0.217
+      ],
+      [
+        1789304442,
+        0.217
       ]
     ],
     "EUR/USD": [
-      [
-        1788094841,
-        0.412
-      ],
       [
         1788098438,
         0.394
@@ -7938,6 +7961,10 @@
       [
         1789300845,
         0.413
+      ],
+      [
+        1789304442,
+        0.406
       ]
     ],
     "WTI/USD": [
@@ -8679,7 +8706,7 @@
   "WTI/USD|SELL|entry": 71.94000244140625,
   "EUR/USD|SELL|entry": 1.15993,
   "XAU/USD|SELL|entry": 4394.7113,
-  "USD/JPY|BUY|entry": 153.57142,
+  "USD/JPY|BUY|entry": 153.49938,
   "EUR/USD|BUY|entry": 1.16427,
   "USD/JPY|SELL|entry": 153.59436
 }
