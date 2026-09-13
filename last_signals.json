@@ -10,33 +10,6 @@
   "USOIL/USD|BUY": 1779067852.924825,
   "pending_validations": [
     {
-      "sym": "USD/JPY",
-      "signal": "SELL",
-      "entry_price": 153.59436,
-      "entry_mode": "LIMIT",
-      "limit_entry": 153.90613842998124,
-      "sl": 154.49795,
-      "tp": 151.78717999999998,
-      "sent_at": 1789137042.728028,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -1.0,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.19,
-        "tl": 0
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.482,
-      "conf": 86,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1789137042"
-    },
-    {
       "sym": "EUR/USD",
       "signal": "SELL",
       "entry_price": 1.16038,
