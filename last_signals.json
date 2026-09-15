@@ -62,33 +62,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "EURUSD_1789371042"
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.15361,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.15526,
-      "tp": 1.1503100000000002,
-      "sent_at": 1789456536.577996,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": 0.02,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.53,
-        "tl": -1
-      },
-      "regime": "RANGE",
-      "hurst": 0.406,
-      "conf": 95,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1789456536"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -5157,6 +5130,23 @@
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-09-15",
+      "regime": "RANGE",
+      "outcome": "SL",
+      "pips": -16.5,
+      "entry": 1.15361,
+      "exit": 1.15526,
+      "sl_pips": 16.5,
+      "tp_pips": 33.0,
+      "conf": 95,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -5177,10 +5167,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1788267645,
-        0.461
-      ],
       [
         1788271242,
         0.464
@@ -6348,13 +6334,13 @@
       [
         1789473644,
         0.364
+      ],
+      [
+        1789477249,
+        0.367
       ]
     ],
     "XAU/USD": [
-      [
-        1788267645,
-        0.324
-      ],
       [
         1788271242,
         0.321
@@ -7190,13 +7176,13 @@
       [
         1789473644,
         0.213
+      ],
+      [
+        1789477249,
+        0.213
       ]
     ],
     "EUR/USD": [
-      [
-        1788267645,
-        0.401
-      ],
       [
         1788271242,
         0.405
@@ -7975,6 +7961,10 @@
       ],
       [
         1789473644,
+        0.417
+      ],
+      [
+        1789477249,
         0.417
       ]
     ],
