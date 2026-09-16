@@ -1604,11 +1604,30 @@
       "outcome": "SL",
       "correct": false,
       "pips": -219.2
+    },
+    {
+      "ts": 1789590643.036137,
+      "date": "2026-09-16",
+      "session": "EU_US",
+      "setup": "sweep_reclaim",
+      "dir": "BUY",
+      "entry": 4258.31663,
+      "sl": 4232.928134651182,
+      "tp1": 4283.705125348819,
+      "tp2": 4296.399373023228,
+      "stars": 4,
+      "entry_type": "market",
+      "danger": false,
+      "capit": false,
+      "probe": true,
+      "align": "against",
+      "add_trigger": 4310.71644,
+      "sl_dist_atr": 1.17
     }
   ],
   "cooldowns": {
     "sweep_reclaim|SELL": 1788963369.806772,
-    "sweep_reclaim|BUY": 1789575340.833191,
+    "sweep_reclaim|BUY": 1789590643.036137,
     "double_bottom|BUY": 1782991847.599438,
     "double_top|SELL": 1781720152.354436,
     "momentum_pullback|SELL": 1783494949.495335,
@@ -1617,7 +1636,7 @@
   },
   "day_count": {
     "date": "2026-09-16",
-    "n": 1
+    "n": 2
   },
   "pa_knowledge": {
     "adjust": {
