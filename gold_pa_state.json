@@ -1667,7 +1667,10 @@
       "probe": false,
       "align": "with",
       "add_trigger": null,
-      "sl_dist_atr": 1.05
+      "sl_dist_atr": 1.05,
+      "outcome": "SL",
+      "correct": false,
+      "pips": -221.9
     }
   ],
   "cooldowns": {
@@ -1707,7 +1710,7 @@
   "last_weekly": 1789354850.81345,
   "momentum": {
     "dir": "BULL",
-    "ts": 1789650946.421214
+    "ts": 1789651852.501139
   },
   "last_validation_n": 50
 }
