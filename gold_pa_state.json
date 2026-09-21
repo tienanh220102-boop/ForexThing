@@ -1823,24 +1823,23 @@
   "pa_knowledge": {
     "adjust": {
       "setup:breakout": -1,
-      "setup:breakout|sess:EU_US": -1,
-      "setup:sweep_reclaim|sess:ASIAN": 1
+      "setup:breakout|sess:EU_US": -1
     },
-    "updated": 1789910136.29213,
-    "n_resolved": 72,
+    "updated": 1789996549.37992,
+    "n_resolved": 75,
     "lessons": [
       "align:against: 21/33 thắng, kỳ vọng +0.55R",
-      "align:neutral: 3/24 thắng, kỳ vọng -0.69R",
-      "align:with: 2/12 thắng, kỳ vọng -0.62R",
-      "mode:probe: 24/51 thắng, kỳ vọng +0.15R",
+      "align:neutral: 3/26 thắng, kỳ vọng -0.71R",
+      "align:with: 2/13 thắng, kỳ vọng -0.65R",
+      "mode:probe: 24/53 thắng, kỳ vọng +0.10R",
       "setup:breakout: 0/12 thắng, kỳ vọng -1.00R → -1 sao",
       "setup:breakout|sess:EU_US: 0/12 thắng, kỳ vọng -1.00R → -1 sao",
-      "setup:sweep_reclaim: 25/52 thắng, kỳ vọng +0.16R",
-      "setup:sweep_reclaim|sess:ASIAN: 8/13 thắng, kỳ vọng +0.46R → +1 sao",
-      "setup:sweep_reclaim|sess:EU_US: 17/39 thắng, kỳ vọng +0.06R"
+      "setup:sweep_reclaim: 25/55 thắng, kỳ vọng +0.10R",
+      "setup:sweep_reclaim|sess:ASIAN: 8/15 thắng, kỳ vọng +0.27R",
+      "setup:sweep_reclaim|sess:EU_US: 17/40 thắng, kỳ vọng +0.04R"
     ]
   },
-  "last_learn": 1789910136.29213,
+  "last_learn": 1789996549.37992,
   "last_weekly": 1789960538.866932,
   "momentum": {
     "dir": "BEAR",

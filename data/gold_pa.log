@@ -1,5 +1,3 @@
-2026-06-20 05:45:43 UTC REGIME er=0.33 trend=False
-2026-06-20 05:45:43 UTC NO_SETUP
 2026-06-20 06:01:07 UTC REGIME er=0.33 trend=False
 2026-06-20 06:01:07 UTC NO_SETUP
 2026-06-20 06:03:53 UTC REGIME er=0.33 trend=False
@@ -20000,3 +19998,6 @@
 2026-09-21 13:00:50 UTC NO_SETUP
 2026-09-21 13:11:00 UTC REGIME er=0.066 trend=False
 2026-09-21 13:11:00 UTC LOW_QUALITY momentum_pullback stars=2
+2026-09-21 13:15:49 UTC LEARN n=75 adjust={'setup:breakout': -1, 'setup:breakout|sess:EU_US': -1}
+2026-09-21 13:15:51 UTC REGIME er=0.066 trend=False
+2026-09-21 13:15:51 UTC LOW_QUALITY momentum_pullback stars=2
