@@ -1822,7 +1822,11 @@
       "probe": false,
       "align": "with",
       "add_trigger": null,
-      "sl_dist_atr": 1.5
+      "sl_dist_atr": 1.5,
+      "filled_ts": 1790053200,
+      "outcome": "SL",
+      "correct": false,
+      "pips": -198.0
     }
   ],
   "cooldowns": {
