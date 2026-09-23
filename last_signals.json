@@ -39,33 +39,6 @@
     {
       "sym": "EUR/USD",
       "signal": "SELL",
-      "entry_price": 1.14515,
-      "entry_mode": "LIMIT",
-      "limit_entry": 1.1461033539559895,
-      "sl": 1.14785,
-      "tp": 1.1397499999999996,
-      "sent_at": 1790086536.345778,
-      "message_id": null,
-      "indicators": {
-        "rsi": 1,
-        "ema": -1,
-        "macd": -0.23,
-        "bb": 0,
-        "mom": -0.6,
-        "inter": -0.46,
-        "tl": -1
-      },
-      "regime": "RANGE",
-      "hurst": 0.373,
-      "conf": 95,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1790086536"
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "SELL",
       "entry_price": 1.14241,
       "entry_mode": "LIMIT",
       "limit_entry": 1.143915777613092,
@@ -5242,6 +5215,23 @@
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": true,
+      "date": "2026-09-22",
+      "regime": "RANGE",
+      "outcome": "TP",
+      "pips": 54.0,
+      "entry": 1.14515,
+      "exit": 1.13975,
+      "sl_pips": 27.0,
+      "tp_pips": 54.0,
+      "conf": 95,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -6437,6 +6427,10 @@
       [
         1790168446,
         0.297
+      ],
+      [
+        1790172046,
+        0.295
       ]
     ],
     "XAU/USD": [
@@ -7283,6 +7277,10 @@
       [
         1790168446,
         0.275
+      ],
+      [
+        1790172046,
+        0.275
       ]
     ],
     "EUR/USD": [
@@ -8028,6 +8026,10 @@
       ],
       [
         1790168446,
+        0.365
+      ],
+      [
+        1790172046,
         0.365
       ]
     ],
