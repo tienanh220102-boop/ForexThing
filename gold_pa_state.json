@@ -1870,7 +1870,7 @@
       "setup:breakout": -1,
       "setup:breakout|sess:EU_US": -1
     },
-    "updated": 1790083859.820397,
+    "updated": 1790171145.785451,
     "n_resolved": 76,
     "lessons": [
       "align:against: 21/33 thắng, kỳ vọng +0.55R",
@@ -1884,7 +1884,7 @@
       "setup:sweep_reclaim|sess:EU_US: 17/40 thắng, kỳ vọng +0.04R"
     ]
   },
-  "last_learn": 1790083859.820397,
+  "last_learn": 1790171145.785451,
   "last_weekly": 1789960538.866932,
   "momentum": {
     "dir": "BEAR",
