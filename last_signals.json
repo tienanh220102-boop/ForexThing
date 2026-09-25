@@ -62,33 +62,6 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "EURUSD_1790238639"
-    },
-    {
-      "sym": "EUR/USD",
-      "signal": "SELL",
-      "entry_price": 1.1387,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 1.1401619144646826,
-      "tp": 1.1357761710706349,
-      "sent_at": 1790319644.413097,
-      "message_id": null,
-      "indicators": {
-        "rsi": -1,
-        "ema": 0,
-        "macd": 0.39,
-        "bb": -1,
-        "mom": -0.2,
-        "inter": -0.46,
-        "tl": -1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.547,
-      "conf": 95,
-      "aligned": 4,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "EURUSD_1790319644"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
@@ -5327,6 +5300,23 @@
       "votes": 3,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-09-25",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -14.6,
+      "entry": 1.1387,
+      "exit": 1.14016,
+      "sl_pips": 14.6,
+      "tp_pips": 29.2,
+      "conf": 95,
+      "votes": 4,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -5347,10 +5337,6 @@
   "last_gold_outlook": 1782374461.738169,
   "hurst_hist": {
     "USD/JPY": [
-      [
-        1789120846,
-        0.444
-      ],
       [
         1789124446,
         0.452
@@ -6530,10 +6516,6 @@
     ],
     "XAU/USD": [
       [
-        1789120846,
-        0.115
-      ],
-      [
         1789124446,
         0.117
       ],
@@ -7379,10 +7361,6 @@
       ]
     ],
     "EUR/USD": [
-      [
-        1789120846,
-        0.225
-      ],
       [
         1789124446,
         0.238
