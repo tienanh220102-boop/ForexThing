@@ -116,11 +116,38 @@
       "consensus": true,
       "entry_confirmed": null,
       "cb_key": "USDJPY_1790657135"
+    },
+    {
+      "sym": "EUR/USD",
+      "signal": "SELL",
+      "entry_price": 1.13616,
+      "entry_mode": "MARKET",
+      "limit_entry": null,
+      "sl": 1.13753,
+      "tp": 1.1334200000000003,
+      "sent_at": 1790665250.031327,
+      "message_id": null,
+      "indicators": {
+        "rsi": 1,
+        "ema": -1,
+        "macd": -0.09,
+        "bb": 0,
+        "mom": -0.2,
+        "inter": -0.35,
+        "tl": -1
+      },
+      "regime": "TREND",
+      "hurst": 0.574,
+      "conf": 95,
+      "aligned": 4,
+      "consensus": true,
+      "entry_confirmed": null,
+      "cb_key": "EURUSD_1790665250"
     }
   ],
   "USD/CHF|BUY": 1780605056.062835,
   "NZD/USD|SELL": 1779062468.994947,
-  "EUR/USD|SELL": 1790594132.924371,
+  "EUR/USD|SELL": 1790665250.031327,
   "AUD/USD|BUY": 1780275662.631774,
   "EUR/JPY|SELL": 1779381057.554533,
   "GBP/JPY|BUY": 1779059689.579696,
@@ -5443,10 +5470,6 @@
   "hurst_hist": {
     "USD/JPY": [
       [
-        1789455650,
-        0.375
-      ],
-      [
         1789459241,
         0.371
       ],
@@ -6621,13 +6644,13 @@
       [
         1790661643,
         0.512
+      ],
+      [
+        1790665250,
+        0.513
       ]
     ],
     "XAU/USD": [
-      [
-        1789455650,
-        0.206
-      ],
       [
         1789459241,
         0.208
@@ -7467,13 +7490,13 @@
       [
         1790661643,
         0.496
+      ],
+      [
+        1790665250,
+        0.499
       ]
     ],
     "EUR/USD": [
-      [
-        1789455650,
-        0.402
-      ],
       [
         1789459241,
         0.405
@@ -8213,6 +8236,10 @@
       [
         1790625643,
         0.575
+      ],
+      [
+        1790665250,
+        0.574
       ]
     ],
     "WTI/USD": [
@@ -8952,7 +8979,7 @@
   },
   "XAU/USD|BUY|entry": 4414.34067,
   "WTI/USD|SELL|entry": 71.94000244140625,
-  "EUR/USD|SELL|entry": 1.13699,
+  "EUR/USD|SELL|entry": 1.13616,
   "XAU/USD|SELL|entry": 4265.44344,
   "USD/JPY|BUY|entry": 157.54224,
   "EUR/USD|BUY|entry": 1.16427,
