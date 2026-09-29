@@ -65,33 +65,6 @@
     },
     {
       "sym": "USD/JPY",
-      "signal": "SELL",
-      "entry_price": 157.25961,
-      "entry_mode": "MARKET",
-      "limit_entry": null,
-      "sl": 157.63900214907434,
-      "tp": 156.5008257018513,
-      "sent_at": 1790613932.714963,
-      "message_id": null,
-      "indicators": {
-        "rsi": 0,
-        "ema": -1,
-        "macd": -0.15,
-        "bb": 0,
-        "mom": -0.2,
-        "inter": 0.23,
-        "tl": 1
-      },
-      "regime": "NEUTRAL",
-      "hurst": 0.522,
-      "conf": 84,
-      "aligned": 3,
-      "consensus": true,
-      "entry_confirmed": null,
-      "cb_key": "USDJPY_1790613932"
-    },
-    {
-      "sym": "USD/JPY",
       "signal": "BUY",
       "entry_price": 157.54224,
       "entry_mode": "MARKET",
@@ -5449,6 +5422,23 @@
       "votes": 4,
       "entry_confirmed": null,
       "actual_pnl_pips": null
+    },
+    {
+      "sym": "USD/JPY",
+      "signal": "SELL",
+      "correct": false,
+      "date": "2026-09-28",
+      "regime": "NEUTRAL",
+      "outcome": "SL",
+      "pips": -37.9,
+      "entry": 157.25961,
+      "exit": 157.639,
+      "sl_pips": 37.9,
+      "tp_pips": 75.9,
+      "conf": 84,
+      "votes": 3,
+      "entry_confirmed": null,
+      "actual_pnl_pips": null
     }
   ],
   "AUD/USD|SELL": 1779332463.119578,
@@ -6648,6 +6638,10 @@
       [
         1790672446,
         0.514
+      ],
+      [
+        1790676042,
+        0.514
       ]
     ],
     "XAU/USD": [
@@ -7494,6 +7488,10 @@
       [
         1790672446,
         0.506
+      ],
+      [
+        1790676042,
+        0.509
       ]
     ],
     "EUR/USD": [
@@ -8240,6 +8238,10 @@
       [
         1790672446,
         0.571
+      ],
+      [
+        1790676042,
+        0.567
       ]
     ],
     "WTI/USD": [
