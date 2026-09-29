@@ -1,11 +1,3 @@
-2026-08-05 07:45:34 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-08-05 07:45:34 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-08-05 07:45:34 UTC [EUR/USD] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.480 ADX=21.4
-2026-08-05 07:45:34 UTC [EUR/USD] COOLDOWN BUY 0.2h/6h
-2026-08-05 07:45:35 UTC [USD/JPY] BLOCKED adx_hurst ADX=11.1 H=0.446
-2026-08-05 07:45:35 UTC [USD/JPY] NO_SIGNAL
-2026-08-05 07:45:36 UTC [XAU/USD] BLOCKED hurst H=0.312 threshold=0.379 src=dyn bars=720
-2026-08-05 07:45:36 UTC [XAU/USD] NO_SIGNAL
 2026-08-05 08:00:38 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-08-05 08:00:38 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-08-05 08:00:38 UTC [EUR/USD] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.480 ADX=21.4
@@ -29998,3 +29990,11 @@
 2026-09-29 16:00:54 UTC [USD/JPY] COOLDOWN BUY 3.8h/6h
 2026-09-29 16:00:55 UTC [XAU/USD] SIGNAL SELL conf=70 votes=2/6 regime=NEUTRAL H=0.508 ADX=27.0
 2026-09-29 16:00:55 UTC [XAU/USD] SENT SELL conf=70% mode=MARKET entry=4158.52228 ext=-0.65 sl=4179.80221 tp=4115.96241
+2026-09-29 16:15:42 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-09-29 16:15:43 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-09-29 16:15:43 UTC [EUR/USD] SIGNAL SELL conf=95 votes=4/6 regime=TREND H=0.566 ADX=27.8
+2026-09-29 16:15:43 UTC [EUR/USD] DUP_SAMEDIR SELL 9.2h prev=1.13616 now=1.13294 improve=-0.00322
+2026-09-29 16:15:44 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.512 ADX=19.7
+2026-09-29 16:15:44 UTC [USD/JPY] COOLDOWN BUY 4.0h/6h
+2026-09-29 16:15:45 UTC [XAU/USD] BLOCKED few_votes BUY=1 BEAR=1
+2026-09-29 16:15:45 UTC [XAU/USD] NO_SIGNAL
