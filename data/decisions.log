@@ -1,11 +1,3 @@
-2026-08-05 07:30:40 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-08-05 07:30:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-08-05 07:30:41 UTC [EUR/USD] SIGNAL BUY conf=88 votes=4/6 regime=NEUTRAL H=0.480 ADX=21.4
-2026-08-05 07:30:41 UTC [EUR/USD] SENT BUY conf=88% mode=MARKET entry=1.15347 ext=0.5 sl=1.15222 tp=1.15598
-2026-08-05 07:30:42 UTC [USD/JPY] BLOCKED adx_hurst ADX=11.1 H=0.446
-2026-08-05 07:30:42 UTC [USD/JPY] NO_SIGNAL
-2026-08-05 07:30:43 UTC [XAU/USD] BLOCKED hurst H=0.312 threshold=0.379 src=dyn bars=720
-2026-08-05 07:30:43 UTC [XAU/USD] NO_SIGNAL
 2026-08-05 07:45:34 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-08-05 07:45:34 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-08-05 07:45:34 UTC [EUR/USD] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.480 ADX=21.4
@@ -29998,3 +29990,11 @@
 2026-09-29 15:45:42 UTC [USD/JPY] COOLDOWN BUY 3.5h/6h
 2026-09-29 15:45:43 UTC [XAU/USD] BLOCKED exhaustion SELL d1_rsi=28.0 pctl=92 at_extreme=False
 2026-09-29 15:45:43 UTC [XAU/USD] NO_SIGNAL
+2026-09-29 16:00:53 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-09-29 16:00:53 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-09-29 16:00:54 UTC [EUR/USD] SIGNAL SELL conf=95 votes=4/6 regime=TREND H=0.568 ADX=26.6
+2026-09-29 16:00:54 UTC [EUR/USD] DUP_SAMEDIR SELL 9.0h prev=1.13616 now=1.13352 improve=-0.00264
+2026-09-29 16:00:54 UTC [USD/JPY] SIGNAL BUY conf=95 votes=4/6 regime=NEUTRAL H=0.512 ADX=20.9
+2026-09-29 16:00:54 UTC [USD/JPY] COOLDOWN BUY 3.8h/6h
+2026-09-29 16:00:55 UTC [XAU/USD] SIGNAL SELL conf=70 votes=2/6 regime=NEUTRAL H=0.508 ADX=27.0
+2026-09-29 16:00:55 UTC [XAU/USD] SENT SELL conf=70% mode=MARKET entry=4158.52228 ext=-0.65 sl=4179.80221 tp=4115.96241
