@@ -1955,7 +1955,10 @@
       "probe": false,
       "align": "against",
       "add_trigger": null,
-      "sl_dist_atr": 1.63
+      "sl_dist_atr": 1.63,
+      "outcome": "SL",
+      "correct": false,
+      "pips": -208.8
     }
   ],
   "cooldowns": {
