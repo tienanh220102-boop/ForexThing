@@ -1,11 +1,3 @@
-2026-08-10 06:00:41 UTC [XAU/USD] SENT BUY conf=88% mode=LIMIT entry=4339.80957 ext=1.4 sl=4313.50559 tp=4420.34681
-2026-08-10 06:15:36 UTC [USD/JPY] BLOCKED hurst H=0.259 threshold=0.385 src=dyn bars=720
-2026-08-10 06:15:36 UTC [USD/JPY] NO_SIGNAL
-2026-08-10 06:15:37 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-08-10 06:15:38 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-08-10 06:15:38 UTC [XAU/USD] SIGNAL BUY conf=95 votes=4/6 regime=TREND H=0.552 ADX=39.3
-2026-08-10 06:15:38 UTC [XAU/USD] COOLDOWN BUY 0.2h/4h
-2026-08-10 06:30:39 UTC [USD/JPY] BLOCKED hurst H=0.259 threshold=0.385 src=dyn bars=720
 2026-08-10 06:30:39 UTC [USD/JPY] NO_SIGNAL
 2026-08-10 06:30:41 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-08-10 06:30:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
@@ -29998,3 +29990,11 @@
 2026-10-04 14:00:39 UTC [USD/JPY] NO_SIGNAL
 2026-10-04 14:00:40 UTC [XAU/USD] BLOCKED low_votes BUY=2 BEAR=2 need=4 H4=BEAR
 2026-10-04 14:00:40 UTC [XAU/USD] NO_SIGNAL
+2026-10-04 14:15:31 UTC [EUR/USD] BLOCKED low_votes BUY=2 BEAR=3 need=4 H4=NEUTRAL
+2026-10-04 14:15:31 UTC [EUR/USD] NO_SIGNAL
+2026-10-04 14:15:32 UTC [USD/JPY] BLOCKED hurst H=0.285 threshold=0.350 src=dyn bars=720
+2026-10-04 14:15:32 UTC [USD/JPY] NO_SIGNAL
+2026-10-04 14:15:33 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-10-04 14:15:33 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-10-04 14:15:33 UTC [XAU/USD] SIGNAL BUY conf=65 votes=3/6 regime=NEUTRAL H=0.532 ADX=15.3
+2026-10-04 14:15:33 UTC [XAU/USD] DUP_SAMEDIR BUY 6.5h prev=4137.51579 now=4137.53040 improve=-0.01461
