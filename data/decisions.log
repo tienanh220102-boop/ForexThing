@@ -1,11 +1,3 @@
-2026-08-10 09:45:35 UTC [USD/JPY] NO_SIGNAL
-2026-08-10 09:45:35 UTC [XAU/USD] SIGNAL BUY conf=72 votes=3/6 regime=NEUTRAL H=0.550 ADX=38.1
-2026-08-10 09:45:35 UTC [XAU/USD] COOLDOWN BUY 3.7h/4h
-2026-08-10 10:00:41 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-08-10 10:00:41 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-08-10 10:00:41 UTC [EUR/USD] SIGNAL BUY conf=95 votes=5/6 regime=RANGE H=0.372 ADX=32.7
-2026-08-10 10:00:41 UTC [EUR/USD] COOLDOWN BUY 3.0h/6h
-2026-08-10 10:00:42 UTC [USD/JPY] BLOCKED hurst H=0.245 threshold=0.378 src=dyn bars=720
 2026-08-10 10:00:42 UTC [USD/JPY] NO_SIGNAL
 2026-08-10 10:00:43 UTC [XAU/USD] SIGNAL BUY conf=72 votes=3/6 regime=NEUTRAL H=0.550 ADX=38.0
 2026-08-10 10:00:43 UTC [XAU/USD] SENT BUY conf=72% mode=MARKET entry=4341.87718 ext=0.03 sl=4313.50559 tp=4398.62036
@@ -29998,3 +29990,11 @@
 2026-10-04 18:24:29 UTC [USD/JPY] NO_SIGNAL
 2026-10-04 18:24:30 UTC [XAU/USD] SIGNAL BUY conf=62 votes=3/6 regime=NEUTRAL H=0.529 ADX=15.2
 2026-10-04 18:24:30 UTC [XAU/USD] DUP_SAMEDIR BUY 10.6h prev=4137.51579 now=4137.62017 improve=-0.10438
+2026-10-04 18:30:35 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-10-04 18:30:36 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-10-04 18:30:36 UTC [EUR/USD] SIGNAL SELL conf=86 votes=3/6 regime=RANGE H=0.407 ADX=38.1
+2026-10-04 18:30:36 UTC [EUR/USD] FLIP_BLOCK SELL 11.3h votes=3/6
+2026-10-04 18:30:37 UTC [USD/JPY] BLOCKED hurst H=0.283 threshold=0.350 src=dyn bars=720
+2026-10-04 18:30:37 UTC [USD/JPY] NO_SIGNAL
+2026-10-04 18:30:37 UTC [XAU/USD] SIGNAL BUY conf=62 votes=3/6 regime=NEUTRAL H=0.529 ADX=15.2
+2026-10-04 18:30:37 UTC [XAU/USD] DUP_SAMEDIR BUY 10.7h prev=4137.51579 now=4137.64779 improve=-0.13200
