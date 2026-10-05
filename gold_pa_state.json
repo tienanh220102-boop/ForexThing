@@ -1999,7 +1999,10 @@
       "probe": false,
       "align": "with",
       "add_trigger": null,
-      "sl_dist_atr": 1.5
+      "sl_dist_atr": 1.5,
+      "outcome": "TP2",
+      "correct": true,
+      "pips": 260.2
     }
   ],
   "cooldowns": {
