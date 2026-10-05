@@ -1,11 +1,3 @@
-2026-08-10 14:15:38 UTC [EUR/USD] NO_SIGNAL
-2026-08-10 14:15:40 UTC [USD/JPY] BLOCKED hurst H=0.241 threshold=0.373 src=dyn bars=720
-2026-08-10 14:15:40 UTC [USD/JPY] NO_SIGNAL
-2026-08-10 14:15:41 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
-2026-08-10 14:15:42 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
-2026-08-10 14:15:42 UTC [XAU/USD] SIGNAL SELL conf=69 votes=3/6 regime=NEUTRAL H=0.549 ADX=30.9
-2026-08-10 14:15:42 UTC [XAU/USD] FLIP_BLOCK SELL 4.2h votes=3/6
-2026-08-10 14:30:44 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
 2026-08-10 14:30:45 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-08-10 14:30:45 UTC [EUR/USD] BLOCKED sentiment_mild BUY sent=-0.35 votes=3
 2026-08-10 14:30:45 UTC [EUR/USD] NO_SIGNAL
@@ -29998,3 +29990,11 @@
 2026-10-05 07:15:35 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
 2026-10-05 07:15:36 UTC [XAU/USD] SIGNAL BUY conf=86 votes=4/6 regime=NEUTRAL H=0.476 ADX=19.0
 2026-10-05 07:15:36 UTC [XAU/USD] COOLDOWN BUY 0.7h/4h
+2026-10-05 07:30:33 UTC [EUR/USD] BLOCKED hurst H=0.330 threshold=0.384 src=dyn bars=720
+2026-10-05 07:30:33 UTC [EUR/USD] NO_SIGNAL
+2026-10-05 07:30:34 UTC [USD/JPY] BLOCKED hurst H=0.269 threshold=0.350 src=dyn bars=720
+2026-10-05 07:30:34 UTC [USD/JPY] NO_SIGNAL
+2026-10-05 07:30:35 UTC HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ^DFII10"}}}
+2026-10-05 07:30:35 UTC $^DFII10: possibly delisted; no price data found  (period=7d) (Yahoo error = "No data found, symbol may be delisted")
+2026-10-05 07:30:35 UTC [XAU/USD] SIGNAL BUY conf=79 votes=3/6 regime=NEUTRAL H=0.477 ADX=19.0
+2026-10-05 07:30:35 UTC [XAU/USD] COOLDOWN BUY 1.0h/4h
