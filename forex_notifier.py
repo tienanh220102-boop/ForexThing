@@ -254,9 +254,10 @@ def fetch_twelve_bars(sym, *, interval='1h', outputsize=720, start_date=None, en
     if 'values' not in data:
         raise DataQualityError(f'provider returned no candles (code={data.get("code", "unknown")})')
     seconds = {'1h': 3600, '1min': 60}[interval]
-    bars = parse_twelve(data, time.time(), interval=seconds)
+    bars = parse_twelve(data, time.time(), interval=seconds, requested_timezone='UTC')
     return bars, {'data_version': DATA_VERSION, 'source': f'twelvedata:{sym}',
-                  'timezone': 'UTC', 'provider_timezone': data.get('meta', {}).get('exchange_timezone'),
+                  'timezone': 'UTC', 'timezone_basis': 'explicit_UTC_request',
+                  'provider_timezone': data.get('meta', {}).get('exchange_timezone'),
                   'fetched_at': time.time(), 'interval_seconds': seconds}
 
 

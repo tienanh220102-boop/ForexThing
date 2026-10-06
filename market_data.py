@@ -35,10 +35,14 @@ def validate_bars(bars, now_ts, *, interval=3600):
     return result
 
 
-def parse_twelve(data, now_ts, *, interval=3600):
+def parse_twelve(data, now_ts, *, interval=3600, requested_timezone=None):
     """Request timezone=UTC; require returned timezone rather than guessing."""
     meta = data.get('meta', {})
     name = meta.get('exchange_timezone') or meta.get('timezone')
+    # Forex responses may omit timezone metadata. An explicit UTC request is
+    # the API contract; default-zone responses without metadata stay invalid.
+    if not name and requested_timezone == 'UTC':
+        name = 'UTC'
     if not name:
         raise DataQualityError('missing response timezone metadata')
     try:

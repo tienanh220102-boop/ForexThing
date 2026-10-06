@@ -162,13 +162,17 @@ function renderResults(results) {
 }
 
 function renderGoldPa(state) {
-  const signals = (state.signals || []).slice(-15).reverse();
+  const target = document.getElementById('gold-pa');
+  const legacyCount = (state.legacy?.state?.signals || (state.ledger_version === 2 ? [] : state.signals) || []).length;
+  const notice = `<p><b>PA PAPER ? ch? m? ph?ng, kh?ng giao d?ch ti?n th?t.</b><br>
+    Ch?t to?n b? t?i TP1; chi ph? gi? l?p 0,40 USD/oz/l?nh. ${legacyCount} t?n hi?u c? ?? c?ch ly v? l?i th?i gian.</p>`;
+  const signals = (state.ledger_version === 2 ? state.signals || [] : []).slice(-15).reverse();
   if (!signals.length) {
     document.getElementById('gold-pa').innerHTML = '<span class="muted">Chưa có setup nào được kích hoạt.</span>';
     return;
   }
 
-  document.getElementById('gold-pa').innerHTML = `
+  target.innerHTML = notice + `
     <table>
       <thead><tr>
         <th>Ngày</th><th>Phiên</th><th>Setup</th><th>Hướng</th><th>⭐</th>
@@ -186,7 +190,7 @@ function renderGoldPa(state) {
           <td>${fmtPrice(s.tp1)}</td>
           <td>${fmtPrice(s.tp2)}</td>
           <td>${s.outcome ? `<span class="pill ${s.correct ? 'win' : 'loss'}">${esc(s.outcome)}</span>` : '<span class="pill open">ĐANG MỞ</span>'}</td>
-          <td>${fmtPips(s.pips)}</td>
+          <td>${s.net_r == null ? '?' : Number(s.net_r).toFixed(3) + 'R'}</td>
         </tr>`).join('')}
       </tbody>
     </table>`;
@@ -300,7 +304,7 @@ function renderChart(sym) {
   const markers = [];
 
   if (data.signals) {
-    for (const [k, v] of Object.entries(data.signals)) {
+    for (const [k, v] of Object.entries(data.signals.audit_status ? {} : data.signals)) {
       if (!k.startsWith(sym + '|') || typeof v !== 'number' || v < minT) continue;
       const t = snap(v);
       if (t === null) continue;
@@ -316,7 +320,7 @@ function renderChart(sym) {
   }
 
   if (sym === 'XAU/USD' && data.goldPa) {
-    const paSigs = (data.goldPa.signals || []).filter(s => s.ts >= minT);
+    const paSigs = (data.goldPa.ledger_version === 2 ? data.goldPa.signals || [] : []).filter(s => s.ts >= minT);
     for (const s of paSigs) {
       const t = snap(s.ts);
       if (t === null) continue;
@@ -358,9 +362,9 @@ async function load() {
     fetchRaw(FILES.signals).then(t => {
       const j = JSON.parse(t);
       data.signals = j;
-      renderStats(j.results || []);
-      renderActiveSignals(j);
-      renderResults(j.results || []);
+      renderStats(j.audit_status ? [] : j.results || []);
+      renderActiveSignals(j.audit_status ? {} : j);
+      renderResults(j.audit_status ? [] : j.results || []);
     }).catch(e => {
       document.getElementById('stats').innerHTML = `<div class="error-box">${esc(e.message)}</div>`;
     }),

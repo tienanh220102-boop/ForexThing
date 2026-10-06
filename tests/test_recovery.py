@@ -40,6 +40,8 @@ class DataTests(unittest.TestCase):
         got = md.parse_twelve(data, T+3600)
         self.assertEqual(got[0]['t'], T)
         self.assertTrue(got[0]['closed'])
+        without_meta = {**data, 'meta': {}}
+        self.assertEqual(md.parse_twelve(without_meta, T+3600, requested_timezone='UTC')[0]['t'], T)
 
     def test_bad_geometry_and_duplicate(self):
         for bars in ([bar(h=99)], [bar(), bar()], [bar(c=float('nan'))]):
