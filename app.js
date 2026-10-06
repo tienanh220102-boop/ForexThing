@@ -165,7 +165,8 @@ function renderGoldPa(state) {
   const target = document.getElementById('gold-pa');
   const legacyCount = (state.legacy?.state?.signals || (state.ledger_version === 2 ? [] : state.signals) || []).length;
   const notice = `<p><b>PA PAPER — chỉ mô phỏng, không giao dịch tiền thật.</b><br>
-    Chốt toàn bộ tại TP1; chi phí giả lập 0,40 USD/oz/lệnh. ${legacyCount} tín hiệu cũ đã cách ly vì lỗi thời gian.</p>`;
+    Chốt toàn bộ tại TP1; chi phí giả lập 0,40 USD/oz/lệnh. Kiểm tra giá mới, khoảng lời sau phí và hiệu lực setup trước khi khớp.<br>
+    Limit mới hết hạn theo setup; lệnh hủy không tính là thua. ${legacyCount} tín hiệu cũ đã cách ly vì lỗi thời gian.</p>`;
   const signals = (state.ledger_version === 2 ? state.signals || [] : []).slice(-15).reverse();
   if (!signals.length) {
     target.innerHTML = notice + '<span class="muted">Đang chờ tín hiệu PAPER dùng dữ liệu UTC đã kiểm tra.</span>';
@@ -185,7 +186,7 @@ function renderGoldPa(state) {
           <td>${esc(s.setup || '—')}</td>
           <td>${dirPill(s.dir)}</td>
           <td>${'★'.repeat(s.stars || 0)}</td>
-          <td>${fmtPrice(s.entry)}</td>
+          <td title="${esc(s.rule_version ? `RR sau phí: ${Number(s.net_reward_risk).toFixed(2)}; ${s.rule_version}` : 'Quy tắc gốc của lệnh')}">${fmtPrice(s.entry)}</td>
           <td>${fmtPrice(s.sl)}</td>
           <td>${fmtPrice(s.tp1)}</td>
           <td>${fmtPrice(s.tp2)}</td>

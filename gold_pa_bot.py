@@ -44,6 +44,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import yfinance as yf
+import execution_rules as entry_rules
 
 # Tai su dung INGESTION + BROADCASTER + primitives tu he thong chinh.
 # Import forex_notifier chi chay phan setup module-level (logging/dir) —
@@ -480,12 +481,16 @@ def detect_momentum(closes, highs, lows):
     return None
 
 
-def _gold_levels(closes, highs, lows, atr_val=0.0):
+def _gold_levels(closes, highs, lows, atr_val=0.0, bars=None, now_ts=None):
     """Vung S/R cho sweep: H4 S/R (cluster pivot) + muc tam ly manh (insight 2)
     + dinh/day khung 48h (12/06/2026 — bat day/dinh trong sideway ma H4 S/R
     chua kip hinh thanh; strength = so lan cham nen tu dieu tiet: cuc tri
     1-cham (spike) bi grade() tru sao, bien range cham nhieu duoc cong)."""
-    h4_c, h4_h, h4_l = fx.resample_to_h4(closes, highs, lows)
+    if bars is not None:
+        h4 = closed_h4(bars, now_ts)
+        h4_c, h4_h, h4_l = ([b[k] for b in h4] for k in ('c', 'h', 'l'))
+    else:  # Compatibility for old exploratory harnesses only.
+        h4_c, h4_h, h4_l = fx.resample_to_h4(closes, highs, lows)
     levels = []
     if len(h4_c) >= 10:
         levels += fx.find_sr_levels(h4_h, h4_l, h4_c, lookback=60)
@@ -810,6 +815,8 @@ def build_order(p, atr_val, psych_levels):
     bi quet som) + rui ro 0.5%; bu lai co ke hoach nhoi khi pha can."""
     is_buy = p['dir'] == 'BUY'
     entry  = p['entry']
+    if (entry <= p['structure'] if is_buy else entry >= p['structure']):
+        return None
 
     # [27/07/2026 — user] SL LUON neo NGOAI RAU NEN (structure) + dem, KHONG
     # bao gio cat vao trong rau. Bo nhanh probe cu:
@@ -858,7 +865,8 @@ def build_order(p, atr_val, psych_levels):
     # Insight 2 — tuong so tron giua entry va TP1: keo TP1 ve truoc tuong
     wall_warn = ''
     star_pen  = 0
-    walls = [w for w in psych_levels if w.get('strength', 0) >= 4]
+    walls = sorted([w for w in psych_levels if w.get('strength', 0) >= 4],
+                   key=lambda w: abs(w['price']-entry))
     for w in walls:
         wp = w['price']
         in_path = (entry < wp < tp1) if is_buy else (tp1 < wp < entry)
@@ -869,7 +877,7 @@ def build_order(p, atr_val, psych_levels):
             star_pen = 1
             wall_warn = (f'⚠️ Tường số tròn {wp:,.0f} chỉ cách entry '
                          f'{dist_to_wall:,.1f}$ — rủi ro tranh chấp cao')
-        elif abs(wp - tp1) < WALL_NEAR_ATR * atr_val or wp < tp1:
+        else:
             new_tp1 = wp - 0.15 * atr_val if is_buy else wp + 0.15 * atr_val
             if (is_buy and new_tp1 > entry) or (not is_buy and new_tp1 < entry):
                 tp1 = new_tp1
@@ -996,7 +1004,8 @@ def resolve_signals(state, now, bars=None):
         return 0
     closed = 0
     for rec in active:
-        ledger.advance(rec, execution, now.timestamp(), meta['source'])
+        events = pending_context_events(rec, bars or [], now.timestamp())
+        ledger.advance(rec, execution, now.timestamp(), meta['source'], cancellation_events=events)
         if rec.get('outcome'):
             closed += 1
             log.info('PAPER_RESOLVED %s %s outcome=%s net_r=%s',
@@ -1006,6 +1015,25 @@ def resolve_signals(state, now, bars=None):
     state['data_health'] = {'ok': True, 'ts': meta['fetched_at'],
                             'source': meta['source'], 'latest_bar_t': execution[-1]['t']}
     return closed
+
+
+def pending_context_events(rec, bars, now_ts):
+    """H4 reversal cancels a pending breakout only AFTER that H4 closes."""
+    if not rec.get('rule_version') or rec['setup'] != 'breakout' or rec['status'] != 'PENDING':
+        return []
+    h4 = closed_h4(bars, now_ts)
+    events = []
+    for i, b in enumerate(h4):
+        at = b['t']+4*3600
+        if at <= rec['ts'] or at > rec['expires_at']:
+            continue
+        past = h4[:i+1]
+        s = market_structure([x['c'] for x in past], [x['h'] for x in past],
+                             [x['l'] for x in past], k=SWING_K_H4)
+        against = 'DOWN' if rec['dir'] == 'BUY' else 'UP'
+        if s['trend'] == against:
+            events.append({'ts': at, 'reason': 'H4_DIRECTION_CHANGED'})
+    return events
 
 
 def check_addons(state, now, bars, atr_val):
@@ -1039,7 +1067,7 @@ def _trade_r(rec):
 
 def report_running_r(state, now):
     rows = ledger.scored(state)
-    unknown = sum(r.get('outcome') not in ledger.SCORED | {'NOFILL', None}
+    unknown = sum(r.get('outcome') not in ledger.SCORED | ledger.NON_TRADES | {None}
                   for r in state.get('signals', []))
     wins = sum(r['net_r'] > 0 for r in rows)
     losses = sum(r['net_r'] < 0 for r in rows)
@@ -1095,11 +1123,13 @@ def send_signal(p, session_lbl, now):
     lines = ['🧪 <b>PA PAPER - chi theo doi, khong vao lenh tien that</b>',
              f'{p["setup"]} | {p["dir"]} | phien {session_lbl}',
              f'Gia tham chieu {p["entry"]:.2f} | SL {p["sl"]:.2f} | TP1 {p["tp1"]:.2f}',
-             ('Limit gia lap; het han sau 6 gio.' if p.get('entry_type') == 'limit'
+            (f'Limit gia lap; het han sau {p.get("limit_ttl", 21600)/3600:g} gio, huy khi setup mat hieu luc.' if p.get('entry_type') == 'limit'
               else 'Market gia lap khop tai OPEN phut day du tiep theo; gia khop co the khac.'),
              'Chot 100% tai TP1. TP2 chi de nghien cuu; khong co runner/nhoi lenh.',
              f'Chi phi gia lap: {PAPER_COST_PRICE:.2f} USD/oz/lenh. Khong phai P&L broker.',
              f'UTC: {now.isoformat()}']
+    if p.get('rule_version'):
+        lines.insert(-1, f'RR sau chi phi: {p["net_reward_risk"]:.2f}; gia thay doi/khong du RR thi huy khop PAPER.')
     return fx.send_telegram('\n'.join(lines))
 
 
@@ -1110,6 +1140,17 @@ def send_weekly(state, now):
 
 
 def deliver_paper_order(order, session_lbl, source, analysis_ts):
+    if order.get('rule_version'):
+        quotes, meta = fx.fetch_twelve_bars(SYM, interval='1min', outputsize=2)
+        checked = datetime.now(timezone.utc).timestamp()
+        if not quotes:
+            raise DataQualityError('fresh quote unavailable')
+        prepared, reason = entry_rules.validate_quote(order, quotes[-1]['c'], quotes[-1]['t'], checked,
+                                                      source=meta['source'], expected_source=source)
+        if reason:
+            log.info('ENTRY_REJECTED %s %s reason=%s', order['setup'], order['dir'], reason)
+            return {'ok': False, 'entry_rejected': reason}, None
+        order.clear(); order.update(prepared)
     issued_at = datetime.now(timezone.utc)
     ledger.new_record(order, issued_at.timestamp(), source,
                       policy=EXIT_POLICY, cost_price=PAPER_COST_PRICE)
@@ -1134,6 +1175,11 @@ def main():
 
     now = datetime.now(timezone.utc)
     state = load_state()
+    state['entry_rules'] = {'version': entry_rules.RULE_VERSION,
+                            'max_signal_age_seconds': entry_rules.MAX_SIGNAL_AGE,
+                            'min_net_rr': dict(entry_rules.MIN_NET_RR),
+                            'limit_ttl_seconds': dict(entry_rules.LIMIT_TTL),
+                            'thresholds_status': 'paper_hypotheses_not_optimized'}
     print(f'=== Gold PA Bot — {now.astimezone(VN_TZ).strftime("%Y-%m-%d %H:%M")} VN ===')
 
     # [INGESTION] price history dung chung voi forex (da fresh neu chay sau no)
@@ -1187,6 +1233,10 @@ def main():
 
     if len(bars) < MIN_BARS:
         print('[PA] Chua du du lieu — thoat')
+        save_state(state)
+        return
+    if state.get('monitor', {}).get('review_required'):
+        log.warning('NEW_ENTRIES_BLOCKED review_required')
         save_state(state)
         return
 
@@ -1251,7 +1301,7 @@ def main():
     mom_dir = mom_st.get('dir') if \
         (now.timestamp() - mom_st.get('ts', 0)) < MOM_EXPIRY_H * 3600 else None
 
-    levels = _gold_levels(closes, highs, lows, atr_val)
+    levels = _gold_levels(closes[:-1], highs[:-1], lows[:-1], atr_val, bars=bars, now_ts=now.timestamp())
     psych  = fx.psychological_levels(price)
 
     # [REGIME-SWITCH 18/06] Efficiency Ratio khung NGAY quyet dinh che do:
@@ -1381,6 +1431,10 @@ def main():
         p = build_order(p, atr_val, psych)
         if p is None:
             log.info('SL_TOO_WIDE skip')
+            continue
+        p, reason = entry_rules.prepare(p, atr_val, (s1, s4), cost=PAPER_COST_PRICE)
+        if reason:
+            log.info('ENTRY_REJECTED reason=%s', reason)
             continue
         ready.append(grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge))
 

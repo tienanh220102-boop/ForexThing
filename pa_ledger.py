@@ -6,9 +6,12 @@ Costs are an explicit round-trip price allowance, not broker fill claims.
 """
 from datetime import datetime, timezone
 import math
+import execution_rules as rules
 
 LEDGER_VERSION = 2
-SCORED = {'TP1', 'TP2', 'SL', 'BE', 'TIMEOUT'}
+SCORED = {'TP1', 'TP2', 'SL', 'BE', 'TIMEOUT', 'TRAIL', 'TIME_STOP'}
+NON_TRADES = {'NOFILL', 'CANCELLED_STRUCTURE', 'CANCELLED_TARGET', 'CANCELLED_CONTEXT',
+              'CANCELLED_LEVEL_LOST', 'CANCELLED_PRICE_MOVED', 'CANCELLED_LOW_RR', 'CANCELLED_STALE_SETUP'}
 
 
 def migrate_state(state):
@@ -30,19 +33,34 @@ def valid_geometry(rec, entry=None):
             else rec['sl'] > e > rec['tp1'] >= rec['tp2'])
 
 
-def new_record(order, ts, source, *, policy='tp1_full', cost_price=0.4):
-    if policy not in ('tp1_full', 'partial_be', 'early_be'):
+def new_record(order, ts, source, *, policy='tp1_full', cost_price=0.4, execution=None):
+    if policy not in ('tp1_full', 'partial_be', 'early_be', 'structure_trail', 'time_stop'):
         raise ValueError('unknown exit policy')
     if cost_price < 0 or not math.isfinite(cost_price):
         raise ValueError('invalid cost assumption')
     rec = {k: order.get(k) for k in
            ('setup', 'dir', 'entry', 'sl', 'tp1', 'tp2', 'stars', 'probe',
             'align', 'sl_dist_atr', 'session', 'regime', 'signal_bar_t')}
+    for key in ('rule_version', 'atr_at_signal', 'min_net_rr', 'max_chase_atr',
+                'max_drift_atr', 'max_signal_age', 'limit_ttl', 'invalidation_price',
+                'cancel_if_target_passed', 'risk_cost_price', 'level', 'structure',
+                'net_reward_risk', 'quote_t', 'quote_checked_at', 'quote_price',
+                'analysis_entry', 'target_wall'):
+        if key in order:
+            rec[key] = order[key]
+    model = dict(execution or {})
+    model['pricing'] = 'synthetic_bid_ask' if execution is not None else 'source_cost_allowance'
+    for key in ('spread', 'slippage', 'delay_seconds'):
+        value = model.get(key, 0)
+        if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
+            raise ValueError('invalid execution assumption')
+        model[key] = value
     rec.update({'ts': ts, 'date': datetime.fromtimestamp(ts, timezone.utc).strftime('%Y-%m-%d'),
                 'ledger_version': LEDGER_VERSION, 'mode': 'paper', 'source': source,
                 'entry_type': order.get('entry_type', 'market'), 'entry_ref': order['entry'],
                 'status': 'PENDING', 'policy': policy, 'cost_price': cost_price,
-                'not_before': (int(ts) // 60 + 1) * 60, 'expires_at': ts + 6 * 3600,
+                'not_before': (int(ts + model['delay_seconds']) // 60 + 1) * 60,
+                'expires_at': ts + order.get('limit_ttl', 6 * 3600), 'execution': model,
                 'remaining': 1.0, 'realized_r': 0.0, 'mfe_r': 0.0, 'mae_r': 0.0,
                 'events': []})
     if rec['dir'] not in ('BUY', 'SELL') or not valid_geometry(rec):
@@ -57,6 +75,8 @@ def _unscored(rec, reason, ts):
 
 def _exit(rec, price, ts, outcome, fraction):
     direction = 1 if rec['dir'] == 'BUY' else -1
+    if outcome in {'SL', 'BE', 'TRAIL', 'TIMEOUT', 'TIME_STOP'}:
+        price -= direction * rec.get('execution', {}).get('slippage', 0)
     rec['realized_r'] += fraction * (price - rec['entry']) * direction / rec['initial_risk']
     rec['remaining'] = round(rec['remaining'] - fraction, 8)
     rec['events'].append({'type': outcome, 'ts': ts, 'price': price, 'fraction': fraction})
@@ -65,6 +85,40 @@ def _exit(rec, price, ts, outcome, fraction):
         rec.update(status='CLOSED', outcome=outcome, closed_ts=ts, net_r=net,
                    correct=True if net > 1e-9 else False if net < -1e-9 else None,
                    pips=round(net * rec['initial_risk'] * 10, 4))
+
+
+def _stop_outcome(rec):
+    return 'TRAIL' if rec.get('trailing_active') else 'BE' if rec.get('be_active') else 'SL'
+
+
+def _manage_closed_bar(rec, b, interval):
+    """Research exits use complete H1 after fill, never future lows/highs."""
+    if rec['policy'] not in ('structure_trail', 'time_stop'):
+        return
+    t = b['t']; bucket = int(t)//3600*3600
+    agg = rec.get('management_bar')
+    if not agg or agg['t'] != bucket:
+        agg = {'t': bucket, 'h': b['h'], 'l': b['l'], 'n': 0, 'first': t}
+    agg.update(h=max(agg['h'], b['h']), l=min(agg['l'], b['l']), c=b['c'], n=agg['n']+interval)
+    rec['management_bar'] = agg
+    if t + interval != bucket+3600 or agg['first'] != bucket or agg['n'] != 3600:
+        return
+    hist = (rec.get('management_history', []) + [dict(agg)])[-3:]
+    rec['management_history'] = hist
+    rec['management_hours'] = rec.get('management_hours', 0) + 1
+    sign = 1 if rec['dir'] == 'BUY' else -1
+    close_r = (b['c']-rec['entry'])*sign/rec['initial_risk']
+    rec['best_close_r'] = max(rec.get('best_close_r', 0), close_r)
+    if rec['policy'] == 'time_stop':
+        deadline = 6 if rec['setup'] == 'sweep_reclaim' else 12
+        if rec['management_hours'] >= deadline and rec['best_close_r'] < 0.5:
+            _exit(rec, b['c'], t+interval, 'TIME_STOP', rec['remaining'])
+    elif len(hist) == 3 and rec['best_close_r'] >= 1:
+        buffer = 0.1 * rec.get('atr_at_signal', rec['initial_risk'])
+        candidate = min(x['l'] for x in hist)-buffer if sign == 1 else max(x['h'] for x in hist)+buffer
+        if (candidate-rec['active_sl'])*sign > 0 and (b['c']-candidate)*sign > 0:
+            rec.update(active_sl=candidate, trailing_active=True)
+            rec['events'].append({'type': 'TRAIL_ARMED', 'ts': t+interval, 'price': candidate})
 
 
 def _weekend_gap(start, end):
@@ -81,23 +135,42 @@ def _weekend_gap(start, end):
     return True
 
 
-def advance(rec, bars, now_ts, source, *, interval=60):
+def advance(rec, bars, now_ts, source, *, interval=60, cancellation_events=()):
     if rec.get('outcome') or rec.get('ledger_version') != LEDGER_VERSION:
         return
     if source != rec['source']:
         _unscored(rec, 'SOURCE_CHANGED', now_ts)
         return
-    for b in bars:
-        t = b['t']
+    for raw in bars:
+        t = raw['t']
         if t < rec['not_before'] or t <= rec.get('last_bar_t', -1) or t + interval > now_ts:
             continue
         expected = rec.get('last_bar_t', rec['not_before'] - interval) + interval
         if t > expected and not _weekend_gap(expected, t):
             _unscored(rec, 'DATA_GAP', t)
             return
+        sign = 1 if rec['dir'] == 'BUY' else -1
+        half = rec.get('execution', {}).get('spread', 0)/2
+        # Synthetic bid/ask from source-mid assumption; cost_price is fees/
+        # other allowance ONLY when explicit spread is supplied (no double count).
+        entry_bar = {**raw, **{k: raw[k]+sign*half for k in ('o', 'h', 'l', 'c')}}
+        b = {**raw, **{k: raw[k]-sign*half for k in ('o', 'h', 'l', 'c')}}
+        if rec['status'] == 'PENDING' and rec.get('rule_version'):
+            events = [e for e in cancellation_events if rec['ts'] < e['ts'] <= t]
+            if events:
+                _unscored(rec, 'CANCELLED_CONTEXT', min(e['ts'] for e in events))
+                return
+            # Known open comes before any intrabar touch. Never cancel a
+            # filled order retrospectively from this bar's low/high/close.
+            if (raw['o']-rec['invalidation_price'])*sign <= 0:
+                _unscored(rec, 'CANCELLED_STRUCTURE', t)
+                return
+            if rec.get('cancel_if_target_passed') and (raw['o']-rec['tp1'])*sign >= 0:
+                _unscored(rec, 'CANCELLED_TARGET', t)
+                return
         # Expiry precedes touch. Bar crossing expiry cannot prove on-time fill.
         if rec['status'] == 'PENDING' and t + interval > rec['expires_at']:
-            touched = b['l'] <= rec['entry'] if rec['dir'] == 'BUY' else b['h'] >= rec['entry']
+            touched = entry_bar['l'] <= rec['entry'] if rec['dir'] == 'BUY' else entry_bar['h'] >= rec['entry']
             _unscored(rec, 'UNKNOWN_EXPIRY' if t < rec['expires_at'] and touched else 'NOFILL', rec['expires_at'])
             return
         rec['last_bar_t'] = t
@@ -105,28 +178,39 @@ def advance(rec, bars, now_ts, source, *, interval=60):
         filled_here = False
         if rec['status'] == 'PENDING':
             limit = rec['entry_type'] == 'limit'
-            touched = b['l'] <= rec['entry'] if buy else b['h'] >= rec['entry']
+            touched = entry_bar['l'] <= rec['entry'] if buy else entry_bar['h'] >= rec['entry']
             if limit and not touched:
+                if rec.get('cancel_if_target_passed') and (raw['h'] >= rec['tp1'] if buy else raw['l'] <= rec['tp1']):
+                    _unscored(rec, 'CANCELLED_TARGET', t+interval)
+                    return
                 continue
-            fill = (min(rec['entry'], b['o']) if buy else max(rec['entry'], b['o'])) if limit else b['o']
+            fill = (min(rec['entry'], entry_bar['o']) if buy else max(rec['entry'], entry_bar['o'])) if limit else entry_bar['o'] + sign*rec.get('execution', {}).get('slippage', 0)
             if not valid_geometry(rec, fill):
                 _unscored(rec, 'INVALID_FILL', t)
+                return
+            reason = rules.fill_rejection(rec, fill, t)
+            if reason:
+                _unscored(rec, reason, t)
+                return
+            filled_here = limit and (entry_bar['o'] > fill if buy else entry_bar['o'] < fill)
+            if filled_here and rec.get('cancel_if_target_passed') and (raw['h'] >= rec['tp1'] if buy else raw['l'] <= rec['tp1']):
+                # Fill itself is uncertain: cancellation may have happened first.
+                _unscored(rec, 'AMBIGUOUS_CANCEL_FILL', t)
                 return
             rec.update(entry=fill, initial_risk=abs(fill - rec['sl']), active_sl=rec['sl'],
                        filled_ts=t, status='OPEN', timeout_at=t + 5 * 86400)
             rec['events'].append({'type': 'FILL', 'ts': t, 'price': fill})
-            filled_here = limit and (b['o'] > fill if buy else b['o'] < fill)
         sl = rec['active_sl']
-        tp = rec['tp2'] if rec.get('tp1_done') else rec['tp1']
+        tp = rec['tp2'] if rec.get('tp1_done') or rec['policy'] == 'structure_trail' else rec['tp1']
         hit_sl = b['l'] <= sl if buy else b['h'] >= sl
         hit_tp = b['h'] >= tp if buy else b['l'] <= tp
         # Opening gaps give known order before intrabar extremes (unless limit filled inside bar).
         if not filled_here and (b['o'] <= sl if buy else b['o'] >= sl):
-            _exit(rec, b['o'], t, 'BE' if rec.get('be_active') else 'SL', rec['remaining'])
+            _exit(rec, b['o'], t, _stop_outcome(rec), rec['remaining'])
             return
         if not filled_here and (b['o'] >= tp if buy else b['o'] <= tp):
             if rec['policy'] != 'partial_be' or rec.get('tp1_done'):
-                _exit(rec, tp, t, 'TP2' if rec.get('tp1_done') else 'TP1', rec['remaining'])
+                _exit(rec, tp, t, 'TP2' if rec.get('tp1_done') or rec['policy'] == 'structure_trail' else 'TP1', rec['remaining'])
                 return
             _exit(rec, rec['tp1'], t, 'PARTIAL_TP1', 0.5)
             rec['tp1_done'] = True
@@ -153,13 +237,14 @@ def advance(rec, bars, now_ts, source, *, interval=60):
             _unscored(rec, 'AMBIGUOUS', t)
             return
         if hit_sl:
-            _exit(rec, sl, t + interval, 'BE' if rec.get('be_active') else 'SL', rec['remaining'])
+            _exit(rec, sl, t + interval, _stop_outcome(rec), rec['remaining'])
             return
         risk = rec['initial_risk']
         favorable = (b['h'] - rec['entry']) if buy else (rec['entry'] - b['l'])
         adverse = (rec['entry'] - b['l']) if buy else (b['h'] - rec['entry'])
-        rec['mfe_r'] = max(rec['mfe_r'], favorable / risk)
-        rec['mae_r'] = max(rec['mae_r'], adverse / risk)
+        if not filled_here:
+            rec['mfe_r'] = max(rec['mfe_r'], favorable / risk)
+            rec['mae_r'] = max(rec['mae_r'], adverse / risk)
         if hit_tp:
             if rec['policy'] == 'partial_be' and not rec.get('tp1_done'):
                 # TP1 and TP2 are ordered price barriers. The NEW BE is applied
@@ -171,7 +256,7 @@ def advance(rec, bars, now_ts, source, *, interval=60):
                     _exit(rec, rec['tp2'], t + interval, 'TP2', rec['remaining'])
                     return
             else:
-                _exit(rec, tp, t + interval, 'TP2' if rec.get('tp1_done') else 'TP1', rec['remaining'])
+                _exit(rec, tp, t + interval, 'TP2' if rec.get('tp1_done') or rec['policy'] == 'structure_trail' else 'TP1', rec['remaining'])
                 return
         if rec['policy'] == 'early_be' and not rec.get('be_active'):
             # Hypothesis for research: only a CLOSED candle >= +0.5R moves SL;
@@ -180,6 +265,10 @@ def advance(rec, bars, now_ts, source, *, interval=60):
             if r_close >= 0.5:
                 rec.update(active_sl=rec['entry'], be_active=True)
                 rec['events'].append({'type': 'BE_ARMED', 'ts': t + interval})
+        if not filled_here:
+            _manage_closed_bar(rec, b, interval)
+            if rec.get('outcome'):
+                return
         if t + interval >= rec['timeout_at']:
             _exit(rec, b['c'], t + interval, 'TIMEOUT', rec['remaining'])
             return
