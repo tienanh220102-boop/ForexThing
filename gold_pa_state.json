@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791284479.9723413,
+    "ts": 1791285344.035437,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791284400
+    "latest_bar_t": 1791285240
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 0.2,
+    "days": 0.21,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791284480.059824,
+    "cutoff": 1791285344.046061,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2183,7 +2183,7 @@
         "shadow_net_r": 0,
         "shadow_wins": 0,
         "evaluations": {
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 0
       }
@@ -2697,7 +2697,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791284480.051363,
+    "checked_at": 1791285344.038313,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -3299,7 +3299,7 @@
       "shadow": {
         "setup": "breakout",
         "dir": "BUY",
-        "entry": 4158.7693,
+        "entry": 4158.95747,
         "sl": 4145.793903177216,
         "tp1": 4184.720093645568,
         "tp2": 4197.695490468352,
@@ -3317,7 +3317,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4158.7693,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791284520,
@@ -3330,12 +3330,23 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mfe_r": 0.12471239916204188,
+        "mae_r": 0.20370542696365557,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1791284520,
+            "price": 4158.95747
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1791285240,
+        "initial_risk": 13.16356682278456,
+        "active_sl": 4145.793903177216,
+        "filled_ts": 1791284520,
+        "timeout_at": 1791716520
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     }
   ]
 }
