@@ -110,6 +110,35 @@ class LedgerTests(unittest.TestCase):
         self.step(r, [bar(t=T+120, o=96, h=97, l=95, c=96)])
         self.assertAlmostEqual(r['net_r'], -2.2)
 
+    def test_gap_tp_precedes_later_sl(self):
+        r = self.rec(); self.step(r, [bar()])
+        self.step(r, [bar(t=T+120, o=103, h=104, l=97, c=100)])
+        self.assertEqual(r['outcome'], 'TP1')
+        self.assertAlmostEqual(r['net_r'], 0.8)
+
+    def test_expiry_missing_tail_is_not_nofill(self):
+        r = self.rec(entry_type='limit'); r['last_bar_t'] = T+21540
+        self.step(r, [], T+21630)
+        self.assertEqual(r['outcome'], 'DATA_GAP')
+
+    def test_expiry_straddle_touch_unscored(self):
+        r = self.rec(entry_type='limit'); r['last_bar_t'] = T+21540
+        self.step(r, [bar(t=T+21600, o=101, h=101, l=99, c=100)], T+21660)
+        self.assertEqual(r['outcome'], 'UNKNOWN_EXPIRY')
+
+    def test_partial_be_never_looks_backward_in_tp1_bar(self):
+        r = self.rec('partial_be')
+        self.step(r, [bar(o=100, h=102.5, l=99.5, c=102)])
+        self.assertEqual(r['status'], 'OPEN')
+        self.assertEqual(r['remaining'], 0.5)
+        self.assertTrue(r['be_active'])
+
+    def test_partial_at_open_still_honors_timeout(self):
+        r = self.rec('partial_be'); self.step(r, [bar()]); r['timeout_at'] = T+180
+        self.step(r, [bar(t=T+120, o=102.1, h=102.5, l=101, c=102.2)])
+        self.assertEqual(r['outcome'], 'TIMEOUT')
+        self.assertAlmostEqual(r['net_r'], 0.85)
+
     def test_new_be_not_retroactive(self):
         r = self.rec('early_be')
         self.step(r, [bar(h=101.8, l=99, c=101.2)])
@@ -160,6 +189,11 @@ class LedgerTests(unittest.TestCase):
 
 
 class IntegrationTests(unittest.TestCase):
+    def recovery(self):
+        spec = importlib.util.spec_from_file_location('recovery', ROOT/'scripts/recover_pa_history.py')
+        mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        return mod
+
     def test_fetch_requests_utc_and_no_gold_futures_fallback(self):
         import forex_notifier as fx
         response = {'meta': {'exchange_timezone': 'UTC'}, 'values': [
@@ -173,11 +207,61 @@ class IntegrationTests(unittest.TestCase):
             ticker.assert_not_called()
 
     def test_history_does_not_force_intra_entry_minute_sl(self):
-        spec = importlib.util.spec_from_file_location('recovery', ROOT/'scripts/recover_pa_history.py')
-        mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        mod = self.recovery()
         rec = {**order(), 'ts': T+15}
         self.assertEqual(mod.review_trade(rec, [bar(t=T, l=97)], T+120)['status'], 'UNKNOWN_ENTRY_BAR')
         self.assertEqual(mod.review_trade(rec, [bar(t=T), bar(h=102.5, c=102)], T+120)['status'], 'TP1')
+
+    def test_history_refinement_continues_beyond_first_hour(self):
+        mod = self.recovery(); rec = {**order(), 'ts': T+15}
+        h1 = [bar(t=T, h=103), bar(t=T+3600, h=103, c=102)]
+        # The old H1 high happened before entry; M1 excludes that pre-entry
+        # hit and establishes an intact path through the following H1 win.
+        def fetch(start, end, interval):
+            return [bar(t=T+i*60) for i in range(60)]
+        got = mod.recover_one(rec, h1, T+7200, fetch)
+        self.assertEqual(got['status'], 'TP1')
+        self.assertEqual(got['at'], T+3600)
+
+    def test_history_known_open_precedes_intrabar(self):
+        mod = self.recovery(); rec = {**order(), 'ts': T+15}
+        for opening, expected in [(103, 'TP1'), (96, 'SL')]:
+            got = mod.review_trade(rec, [bar(t=T), bar(o=opening, h=104, l=95)], T+120)
+            self.assertEqual(got['status'], expected)
+
+    def test_health_recovers_after_old_gap(self):
+        import gold_pa_bot as pa
+        state = {'signals': [], 'data_health': {'ok': False}}
+        with patch.object(pa.fx, 'fetch_twelve_bars', return_value=([bar()],
+                          {'source': 'spot', 'fetched_at': T+90})):
+            pa.resolve_signals(state, datetime.fromtimestamp(T+90, timezone.utc))
+        self.assertTrue(state['data_health']['ok'])
+
+    def test_slow_delivery_clock_excludes_analysis_and_transport_bars(self):
+        import gold_pa_bot as pa
+        with patch.object(pa, 'datetime') as clock, patch.object(pa, 'send_signal') as send:
+            clock.now.side_effect = [datetime.fromtimestamp(T+95, timezone.utc),
+                                     datetime.fromtimestamp(T+125, timezone.utc)]
+            send.return_value = {'ok': True, 'result': {'message_id': 7}}
+            _, rec = pa.deliver_paper_order(order(), 'EU_US', 'spot', T+15)
+        self.assertEqual(rec['ts'], T+125)
+        self.assertEqual(rec['not_before'], T+180)
+        ledger.advance(rec, [bar(t=T+60, l=97), bar(t=T+120, l=97)], T+180, 'spot')
+        self.assertEqual(rec['status'], 'PENDING')
+
+    def test_live_mode_cannot_emit(self):
+        import gold_pa_bot as pa
+        with patch.object(pa, 'PA_MODE', 'live'), patch.object(pa, 'send_signal') as send:
+            pa.main()
+        send.assert_not_called()
+
+    def test_history_timeout_boundary_refines_instead_of_late_tp(self):
+        mod = self.recovery()
+        rec = {**order(), 'ts': T+15}
+        bars = [bar(t=T+i*3600) for i in range(120)]
+        bars.append(bar(t=T+5*86400, h=104, c=103))
+        got = mod.review_trade(rec, bars, T+5*86400+3600, interval=3600)
+        self.assertEqual(got['status'], 'UNKNOWN_TIMEOUT_BAR')
 
 
 if __name__ == '__main__':

@@ -986,10 +986,10 @@ def grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge=None):
 # ── Tracking ket qua (first-touch, SL truoc TP trong cung nen) ──
 def resolve_signals(state, now, bars=None):
     active = [r for r in state.get('signals', []) if not r.get('outcome')]
-    if not active:
-        return 0
     try:
-        execution, meta = fx.fetch_twelve_bars(SYM, interval='1min', outputsize=5000)
+        execution, meta = fx.fetch_twelve_bars(SYM, interval='1min', outputsize=5000 if active else 2)
+        if not execution or not 0 <= meta['fetched_at'] - execution[-1]['t'] < 180:
+            raise DataQualityError('M1 feed is stale')
     except DataQualityError as exc:
         state['data_health'] = {'ok': False, 'reason': str(exc), 'ts': now.timestamp()}
         log.warning('EXECUTION_DATA_REJECTED %s', exc)
@@ -1001,8 +1001,10 @@ def resolve_signals(state, now, bars=None):
             closed += 1
             log.info('PAPER_RESOLVED %s %s outcome=%s net_r=%s',
                      rec['setup'], rec['dir'], rec['outcome'], rec.get('net_r'))
-    state['data_health'] = {'ok': not any(r.get('outcome') in ('DATA_GAP', 'SOURCE_CHANGED')
-                                         for r in active), 'ts': now.timestamp()}
+    # Historical gaps disqualify those records, not every future paper idea.
+    # Current health is established by a NEW successful M1 fetch on every run.
+    state['data_health'] = {'ok': True, 'ts': meta['fetched_at'],
+                            'source': meta['source'], 'latest_bar_t': execution[-1]['t']}
     return closed
 
 
@@ -1105,6 +1107,21 @@ def send_weekly(state, now):
     result = report_running_r(state, now)
     if result.get('ok'):
         state['last_weekly'] = now.timestamp()
+
+
+def deliver_paper_order(order, session_lbl, source, analysis_ts):
+    issued_at = datetime.now(timezone.utc)
+    ledger.new_record(order, issued_at.timestamp(), source,
+                      policy=EXIT_POLICY, cost_price=PAPER_COST_PRICE)
+    result = send_signal(order, session_lbl, issued_at)
+    if not result.get('ok'):
+        return result, None
+    delivered_at = datetime.now(timezone.utc)
+    record = ledger.new_record(order, delivered_at.timestamp(), source,
+                               policy=EXIT_POLICY, cost_price=PAPER_COST_PRICE)
+    record['analysis_ts'] = analysis_ts
+    record['message_id'] = result.get('result', {}).get('message_id')
+    return result, record
 
 
 def main():
@@ -1398,18 +1415,18 @@ def main():
         log.info('DUPLICATE_SETUP_BAR')
         save_state(state)
         return
-    record = ledger.new_record(best, now.timestamp(), cached['source'],
-                               policy=EXIT_POLICY, cost_price=PAPER_COST_PRICE)
     try:
-        result = send_signal(best, session_lbl, now)
+        result, record = deliver_paper_order(best, session_lbl, cached['source'], now.timestamp())
     except Exception as e:
         log.info(f'TELEGRAM_FAIL {e}')
         save_state(state)
         return
     if result.get('ok'):
-        cds[f"{best['setup']}|{best['dir']}"] = now.timestamp()
+        delivered_at = datetime.fromtimestamp(record['ts'], timezone.utc)
+        cds[f"{best['setup']}|{best['dir']}"] = delivered_at.timestamp()
         state['cooldowns'] = cds
-        state['day_count'] = {'date': today, 'n': n_today + 1}
+        delivered_day = delivered_at.strftime('%Y-%m-%d')
+        state['day_count'] = {'date': delivered_day, 'n': (n_today if delivered_day == today else 0) + 1}
         state.setdefault('signals', []).append(record)
         log.info(f"SENT {best['setup']} {best['dir']} stars={best['stars']} "
                  f"type={best.get('entry_type', 'market')} "

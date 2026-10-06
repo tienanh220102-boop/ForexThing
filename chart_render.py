@@ -55,7 +55,7 @@ def render_chart(bars, levels=None, signals=None, out_path=DEFAULT_OUT,
     lo   = [b['l'] for b in view]
     # open xap xi = close truoc; nen dau tien cua view lay tu nen lien truoc no
     prev_c = bars[-n_bars - 1]['c'] if len(bars) > n_bars else cl[0]
-    op = [prev_c] + cl[:-1]
+    op = [b.get('o', prev_c if i == 0 else cl[i-1]) for i, b in enumerate(view)]
 
     y_min, y_max = min(lo), max(hi)
     pad = (y_max - y_min) * 0.04

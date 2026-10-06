@@ -164,11 +164,11 @@ function renderResults(results) {
 function renderGoldPa(state) {
   const target = document.getElementById('gold-pa');
   const legacyCount = (state.legacy?.state?.signals || (state.ledger_version === 2 ? [] : state.signals) || []).length;
-  const notice = `<p><b>PA PAPER ? ch? m? ph?ng, kh?ng giao d?ch ti?n th?t.</b><br>
-    Ch?t to?n b? t?i TP1; chi ph? gi? l?p 0,40 USD/oz/l?nh. ${legacyCount} t?n hi?u c? ?? c?ch ly v? l?i th?i gian.</p>`;
+  const notice = `<p><b>PA PAPER — chỉ mô phỏng, không giao dịch tiền thật.</b><br>
+    Chốt toàn bộ tại TP1; chi phí giả lập 0,40 USD/oz/lệnh. ${legacyCount} tín hiệu cũ đã cách ly vì lỗi thời gian.</p>`;
   const signals = (state.ledger_version === 2 ? state.signals || [] : []).slice(-15).reverse();
   if (!signals.length) {
-    document.getElementById('gold-pa').innerHTML = '<span class="muted">Chưa có setup nào được kích hoạt.</span>';
+    target.innerHTML = notice + '<span class="muted">Đang chờ tín hiệu PAPER dùng dữ liệu UTC đã kiểm tra.</span>';
     return;
   }
 
@@ -176,7 +176,7 @@ function renderGoldPa(state) {
     <table>
       <thead><tr>
         <th>Ngày</th><th>Phiên</th><th>Setup</th><th>Hướng</th><th>⭐</th>
-        <th>Entry</th><th>SL</th><th>TP1</th><th>TP2</th><th>Kết quả</th><th>Pips</th>
+        <th>Entry</th><th>SL</th><th>TP1</th><th>TP2 tham khảo</th><th>Kết quả mô phỏng</th><th>R sau chi phí</th>
       </tr></thead>
       <tbody>${signals.map(s => `
         <tr>
@@ -189,8 +189,8 @@ function renderGoldPa(state) {
           <td>${fmtPrice(s.sl)}</td>
           <td>${fmtPrice(s.tp1)}</td>
           <td>${fmtPrice(s.tp2)}</td>
-          <td>${s.outcome ? `<span class="pill ${s.correct ? 'win' : 'loss'}">${esc(s.outcome)}</span>` : '<span class="pill open">ĐANG MỞ</span>'}</td>
-          <td>${s.net_r == null ? '?' : Number(s.net_r).toFixed(3) + 'R'}</td>
+          <td>${s.outcome ? `<span class="pill ${s.correct === true ? 'win' : s.correct === false ? 'loss' : 'open'}">${esc(s.outcome)}</span>` : esc(s.status || 'PENDING')}</td>
+          <td>${s.net_r == null ? '—' : Number(s.net_r).toFixed(3) + 'R'}</td>
         </tr>`).join('')}
       </tbody>
     </table>`;
@@ -256,7 +256,8 @@ function renderChart(sym) {
     el.innerHTML = '<span class="muted">Không tải được thư viện chart (CDN bị chặn?).</span>';
     return;
   }
-  const bars = data.prices && data.prices[sym] && data.prices[sym].bars;
+  const stream = data.prices && data.prices[sym];
+  const bars = stream && stream.data_version === 2 ? stream.bars : [];
   if (!bars || bars.length < 2) {
     el.innerHTML = '<span class="muted">Chưa có dữ liệu nến cho ' + esc(sym) + '.</span>';
     return;
@@ -272,11 +273,11 @@ function renderChart(sym) {
     timeScale: { timeVisible: true, secondsVisible: false },
   });
 
-  // nguồn chỉ có t/h/l/c — open lấy bằng close nến trước (giống chart_render.py)
+  // UTC v2 retains real opens; never invent opens across market gaps.
   const candles = [];
-  for (let i = 1; i < bars.length; i++) {
+  for (let i = 0; i < bars.length; i++) {
     candles.push({
-      time: bars[i].t, open: bars[i - 1].c,
+      time: bars[i].t, open: bars[i].o,
       high: bars[i].h, low: bars[i].l, close: bars[i].c,
     });
   }

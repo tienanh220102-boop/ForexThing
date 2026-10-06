@@ -97,7 +97,8 @@ def advance(rec, bars, now_ts, source, *, interval=60):
             return
         # Expiry precedes touch. Bar crossing expiry cannot prove on-time fill.
         if rec['status'] == 'PENDING' and t + interval > rec['expires_at']:
-            _unscored(rec, 'NOFILL', rec['expires_at'])
+            touched = b['l'] <= rec['entry'] if rec['dir'] == 'BUY' else b['h'] >= rec['entry']
+            _unscored(rec, 'UNKNOWN_EXPIRY' if t < rec['expires_at'] and touched else 'NOFILL', rec['expires_at'])
             return
         rec['last_bar_t'] = t
         buy = rec['dir'] == 'BUY'
@@ -123,6 +124,31 @@ def advance(rec, bars, now_ts, source, *, interval=60):
         if not filled_here and (b['o'] <= sl if buy else b['o'] >= sl):
             _exit(rec, b['o'], t, 'BE' if rec.get('be_active') else 'SL', rec['remaining'])
             return
+        if not filled_here and (b['o'] >= tp if buy else b['o'] <= tp):
+            if rec['policy'] != 'partial_be' or rec.get('tp1_done'):
+                _exit(rec, tp, t, 'TP2' if rec.get('tp1_done') else 'TP1', rec['remaining'])
+                return
+            _exit(rec, rec['tp1'], t, 'PARTIAL_TP1', 0.5)
+            rec['tp1_done'] = True
+            tp2_open = b['o'] >= rec['tp2'] if buy else b['o'] <= rec['tp2']
+            tp2_hit = b['h'] >= rec['tp2'] if buy else b['l'] <= rec['tp2']
+            if tp2_open:
+                _exit(rec, rec['tp2'], t, 'TP2', rec['remaining'])
+                return
+            if hit_sl and tp2_hit:
+                _unscored(rec, 'AMBIGUOUS', t)
+                return
+            if hit_sl:
+                _exit(rec, sl, t + interval, 'SL', rec['remaining'])
+                return
+            if tp2_hit:
+                _exit(rec, rec['tp2'], t + interval, 'TP2', rec['remaining'])
+                return
+            rec.update(active_sl=rec['entry'], be_active=True)
+            if t + interval >= rec['timeout_at']:
+                _exit(rec, b['c'], t + interval, 'TIMEOUT', rec['remaining'])
+                return
+            continue
         if hit_sl and hit_tp or filled_here and hit_tp:
             _unscored(rec, 'AMBIGUOUS', t)
             return
@@ -136,13 +162,9 @@ def advance(rec, bars, now_ts, source, *, interval=60):
         rec['mae_r'] = max(rec['mae_r'], adverse / risk)
         if hit_tp:
             if rec['policy'] == 'partial_be' and not rec.get('tp1_done'):
-                # New BE can only activate on NEXT bar. If this bar crosses both
-                # potential BE and TP2 the ordering of the runner is unknowable.
+                # TP1 and TP2 are ordered price barriers. The NEW BE is applied
+                # only to the NEXT bar, never to earlier lows/highs of this bar.
                 beyond_tp2 = b['h'] >= rec['tp2'] if buy else b['l'] <= rec['tp2']
-                crosses_be = b['l'] <= rec['entry'] if buy else b['h'] >= rec['entry']
-                if crosses_be:
-                    _unscored(rec, 'AMBIGUOUS', t)
-                    return
                 _exit(rec, rec['tp1'], t + interval, 'PARTIAL_TP1', 0.5)
                 rec.update(tp1_done=True, active_sl=rec['entry'], be_active=True)
                 if beyond_tp2:
@@ -163,7 +185,7 @@ def advance(rec, bars, now_ts, source, *, interval=60):
             return
     if rec['status'] == 'PENDING' and now_ts >= rec['expires_at']:
         # No bars covering the expiry window is missing evidence, not NOFILL.
-        if rec.get('last_bar_t', 0) + interval >= rec['expires_at'] - interval:
+        if rec.get('last_bar_t', 0) + interval >= rec['expires_at']:
             _unscored(rec, 'NOFILL', rec['expires_at'])
         else:
             _unscored(rec, 'DATA_GAP', now_ts)
