@@ -1390,6 +1390,9 @@ def send_weekly(state, now):
 
 # ── Main ─────────────────────────────────────────────────────
 def main():
+    if os.environ.get('PA_MODE', 'paper').strip().lower() == 'paused':
+        print('[PA] PA_MODE=paused: signal generation and legacy scoring suspended for audit recovery')
+        return
     if not fx.TELEGRAM_TOKEN or not fx.TELEGRAM_CHAT:
         print('[PA] TELEGRAM_TOKEN/TELEGRAM_CHAT chua dat — thoat')
         return

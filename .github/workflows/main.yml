@@ -35,11 +35,12 @@ jobs:
           TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
           TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}
           ACCOUNT_SIZE:     ${{ secrets.ACCOUNT_SIZE }}
-          VOTING_MODE:      ${{ vars.VOTING_MODE }}   # info (mac dinh/rong) = tham khao, khong actionable | live = bat lai
+          VOTING_MODE:      'off'  # Audit recovery: keep ingestion, silence actionable vote messages.
         run: python forex_notifier.py
 
       - name: Run Gold PA Bot (he Price Action doc lap cho XAU)
         env:
+          PA_MODE:         'paused'  # Resume in paper mode only after ledger/data repair.
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
           TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}
