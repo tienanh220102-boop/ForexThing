@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791263317.156729,
+    "ts": 1791263738.86122,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791263220
+    "latest_bar_t": 1791263640
   },
   "monitor": {
     "n": 0,
