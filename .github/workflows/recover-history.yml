@@ -1,0 +1,30 @@
+name: Audit historical PA outcomes
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pa-history-audit
+  cancel-in-progress: false
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Read-only historical replay with explicit UTC data
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+        run: python scripts/recover_pa_history.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pa-history-recovery
+          path: data/history_recovery/
+          retention-days: 30

@@ -49,6 +49,8 @@ import yfinance as yf
 # Import forex_notifier chi chay phan setup module-level (logging/dir) —
 # main() cua no co __main__ guard nen khong bi kich hoat.
 import forex_notifier as fx
+import pa_ledger as ledger
+from market_data import DataQualityError, closed_h4, usable_cache
 
 _ROOT      = Path(__file__).parent
 STATE_FILE = str(_ROOT / 'gold_pa_state.json')
@@ -56,6 +58,9 @@ _LOG_FILE  = str(_ROOT / 'data' / 'gold_pa.log')
 
 SYM, YF_SYM = 'XAU/USD', 'GC=F'
 VN_TZ       = timezone(timedelta(hours=7))
+PA_MODE = os.environ.get('PA_MODE', 'paper').strip().lower() or 'paper'
+EXIT_POLICY = 'tp1_full'  # Predeclared baseline; alternatives are research-only.
+PAPER_COST_PRICE = 0.40  # USD/oz round-trip assumption, not a broker quote.
 
 # ── Tham so Brain ─────────────────────────────────────────────
 SL_ATR_FLOOR    = 1.5    # SL toi thieu 1.5x ATR (Tram 3 — chong quet rau)
@@ -256,15 +261,17 @@ def load_state():
     if os.path.exists(STATE_FILE):
         try:
             with open(STATE_FILE, encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return {}
+                return ledger.migrate_state(json.load(f))
+        except (OSError, ValueError) as exc:
+            raise RuntimeError('PA state unreadable; refusing to reset ledger') from exc
+    return ledger.migrate_state({})
 
 
 def save_state(state):
-    with open(STATE_FILE, 'w', encoding='utf-8') as f:
+    temp = STATE_FILE + '.tmp'
+    with open(temp, 'w', encoding='utf-8') as f:
         json.dump(state, f, indent=2, ensure_ascii=False)
+    os.replace(temp, STATE_FILE)
 
 
 # ── Tram 2: Session filter ───────────────────────────────────
@@ -494,14 +501,14 @@ def _gold_levels(closes, highs, lows, atr_val=0.0):
     return levels
 
 
-def detect_sweep_reclaim(closes, highs, lows, atr_val, levels):
+def detect_sweep_reclaim(closes, highs, lows, atr_val, levels, opens=None):
     """Insight 1 — setup chu luc. Nen H1 DONG gan nhat dam xuyen level
     (quet thanh khoan) roi rut rau dong nguoc lai ben kia level.
     KHONG co logic 'close > khang cu → mua' o day — nguoc lai moi dung."""
     out = []
     if len(closes) < 5 or atr_val <= 0:
         return out
-    o, c   = closes[-3], closes[-2]      # nen dong gan nhat (-1 dang hinh)
+    o, c   = (opens[-2] if opens is not None else closes[-3]), closes[-2]
     hi, lo = highs[-2], lows[-2]
     body    = abs(c - o)
     rng     = max(hi - lo, 1e-9)
@@ -977,138 +984,33 @@ def grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge=None):
 
 
 # ── Tracking ket qua (first-touch, SL truoc TP trong cung nen) ──
-def resolve_signals(state, now, bars):
-    res = 0
-    for rec in state.get('signals', []):
+def resolve_signals(state, now, bars=None):
+    active = [r for r in state.get('signals', []) if not r.get('outcome')]
+    if not active:
+        return 0
+    try:
+        execution, meta = fx.fetch_twelve_bars(SYM, interval='1min', outputsize=5000)
+    except DataQualityError as exc:
+        state['data_health'] = {'ok': False, 'reason': str(exc), 'ts': now.timestamp()}
+        log.warning('EXECUTION_DATA_REJECTED %s', exc)
+        return 0
+    closed = 0
+    for rec in active:
+        ledger.advance(rec, execution, now.timestamp(), meta['source'])
         if rec.get('outcome'):
-            continue
-        is_buy   = rec['dir'] == 'BUY'
-        is_limit = rec.get('entry_type') == 'limit'
-        filled   = not is_limit or bool(rec.get('filled_ts'))
-        for b in bars:
-            if b.get('t', 0) <= rec['ts']:
-                continue
-            # Limit chua khop: cho nen cham gia entry truoc khi dem SL/TP.
-            # Qua han ma chua khop → NOFILL (khong tinh thang/thua).
-            if not filled:
-                touched = (b['l'] <= rec['entry']) if is_buy else (b['h'] >= rec['entry'])
-                if not touched:
-                    if b['t'] - rec['ts'] > LIMIT_EXPIRY_H * 3600:
-                        rec['outcome'] = 'NOFILL'
-                        rec['correct'] = None
-                        rec['pips']    = 0.0
-                        break
-                    continue
-                rec['filled_ts'] = b['t']
-                filled = True
-                # nen khop lenh co the cham ca SL — kiem tra ngay nen nay (SL-first)
-            hit_sl  = (b['l'] <= rec['sl'])  if is_buy else (b['h'] >= rec['sl'])
-            hit_tp1 = (b['h'] >= rec['tp1']) if is_buy else (b['l'] <= rec['tp1'])
-            hit_tp2 = (b['h'] >= rec['tp2']) if is_buy else (b['l'] <= rec['tp2'])
-            if hit_sl:
-                rec['outcome'] = 'SL'
-                rec['correct'] = False
-                rec['pips'] = fx.price_to_pips(SYM, (rec['sl'] - rec['entry']) * (1 if is_buy else -1))
-                break
-            if hit_tp1:
-                rec['outcome'] = 'TP2' if hit_tp2 else 'TP1'
-                rec['correct'] = True
-                tp = rec['tp2'] if hit_tp2 else rec['tp1']
-                rec['pips'] = fx.price_to_pips(SYM, (tp - rec['entry']) * (1 if is_buy else -1))
-                break
-        # Limit chua khop + qua han (ke ca khi khong co nen moi — cuoi tuan) → NOFILL
-        if not rec.get('outcome') and is_limit and not filled and \
-                (now.timestamp() - rec['ts']) > LIMIT_EXPIRY_H * 3600:
-            rec['outcome'] = 'NOFILL'
-            rec['correct'] = None
-            rec['pips']    = 0.0
-        if not rec.get('outcome') and (now.timestamp() - rec['ts']) > TIMEOUT_DAYS * 86400:
-            last_c = bars[-1]['c'] if bars else rec['entry']
-            move = (last_c - rec['entry']) * (1 if is_buy else -1)
-            rec['outcome'] = 'EXP'
-            rec['correct'] = move > 0
-            rec['pips']    = fx.price_to_pips(SYM, move)
-        if rec.get('outcome'):
-            res += 1
-            log.info(f"RESOLVED {rec['setup']} {rec['dir']} {rec['outcome']} pips={rec['pips']}")
-    if res:
-        print(f'[PA] Da chot {res} keo')
-    state['signals'] = state.get('signals', [])[-200:]
-    return res
+            closed += 1
+            log.info('PAPER_RESOLVED %s %s outcome=%s net_r=%s',
+                     rec['setup'], rec['dir'], rec['outcome'], rec.get('net_r'))
+    state['data_health'] = {'ok': not any(r.get('outcome') in ('DATA_GAP', 'SOURCE_CHANGED')
+                                         for r in active), 'ts': now.timestamp()}
+    return closed
 
 
-# ── Probe add-on: "đánh đuổi" sau khi phá cản (13/06/2026) ───
 def check_addons(state, now, bars, atr_val):
-    """Lenh do (probe) dang mo + nen H1 DONG pha qua add_trigger (swing/can
-    xac nhan trend) → goi y NHOI 0.5% von, SL sau can vua pha (can pha = ho
-    tro/khang cu moi). Moi probe nhoi toi da 1 lan; lenh nhoi tracking rieng
-    (setup='addon') de learning loop do duoc danh duoi co an khong."""
-    for rec in state.get('signals', []):
-        if not rec.get('probe') or rec.get('add_sent') or rec.get('outcome'):
-            continue
-        trig = rec.get('add_trigger')
-        if not trig:
-            continue
-        if rec.get('entry_type') == 'limit' and not rec.get('filled_ts'):
-            continue                          # probe chua khop thi chua nhoi
-        is_buy = rec['dir'] == 'BUY'
-        for b in bars[:-1]:                   # chi xet nen DA DONG
-            if b.get('t', 0) <= rec['ts']:
-                continue
-            if not (b['c'] > trig if is_buy else b['c'] < trig):
-                continue
-            price = bars[-1]['c']
-            tp    = rec['tp2']
-            # gia da chay qua/gan het duong den TP2 → nhoi vo nghia
-            if (is_buy and price >= tp - 0.3 * atr_val) or \
-               (not is_buy and price <= tp + 0.3 * atr_val):
-                rec['add_sent'] = -1          # danh dau bo qua, khong xet lai
-                log.info(f"ADDON_SKIP_LATE {rec['setup']} {rec['dir']} trig={trig:.1f}")
-                break
-            sl  = trig - ADDON_SL_ATR * atr_val if is_buy else trig + ADDON_SL_ATR * atr_val
-            sl_pips = fx.price_to_pips(SYM, abs(price - sl))
-            sl_usd  = round(sl_pips * fx.LOT_SIZE * 10, 2)
-            lot = None
-            if fx.ACCOUNT_SIZE > 0 and sl_usd > 0:
-                lot = max(round((fx.ACCOUNT_SIZE * PROBE_RISK_PCT) / (sl_usd / fx.LOT_SIZE), 2), 0.01)
-            emoji = '🟢' if is_buy else '🔴'
-            act   = 'BUY (MUA)' if is_buy else 'SELL (BÁN)'
-            lines = [
-                f'🔼 <b>NHỒI LỆNH — XAU/USD (đánh đuổi sau phá cản)</b>',
-                f'Lệnh dò {rec["dir"]} @ {fx.fmt_price(SYM, rec["entry"])} '
-                f'({datetime.fromtimestamp(rec["ts"], VN_TZ).strftime("%d/%m %H:%M")}) '
-                f'đã được xác nhận:',
-                f'✅ H1 đóng cửa phá {"trên cản" if is_buy else "dưới hỗ trợ"} '
-                f'{fx.fmt_price(SYM, trig)} — trend xác nhận theo hướng lệnh dò',
-                '',
-                f'{emoji} Lệnh: <b>{act}</b> quanh {fx.fmt_price(SYM, price)}',
-                f'🛑 SL:  {fx.fmt_price(SYM, sl)}  (sau cản vừa phá / -${sl_usd:.2f})',
-                f'🎯 TP:  {fx.fmt_price(SYM, tp)}  (TP2 của lệnh dò)',
-            ]
-            if lot:
-                lines.append(f'📐 Lot đề xuất: {lot} lot (0.5% rủi ro / ${fx.ACCOUNT_SIZE:.0f} vốn)')
-            lines += ['', '📌 Lệnh dò gốc: dời SL về entry (hòa vốn) — tổng vị thế giờ rủi ro tối thiểu']
-            try:
-                r = fx.send_telegram('\n'.join(lines))
-            except Exception as e:
-                log.info(f'ADDON_TG_FAIL {e}')
-                break
-            if r.get('ok'):
-                rec['add_sent'] = now.timestamp()
-                state.setdefault('signals', []).append({
-                    'ts': now.timestamp(), 'date': now.strftime('%Y-%m-%d'),
-                    'session': rec.get('session'), 'setup': 'addon',
-                    'dir': rec['dir'], 'entry': price, 'sl': sl,
-                    'tp1': tp, 'tp2': tp, 'stars': rec.get('stars', 3),
-                    'entry_type': 'market', 'probe': False,
-                    'parent_ts': rec['ts'],
-                })
-                log.info(f"ADDON_SENT {rec['dir']} trig={trig:.1f} entry={price:.2f} sl={sl:.2f}")
-                print(f"[PA] Nhoi lenh {rec['dir']} sau pha can {trig:.1f}")
-            break
+    # Disabled during paper recovery; never broadcast an unvalidated add-on.
+    return 0
 
 
-# ── Learning loop: moi ngay thong minh hon (13/06/2026) ─────
 def _bucket_keys(rec):
     keys = [f"setup:{rec.get('setup')}",
             f"setup:{rec.get('setup')}|sess:{rec.get('session', '?')}"]
@@ -1124,96 +1026,30 @@ def _bucket_keys(rec):
 
 
 def update_knowledge(state, now):
-    """Vong lap hoc 1 lan/ngay (Lance Beggs YTC: thong ke → manh/yeu → dieu
-    chinh). Gom keo da chot theo bucket; bucket >= LEARN_MIN_N keo: WR Laplace
-    + ky vong R quyet dinh dieu chinh sao (chi ap dung bucket setup:*, cac
-    bucket khac chi ghi bai hoc). Khac biet vs hardcode: nguong tu data chinh
-    he nay, co floor (min n) va cap (±1 sao) — [[feedback-adaptive-over-fixed]].
-    Thay doi dieu chinh → bao Telegram ngan de user biet bot vua 'hoc' gi."""
-    done = [x for x in state.get('signals', [])
-            if x.get('outcome') and x['outcome'] != 'NOFILL']
-    stats = {}
-    for rec in done:
-        sl_pips = fx.price_to_pips(SYM, abs(rec.get('entry', 0) - rec.get('sl', 0)))
-        for k in _bucket_keys(rec):
-            s = stats.setdefault(k, {'n': 0, 'w': 0, 'r': 0.0})
-            s['n'] += 1
-            s['w'] += 1 if rec.get('correct') else 0
-            if sl_pips:
-                s['r'] += (rec.get('pips') or 0.0) / sl_pips
-    adjust, lessons = {}, []
-    for k in sorted(stats):
-        s = stats[k]
-        if s['n'] < LEARN_MIN_N:
-            continue
-        wr    = (s['w'] + 1) / (s['n'] + 2)          # Laplace smoothing
-        exp_r = s['r'] / s['n']
-        verdict = ''
-        if k.startswith('setup:'):
-            if wr >= LEARN_WR_GOOD and exp_r > 0:
-                adjust[k] = 1
-                verdict = ' → +1 sao'
-            elif wr <= LEARN_WR_BAD or exp_r <= -0.30:
-                adjust[k] = -1
-                verdict = ' → -1 sao'
-        lessons.append(f"{k}: {s['w']}/{s['n']} thắng, kỳ vọng {exp_r:+.2f}R{verdict}")
-    old = state.get('pa_knowledge', {}).get('adjust', {})
-    state['pa_knowledge'] = {'adjust': adjust, 'updated': now.timestamp(),
-                             'n_resolved': len(done), 'lessons': lessons[-40:]}
+    # Old scores are invalid; do not adapt thresholds to a tiny repaired sample.
+    state['pa_knowledge'] = {'adjust': {}, 'disabled': 'audit_recovery', 'updated': now.timestamp()}
     state['last_learn'] = now.timestamp()
-    log.info(f'LEARN n={len(done)} adjust={adjust}')
-    if adjust != old:
-        diff = []
-        for k in sorted(set(adjust) | set(old)):
-            if adjust.get(k, 0) != old.get(k, 0):
-                diff.append(f'  {k}: {old.get(k, 0):+d} → {adjust.get(k, 0):+d} sao')
-        try:
-            fx.send_telegram('\n'.join(
-                ['📚 <b>Gold PA Bot — học từ dữ liệu mới</b>',
-                 f'(dựa trên {len(done)} kèo đã chốt, bucket ≥{LEARN_MIN_N} kèo mới được điều chỉnh)']
-                + diff))
-        except Exception as e:
-            log.info(f'LEARN_TG_FAIL {e}')
 
 
 def _trade_r(rec):
-    """R thuc cua 1 keo da chot = pips ket qua / sl_pips (giong learning loop)."""
-    sl_pips = fx.price_to_pips(SYM, abs(rec.get('entry', 0) - rec.get('sl', 0)))
-    if not sl_pips:
-        return None
-    return (rec.get('pips') or 0.0) / sl_pips
+    return rec.get('net_r') if rec.get('ledger_version') == ledger.LEDGER_VERSION else None
 
 
 def report_running_r(state, now):
-    """Bang diem SACH tu REPORT_SINCE: tong R thang/thua cua PA tinh tu ngay do.
-    Goi khi co keo MOI chot (khong spam moi 15p). NOFILL khong tinh (khong vao lenh)."""
-    done = [x for x in state.get('signals', [])
-            if x.get('date', '') >= REPORT_SINCE
-            and x.get('outcome') and x['outcome'] != 'NOFILL']
-    if not done:
-        return
-    rs = [(_trade_r(x) or 0.0) for x in done]
-    total  = sum(rs)
-    wins   = sum(1 for x in done if x.get('correct'))
-    losses = sum(1 for x in done if x.get('correct') is False)
-    head   = '🟢' if total >= 0 else '🔴'
-    lines  = [f'{head} <b>PA — Tổng R từ {REPORT_SINCE}</b>',
-              f'Tổng: <b>{total:+.2f}R</b>   ({wins}W / {losses}L · {len(done)} lệnh)',
-              '']
-    for x in done[-12:]:                      # liet ke toi da 12 keo gan nhat
-        r   = _trade_r(x) or 0.0
-        ico = '✅' if x.get('correct') else ('❌' if x.get('correct') is False else '➖')
-        lines.append(f"{ico} {x.get('date')} {x.get('setup')} {x.get('dir')} "
-                     f"{x.get('outcome')}  <b>{r:+.2f}R</b>")
-    try:
-        fx.send_telegram('\n'.join(lines))
-    except Exception as e:
-        log.info(f'REPORT_FAIL {e}')
+    rows = ledger.scored(state)
+    unknown = sum(r.get('outcome') not in ledger.SCORED | {'NOFILL', None}
+                  for r in state.get('signals', []))
+    wins = sum(r['net_r'] > 0 for r in rows)
+    losses = sum(r['net_r'] < 0 for r in rows)
+    lines = ['🧪 <b>PA PAPER - ket qua mo phong UTC v2</b>',
+             f'{wins}W / {losses}L | {len(rows)} lenh du du lieu | {sum(r["net_r"] for r in rows):+.2f}R',
+             f'Chua xac dinh: {unknown}. Lich su v1 tach rieng, khong dung de cham diem.',
+             'Gia lap chi phi 0.40 USD/oz/lenh; khong phai P&L tai broker.',
+             'Thoat: chot toan bo tai TP1. Khong co lot de xuat / lenh tien that.']
+    return fx.send_telegram('\n'.join(lines))
 
 
-_SPRT_LBL = {'CONFIRM_EDGE': '✅ đã xác nhận có edge',
-             'REJECT_EDGE': '🛑 đã bác (edge âm)',
-             'CHUA_DU': '⏳ chưa đủ bằng chứng'}
+_SPRT_LBL = {}
 
 
 def _sprt_verdict(rs):
@@ -1233,69 +1069,14 @@ def _sprt_verdict(rs):
 
 
 def check_live_validation(state, now):
-    """Ky luat kiem chung live: moi VALIDATION_EVERY keo da chot, so WR/exp THUC
-    voi backtest -> Telegram canh bao neu lech (kill-switch). Chay moi run; chi
-    BAN khi vuot moc 50 moi. Khong dieu chinh logic — chi GIAM SAT + canh bao."""
-    done = [x for x in state.get('signals', [])
-            if x.get('outcome') and x['outcome'] != 'NOFILL']
-    n = len(done)
-    milestone = (n // VALIDATION_EVERY) * VALIDATION_EVERY
-    if milestone < VALIDATION_EVERY or milestone <= state.get('last_validation_n', 0):
-        return
-    rs = [r for r in (_trade_r(x) for x in done) if r is not None]
-    if len(rs) < VALIDATION_EVERY:
-        return
-    exp_r   = sum(rs) / len(rs)
-    wr      = sum(1 for x in done if x.get('correct')) / len(done)
-    total_r = sum(rs)
-    eq = peak = dd = 0.0                       # max drawdown tren duong equity R
-    for r in rs:
-        eq += r
-        peak = max(peak, eq)
-        dd = min(dd, eq - peak)
-    max_dd = -dd
-    sprt_state, sprt_llr = _sprt_verdict(rs)
-
-    # Phan quyet EDGE: SPRT (co co so) bac edge HOAC exp am ro -> kill-switch.
-    if sprt_state == 'REJECT_EDGE' or exp_r < KILL_EXP_R:
-        head = '🛑 <b>KILL-SWITCH — Gold PA edge ÂM</b>'
-        _why = ('SPRT đã bác giả thuyết có edge' if sprt_state == 'REJECT_EDGE'
-                else f'kỳ vọng thực {exp_r:+.3f}R dưới ngưỡng {KILL_EXP_R:+.2f}R')
-        tail = (f'Edge âm rõ rệt ({_why}) — KHÔNG còn là nhiễu. ĐỀ NGHỊ TẠM DỪNG, '
-                'mổ xẻ nguyên nhân trước khi đánh tiếp (không gồng).')
-    elif exp_r < 0:
-        head = '⚠️ <b>Kiểm chứng PA — DƯỚI hòa vốn</b>'
-        tail = 'Kỳ vọng thực đang âm nhẹ — theo dõi sát mốc kế tiếp, cân nhắc giảm rủi ro.'
-    elif exp_r < BACKTEST_EXP_R * 0.5:
-        head = '🟡 <b>Kiểm chứng PA — yếu hơn backtest</b>'
-        tail = 'Còn dương nhưng dưới nửa kỳ vọng backtest — bình thường ở mẫu nhỏ, tiếp tục theo dõi.'
-    else:
-        head = '✅ <b>Kiểm chứng PA — bám kế hoạch</b>'
-        tail = 'Edge thực còn dương, khớp backtest — tiếp tục đánh nhỏ kỷ luật.'
-
-    msg = [head,
-           f'Mốc <b>{n}</b> kèo đã chốt (backtest exp≈+{BACKTEST_EXP_R:.2f}R/lệnh):',
-           f'• Tỷ lệ thắng (WR): <b>{wr:.0%}</b>',
-           f'• Kỳ vọng thực: <b>{exp_r:+.3f}R</b>/lệnh',
-           f'• Tổng: {total_r:+.1f}R | Drawdown lớn nhất: {max_dd:.1f}R',
-           f'• SPRT (xác nhận edge): {_SPRT_LBL.get(sprt_state, sprt_state)} '
-           f'(LLR={sprt_llr:+.2f}; cần ±{SPRT_A:.2f} để kết luận)',
-           '', tail]
-    # Canh bao BAO TOAN VON rieng (mỗi 1R ≈ 1% vốn ở rủi ro mặc định): drawdown lớn
-    # đáng dừng-soát kể cả khi expectancy còn dương.
-    if max_dd > KILL_DD_R:
-        msg += ['', f'🩸 <b>Cảnh báo vốn:</b> drawdown {max_dd:.1f}R (~{max_dd:.0f}% vốn nếu '
-                    f'1%/lệnh) đã vượt {KILL_DD_R:.0f}R — cân nhắc GIẢM SIZE / tạm nghỉ dù edge còn dương.']
-    msg += ['<i>Báo tự động mỗi 50 kèo — kỷ luật kiểm chứng live</i>']
-    try:
-        fx.send_telegram('\n'.join(msg))
-    except Exception as e:
-        log.info(f'VALIDATION_TG_FAIL {e}')
-    state['last_validation_n'] = milestone
-    log.info(f'VALIDATION n={n} exp={exp_r:.3f} wr={wr:.2f} dd={max_dd:.1f}R')
+    previous = state.get('monitor', {})
+    current = ledger.monitor(state)
+    if current['reasons'] and current['reasons'] != previous.get('reasons'):
+        log.warning('PAPER_REVIEW_REQUIRED %s', current)
+        fx.send_telegram('PA PAPER: can review ket qua moi. He thong tiep tuc mo phong, '
+                         'KHONG phat lenh tien that. Ly do: ' + ', '.join(current['reasons']))
 
 
-# ── BROADCASTER ──────────────────────────────────────────────
 def send_photo(path, caption='', reply_to=None):
     """Gui anh chart qua Telegram sendPhoto (multipart). Loi khong duoc lam
     hong flow gui tin hieu — caller phai wrap try/except."""
@@ -1308,90 +1089,27 @@ def send_photo(path, caption='', reply_to=None):
 
 
 def send_signal(p, session_lbl, now):
-    is_buy   = p['dir'] == 'BUY'
-    emoji    = '🟢' if is_buy else '🔴'
-    act      = 'BUY (MUA)' if is_buy else 'SELL (BÁN)'
-    star_bar = '★' * p['stars'] + '☆' * (5 - p['stars'])
-    name     = _SETUP_NAMES.get(p['setup'], p['setup'])
-    now_vn   = now.astimezone(VN_TZ)
-
-    mode = ' | 🔎 LỆNH DÒ' if p.get('probe') else ''
-    lines = [
-        f'🥇 <b>TÍN HIỆU GOLD PA — XAU/USD</b>',
-        f'⏱ Khung: H1 | Phiên: {session_lbl} | {star_bar} ({p["stars"]}/5){mode}',
-        f'🧩 Setup: <b>{name}</b>',
-        '━━━━━━━━━━━━━━━━━━━━',
-        '',
-        (f'{emoji} Lệnh: <b>{act} LIMIT</b> @ {fx.fmt_price(SYM, p["entry"])} — '
-         f'giá đã bật khỏi level, KHÔNG đuổi; chờ retest, hủy sau {LIMIT_EXPIRY_H}h nếu chưa khớp'
-         if p.get('entry_type') == 'limit'
-         else f'{emoji} Lệnh: <b>{act}</b> quanh {fx.fmt_price(SYM, p["entry"])}'),
-        f'🛑 SL:  {fx.fmt_price(SYM, p["sl"])}  ({p["sl_dist_atr"]}×ATR / -${p["sl_usd"]:.2f})',
-        f'🎯 TP1: {fx.fmt_price(SYM, p["tp1"])}  (R:R 1:{p["rr1"]} / +${p["tp1_usd"]:.2f})',
-        f'🎯 TP2: {fx.fmt_price(SYM, p["tp2"])}  (R:R 1:{p["rr2"]} / +${p["tp2_usd"]:.2f})',
-    ]
-    if p.get('rec_lot'):
-        _rp = p.get('risk_pct', DEFAULT_RISK_PCT) * 100
-        _tag = (' — lệnh dò, đánh nhỏ' if p.get('probe')
-                else ' — kèo nguy hiểm, giảm nửa' if p.get('danger') else '')
-        lines.append(f'📐 Lot đề xuất: {p["rec_lot"]} lot ({_rp:g}% rủi ro{_tag} / ${fx.ACCOUNT_SIZE:.0f} vốn)')
-    lines.append('📌 Chạm TP1 → dời SL về entry (phần còn lại rủi ro 0)')
-    if p.get('probe'):
-        trig = p.get('add_trigger')
-        side = 'trên cản' if is_buy else 'dưới hỗ trợ'
-        lines.append(
-            f'🔼 Kế hoạch nhồi: nến H1 đóng {side} {fx.fmt_price(SYM, trig)} '
-            f'→ trend xác nhận, vào thêm 0.5% (bot sẽ nhắn khi phá)'
-            if trig else
-            '🔎 Lệnh dò: SL bé chấp nhận bị quét sớm — sai thì mất ít, đúng thì giữ kèo')
-    lines += ['', '📝 Lý do:']
-    lines += [f'  • {c}' for c in p['confluence']]
-    if p.get('wall_warn'):
-        lines += ['', p['wall_warn']]
-    lines += [
-        '',
-        f'⏰ {now_vn.strftime("%H:%M %d/%m/%Y")}',
-        '🧪 <i>Hệ Price Action độc lập — thống kê tách biệt với vote system</i>',
-    ]
+    # PAPER is the only enabled mode; no live execution/lot suggestion.
+    lines = ['🧪 <b>PA PAPER - chi theo doi, khong vao lenh tien that</b>',
+             f'{p["setup"]} | {p["dir"]} | phien {session_lbl}',
+             f'Gia tham chieu {p["entry"]:.2f} | SL {p["sl"]:.2f} | TP1 {p["tp1"]:.2f}',
+             ('Limit gia lap; het han sau 6 gio.' if p.get('entry_type') == 'limit'
+              else 'Market gia lap khop tai OPEN phut day du tiep theo; gia khop co the khac.'),
+             'Chot 100% tai TP1. TP2 chi de nghien cuu; khong co runner/nhoi lenh.',
+             f'Chi phi gia lap: {PAPER_COST_PRICE:.2f} USD/oz/lenh. Khong phai P&L broker.',
+             f'UTC: {now.isoformat()}']
     return fx.send_telegram('\n'.join(lines))
 
 
 def send_weekly(state, now):
-    # NOFILL = limit khong khop, khong phai thang/thua — loai khoi thong ke WR
-    done = [x for x in state.get('signals', [])
-            if x.get('outcome') and x['outcome'] != 'NOFILL']
-    if len(done) < 3:
-        return
-    wins = sum(1 for x in done if x.get('correct'))
-    wr   = wins / len(done) * 100
-    pips = sum(x.get('pips', 0) for x in done)
-    usd  = round(pips * fx.LOT_SIZE * 10, 2)
-    sign = '+' if usd >= 0 else ''
-    icon = '🔥' if wr >= 65 else ('⚠️' if wr < 45 else '📊')
-    lines = [
-        f'🥇 <b>Báo cáo tuần — Gold PA Bot</b>',
-        f'{icon} Tổng: {wins}/{len(done)} = <b>{wr:.0f}%</b>  |  💰 {sign}{usd:.2f} USD ({fx.LOT_SIZE} lot)',
-        '',
-    ]
-    by_setup = {}
-    for x in done:
-        st = by_setup.setdefault(x['setup'], {'n': 0, 'w': 0, 'pips': 0.0})
-        st['n'] += 1
-        st['pips'] += x.get('pips', 0)
-        if x.get('correct'):
-            st['w'] += 1
-    for code, st in sorted(by_setup.items(), key=lambda kv: -kv[1]['n']):
-        name = _SETUP_NAMES.get(code, code)
-        lines.append(f'  {name}: {st["w"]}/{st["n"]} ({st["pips"]:+.0f}p)')
-    fx.send_telegram('\n'.join(lines))
-    state['last_weekly'] = now.timestamp()
-    log.info(f'WEEKLY sent n={len(done)} wr={wr:.0f}%')
+    result = report_running_r(state, now)
+    if result.get('ok'):
+        state['last_weekly'] = now.timestamp()
 
 
-# ── Main ─────────────────────────────────────────────────────
 def main():
-    if os.environ.get('PA_MODE', 'paper').strip().lower() == 'paused':
-        print('[PA] PA_MODE=paused: signal generation and legacy scoring suspended for audit recovery')
+    if PA_MODE != 'paper':
+        print('[PA] Only paper mode is enabled; live/paused/unknown modes cannot emit signals')
         return
     if not fx.TELEGRAM_TOKEN or not fx.TELEGRAM_CHAT:
         print('[PA] TELEGRAM_TOKEN/TELEGRAM_CHAT chua dat — thoat')
@@ -1403,20 +1121,24 @@ def main():
 
     # [INGESTION] price history dung chung voi forex (da fresh neu chay sau no)
     fx.load_price_history()
-    closes, highs, lows, timestamps = None, None, None, None
-    try:
-        closes, highs, lows, timestamps = fx.fetch_ohlcv(SYM, YF_SYM)
-    except Exception as e:
-        log.info(f'FETCH_FAIL {e}')
-    if closes and len(closes) >= 60:
-        new_bars = [{'t': t, 'c': c, 'h': h, 'l': l}
-                    for t, c, h, l in zip(timestamps, closes, highs, lows)]
-        if SYM not in fx._price_history:
-            fx._price_history[SYM] = {'bars': []}
-        fx._price_history[SYM]['bars'] = fx._merge_bars(
-            fx._price_history[SYM].get('bars', []), new_bars)
-        fx.save_price_history()
-    bars = fx._price_history.get(SYM, {}).get('bars', [])
+    cached = fx._price_history.get(SYM, {})
+    if not usable_cache(cached, now.timestamp()) or now.timestamp() - cached.get('fetched_at', 0) > 1200:
+        closes, _, _, _ = fx.fetch_ohlcv(SYM, YF_SYM)
+        if closes:
+            fx.cache_last_fetch(SYM)
+            fx.save_price_history()
+        else:
+            state['data_health'] = {'ok': False, 'reason': 'H1 fetch failed', 'ts': now.timestamp()}
+            save_state(state)
+            return
+    cached = fx._price_history.get(SYM, {})
+    bars = cached.get('bars', [])
+    if state.pop('notice_pending', False):
+        result = fx.send_telegram('PA chuyen sang PAPER. Bang diem cu co loi thu tu thoi gian, '
+                                  'da tach khoi thong ke moi. Khong su dung tin hieu de vao tien that. '
+                                  'Lich su goc duoc giu nguyen de kiem tra lai.')
+        if not result.get('ok'):
+            state['notice_pending'] = True
     print(f'[PA] {len(bars)} bars H1')
 
     # Chot ket qua keo cu (chay moi run, ke ca ngoai phien)
@@ -1455,7 +1177,7 @@ def main():
     # sweep cu se duoc detect lai sau khi cooldown het han = lenh ao lap lai.
     # Du lieu cu hon 2.5h = khong co nen moi → chi resolve, khong quet keo.
     bar_age_h = (now.timestamp() - bars[-1].get('t', 0)) / 3600
-    if bar_age_h > 2.5:
+    if not 0 <= bar_age_h < 1:
         print(f'[PA] Du lieu cu {bar_age_h:.1f}h (thi truong dong?) — khong quet keo moi')
         log.info(f'MARKET_STALE age={bar_age_h:.1f}h')
         save_state(state)
@@ -1471,21 +1193,20 @@ def main():
         save_state(state)
         return
 
-    atr_val = fx.atr(highs, lows, closes)
+    atr_val = fx.atr(highs[:-1], lows[:-1], closes[:-1])
     if not atr_val or atr_val <= 0:
         save_state(state)
         return
 
-    # Danh duoi (13/06/2026): probe da khop + H1 dong pha can xac nhan → goi y
-    # nhoi. Chay TRUOC session gate — pha can co the xay ra o bat ky phien nao.
-    try:
-        check_addons(state, now, bars, atr_val)
-    except Exception as e:
-        log.info(f'ADDON_FAIL {e}')
+    if not state.get('data_health', {}).get('ok', True):
+        save_state(state)
+        return
 
     # [TRAM 2] Session
     session, session_lbl = get_session(now)
-    allowed = _SESSION_ALLOWED[session]
+    allowed = set(_SESSION_ALLOWED[session])
+    if session != 'OFF':
+        allowed.add('breakout')  # paper candidate; direction must pass H4 below
     if not allowed:
         print(f'[PA] Phien {session} — khong quet keo moi')
         save_state(state)
@@ -1527,14 +1248,26 @@ def main():
         print(f"[PA] BIAS thu cong = {BIAS} -> chi danh {'BUY' if BIAS == 'UP' else 'SELL'}")
         log.info(f'BIAS_ACTIVE {BIAS}')
 
+    s1 = market_structure(closes[:-1], highs[:-1], lows[:-1], k=SWING_K)
+    h4 = closed_h4(bars, now.timestamp())
+    s4 = market_structure([b['c'] for b in h4], [b['h'] for b in h4],
+                          [b['l'] for b in h4], k=SWING_K_H4)
     cands = []
-    if is_trend:
-        cands += detect_breakout(closes, highs, lows, atr_val)
-    else:
-        cands += detect_sweep_reclaim(closes, highs, lows, atr_val, levels)
-        cands += detect_momentum_pullback(closes, highs, lows, atr_val, mom_dir)
-        cands += detect_compression_breakout(closes, highs, lows, atr_val)
-        cands += detect_chart_patterns(closes, highs, lows)
+    if not is_trend:
+        cands += detect_sweep_reclaim(closes, highs, lows, atr_val, levels,
+                                      opens=[b['o'] for b in bars])
+    # Research candidate: intraday breakout need not wait for a 20-day regime,
+    # but MUST agree with confirmed H4 direction. No real-money approval implied.
+    for p in detect_breakout(closes, highs, lows, atr_val):
+        want = 'UP' if p['dir'] == 'BUY' else 'DOWN'
+        if s4['confirmed'] and s4['trend'] == want:
+            cands.append(p)
+        else:
+            log.info('H4_DIRECTION_BLOCK breakout %s h4=%s', p['dir'], s4['trend'])
+    for p in cands:
+        p['regime'] = regime_lbl
+        p['signal_bar_t'] = bars[-2]['t']
+        p['session'] = session
 
     # [EXHAUSTION GUARD 12/06/2026] dung chung helper voi forex_notifier:
     # lenh thuan-move trong vung kiet (D1 RSI cuc doan + move > pctl 85) chi
@@ -1608,11 +1341,6 @@ def main():
 
     # [TRAM 3] Cau truc BOS/CHoCH (13/06/2026 — thay fx.h4_trend max-cua-so):
     # H1 cho sweep/mean-reversion, H4 cho trend setup. SL/TP dong + tuong so tron.
-    s1 = market_structure(closes[:-1], highs[:-1], lows[:-1], k=SWING_K)
-    h4_c, h4_h, h4_l = fx.resample_to_h4(closes, highs, lows)
-    s4 = market_structure(h4_c, h4_h, h4_l, k=SWING_K_H4)
-    print(f"[PA] Cau truc H1: {s1['trend']} conf={s1['confirmed']} | "
-          f"H4: {s4['trend']} conf={s4['confirmed']}")
     dxy = fetch_dxy_bars()
     dxy_div, dxy_note = dxy_divergence(highs, lows, dxy)
 
@@ -1665,6 +1393,13 @@ def main():
         return
 
     best = max(final, key=lambda p: (p['stars'], p['setup'] == 'sweep_reclaim'))
+    if any(r.get('signal_bar_t') == best['signal_bar_t'] and r['setup'] == best['setup']
+           and r['dir'] == best['dir'] for r in state.get('signals', [])):
+        log.info('DUPLICATE_SETUP_BAR')
+        save_state(state)
+        return
+    record = ledger.new_record(best, now.timestamp(), cached['source'],
+                               policy=EXIT_POLICY, cost_price=PAPER_COST_PRICE)
     try:
         result = send_signal(best, session_lbl, now)
     except Exception as e:
@@ -1675,17 +1410,7 @@ def main():
         cds[f"{best['setup']}|{best['dir']}"] = now.timestamp()
         state['cooldowns'] = cds
         state['day_count'] = {'date': today, 'n': n_today + 1}
-        state.setdefault('signals', []).append({
-            'ts': now.timestamp(), 'date': today, 'session': session,
-            'setup': best['setup'], 'dir': best['dir'],
-            'entry': best['entry'], 'sl': best['sl'],
-            'tp1': best['tp1'], 'tp2': best['tp2'], 'stars': best['stars'],
-            'entry_type': best.get('entry_type', 'market'),
-            'danger': best.get('danger', False), 'capit': best.get('capit', False),
-            'probe': best.get('probe', False), 'align': best.get('align'),
-            'add_trigger': best.get('add_trigger'),
-            'sl_dist_atr': best.get('sl_dist_atr'),
-        })
+        state.setdefault('signals', []).append(record)
         log.info(f"SENT {best['setup']} {best['dir']} stars={best['stars']} "
                  f"type={best.get('entry_type', 'market')} "
                  f"entry={best['entry']:.2f} sl={best['sl']:.2f} "
@@ -1707,7 +1432,7 @@ def main():
                 note=f"{best['setup']} {best['dir']} {best['stars']}/5 sao | phien {session}")
             if cpath:
                 pr = send_photo(cpath,
-                                caption=f"🥇 Chart: {best['setup']} {best['dir']} — "
+                                caption=f"PAPER Chart: {best['setup']} {best['dir']} — "
                                         f"vùng cản/KC + setup đánh dấu trên nến H1",
                                 reply_to=result.get('result', {}).get('message_id'))
                 log.info('CHART_SENT' if pr.get('ok') else f'CHART_TG_FAIL {pr}')

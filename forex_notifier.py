@@ -16,6 +16,7 @@ from datetime import datetime, timezone, timedelta
 import requests
 import yfinance as yf
 import pandas as pd
+from market_data import DATA_VERSION, DataQualityError, parse_twelve, validate_bars, usable_cache
 
 # ── Cau hinh ──────────────────────────────────────────────────
 # parent = cloud_notifier/ locally va repo root trong GitHub Actions
@@ -196,7 +197,13 @@ def load_price_history():
     if os.path.exists(PRICE_HISTORY_FILE):
         try:
             with open(PRICE_HISTORY_FILE, encoding='utf-8') as f:
-                _price_history = json.load(f)
+                raw = json.load(f)
+            # Legacy timestamps lack provenance. Preserve them in Git history,
+            # never merge them into the new UTC stream or guess a fixed offset.
+            now_ts = time.time()
+            _price_history = {k: v for k, v in raw.items() if usable_cache(v, now_ts)}
+            if len(_price_history) != len(raw):
+                _log.warning('LEGACY_CACHE_QUARANTINED symbols=%s', sorted(set(raw) - set(_price_history)))
             total = sum(len(v.get('bars', [])) for v in _price_history.values())
             print(f'  [History] {len(_price_history)} cap, {total} bars (toi da {MAX_HISTORY_BARS}/cap)')
         except Exception as e:
@@ -224,63 +231,74 @@ def _merge_bars(old_bars, new_bars):
         by_ts[b['t']] = b
     return sorted(by_ts.values(), key=lambda x: x['t'])[-MAX_HISTORY_BARS:]
 
-def fetch_ohlcv(sym, yf_sym, outputsize=500):
-    """
-    Lay OHLCV H1: uu tien Twelve Data (chat luong cao),
-    fallback yfinance khi chua co API key hoac het quota.
-    Tra ve: (closes, highs, lows, timestamps) — timestamps la list unix int (UTC).
-    Twelve Data free: 800 req/ngay — 14 cap × 48 lan/ngay = 672 req (trong quota free).
-    """
-    if TWELVE_DATA_KEY:
-        td_sym = TWELVE_DATA_SYMBOLS.get(sym)
-        if td_sym:
-            try:
-                r = requests.get(
-                    'https://api.twelvedata.com/time_series',
-                    params={
-                        'symbol': td_sym, 'interval': '1h',
-                        'outputsize': outputsize, 'apikey': TWELVE_DATA_KEY,
-                    },
-                    timeout=15,
-                )
-                data = r.json()
-                if data.get('status') != 'error' and 'values' in data:
-                    vals = list(reversed(data['values']))  # Newest-first → chronological
-                    if len(vals) >= 60:
-                        closes     = [float(v['close'])    for v in vals]
-                        highs      = [float(v['high'])     for v in vals]
-                        lows       = [float(v['low'])      for v in vals]
-                        timestamps = []
-                        for v in vals:
-                            try:
-                                dt = datetime.strptime(v['datetime'], '%Y-%m-%d %H:%M:%S')
-                                timestamps.append(int(dt.replace(tzinfo=timezone.utc).timestamp()))
-                            except Exception:
-                                timestamps.append(0)
-                        return closes, highs, lows, timestamps
-                else:
-                    print(f'  Twelve Data: {data.get("message", "unknown error")} ({sym})')
-            except Exception as e:
-                print(f'  Twelve Data loi {sym}: {e}')
-    # Fallback: yfinance
+_last_fetch = {}
+
+
+def fetch_twelve_bars(sym, *, interval='1h', outputsize=720, start_date=None, end_date=None):
+    if not TWELVE_DATA_KEY:
+        raise DataQualityError('Twelve Data key unavailable')
+    params = {'symbol': sym, 'interval': interval, 'outputsize': outputsize,
+              'apikey': TWELVE_DATA_KEY, 'timezone': 'UTC', 'order': 'asc'}
+    if start_date:
+        params['start_date'] = start_date
+    if end_date:
+        params['end_date'] = end_date
     try:
-        df = yf.Ticker(yf_sym).history(period='60d', interval='1h')
-        if df is None or len(df) < 60:
+        r = requests.get('https://api.twelvedata.com/time_series', params=params, timeout=30)
+        # Never print request exceptions/URLs: query string contains an API key.
+        if r.status_code != 200:
+            raise DataQualityError(f'provider HTTP {r.status_code}')
+        data = r.json()
+    except requests.RequestException:
+        raise DataQualityError('provider transport failure') from None
+    if 'values' not in data:
+        raise DataQualityError(f'provider returned no candles (code={data.get("code", "unknown")})')
+    seconds = {'1h': 3600, '1min': 60}[interval]
+    bars = parse_twelve(data, time.time(), interval=seconds)
+    return bars, {'data_version': DATA_VERSION, 'source': f'twelvedata:{sym}',
+                  'timezone': 'UTC', 'provider_timezone': data.get('meta', {}).get('exchange_timezone'),
+                  'fetched_at': time.time(), 'interval_seconds': seconds}
+
+
+def cache_last_fetch(sym):
+    fresh = _last_fetch.get(sym)
+    if not fresh:
+        raise DataQualityError('no validated fetch to cache')
+    old = _price_history.get(sym, {})
+    same_source = old.get('data_version') == DATA_VERSION and old.get('source') == fresh['source']
+    bars = _merge_bars(old.get('bars', []) if same_source else [], fresh['bars'])
+    _price_history[sym] = {**fresh, 'bars': bars}
+
+
+def fetch_ohlcv(sym, yf_sym, outputsize=720):
+    """UTC H1 data; XAU spot MUST NOT silently fall back to gold futures."""
+    _last_fetch.pop(sym, None)
+    if sym in TWELVE_DATA_SYMBOLS and TWELVE_DATA_KEY:
+        try:
+            bars, meta = fetch_twelve_bars(sym, outputsize=outputsize)
+            _last_fetch[sym] = {**meta, 'bars': bars}
+            return tuple([b[k] for b in bars] for k in ('c', 'h', 'l', 't'))
+        except DataQualityError as exc:
+            _log.warning('[%s] DATA_REJECTED %s', sym, exc)
+            # Bad temporal evidence is never repaired by changing instrument.
             return None, None, None, None
-        idx    = df.index
-        closes = list(df['Close'].dropna())
-        highs  = list(df['High'].dropna())
-        lows   = list(df['Low'].dropna())
-        # Convert index to unix timestamps (UTC)
-        if hasattr(idx, 'tz') and idx.tz is not None:
-            timestamps = [int(ts.timestamp()) for ts in idx]
-        else:
-            timestamps = [int(pd.Timestamp(ts, tz='UTC').timestamp()) for ts in idx]
-        n = min(len(closes), len(highs), len(lows), len(timestamps))
-        return closes[:n], highs[:n], lows[:n], timestamps[:n]
-    except Exception as e:
-        print(f'  yfinance loi {sym}: {e}')
+    if sym == 'XAU/USD':
+        _log.warning('[XAU/USD] DATA_REJECTED spot feed unavailable; futures fallback disabled')
         return None, None, None, None
+    try:
+        df = yf.Ticker(yf_sym).history(period='60d', interval='1h').dropna(subset=['Open', 'High', 'Low', 'Close'])
+        if df.index.tz is None:
+            raise DataQualityError('Yahoo timestamps missing timezone')
+        bars = [{'t': int(t.timestamp()), 'o': float(row['Open']), 'h': float(row['High']),
+                 'l': float(row['Low']), 'c': float(row['Close'])} for t, row in df.iterrows()]
+        bars = validate_bars(bars, time.time())
+        _last_fetch[sym] = {'data_version': DATA_VERSION, 'source': f'yahoo:{yf_sym}',
+                            'timezone': 'UTC', 'fetched_at': time.time(), 'bars': bars}
+        return tuple([b[k] for b in bars] for k in ('c', 'h', 'l', 't'))
+    except Exception:
+        _log.warning('[%s] DATA_REJECTED Yahoo fetch/validation failed', sym)
+        return None, None, None, None
+
 
 # ── Indicator co ban ─────────────────────────────────────────
 def ema(values, period):
@@ -1896,11 +1914,7 @@ def analyze(sym, yf_sym, now=None, state=None):
             return None
 
         # Merge vao lich su tich luy va lay long series de phan tich
-        new_bars = [{'t': t, 'c': c, 'h': h, 'l': l}
-                    for t, c, h, l in zip(timestamps, closes, highs, lows)]
-        if sym not in _price_history:
-            _price_history[sym] = {'bars': []}
-        _price_history[sym]['bars'] = _merge_bars(_price_history[sym].get('bars', []), new_bars)
+        cache_last_fetch(sym)
 
         long_bars   = _price_history[sym]['bars']
         long_closes = [b['c'] for b in long_bars]
@@ -2895,6 +2909,17 @@ def main():
     _d1_cache = {}   # Reset D1 cache moi phien (du lieu fresh)
     print('=== Tai lich su gia ===')
     load_price_history()
+
+    if SILENT_VOTE:
+        for sym, yf_sym in SYMBOLS.items():
+            closes, _, _, _ = fetch_ohlcv(sym, yf_sym)
+            if closes:
+                cache_last_fetch(sym)
+        save_price_history()
+        state['audit_status'] = 'legacy_unverified_scoring_suspended'
+        save_state(state)
+        print('[Recovery] UTC ingestion only; vote scoring and notifications suspended')
+        return
 
     # Buoc 1: fetch intermarket + fundamental 1 lan cho ca phien
     print('=== Lay du lieu lien thi truong (DXY, Oil) ===')
