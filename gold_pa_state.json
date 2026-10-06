@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791287131.9478054,
+    "ts": 1791288038.635821,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791287040
+    "latest_bar_t": 1791287940
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 0.23,
+    "days": 0.24,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791287131.956111,
+    "cutoff": 1791288038.638091,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -3330,7 +3330,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.9976460162202072,
+        "mfe_r": 1.2151091125480078,
         "mae_r": 0.20370542696365557,
         "events": [
           {
@@ -3340,7 +3340,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791287040,
+        "last_bar_t": 1791287940,
         "initial_risk": 13.16356682278456,
         "active_sl": 4145.793903177216,
         "filled_ts": 1791284520,
