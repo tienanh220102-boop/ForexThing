@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791289840.0747814,
+    "ts": 1791290740.882911,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791289740
+    "latest_bar_t": 1791290640
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 0.26,
+    "days": 0.28,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791289840.776399,
+    "cutoff": 1791290741.575934,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2204,11 +2204,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791289840.077943,
+    "fetched_at": 1791290740.885674,
     "coverage_start": 1791086400.0,
     "coverage_end": 1791691200.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "e3e4dc7a4352f79b34527db570ae19a8384b4615611cd087e1eed5362af2b3f5",
+    "sha256": "619f1e9c70c28750d13640d98030bccfc2c0984f59a2f7f68386d6f4da83d1f5",
     "events": [
       {
         "title": "OPEC-JMMC Meetings",
@@ -2399,13 +2399,13 @@
       {
         "title": "ADP Weekly Employment Change",
         "currency": "USD",
-        "ts": 1791288900.0,
+        "ts": 1791288840.0,
         "impact": "low"
       },
       {
         "title": "ADP Weekly Employment Change",
         "currency": "USD",
-        "ts": 1791288960.0,
+        "ts": 1791288900.0,
         "impact": "low"
       },
       {
@@ -2707,7 +2707,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791289840.216389,
+    "checked_at": 1791290741.119805,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -3350,7 +3350,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791289740,
+        "last_bar_t": 1791290640,
         "initial_risk": 13.16356682278456,
         "active_sl": 4145.793903177216,
         "filled_ts": 1791284520,
@@ -3983,7 +3983,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.06069909101197063,
-        "mae_r": 0.13574633161373656,
+        "mae_r": 0.29991511178856617,
         "events": [
           {
             "type": "FILL",
@@ -3992,7 +3992,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791289740,
+        "last_bar_t": 1791290640,
         "initial_risk": 24.648474549728235,
         "active_sl": 4153.0596654502715,
         "filled_ts": 1791288960,
