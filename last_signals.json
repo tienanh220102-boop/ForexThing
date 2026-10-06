@@ -9281,5 +9281,6 @@
   "XAU/USD|SELL|entry": 4137.61294,
   "USD/JPY|BUY|entry": 157.86095,
   "EUR/USD|BUY|entry": 1.12633,
-  "USD/JPY|SELL|entry": 157.43192
+  "USD/JPY|SELL|entry": 157.43192,
+  "audit_status": "legacy_unverified_scoring_suspended"
 }
