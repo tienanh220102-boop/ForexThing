@@ -14,6 +14,7 @@ import numpy as np
 from datetime import datetime, timezone, timedelta
 
 import requests
+import news_calendar
 import yfinance as yf
 import pandas as pd
 from market_data import DATA_VERSION, DataQualityError, parse_twelve, validate_bars, usable_cache
@@ -1618,7 +1619,7 @@ def _fetch_rss_headlines(url):
 def fetch_fundamental(now):
     """
     Tai 3 nguon du lieu co ban, cache lai cho toan bo phien:
-      1. Economic Calendar (Twelve Data) — su kien high/medium-impact hom nay
+      1. Verified weekly macro calendar — fail closed if unavailable or stale
       2. News Sentiment (RSS Reuters + FXStreet) — xu huong tin tuc moi nhat
       3. Fear & Greed Index (CNN) — tram thai cam xuc thi truong (0-100)
     """
@@ -1628,46 +1629,9 @@ def fetch_fundamental(now):
 
     print('  [Fundamental] Dang tai: Calendar / Sentiment / Fear&Greed ...')
 
-    # --- 1. Economic Calendar (Twelve Data) ---
-    calendar_events = []
-    if TWELVE_DATA_KEY:
-        try:
-            date_str = now.strftime('%Y-%m-%d')
-            r = requests.get(
-                'https://api.twelvedata.com/economic_calendar',
-                params={
-                    'start_date': f'{date_str} 00:00:00',
-                    'end_date':   f'{date_str} 23:59:59',
-                    'importance': 'high,medium',
-                    'apikey':     TWELVE_DATA_KEY,
-                },
-                timeout=10
-            )
-            # Twelve Data doi khi tra ve JSON bi hong (null prefix, double-object...)
-            # Dung text parse truc tiep, fallback sang {} neu loi
-            try:
-                raw_data = r.json()
-            except Exception:
-                import re as _re
-                m = _re.search(r'\{.*\}', r.text, _re.DOTALL)
-                raw_data = json.loads(m.group()) if m else {}
-            events_list = raw_data.get('result', {}).get('list', []) if isinstance(raw_data, dict) else []
-            for ev in events_list:
-                try:
-                    ev_dt = datetime.strptime(
-                        f'{ev.get("date","")} {ev.get("time","00:00:00")}',
-                        '%Y-%m-%d %H:%M:%S'
-                    ).replace(tzinfo=timezone.utc)
-                    calendar_events.append({
-                        'title':      ev.get('event', ''),
-                        'country':    ev.get('country', ''),
-                        'datetime':   ev_dt,
-                        'importance': ev.get('importance', 'low').lower(),
-                    })
-                except Exception:
-                    pass
-        except Exception as e:
-            print(f'  [Fundamental] Calendar loi: {e}')
+    # --- 1. Verified macro calendar (UNKNOWN is never treated as empty) ---
+    calendar_snapshot = news_calendar.fetch(now.timestamp())
+    calendar_events = calendar_snapshot.get('events', [])
 
     # --- 2. News Sentiment (RSS) ---
     headlines = []
@@ -1745,6 +1709,7 @@ def fetch_fundamental(now):
 
     _fundamental_cache = {
         'calendar':   calendar_events,
+        'calendar_snapshot': calendar_snapshot,
         'sentiment':  currency_sentiment,
         'fear_greed': fear_greed,
         'n_headlines': len(headlines),
@@ -1756,27 +1721,7 @@ def fetch_fundamental(now):
 
 
 def check_calendar(fund, sym, now):
-    """
-    Kiem tra lich kinh te co anh huong den cap tien khong.
-    Tra ve: ('HARD', reason) | ('SOFT', reason) | ('PASS', '')
-      HARD: su kien high-impact trong 60p → block hoan toan
-      SOFT: su kien medium-impact trong 30p → can them 1 vote
-    """
-    try:
-        base, quote = sym.split('/')
-    except ValueError:
-        return 'PASS', ''
-    relevant = {_CURRENCY_COUNTRY.get(base[:3], ''), _CURRENCY_COUNTRY.get(quote[:3], '')} - {''}
-    for ev in fund.get('calendar', []):
-        if ev['country'] not in relevant:
-            continue
-        mins = (ev['datetime'] - now).total_seconds() / 60
-        if ev['importance'] == 'high' and -15 <= mins <= 60:
-            direction = 'vua qua' if mins < 0 else f'con {int(mins)}p'
-            return 'HARD', f'{ev["title"]} ({ev["country"]}, {direction})'
-        if ev['importance'] == 'medium' and 0 <= mins <= 30:
-            return 'SOFT', f'{ev["title"]} ({ev["country"]}, con {int(mins)}p)'
-    return 'PASS', ''
+    return news_calendar.evaluate(fund.get('calendar_snapshot'),now.timestamp(),sym)
 
 
 def get_sentiment_score(fund, sym):
@@ -1946,7 +1891,7 @@ def analyze(sym, yf_sym, now=None, state=None):
         # [TANG 1 — FUNDAMENTAL] Economic Calendar: block truoc khi tinh toan nang
         fund = fetch_fundamental(now)
         cal_status, cal_reason = check_calendar(fund, sym, now)
-        if cal_status == 'HARD':
+        if cal_status in ('HARD', 'UNKNOWN'):
             print(f'  [D] Calendar HARD block: {cal_reason}')
             _log.info(f'[{sym}] BLOCKED calendar_hard {cal_reason}')
             return None

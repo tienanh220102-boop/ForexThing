@@ -48,6 +48,8 @@ def new_record(order, ts, source, *, policy='tp1_full', cost_price=0.4, executio
                 'analysis_entry', 'target_wall'):
         if key in order:
             rec[key] = order[key]
+    if 'calendar_valid_until' in order:
+        rec['calendar_valid_until']=order['calendar_valid_until']
     model = dict(execution or {})
     model['pricing'] = 'synthetic_bid_ask' if execution is not None else 'source_cost_allowance'
     for key in ('spread', 'slippage', 'delay_seconds'):
@@ -60,7 +62,7 @@ def new_record(order, ts, source, *, policy='tp1_full', cost_price=0.4, executio
                 'entry_type': order.get('entry_type', 'market'), 'entry_ref': order['entry'],
                 'status': 'PENDING', 'policy': policy, 'cost_price': cost_price,
                 'not_before': (int(ts + model['delay_seconds']) // 60 + 1) * 60,
-                'expires_at': ts + order.get('limit_ttl', 6 * 3600), 'execution': model,
+                'expires_at': min(ts + order.get('limit_ttl', 6 * 3600),order.get('calendar_valid_until',math.inf)), 'execution': model,
                 'remaining': 1.0, 'realized_r': 0.0, 'mfe_r': 0.0, 'mae_r': 0.0,
                 'events': []})
     if rec['dir'] not in ('BUY', 'SELL') or not valid_geometry(rec):

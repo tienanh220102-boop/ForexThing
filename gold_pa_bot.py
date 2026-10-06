@@ -45,6 +45,10 @@ from pathlib import Path
 
 import yfinance as yf
 import execution_rules as entry_rules
+import news_calendar
+import pa_controls as controls
+import pa_observations as observations
+import hashlib
 
 # Tai su dung INGESTION + BROADCASTER + primitives tu he thong chinh.
 # Import forex_notifier chi chay phan setup module-level (logging/dir) —
@@ -269,6 +273,10 @@ def load_state():
 
 
 def save_state(state):
+    observations.summarize(state)
+    state['portfolio'] = controls.portfolio(state)
+    if state.get('forward_studies'):
+        controls.study(state, datetime.now(timezone.utc).timestamp(), controls.configuration_hash(_ROOT))
     temp = STATE_FILE + '.tmp'
     with open(temp, 'w', encoding='utf-8') as f:
         json.dump(state, f, indent=2, ensure_ascii=False)
@@ -994,8 +1002,9 @@ def grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge=None):
 # ── Tracking ket qua (first-touch, SL truoc TP trong cung nen) ──
 def resolve_signals(state, now, bars=None):
     active = [r for r in state.get('signals', []) if not r.get('outcome')]
+    shadow_active = any(o.get('shadow') and not o['shadow'].get('outcome') for o in state.get('observations',[]))
     try:
-        execution, meta = fx.fetch_twelve_bars(SYM, interval='1min', outputsize=5000 if active else 2)
+        execution, meta = fx.fetch_twelve_bars(SYM, interval='1min', outputsize=5000 if active or shadow_active else 2)
         if not execution or not 0 <= meta['fetched_at'] - execution[-1]['t'] < 180:
             raise DataQualityError('M1 feed is stale')
     except DataQualityError as exc:
@@ -1010,6 +1019,7 @@ def resolve_signals(state, now, bars=None):
             closed += 1
             log.info('PAPER_RESOLVED %s %s outcome=%s net_r=%s',
                      rec['setup'], rec['dir'], rec['outcome'], rec.get('net_r'))
+    observations.resolve(state, execution, now.timestamp(), meta['source'])
     # Historical gaps disqualify those records, not every future paper idea.
     # Current health is established by a NEW successful M1 fetch on every run.
     state['data_health'] = {'ok': True, 'ts': meta['fetched_at'],
@@ -1139,7 +1149,7 @@ def send_weekly(state, now):
         state['last_weekly'] = now.timestamp()
 
 
-def deliver_paper_order(order, session_lbl, source, analysis_ts):
+def deliver_paper_order(order, session_lbl, source, analysis_ts, calendar=None, study_ends_at=None):
     if order.get('rule_version'):
         quotes, meta = fx.fetch_twelve_bars(SYM, interval='1min', outputsize=2)
         checked = datetime.now(timezone.utc).timestamp()
@@ -1152,6 +1162,19 @@ def deliver_paper_order(order, session_lbl, source, analysis_ts):
             return {'ok': False, 'entry_rejected': reason}, None
         order.clear(); order.update(prepared)
     issued_at = datetime.now(timezone.utc)
+    if study_ends_at is not None and issued_at.timestamp() >= study_ends_at:
+        return {'ok':False,'entry_rejected':'STUDY_REVIEW_DUE'}, None
+    if calendar is not None:
+        cal_status, cal_reason = news_calendar.evaluate(calendar, issued_at.timestamp(), SYM)
+        if cal_status in ('HARD','UNKNOWN'):
+            return {'ok':False,'entry_rejected':'CALENDAR_'+cal_status}, None
+        deadlines=[e['ts']-3600 for e in calendar['events'] if e['currency'] in ('USD','ALL')
+                   and e['impact']=='high' and e['ts']-3600>issued_at.timestamp()]
+        # Do not retrospectively renew pending orders with a later snapshot.
+        order['calendar_valid_until']=min([calendar['coverage_end']-3600,
+                                           calendar['fetched_at']+news_calendar.TTL]+deadlines)
+    if study_ends_at is not None:
+        order['calendar_valid_until']=min(order.get('calendar_valid_until',float('inf')),study_ends_at)
     ledger.new_record(order, issued_at.timestamp(), source,
                       policy=EXIT_POLICY, cost_price=PAPER_COST_PRICE)
     result = send_signal(order, session_lbl, issued_at)
@@ -1161,6 +1184,7 @@ def deliver_paper_order(order, session_lbl, source, analysis_ts):
     record = ledger.new_record(order, delivered_at.timestamp(), source,
                                policy=EXIT_POLICY, cost_price=PAPER_COST_PRICE)
     record['analysis_ts'] = analysis_ts
+    record['issued_at'] = issued_at.timestamp()
     record['message_id'] = result.get('result', {}).get('message_id')
     return result, record
 
@@ -1175,6 +1199,7 @@ def main():
 
     now = datetime.now(timezone.utc)
     state = load_state()
+    study_id=controls.study(state,now.timestamp(),controls.configuration_hash(_ROOT))
     state['entry_rules'] = {'version': entry_rules.RULE_VERSION,
                             'max_signal_age_seconds': entry_rules.MAX_SIGNAL_AGE,
                             'min_net_rr': dict(entry_rules.MIN_NET_RR),
@@ -1235,10 +1260,11 @@ def main():
         print('[PA] Chua du du lieu — thoat')
         save_state(state)
         return
+    run_blocks=[]
     if state.get('monitor', {}).get('review_required'):
-        log.warning('NEW_ENTRIES_BLOCKED review_required')
-        save_state(state)
-        return
+        run_blocks.append('MONITOR_REVIEW')
+    if state.get('audit_capacity_reached'):
+        run_blocks.append('AUDIT_CAPACITY')
 
     # Thi truong dong (cuoi tuan/holiday): nen cuoi dong bang → cung 1 nen
     # sweep cu se duoc detect lai sau khi cooldown het han = lenh ao lap lai.
@@ -1274,22 +1300,15 @@ def main():
     allowed = set(_SESSION_ALLOWED[session])
     if session != 'OFF':
         allowed.add('breakout')  # paper candidate; direction must pass H4 below
-    if not allowed:
-        print(f'[PA] Phien {session} — khong quet keo moi')
-        save_state(state)
-        return
-
-    # [TRAM 1] News filter — high-impact USD → khoa Brain hoan toan
-    try:
-        fund = fx.fetch_fundamental(now)
-        cal_status, cal_reason = fx.check_calendar(fund, SYM, now)
-        if cal_status == 'HARD':
-            print(f'[PA] News block: {cal_reason}')
-            log.info(f'NEWS_BLOCK {cal_reason}')
-            save_state(state)
-            return
-    except Exception as e:
-        log.info(f'NEWS_CHECK_FAIL {e}')
+    # Calendar absence is UNKNOWN, never an empty-safe day. Detection still
+    # runs for observations, but no blocked candidate can be delivered.
+    state['calendar_snapshot']=news_calendar.fetch(datetime.now(timezone.utc).timestamp(),state.get('calendar_snapshot'))
+    cal_status,cal_reason=news_calendar.evaluate(state['calendar_snapshot'],datetime.now(timezone.utc).timestamp(),SYM)
+    state['calendar_health']={'status':cal_status,'reason':cal_reason,
+                              'checked_at':datetime.now(timezone.utc).timestamp(),'source':news_calendar.URL}
+    if cal_status in ('UNKNOWN','HARD'):
+        run_blocks.append('CALENDAR_'+cal_status)
+        log.warning('NEW_ENTRIES_BLOCKED calendar=%s reason=%s',cal_status,cal_reason)
 
     # [BRAIN] momentum regime (insight 3) — luu state de pullback dung lai
     mom_now = detect_momentum(closes, highs, lows)
@@ -1319,18 +1338,32 @@ def main():
     h4 = closed_h4(bars, now.timestamp())
     s4 = market_structure([b['c'] for b in h4], [b['h'] for b in h4],
                           [b['l'] for b in h4], k=SWING_K_H4)
-    cands = []
-    if not is_trend:
-        cands += detect_sweep_reclaim(closes, highs, lows, atr_val, levels,
-                                      opens=[b['o'] for b in bars])
+    context={'source':cached['source'],'data_fetched_at':cached.get('fetched_at'),
+             'bars_sha256':hashlib.sha256(json.dumps(bars,sort_keys=True).encode()).hexdigest(),
+             'rule_version':entry_rules.RULE_VERSION,'study_id':study_id,'atr':atr_val,
+             'h1':s1,'h4':s4,'calendar':dict(state['calendar_snapshot']),'regime':regime_lbl}
+    def audit(p,reason):
+        raw=dict(p)
+        if 'sl' not in raw:
+            built=build_order(raw,atr_val,psych)
+            raw=built if built is not None else raw
+        return observations.observe(state,raw,reason,datetime.now(timezone.utc).timestamp(),cached['source'],context)
+    raw_candidates=detect_sweep_reclaim(closes,highs,lows,atr_val,levels,opens=[b['o'] for b in bars])
+    raw_candidates += detect_breakout(closes,highs,lows,atr_val)
+    cands=[]
     # Research candidate: intraday breakout need not wait for a 20-day regime,
     # but MUST agree with confirmed H4 direction. No real-money approval implied.
-    for p in detect_breakout(closes, highs, lows, atr_val):
+    for p in raw_candidates:
+        p.update(regime=regime_lbl,signal_bar_t=bars[-2]['t'],session=session)
+        if run_blocks:
+            audit(p,run_blocks[0]);continue
+        if p['setup']=='sweep_reclaim' and is_trend:
+            audit(p,'DAILY_REGIME');continue
         want = 'UP' if p['dir'] == 'BUY' else 'DOWN'
-        if s4['confirmed'] and s4['trend'] == want:
-            cands.append(p)
-        else:
+        if p['setup']=='breakout' and not (s4['confirmed'] and s4['trend']==want):
             log.info('H4_DIRECTION_BLOCK breakout %s h4=%s', p['dir'], s4['trend'])
+            audit(p,'H4_DIRECTION');continue
+        cands.append(p)
     for p in cands:
         p['regime'] = regime_lbl
         p['signal_bar_t'] = bars[-2]['t']
@@ -1365,20 +1398,24 @@ def main():
     filtered = []
     for p in cands:
         if p['setup'] not in allowed:
+            audit(p,'SESSION_SKIP')
             log.info(f"SESSION_SKIP {p['setup']} {p['dir']} session={session}")
             continue
         # [BIAS] veto mem: bo lenh nguoc huong user cung cap (SIDE/OFF = khong loc)
         if (BIAS == 'UP' and p['dir'] == 'SELL') or (BIAS == 'DOWN' and p['dir'] == 'BUY'):
+            audit(p,'BIAS_VETO')
             print(f"[PA] {p['setup']} {p['dir']} nguoc BIAS={BIAS} — bo (veto thu cong)")
             log.info(f"BIAS_VETO {p['setup']} {p['dir']} bias={BIAS}")
             continue
         if mom_dir and p['setup'] != 'momentum_pullback':
             want = 'BULL' if p['dir'] == 'BUY' else 'BEAR'
             if want != mom_dir:
+                audit(p,'MOMENTUM_BLOCK')
                 print(f"[PA] {p['setup']} {p['dir']} nguoc momentum {mom_dir} — khoa")
                 log.info(f"MOMENTUM_BLOCK {p['setup']} {p['dir']} regime={mom_dir}")
                 continue
         if p['dir'] in ta_recent:
+            audit(p,'CROSS_SYSTEM_DUPLICATE')
             _age = (now.timestamp() - ta_recent[p['dir']]) / 3600
             print(f"[PA] {p['setup']} {p['dir']} — TA da gui XAU {p['dir']} {_age:.1f}h truoc, nhuong")
             log.info(f"CROSS_DUP {p['setup']} {p['dir']} ta_sent={_age:.1f}h")
@@ -1428,12 +1465,16 @@ def main():
                                 and p.get('level_strength', 0) >= 3
                                 and 0 <= now.hour < 7
                                 and not p.get('probe') and not p.get('danger'))
+        raw=dict(p)
         p = build_order(p, atr_val, psych)
         if p is None:
+            audit(raw,'INVALID_ORDER_GEOMETRY')
             log.info('SL_TOO_WIDE skip')
             continue
+        baseline=dict(p)
         p, reason = entry_rules.prepare(p, atr_val, (s1, s4), cost=PAPER_COST_PRICE)
         if reason:
+            audit(baseline,reason)
             log.info('ENTRY_REJECTED reason=%s', reason)
             continue
         ready.append(grade(p, mom_dir, s1, s4, dxy_div, dxy_note, session, knowledge))
@@ -1447,9 +1488,11 @@ def main():
     for p in ready:
         key = f"{p['setup']}|{p['dir']}"
         if (now.timestamp() - cds.get(key, 0)) / 3600 < COOLDOWN_H:
+            audit(p,'COOLDOWN')
             log.info(f'COOLDOWN {key}')
             continue
         if p['stars'] < MIN_STARS:
+            audit(p,'LOW_QUALITY')
             log.info(f"LOW_QUALITY {p['setup']} stars={p['stars']}")
             continue
         final.append(p)
@@ -1458,24 +1501,37 @@ def main():
         save_state(state)
         return
     if n_today >= DAILY_CAP:
+        for p in final:audit(p,'DAILY_CAP')
         print(f'[PA] Da du {DAILY_CAP} keo hom nay — dung')
         log.info(f'DAILY_CAP {n_today}')
         save_state(state)
         return
 
     best = max(final, key=lambda p: (p['stars'], p['setup'] == 'sweep_reclaim'))
+    for p in final:
+        if p is not best:audit(p,'NOT_SELECTED')
+    risk_reason=controls.admission(state,best)
+    if risk_reason:
+        audit(best,risk_reason);save_state(state);return
     if any(r.get('signal_bar_t') == best['signal_bar_t'] and r['setup'] == best['setup']
            and r['dir'] == best['dir'] for r in state.get('signals', [])):
+        audit(best,'DUPLICATE_SETUP_BAR')
         log.info('DUPLICATE_SETUP_BAR')
         save_state(state)
         return
     try:
-        result, record = deliver_paper_order(best, session_lbl, cached['source'], now.timestamp())
+        result, record = deliver_paper_order(best, session_lbl, cached['source'], now.timestamp(),
+                                             state['calendar_snapshot'],state['forward_studies'][-1]['ends_at'])
     except Exception as e:
+        audit(best,'DELIVERY_OR_QUOTE_FAILED')
         log.info(f'TELEGRAM_FAIL {e}')
         save_state(state)
         return
     if result.get('ok'):
+        observation_id=audit(best,'ACCEPTED')
+        record.update(observation_id=observation_id,study_id=study_id,risk_units=1.0,
+                      trade_id=f'{study_id.split(":")[1]}-{int(record["ts"]*1000)}',
+                      risk_scope='PA_PAPER_only')
         delivered_at = datetime.fromtimestamp(record['ts'], timezone.utc)
         cds[f"{best['setup']}|{best['dir']}"] = delivered_at.timestamp()
         state['cooldowns'] = cds
@@ -1510,7 +1566,8 @@ def main():
         except Exception as e:
             log.info(f'CHART_FAIL {e}')
     else:
-        print(f'[PA] Loi Telegram: {result}')
+        audit(best,result.get('entry_rejected','DELIVERY_FAILED'))
+        print(f'[PA] Khong phat: {result}')
     save_state(state)
 
 

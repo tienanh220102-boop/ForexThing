@@ -164,9 +164,20 @@ function renderResults(results) {
 function renderGoldPa(state) {
   const target = document.getElementById('gold-pa');
   const legacyCount = (state.legacy?.state?.signals || (state.ledger_version === 2 ? [] : state.signals) || []).length;
+  const calendar = state.calendar_health || {}, portfolio = state.portfolio || {}, study = state.forward_review || {};
+  const calendarStatus = !calendar.checked_at || Date.now()/1000-calendar.checked_at>900 ? 'STALE / CHƯA XÁC MINH' : calendar.status;
+  const observations = state.observation_summary || {};
   const notice = `<p><b>PA PAPER — chỉ mô phỏng, không giao dịch tiền thật.</b><br>
     Chốt toàn bộ tại TP1; chi phí giả lập 0,40 USD/oz/lệnh. Kiểm tra giá mới, khoảng lời sau phí và hiệu lực setup trước khi khớp.<br>
-    Limit mới hết hạn theo setup; lệnh hủy không tính là thua. ${legacyCount} tín hiệu cũ đã cách ly vì lỗi thời gian.</p>`;
+    Limit mới hết hạn theo setup và thời hạn lịch tin; lệnh hủy không tính là thua. ${legacyCount} tín hiệu cũ đã cách ly vì lỗi thời gian.</p>
+    <p>Lịch tin: <b>${esc(calendarStatus)}</b> — ${esc(calendar.reason || 'Chưa có dữ liệu')}.<br>
+    Kiểm tra lúc: ${calendar.checked_at ? esc(new Date(calendar.checked_at*1000).toLocaleString('vi-VN')) : '—'}.<br>
+    Lệnh đang giữ chỗ: ${esc(portfolio.active ?? '—')}/2; ngân sách PA PAPER: ${esc(portfolio.reserved_risk_units ?? '—')}/2 đơn vị. Không phản ánh tài khoản broker.<br>
+    Đợt đánh giá: ${esc(study.readiness || 'CHƯA BẮT ĐẦU')}, ${esc(study.days ?? 0)}/60 ngày,
+    ${esc(study.metrics?.n ?? 0)}/100 kết quả rõ. ${study.ends_at ? 'Mốc khóa: '+esc(new Date(study.ends_at*1000).toLocaleString('vi-VN'))+'.' : ''} Không tự bật tiền thật.</p>
+    <details><summary>${esc(observations.count ?? 0)} ứng viên đã ghi nhận, gồm cả tín hiệu bị bỏ qua</summary>
+    <p>Kết quả giả định từ lúc phát hiện, tách khỏi lệnh PAPER đã gửi; không phải bằng chứng một bộ lọc gây lỗ.</p>
+    ${Object.entries(observations.groups || {}).map(([reason,g])=>`<p>${esc(reason)}: ${esc(g.candidates)} ứng viên; ${esc(g.shadow_resolved)} kết quả giả định rõ; ${Number(g.shadow_net_r).toFixed(2)}R.</p>`).join('')}</details>`;
   const signals = (state.ledger_version === 2 ? state.signals || [] : []).slice(-15).reverse();
   if (!signals.length) {
     target.innerHTML = notice + '<span class="muted">Đang chờ tín hiệu PAPER dùng dữ liệu UTC đã kiểm tra.</span>';
@@ -181,7 +192,7 @@ function renderGoldPa(state) {
       </tr></thead>
       <tbody>${signals.map(s => `
         <tr>
-          <td>${esc(s.date || '—')}</td>
+          <td>${esc(s.date || '—')}<br><small>${esc(s.trade_id || '')}</small></td>
           <td>${esc(s.session || '—')}</td>
           <td>${esc(s.setup || '—')}</td>
           <td>${dirPill(s.dir)}</td>
