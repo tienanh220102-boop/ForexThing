@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791277240.2785249,
+    "ts": 1791278133.75227,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791277140
+    "latest_bar_t": 1791278040
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 0.12,
+    "days": 0.13,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791277240.27962,
+    "cutoff": 1791278133.817797,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2183,11 +2183,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791276083.697205,
+    "fetched_at": 1791278133.753441,
     "coverage_start": 1791086400.0,
     "coverage_end": 1791691200.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "7160d755ebf4c1b58d061fbc728dabb1212794e81e7e4ecad1e61c398f08ccae",
+    "sha256": "e3e4dc7a4352f79b34527db570ae19a8384b4615611cd087e1eed5362af2b3f5",
     "events": [
       {
         "title": "OPEC-JMMC Meetings",
@@ -2358,13 +2358,13 @@
         "impact": "low"
       },
       {
-        "title": "MPC Member Mann Speaks",
+        "title": "Housing Equity Withdrawal q/q",
         "currency": "GBP",
         "ts": 1791275400.0,
         "impact": "low"
       },
       {
-        "title": "Housing Equity Withdrawal q/q",
+        "title": "MPC Member Mann Speaks",
         "currency": "GBP",
         "ts": 1791275400.0,
         "impact": "low"
@@ -2686,7 +2686,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791276336.908828,
+    "checked_at": 1791278133.809594,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
