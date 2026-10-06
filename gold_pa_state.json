@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791320442.8119447,
+    "ts": 1791321339.5587811,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791320340
+    "latest_bar_t": 1791321240
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 0.62,
+    "days": 0.63,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791320442.813181,
+    "cutoff": 1791321339.733126,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2204,11 +2204,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791318671.638397,
+    "fetched_at": 1791321339.560161,
     "coverage_start": 1791086400.0,
     "coverage_end": 1791691200.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "31717877203178f263d9daf45febcc5aa129a2bfe0f9cd0cd8c5778f6672ed48",
+    "sha256": "8a8fcf42f3fdb1b9c0a2f382d3fe1fdc123c79dd0c82325dc46e4dba62d5095c",
     "events": [
       {
         "title": "OPEC-JMMC Meetings",
@@ -2707,7 +2707,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791319536.495392,
+    "checked_at": 1791321339.725124,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
