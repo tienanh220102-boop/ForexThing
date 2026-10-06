@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791262843.1227472,
+    "ts": 1791263317.156729,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791262740
+    "latest_bar_t": 1791263220
   },
   "monitor": {
     "n": 0,
@@ -2096,5 +2096,18 @@
     "review_required": false
   },
   "last_weekly": 1791261568.084622,
-  "last_learn": 1791261568.084622
+  "last_learn": 1791261568.084622,
+  "entry_rules": {
+    "version": "2026-10-06-entry-v3",
+    "max_signal_age_seconds": 2700,
+    "min_net_rr": {
+      "sweep_reclaim": 0.8,
+      "breakout": 1.2
+    },
+    "limit_ttl_seconds": {
+      "sweep_reclaim": 7200,
+      "breakout": 3600
+    },
+    "thresholds_status": "paper_hypotheses_not_optimized"
+  }
 }
