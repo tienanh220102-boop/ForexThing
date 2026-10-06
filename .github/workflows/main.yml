@@ -40,7 +40,7 @@ jobs:
 
       - name: Run Gold PA Bot (he Price Action doc lap cho XAU)
         env:
-          PA_MODE:         'paused'  # Resume in paper mode only after ledger/data repair.
+          PA_MODE:         'paper'  # Reviewed UTC ledger; simulated signals only.
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
           TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}

@@ -174,12 +174,19 @@ def main():
     ap.add_argument('--ref', default='2907543dd014c3b8ec8e1cd7c5d09d7488e5c9b5')
     ap.add_argument('--output', default='data/history_recovery')
     ap.add_argument('--offline', action='store_true')
+    ap.add_argument('--asof', help='Fixed UTC replay cutoff, e.g. 2026-10-06T04:00:00Z')
     args = ap.parse_args()
     out = Path(args.output); out.mkdir(parents=True, exist_ok=True)
     original = subprocess.check_output(['git', 'show', args.ref + ':gold_pa_state.json'])
     (out / 'original_state.json').write_bytes(original)
     state = json.loads(original); records = state['signals']
-    now_ts = time.time(); last_call = 0
+    now_ts = time.time()
+    if args.asof:
+        cutoff = datetime.fromisoformat(args.asof.replace('Z', '+00:00'))
+        if cutoff.tzinfo is None:
+            ap.error('--asof must include a timezone')
+        now_ts = cutoff.timestamp()
+    last_call = 0
 
     def fetch(start, end, interval):
         nonlocal last_call
