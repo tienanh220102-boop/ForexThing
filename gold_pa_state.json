@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791362735.545876,
+    "ts": 1791363645.5062304,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791362640
+    "latest_bar_t": 1791363540
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 1.11,
+    "days": 1.12,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791362736.306235,
+    "cutoff": 1791363645.509967,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2190,12 +2190,12 @@
       },
       "STALE_QUOTE": {
         "candidates": 3,
-        "shadow_resolved": 1,
-        "shadow_net_r": -1.0162281847987389,
+        "shadow_resolved": 2,
+        "shadow_net_r": -2.0668152345515773,
         "shadow_wins": 0,
         "evaluations": {
-          "SL": 1,
-          "OPEN": 2
+          "SL": 2,
+          "OPEN": 1
         },
         "later_accepted": 0
       }
@@ -4654,7 +4654,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.8344650225350785,
+        "mfe_r": 0.9633107911029458,
         "mae_r": 0.43621879903199956,
         "events": [
           {
@@ -4664,7 +4664,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791362640,
+        "last_bar_t": 1791363540,
         "initial_risk": 12.376037007070408,
         "active_sl": 4147.329257007071,
         "filled_ts": 1791349320,
@@ -5296,7 +5296,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.8859699847378659,
+        "mfe_r": 1.032785368870612,
         "mae_r": 0.5619311411448304,
         "events": [
           {
@@ -5306,7 +5306,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791362640,
+        "last_bar_t": 1791363540,
         "initial_risk": 10.86125959769015,
         "active_sl": 4145.10985959769,
         "filled_ts": 1791353760,
@@ -5932,7 +5932,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4132.78155,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791357360,
@@ -5943,25 +5943,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 1.0059222196589412,
-        "mae_r": 0.982911435402601,
+        "mae_r": 0.9910154807730187,
         "events": [
           {
             "type": "FILL",
             "ts": 1791357360,
             "price": 4132.39789
+          },
+          {
+            "type": "SL",
+            "ts": 1791363540,
+            "price": 4124.490727950536,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791362640,
+        "last_bar_t": 1791363480,
         "initial_risk": 7.907162049464205,
         "active_sl": 4124.490727950536,
         "filled_ts": 1791357360,
-        "timeout_at": 1791789360
+        "timeout_at": 1791789360,
+        "outcome": "SL",
+        "closed_ts": 1791363540,
+        "net_r": -1.0505870497528382,
+        "correct": false,
+        "pips": -83.0716
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     },
     {
       "id": "61a8a4a0b907a51fe4d0",
@@ -6594,7 +6605,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.6759093944418214,
+        "mfe_r": 0.8213221445588307,
         "mae_r": 0.11120345682784744,
         "events": [
           {
@@ -6604,7 +6615,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791362640,
+        "last_bar_t": 1791363540,
         "initial_risk": 10.96602601021732,
         "active_sl": 4143.003916010217,
         "filled_ts": 1791360960,
