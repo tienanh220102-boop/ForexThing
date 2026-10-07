@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791369933.1699915,
+    "ts": 1791370849.3798122,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791369780
+    "latest_bar_t": 1791370740
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 1.19,
+    "days": 1.2,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791369933.178214,
+    "cutoff": 1791370849.382843,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -7291,7 +7291,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791369780,
+        "last_bar_t": 1791370740,
         "initial_risk": 15.78947129520111,
         "active_sl": 4139.207851295201,
         "filled_ts": 1791364560,
@@ -7924,7 +7924,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.5072884926751949,
-        "mae_r": 0.16290500213872813,
+        "mae_r": 0.20650577763363093,
         "events": [
           {
             "type": "FILL",
@@ -7933,7 +7933,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791369780,
+        "last_bar_t": 1791370740,
         "initial_risk": 12.564684774115449,
         "active_sl": 4128.077324774115,
         "filled_ts": 1791368160,
