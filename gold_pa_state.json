@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791378933.8715088,
+    "ts": 1791379498.591071,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791378840
+    "latest_bar_t": 1791379380
   },
   "monitor": {
     "n": 0,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791378933.956161,
+    "cutoff": 1791379498.597033,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2185,7 +2185,7 @@
         "evaluations": {
           "SL": 1,
           "TP1": 4,
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 0
       },
@@ -2726,7 +2726,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791378933.947767,
+    "checked_at": 1791379498.592412,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -9222,7 +9222,7 @@
       "shadow": {
         "setup": "breakout",
         "dir": "SELL",
-        "entry": 4092.32386,
+        "entry": 4093.07383,
         "sl": 4127.3208968800045,
         "tp1": 4022.329786239992,
         "tp2": 3987.3327493599877,
@@ -9240,7 +9240,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4092.32386,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791378960,
@@ -9254,11 +9254,22 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mae_r": 0.14946885868898932,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1791378960,
+            "price": 4093.07383
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1791379380,
+        "initial_risk": 34.247066880004695,
+        "active_sl": 4127.3208968800045,
+        "filled_ts": 1791378960,
+        "timeout_at": 1791810960
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     }
   ]
 }
