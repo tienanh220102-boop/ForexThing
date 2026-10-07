@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791345645.7395117,
+    "ts": 1791346534.314588,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791345540
+    "latest_bar_t": 1791346440
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 0.91,
+    "days": 0.92,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791345645.740806,
+    "cutoff": 1791346534.410178,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2204,11 +2204,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791343841.811052,
+    "fetched_at": 1791346534.316019,
     "coverage_start": 1791086400.0,
     "coverage_end": 1791691200.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "8a8fcf42f3fdb1b9c0a2f382d3fe1fdc123c79dd0c82325dc46e4dba62d5095c",
+    "sha256": "7a10bbefac236e8bda1856370e030ac37abff48a513b3c900caf6e6ed4341cee",
     "events": [
       {
         "title": "OPEC-JMMC Meetings",
@@ -2505,6 +2505,12 @@
         "impact": "low"
       },
       {
+        "title": "President Trump Speaks",
+        "currency": "USD",
+        "ts": 1791392400.0,
+        "impact": "medium"
+      },
+      {
         "title": "10-y Bond Auction",
         "currency": "USD",
         "ts": 1791392460.0,
@@ -2707,7 +2713,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791344733.325422,
+    "checked_at": 1791346534.402033,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
