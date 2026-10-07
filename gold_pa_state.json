@@ -2084,7 +2084,7 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791352841.387725,
+    "ts": 1791352878.4406245,
     "source": "twelvedata:XAU/USD",
     "latest_bar_t": 1791352740
   },
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791352841.390062,
+    "cutoff": 1791352878.443105,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
