@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791375335.1197307,
+    "ts": 1791376241.0841265,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791375240
+    "latest_bar_t": 1791376140
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 1.25,
+    "days": 1.26,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791375335.220042,
+    "cutoff": 1791376241.247602,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2179,13 +2179,12 @@
     "groups": {
       "H4_DIRECTION": {
         "candidates": 5,
-        "shadow_resolved": 3,
-        "shadow_net_r": 2.776011656366184,
-        "shadow_wins": 2,
+        "shadow_resolved": 5,
+        "shadow_net_r": 7.083465481604865,
+        "shadow_wins": 4,
         "evaluations": {
           "SL": 1,
-          "TP1": 2,
-          "OPEN": 2
+          "TP1": 4
         },
         "later_accepted": 0
       },
@@ -2195,7 +2194,7 @@
         "shadow_net_r": 0,
         "shadow_wins": 0,
         "evaluations": {
-          "PENDING": 1
+          "AMBIGUOUS": 1
         },
         "later_accepted": 0
       },
@@ -2217,7 +2216,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791375335.123317,
+    "fetched_at": 1791376241.08756,
     "coverage_start": 1791086400.0,
     "coverage_end": 1791691200.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -2726,7 +2725,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791375335.212792,
+    "checked_at": 1791376241.239679,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -7278,7 +7277,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4121.9379,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791364560,
@@ -7289,25 +7288,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 0.9043786035027127,
+        "remaining": 0.0,
+        "realized_r": 2.281291242560474,
+        "mfe_r": 2.444703136559862,
         "mae_r": 0.024174336990999804,
         "events": [
           {
             "type": "FILL",
             "ts": 1791364560,
             "price": 4123.41838
+          },
+          {
+            "type": "TP1",
+            "ts": 1791376140,
+            "price": 4087.397997409598,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791375240,
+        "last_bar_t": 1791376080,
         "initial_risk": 15.78947129520111,
         "active_sl": 4139.207851295201,
         "filled_ts": 1791364560,
-        "timeout_at": 1791796560
+        "timeout_at": 1791796560,
+        "outcome": "TP1",
+        "closed_ts": 1791376140,
+        "net_r": 2.2559579053941072,
+        "correct": true,
+        "pips": 356.2038
       },
-      "evaluation": "OPEN"
+      "evaluation": "TP1"
     },
     {
       "id": "8be826daf1c64ed7b3fc",
@@ -7920,7 +7930,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4115.16363,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791368160,
@@ -7931,25 +7941,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 0.5072884926751949,
+        "remaining": 0.0,
+        "realized_r": 2.083331179319132,
+        "mfe_r": 2.4429446939436503,
         "mae_r": 0.6595820069495929,
         "events": [
           {
             "type": "FILL",
             "ts": 1791368160,
             "price": 4115.51264
+          },
+          {
+            "type": "TP1",
+            "ts": 1791376140,
+            "price": 4089.336240451769,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791375240,
+        "last_bar_t": 1791376080,
         "initial_risk": 12.564684774115449,
         "active_sl": 4128.077324774115,
         "filled_ts": 1791368160,
-        "timeout_at": 1791800160
+        "timeout_at": 1791800160,
+        "outcome": "TP1",
+        "closed_ts": 1791376140,
+        "net_r": 2.0514959198445735,
+        "correct": true,
+        "pips": 257.764
       },
-      "evaluation": "OPEN"
+      "evaluation": "TP1"
     },
     {
       "id": "1f11a32cb9ae863d7e6f",
@@ -8569,7 +8590,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "limit",
         "entry_ref": 4110.863594487529,
-        "status": "PENDING",
+        "status": "AMBIGUOUS",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791371760,
@@ -8584,11 +8605,28 @@
         "realized_r": 0.0,
         "mfe_r": 0.0,
         "mae_r": 0.0,
-        "events": [],
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1791375900,
+            "price": 4110.863594487529
+          },
+          {
+            "type": "AMBIGUOUS",
+            "ts": 1791375960
+          }
+        ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791375240
+        "last_bar_t": 1791375960,
+        "initial_risk": 6.417566925170831,
+        "active_sl": 4104.446027562358,
+        "filled_ts": 1791375900,
+        "timeout_at": 1791807900,
+        "outcome": "AMBIGUOUS",
+        "correct": null,
+        "closed_ts": 1791375960
       },
-      "evaluation": "PENDING"
+      "evaluation": "AMBIGUOUS"
     }
   ]
 }
