@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791366335.9831738,
+    "ts": 1791367248.4442904,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791366240
+    "latest_bar_t": 1791367140
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 1.15,
+    "days": 1.16,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791366336.095256,
+    "cutoff": 1791367248.447029,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -4654,7 +4654,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 1.4235267711251245,
+        "mfe_r": 1.4707583687412917,
         "mae_r": 0.43621879903199956,
         "events": [
           {
@@ -4664,7 +4664,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791366240,
+        "last_bar_t": 1791367140,
         "initial_risk": 12.376037007070408,
         "active_sl": 4147.329257007071,
         "filled_ts": 1791349320,
@@ -5296,7 +5296,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 1.5571858722165541,
+        "mfe_r": 1.6110046760802474,
         "mae_r": 0.5619311411448304,
         "events": [
           {
@@ -5306,7 +5306,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791366240,
+        "last_bar_t": 1791367140,
         "initial_risk": 10.86125959769015,
         "active_sl": 4145.10985959769,
         "filled_ts": 1791353760,
@@ -7258,7 +7258,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.3852427916220645,
+        "mfe_r": 0.42226366389018166,
         "mae_r": 0.007784934511211504,
         "events": [
           {
@@ -7268,7 +7268,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791366240,
+        "last_bar_t": 1791367140,
         "initial_risk": 15.78947129520111,
         "active_sl": 4139.207851295201,
         "filled_ts": 1791364560,
