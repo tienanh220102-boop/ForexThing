@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791402337.3753066,
+    "ts": 1791403258.8032794,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791402240
+    "latest_bar_t": 1791403140
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 1.57,
+    "days": 1.58,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791402337.386266,
+    "cutoff": 1791403258.806738,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2218,7 +2218,7 @@
         "evaluations": {
           "SL": 2,
           "TP1": 1,
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 0
       }
@@ -9275,7 +9275,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791402240,
+        "last_bar_t": 1791403140,
         "initial_risk": 34.247066880004695,
         "active_sl": 4127.3208968800045,
         "filled_ts": 1791378960,
@@ -10565,7 +10565,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "limit",
         "entry_ref": 4101.4416577566135,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791390000,
@@ -10578,13 +10578,23 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
+        "mfe_r": 0.11030614339749226,
+        "mae_r": 0.12305599251167665,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1791402840,
+            "price": 4101.4416577566135
+          }
+        ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791402240
+        "last_bar_t": 1791403140,
+        "initial_risk": 8.649946539681423,
+        "active_sl": 4092.791711216932,
+        "filled_ts": 1791402840,
+        "timeout_at": 1791834840
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     },
     {
       "id": "c25203c46a2c637625e4",
