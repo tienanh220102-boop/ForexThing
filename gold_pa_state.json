@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791421242.1090093,
+    "ts": 1791422133.9040453,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791421140
+    "latest_bar_t": 1791422040
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 1.79,
+    "days": 1.8,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791421242.111451,
+    "cutoff": 1791422134.387448,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2189,25 +2189,23 @@
       },
       "H4_DIRECTION": {
         "candidates": 6,
-        "shadow_resolved": 5,
-        "shadow_net_r": 7.083465481604865,
+        "shadow_resolved": 6,
+        "shadow_net_r": 6.071785649244285,
         "shadow_wins": 4,
         "evaluations": {
-          "SL": 1,
-          "TP1": 4,
-          "OPEN": 1
+          "SL": 2,
+          "TP1": 4
         },
         "later_accepted": 0
       },
       "LOW_QUALITY": {
         "candidates": 4,
-        "shadow_resolved": 2,
-        "shadow_net_r": -2.0886790560543,
+        "shadow_resolved": 3,
+        "shadow_net_r": -3.124302240104474,
         "shadow_wins": 0,
         "evaluations": {
           "AMBIGUOUS": 1,
-          "SL": 2,
-          "OPEN": 1
+          "SL": 3
         },
         "later_accepted": 0
       },
@@ -2229,11 +2227,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791419436.686306,
+    "fetched_at": 1791422133.90686,
     "coverage_start": 1791086400.0,
     "coverage_end": 1791691200.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "7a10bbefac236e8bda1856370e030ac37abff48a513b3c900caf6e6ed4341cee",
+    "sha256": "0e5b08f7a7f8c102b691575b7f4e1a8424a664bc4bc8b4f2836ce3d02a8a5c41",
     "events": [
       {
         "title": "OPEC-JMMC Meetings",
@@ -2608,6 +2606,12 @@
         "impact": "medium"
       },
       {
+        "title": "MPC Member Pill Speaks",
+        "currency": "GBP",
+        "ts": 1791450000.0,
+        "impact": "low"
+      },
+      {
         "title": "MPC Member Greene Speaks",
         "currency": "GBP",
         "ts": 1791450900.0,
@@ -2617,12 +2621,6 @@
         "title": "Eurogroup Meetings",
         "currency": "EUR",
         "ts": 1791450900.0,
-        "impact": "low"
-      },
-      {
-        "title": "MPC Member Pill Speaks",
-        "currency": "GBP",
-        "ts": 1791455400.0,
         "impact": "low"
       },
       {
@@ -2738,7 +2736,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791420332.311242,
+    "checked_at": 1791422134.381988,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -9252,7 +9250,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4092.32386,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791378960,
@@ -9263,25 +9261,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 0.34335699583269685,
-        "mae_r": 0.9591872528849821,
+        "mae_r": 0.9864129421175097,
         "events": [
           {
             "type": "FILL",
             "ts": 1791378960,
             "price": 4093.07383
+          },
+          {
+            "type": "SL",
+            "ts": 1791421380,
+            "price": 4127.3208968800045,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791421140,
+        "last_bar_t": 1791421320,
         "initial_risk": 34.247066880004695,
         "active_sl": 4127.3208968800045,
         "filled_ts": 1791378960,
-        "timeout_at": 1791810960
+        "timeout_at": 1791810960,
+        "outcome": "SL",
+        "closed_ts": 1791421380,
+        "net_r": -1.0116798323605791,
+        "correct": false,
+        "pips": -346.4707
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     },
     {
       "id": "634e6682908fc99db570",
@@ -12476,7 +12485,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4109.47198,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791414960,
@@ -12487,8 +12496,8 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 0.35844225907210425,
         "mae_r": 0.8885980616415663,
         "events": [
@@ -12496,16 +12505,27 @@
             "type": "FILL",
             "ts": 1791414960,
             "price": 4109.61347
+          },
+          {
+            "type": "SL",
+            "ts": 1791421260,
+            "price": 4120.842112544603,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791421140,
+        "last_bar_t": 1791421200,
         "initial_risk": 11.228642544602735,
         "active_sl": 4120.842112544603,
         "filled_ts": 1791414960,
-        "timeout_at": 1791846960
+        "timeout_at": 1791846960,
+        "outcome": "SL",
+        "closed_ts": 1791421260,
+        "net_r": -1.0356231840501742,
+        "correct": false,
+        "pips": -116.2864
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     }
   ]
 }
