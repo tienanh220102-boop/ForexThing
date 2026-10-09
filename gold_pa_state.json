@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791549936.6334553,
+    "ts": 1791550846.9091234,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791549840
+    "latest_bar_t": 1791550740
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 3.28,
+    "days": 3.29,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791549936.644731,
+    "cutoff": 1791550846.91258,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2200,13 +2200,13 @@
       },
       "H4_DIRECTION": {
         "candidates": 10,
-        "shadow_resolved": 8,
-        "shadow_net_r": 7.378319725970524,
+        "shadow_resolved": 9,
+        "shadow_net_r": 6.34897340562876,
         "shadow_wins": 5,
         "evaluations": {
-          "SL": 3,
+          "SL": 4,
           "TP1": 5,
-          "OPEN": 2
+          "OPEN": 1
         },
         "later_accepted": 0
       },
@@ -13818,7 +13818,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 1.1186931511556257,
-        "mae_r": 0.0466191668113368,
+        "mae_r": 0.07282411012868673,
         "events": [
           {
             "type": "FILL",
@@ -13827,7 +13827,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791549840,
+        "last_bar_t": 1791550740,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -15099,7 +15099,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4187.1751,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791522960,
@@ -15110,25 +15110,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 1.4397334105989423,
-        "mae_r": 0.8671734948870378,
+        "mae_r": 0.9472346587273647,
         "events": [
           {
             "type": "FILL",
             "ts": 1791522960,
             "price": 4187.35955
+          },
+          {
+            "type": "SL",
+            "ts": 1791550380,
+            "price": 4173.72922104081,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791549840,
+        "last_bar_t": 1791550320,
         "initial_risk": 13.630328959189683,
         "active_sl": 4173.72922104081,
         "filled_ts": 1791522960,
-        "timeout_at": 1791954960
+        "timeout_at": 1791954960,
+        "outcome": "SL",
+        "closed_ts": 1791550380,
+        "net_r": -1.0293463203417639,
+        "correct": false,
+        "pips": -140.3033
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     },
     {
       "id": "df3ae90bf62a033efb56",
@@ -16412,7 +16423,7 @@
         "mae_r": 0.0,
         "events": [],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791549840
+        "last_bar_t": 1791550740
       },
       "evaluation": "PENDING"
     }
