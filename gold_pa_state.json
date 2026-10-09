@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791534638.7343187,
+    "ts": 1791535530.8426867,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791534540
+    "latest_bar_t": 1791535440
   },
   "monitor": {
     "n": 0,
@@ -2135,7 +2135,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 3.1,
+    "days": 3.11,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,7 +2158,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791534638.82505,
+    "cutoff": 1791535530.851271,
     "ends_at": 1796450956.689905,
     "readiness": "COLLECTING",
     "issues": [
@@ -2747,7 +2747,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791534638.816973,
+    "checked_at": 1791535530.84545,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -13826,7 +13826,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791534540,
+        "last_bar_t": 1791535440,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -15121,7 +15121,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791534540,
+        "last_bar_t": 1791535440,
         "initial_risk": 13.630328959189683,
         "active_sl": 4173.72922104081,
         "filled_ts": 1791522960,
@@ -15763,7 +15763,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791534540,
+        "last_bar_t": 1791535440,
         "initial_risk": 15.20393684841747,
         "active_sl": 4176.802463151583,
         "filled_ts": 1791526560,
