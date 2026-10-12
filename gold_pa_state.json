@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791832536.6800632,
+    "ts": 1791833441.5617836,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791832440
+    "latest_bar_t": 1791833340
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 0.64,
+    "days": 0.65,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791832536.691458,
+    "cutoff": 1791833441.746256,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2234,13 +2234,13 @@
       },
       "LOW_QUALITY": {
         "candidates": 5,
-        "shadow_resolved": 3,
-        "shadow_net_r": -3.124302240104474,
-        "shadow_wins": 0,
+        "shadow_resolved": 4,
+        "shadow_net_r": -2.1987862807844367,
+        "shadow_wins": 1,
         "evaluations": {
           "AMBIGUOUS": 1,
           "SL": 3,
-          "OPEN": 1
+          "TP1": 1
         },
         "later_accepted": 0
       },
@@ -2262,7 +2262,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791831643.817594,
+    "fetched_at": 1791833441.565204,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -2927,7 +2927,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791832536.683594,
+    "checked_at": 1791833441.738317,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -14006,7 +14006,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791832440,
+        "last_bar_t": 1791833340,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -22740,7 +22740,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791832440,
+        "last_bar_t": 1791833340,
         "initial_risk": 7.695126663069459,
         "active_sl": 4178.509536663069,
         "filled_ts": 1791810960,
@@ -23522,7 +23522,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "limit",
         "entry_ref": 4168.974898677888,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791821760,
@@ -23533,25 +23533,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 0.825936522000305,
+        "remaining": 0.0,
+        "realized_r": 1.0,
+        "mfe_r": 1.0591330186621961,
         "mae_r": 0.7033213866143243,
         "events": [
           {
             "type": "FILL",
             "ts": 1791825300,
             "price": 4168.974898677888
+          },
+          {
+            "type": "TP1",
+            "ts": 1791833160,
+            "price": 4163.604620745214,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791832440,
+        "last_bar_t": 1791833100,
         "initial_risk": 5.370277932674071,
         "active_sl": 4174.345176610562,
         "filled_ts": 1791825300,
-        "timeout_at": 1792257300
+        "timeout_at": 1792257300,
+        "outcome": "TP1",
+        "closed_ts": 1791833160,
+        "net_r": 0.9255159593200376,
+        "correct": true,
+        "pips": 49.7028
       },
-      "evaluation": "OPEN"
+      "evaluation": "TP1"
     }
   ]
 }
