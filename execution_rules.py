@@ -4,7 +4,7 @@ import math
 
 RULE_VERSION = '2026-10-06-entry-v3'
 MAX_SIGNAL_AGE = 45 * 60
-MAX_QUOTE_AGE = 90
+MAX_QUOTE_AGE = 180  # M1 open-time; Twelve Data last bar lags ~95-135s
 MAX_CHASE_ATR = 0.75
 MAX_DRIFT_ATR = 0.25
 MIN_NET_RR = {'sweep_reclaim': 0.80, 'breakout': 1.20}

@@ -33,7 +33,7 @@ class EntryRulesTests(unittest.TestCase):
         p = guarded()
         cases = [(99, T, T+30, 'LEVEL_NOT_RECLAIMED'),
                  (100.6, T, T+30, 'ENTRY_TOO_FAR_FROM_LEVEL'),
-                 (100, T, T+91, 'STALE_QUOTE'),
+                 (100, T, T+181, 'STALE_QUOTE'),
                  (100, T+2800, T+2800, 'STALE_SETUP')]
         for price, qt, now, expected in cases:
             self.assertEqual(rules.validate_quote(p, price, qt, now)[1], expected)
