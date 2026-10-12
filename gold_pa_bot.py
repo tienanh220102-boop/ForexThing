@@ -165,6 +165,7 @@ if BIAS not in ('UP', 'DOWN', 'SIDE', 'OFF'):
     BIAS = 'OFF'
 TIMEOUT_DAYS    = 5      # keo khong cham SL/TP sau 5 ngay → het han (EXP)
 MIN_BARS        = 120    # du lieu H1 toi thieu
+MAX_BAR_AGE_H   = 1.5    # tuoi toi da (gio) cua nen H1 cuoi (theo gio mo nen) truoc khi coi la thi truong dong
 
 # ── Probe & Pyramid (13/06/2026 — user: "SL bé dò đường, phá cản mới đánh đuổi") ──
 # Lenh chua duoc CAU TRUC xac nhan (BOS — close pha swing) = lenh PHAN DOAN →
@@ -1270,7 +1271,9 @@ def main():
     # sweep cu se duoc detect lai sau khi cooldown het han = lenh ao lap lai.
     # Du lieu cu hon 2.5h = khong co nen moi → chi resolve, khong quet keo.
     bar_age_h = (now.timestamp() - bars[-1].get('t', 0)) / 3600
-    if not 0 <= bar_age_h < 1:
+    # t = gio MO nen. Luc :00 nen moi chua kip ve -> nen cuoi mo 1h+vai chuc giay truoc;
+    # nguong 1h cu nuot oan 1/4 so lan quet. 1.5h chi con chan khi thieu >=1 nen (dong cua).
+    if not 0 <= bar_age_h < MAX_BAR_AGE_H:
         print(f'[PA] Du lieu cu {bar_age_h:.1f}h (thi truong dong?) — khong quet keo moi')
         log.info(f'MARKET_STALE age={bar_age_h:.1f}h')
         save_state(state)
