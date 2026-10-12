@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791776734.2394974,
+    "ts": 1791777642.9251122,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791776640
+    "latest_bar_t": 1791777540
   },
   "monitor": {
     "n": 0,
@@ -2131,11 +2131,32 @@
         "PA_MODE": "paper"
       },
       "execution_contract": "UTC spot M1; full TP1; aggregate cost 0.40 USD/oz; no broker fills"
+    },
+    {
+      "id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
+      "started_at": 1791777642.567539,
+      "ends_at": 1796961642.567539,
+      "configuration_hash": "687e6aa9655478eba0c458e81eec30d776130671b2b3a46be72b956db9402897",
+      "plan": {
+        "min_calendar_days": 60,
+        "min_resolved": 100,
+        "min_per_setup": 25,
+        "max_unknown_fraction": 0.05,
+        "min_mean_net_r": 0,
+        "min_profit_factor": 1.2,
+        "max_drawdown_r": 5,
+        "purpose": "review only; never automatic live approval"
+      },
+      "runtime": {
+        "BIAS": "",
+        "PA_MODE": "paper"
+      },
+      "execution_contract": "UTC spot M1; full TP1; aggregate cost 0.40 USD/oz; no broker fills"
     }
   ],
   "forward_review": {
-    "study_id": "2026-10-06-controls-v1:29e249e885bf:1791266956",
-    "days": 5.9,
+    "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
+    "days": 0.0,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2158,8 +2179,8 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791776734.251897,
-    "ends_at": 1796450956.689905,
+    "cutoff": 1791777643.036748,
+    "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
       "INSUFFICIENT_DAYS",
@@ -2240,7 +2261,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791775841.06464,
+    "fetched_at": 1791777642.928767,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -2905,7 +2926,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791776734.243697,
+    "checked_at": 1791777643.023695,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -13984,7 +14005,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791776640,
+        "last_bar_t": 1791777540,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -16586,7 +16607,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791776640,
+        "last_bar_t": 1791777540,
         "initial_risk": 19.828819513104463,
         "active_sl": 4218.506898212231,
         "filled_ts": 1791554280,
@@ -17229,7 +17250,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791776640,
+        "last_bar_t": 1791777540,
         "initial_risk": 20.27982092617367,
         "active_sl": 4218.176890926174,
         "filled_ts": 1791573360,
