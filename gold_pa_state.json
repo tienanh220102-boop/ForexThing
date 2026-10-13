@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791872139.7938685,
+    "ts": 1791873044.1763232,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791872040
+    "latest_bar_t": 1791872940
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 1.09,
+    "days": 1.1,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791872140.758611,
+    "cutoff": 1791873045.130697,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2221,24 +2221,24 @@
       },
       "H4_DIRECTION": {
         "candidates": 19,
-        "shadow_resolved": 14,
-        "shadow_net_r": 13.83243940066729,
+        "shadow_resolved": 15,
+        "shadow_net_r": 12.802762131846933,
         "shadow_wins": 9,
         "evaluations": {
-          "SL": 5,
+          "SL": 6,
           "TP1": 9,
-          "OPEN": 2,
+          "OPEN": 1,
           "NOT_EVALUABLE": 3
         },
         "later_accepted": 0
       },
       "LEVEL_NOT_RECLAIMED": {
         "candidates": 1,
-        "shadow_resolved": 0,
-        "shadow_net_r": 0,
+        "shadow_resolved": 1,
+        "shadow_net_r": -1.068384503151248,
         "shadow_wins": 0,
         "evaluations": {
-          "PENDING": 1
+          "SL": 1
         },
         "later_accepted": 0
       },
@@ -2272,7 +2272,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791871246.246774,
+    "fetched_at": 1791873044.180019,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -2931,7 +2931,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791872139.796724,
+    "checked_at": 1791873044.377425,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -14010,7 +14010,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791872040,
+        "last_bar_t": 1791872940,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -25143,7 +25143,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4198.2936,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791868560,
@@ -25154,25 +25154,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 0.1787721577151844,
-        "mae_r": 0.6046802876685667,
+        "mae_r": 0.9690570523131771,
         "events": [
           {
             "type": "FILL",
             "ts": 1791868560,
             "price": 4198.0357
+          },
+          {
+            "type": "SL",
+            "ts": 1791872880,
+            "price": 4184.55737076353,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791872040,
+        "last_bar_t": 1791872820,
         "initial_risk": 13.478329236470017,
         "active_sl": 4184.55737076353,
         "filled_ts": 1791868560,
-        "timeout_at": 1792300560
+        "timeout_at": 1792300560,
+        "outcome": "SL",
+        "closed_ts": 1791872880,
+        "net_r": -1.0296772688203573,
+        "correct": false,
+        "pips": -138.7833
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     },
     {
       "id": "f2dd1bee35860eb1618d",
@@ -25919,12 +25930,16 @@
         {
           "ts": 1791872140.757942,
           "reason": "LEVEL_NOT_RECLAIMED"
+        },
+        {
+          "ts": 1791873045.130361,
+          "reason": "INVALID_ORDER_GEOMETRY"
         }
       ],
       "shadow": {
         "setup": "sweep_reclaim",
         "dir": "BUY",
-        "entry": 4191.41722,
+        "entry": 4191.39992,
         "sl": 4185.550641558723,
         "tp1": 4197.283798441277,
         "tp2": 4200.217087661916,
@@ -25942,7 +25957,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4191.41722,
-        "status": "PENDING",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1791872160,
@@ -25953,14 +25968,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mae_r": 0.9209512000635603,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1791872160,
+            "price": 4191.39992
+          },
+          {
+            "type": "SL",
+            "ts": 1791872820,
+            "price": 4185.550641558723,
+            "fraction": 1.0
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1791872760,
+        "initial_risk": 5.84927844127651,
+        "active_sl": 4185.550641558723,
+        "filled_ts": 1791872160,
+        "timeout_at": 1792304160,
+        "outcome": "SL",
+        "closed_ts": 1791872820,
+        "net_r": -1.068384503151248,
+        "correct": false,
+        "pips": -62.4928
       },
-      "evaluation": "PENDING"
+      "evaluation": "SL"
     }
   ],
   "momentum": {
