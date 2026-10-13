@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791855040.089063,
+    "ts": 1791855942.3356514,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791854940
+    "latest_bar_t": 1791855840
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 0.9,
+    "days": 0.91,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791855040.381238,
+    "cutoff": 1791855942.414509,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2262,7 +2262,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791855040.092463,
+    "fetched_at": 1791855942.338395,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -2921,7 +2921,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791855040.372877,
+    "checked_at": 1791855942.406495,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -13991,7 +13991,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 1.409063718722665,
-        "mae_r": 0.5479426919808597,
+        "mae_r": 0.6589237231422185,
         "events": [
           {
             "type": "FILL",
@@ -14000,7 +14000,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791854940,
+        "last_bar_t": 1791855840,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -24343,7 +24343,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 1.5068269818126616,
+        "mfe_r": 2.1321109536917056,
         "mae_r": 0.39761999919709073,
         "events": [
           {
@@ -24353,7 +24353,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791854940,
+        "last_bar_t": 1791855840,
         "initial_risk": 7.550953186617335,
         "active_sl": 4174.168693186617,
         "filled_ts": 1791854160,
