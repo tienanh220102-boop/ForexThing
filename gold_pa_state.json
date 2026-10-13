@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791857736.3992658,
+    "ts": 1791858637.7236753,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791857640
+    "latest_bar_t": 1791858540
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 0.93,
+    "days": 0.94,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791857736.814568,
+    "cutoff": 1791858637.823296,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2262,7 +2262,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791857736.402793,
+    "fetched_at": 1791858637.726704,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -2921,7 +2921,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791857736.806467,
+    "checked_at": 1791858637.815503,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -14000,7 +14000,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791857640,
+        "last_bar_t": 1791858540,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -24344,7 +24344,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 2.1321109536917056,
-        "mae_r": 0.4436724632246075,
+        "mae_r": 0.996907253158664,
         "events": [
           {
             "type": "FILL",
@@ -24353,7 +24353,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791857640,
+        "last_bar_t": 1791858540,
         "initial_risk": 7.550953186617335,
         "active_sl": 4174.168693186617,
         "filled_ts": 1791854160,
