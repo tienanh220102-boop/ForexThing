@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791884738.7570198,
+    "ts": 1791885644.9374204,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791884640
+    "latest_bar_t": 1791885540
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 1.24,
+    "days": 1.25,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791884738.768704,
+    "cutoff": 1791885645.014402,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2283,11 +2283,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791883844.141343,
+    "fetched_at": 1791885644.941082,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "db6364aa36a11ec3186d6c03672bd0a66e4afc26a9f050346287952af6f03593",
+    "sha256": "05e50dd5b7252cee5a0ac28276aaee2332d4753291329256c5954bfdd15cd0b2",
     "events": [
       {
         "title": "Bank Holiday",
@@ -2377,18 +2377,6 @@
         "title": "FOMC Member Waller Speaks",
         "currency": "USD",
         "ts": 1791877500.0,
-        "impact": "low"
-      },
-      {
-        "title": "M2 Money Supply y/y",
-        "currency": "CNY",
-        "ts": 1791878580.0,
-        "impact": "low"
-      },
-      {
-        "title": "New Loans",
-        "currency": "CNY",
-        "ts": 1791878580.0,
         "impact": "low"
       },
       {
@@ -2512,6 +2500,18 @@
         "impact": "medium"
       },
       {
+        "title": "M2 Money Supply y/y",
+        "currency": "CNY",
+        "ts": 1791964980.0,
+        "impact": "low"
+      },
+      {
+        "title": "New Loans",
+        "currency": "CNY",
+        "ts": 1791964980.0,
+        "impact": "low"
+      },
+      {
         "title": "ECB President Lagarde Speaks",
         "currency": "EUR",
         "ts": 1791966600.0,
@@ -2528,6 +2528,12 @@
         "currency": "USD",
         "ts": 1791970800.0,
         "impact": "low"
+      },
+      {
+        "title": "EU Economic Summit",
+        "currency": "EUR",
+        "ts": 1791972900.0,
+        "impact": "medium"
       },
       {
         "title": "Building Permits m/m",
@@ -2714,6 +2720,12 @@
         "currency": "EUR",
         "ts": 1792054800.0,
         "impact": "low"
+      },
+      {
+        "title": "EU Economic Summit",
+        "currency": "EUR",
+        "ts": 1792059300.0,
+        "impact": "medium"
       },
       {
         "title": "Manufacturing Sales m/m",
@@ -2942,7 +2954,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791884738.760825,
+    "checked_at": 1791885645.00722,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -14021,7 +14033,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791884640,
+        "last_bar_t": 1791885540,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
@@ -26799,7 +26811,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791884640,
+        "last_bar_t": 1791885540,
         "initial_risk": 15.764905976731825,
         "active_sl": 4205.4770459767315,
         "filled_ts": 1791879360,
@@ -27586,7 +27598,7 @@
         "mae_r": 0.0,
         "events": [],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791884640
+        "last_bar_t": 1791885540
       },
       "evaluation": "PENDING"
     }
