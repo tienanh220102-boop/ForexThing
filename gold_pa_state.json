@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791942340.0975416,
+    "ts": 1791943247.231275,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791942240
+    "latest_bar_t": 1791943140
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 1.91,
+    "days": 1.92,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791942340.107768,
+    "cutoff": 1791943247.360647,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2282,11 +2282,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791941440.11974,
+    "fetched_at": 1791943247.234328,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "e9041d280fe7082e535d11418861524446a9dce21bbe2b3613f0dda745b21a23",
+    "sha256": "9f258a761b76a26b37ac24c6caf60c4bb82e2246de26816f0223ea6b189d2beb",
     "events": [
       {
         "title": "Bank Holiday",
@@ -2451,22 +2451,22 @@
         "impact": "low"
       },
       {
+        "title": "ECB President Lagarde Speaks",
+        "currency": "EUR",
+        "ts": 1791943800.0,
+        "impact": "medium"
+      },
+      {
         "title": "Trade Balance",
         "currency": "CNY",
-        "ts": 1791943380.0,
+        "ts": 1791946980.0,
         "impact": "low"
       },
       {
         "title": "USD-Denominated Trade Balance",
         "currency": "CNY",
-        "ts": 1791943440.0,
+        "ts": 1791947040.0,
         "impact": "low"
-      },
-      {
-        "title": "ECB President Lagarde Speaks",
-        "currency": "EUR",
-        "ts": 1791943800.0,
-        "impact": "medium"
       },
       {
         "title": "MPC Member Breeden Speaks",
@@ -2959,7 +2959,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791942340.100077,
+    "checked_at": 1791943247.352785,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -14029,7 +14029,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 1.409063718722665,
-        "mae_r": 0.8334512460134497,
+        "mae_r": 0.8717693526799951,
         "events": [
           {
             "type": "FILL",
@@ -14038,7 +14038,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791942240,
+        "last_bar_t": 1791943140,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
