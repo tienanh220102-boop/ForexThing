@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791966636.6862988,
+    "ts": 1791967536.7901654,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791966540
+    "latest_bar_t": 1791967440
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 2.19,
+    "days": 2.2,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791966636.768835,
+    "cutoff": 1791967536.973849,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2282,11 +2282,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791966636.687718,
+    "fetched_at": 1791967536.791755,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "0a90ec13a72373f8ce10b40b22c2cdbeda8127336cb7b3432c4d27c02b4c01ac",
+    "sha256": "451cc5e47c49cffda1915f211d0259676b6e0ca840d37a5f5e6d4a2e9cffeefb",
     "events": [
       {
         "title": "Bank Holiday",
@@ -2499,22 +2499,22 @@
         "impact": "medium"
       },
       {
+        "title": "ECB President Lagarde Speaks",
+        "currency": "EUR",
+        "ts": 1791966600.0,
+        "impact": "medium"
+      },
+      {
         "title": "M2 Money Supply y/y",
         "currency": "CNY",
-        "ts": 1791964980.0,
+        "ts": 1791968580.0,
         "impact": "low"
       },
       {
         "title": "New Loans",
         "currency": "CNY",
-        "ts": 1791964980.0,
+        "ts": 1791968580.0,
         "impact": "low"
-      },
-      {
-        "title": "ECB President Lagarde Speaks",
-        "currency": "EUR",
-        "ts": 1791966600.0,
-        "impact": "medium"
       },
       {
         "title": "German 30-y Bond Auction",
@@ -2959,7 +2959,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791966636.760502,
+    "checked_at": 1791967536.96553,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
