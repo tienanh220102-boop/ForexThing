@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791969964.7003174,
+    "ts": 1791970240.4975932,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791969840
+    "latest_bar_t": 1791970140
   },
   "monitor": {
     "n": 0,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791969964.821365,
+    "cutoff": 1791970240.508072,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2960,7 +2960,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791969964.814173,
+    "checked_at": 1791970240.500162,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -30011,7 +30011,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.04442813455812954,
+        "mfe_r": 0.09775111096768668,
         "mae_r": 0.1106271705424799,
         "events": [
           {
@@ -30021,7 +30021,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791969840,
+        "last_bar_t": 1791970140,
         "initial_risk": 16.494953193247966,
         "active_sl": 4160.435263193248,
         "filled_ts": 1791969360,
