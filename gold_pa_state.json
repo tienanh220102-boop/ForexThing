@@ -2162,9 +2162,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791994536.6971443,
+    "ts": 1791995437.8507442,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791994440
+    "latest_bar_t": 1791995340
   },
   "monitor": {
     "n": 0,
@@ -2234,7 +2234,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 2.51,
+    "days": 2.52,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2257,7 +2257,7 @@
     "signals": 1,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791994536.70549,
+    "cutoff": 1791995438.012868,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2370,7 +2370,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791993641.437522,
+    "fetched_at": 1791995437.852876,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3047,7 +3047,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791994536.699587,
+    "checked_at": 1791995438.007716,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -32519,7 +32519,7 @@
         "mae_r": 0.0,
         "events": [],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791994440
+        "last_bar_t": 1791995340
       },
       "evaluation": "PENDING"
     }
