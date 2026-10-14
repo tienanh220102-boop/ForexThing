@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791938732.3543262,
+    "ts": 1791939647.774089,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791938640
+    "latest_bar_t": 1791939540
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 1.86,
+    "days": 1.88,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791938732.362819,
+    "cutoff": 1791939647.861468,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2282,11 +2282,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1791937839.878052,
+    "fetched_at": 1791939647.776627,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "05e50dd5b7252cee5a0ac28276aaee2332d4753291329256c5954bfdd15cd0b2",
+    "sha256": "e9041d280fe7082e535d11418861524446a9dce21bbe2b3613f0dda745b21a23",
     "events": [
       {
         "title": "Bank Holiday",
@@ -2586,6 +2586,12 @@
         "title": "Beige Book",
         "currency": "USD",
         "ts": 1792000800.0,
+        "impact": "low"
+      },
+      {
+        "title": "FOMC Member Goolsbee Speaks",
+        "currency": "USD",
+        "ts": 1792004400.0,
         "impact": "low"
       },
       {
@@ -2953,7 +2959,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791938732.356891,
+    "checked_at": 1791939647.855432,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -14032,7 +14038,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791938640,
+        "last_bar_t": 1791939540,
         "initial_risk": 31.764617458587054,
         "active_sl": 4139.684112541413,
         "filled_ts": 1791512160,
