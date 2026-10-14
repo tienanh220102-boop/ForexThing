@@ -2162,9 +2162,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792017937.9880924,
+    "ts": 1792018843.797537,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792017840
+    "latest_bar_t": 1792018740
   },
   "monitor": {
     "n": 0,
@@ -2234,7 +2234,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 2.78,
+    "days": 2.79,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2257,7 +2257,7 @@
     "signals": 1,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792017937.999391,
+    "cutoff": 1792018843.951524,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2370,11 +2370,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792017045.309529,
+    "fetched_at": 1792018843.800412,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "20e9d61813c122c87a8e9a862d4b9688903188908616b0dac5fc202f7447a6ab",
+    "sha256": "d5bcacb7eef84eacd87a3616b9ba86526341b242a567929f0bd501d7e7c7f47f",
     "events": [
       {
         "title": "Bank Holiday",
@@ -3047,7 +3047,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792017937.991055,
+    "checked_at": 1792018843.945073,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -32516,7 +32516,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.06173693610452287,
-        "mae_r": 0.5082205428755968,
+        "mae_r": 0.5458488859288729,
         "events": [
           {
             "type": "FILL",
@@ -32525,7 +32525,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792017840,
+        "last_bar_t": 1792018740,
         "initial_risk": 24.535760150079113,
         "active_sl": 4122.90004280674,
         "filled_ts": 1792005300,
