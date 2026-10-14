@@ -63,7 +63,8 @@
       "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
       "risk_units": 1.0,
       "trade_id": "687e6aa96554-1791990942036",
-      "risk_scope": "PA_PAPER_only"
+      "risk_scope": "PA_PAPER_only",
+      "last_bar_t": 1791991740
     }
   ],
   "legacy": {
@@ -2153,9 +2154,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791990940.8424256,
+    "ts": 1791991840.0468438,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791990840
+    "latest_bar_t": 1791991740
   },
   "monitor": {
     "n": 0,
@@ -2225,7 +2226,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 2.47,
+    "days": 2.48,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2248,7 +2249,7 @@
     "signals": 1,
     "unknown": 0,
     "pending_at_cutoff": 1,
-    "cutoff": 1791990944.806724,
+    "cutoff": 1791991840.666895,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -3038,7 +3039,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1791990940.94102,
+    "checked_at": 1791991840.049774,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -32466,6 +32467,10 @@
         {
           "ts": 1791990942.036709,
           "reason": "ACCEPTED"
+        },
+        {
+          "ts": 1791991840.666515,
+          "reason": "COOLDOWN"
         }
       ],
       "shadow": {
@@ -32505,7 +32510,8 @@
         "mfe_r": 0.0,
         "mae_r": 0.0,
         "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1791991740
       },
       "evaluation": "PENDING"
     }
