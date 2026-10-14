@@ -2084,9 +2084,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1791977438.7231598,
+    "ts": 1791978333.656127,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1791977340
+    "latest_bar_t": 1791978240
   },
   "monitor": {
     "n": 0,
@@ -2156,7 +2156,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 2.31,
+    "days": 2.32,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2179,7 +2179,7 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1791977442.217759,
+    "cutoff": 1791978333.665547,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2960,7 +2960,7 @@
   "calendar_health": {
     "status": "HARD",
     "reason": "Core CPI m/m; Core CPI y/y; CPI m/m; CPI y/y",
-    "checked_at": 1791977442.210207,
+    "checked_at": 1791978333.659233,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -30021,7 +30021,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791977340,
+        "last_bar_t": 1791978240,
         "initial_risk": 16.494953193247966,
         "active_sl": 4160.435263193248,
         "filled_ts": 1791969360,
@@ -30835,7 +30835,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1791977340,
+        "last_bar_t": 1791978240,
         "initial_risk": 11.632568615487799,
         "active_sl": 4151.073118615488,
         "filled_ts": 1791976560,
