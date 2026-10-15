@@ -2162,9 +2162,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792026048.5873582,
+    "ts": 1792026936.9741213,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792025940
+    "latest_bar_t": 1792026840
   },
   "monitor": {
     "n": 0,
@@ -2234,7 +2234,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 2.88,
+    "days": 2.89,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2257,7 +2257,7 @@
     "signals": 1,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792026049.033706,
+    "cutoff": 1792026936.982792,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -3047,7 +3047,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792026049.025337,
+    "checked_at": 1792026936.975822,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
