@@ -2238,9 +2238,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792050333.7893353,
+    "ts": 1792051245.2169042,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792050240
+    "latest_bar_t": 1792051140
   },
   "monitor": {
     "n": 0,
@@ -2327,11 +2327,32 @@
         "PA_MODE": "paper"
       },
       "execution_contract": "UTC spot M1; full TP1; aggregate cost 0.40 USD/oz; no broker fills"
+    },
+    {
+      "id": "2026-10-06-controls-v1:f51c3ca8e154:1792051244",
+      "started_at": 1792051244.954668,
+      "ends_at": 1797235244.954668,
+      "configuration_hash": "f51c3ca8e154b8d82e513d0142298d90d8fd829d5c5b833b063028d51134b054",
+      "plan": {
+        "min_calendar_days": 60,
+        "min_resolved": 100,
+        "min_per_setup": 25,
+        "max_unknown_fraction": 0.05,
+        "min_mean_net_r": 0,
+        "min_profit_factor": 1.2,
+        "max_drawdown_r": 5,
+        "purpose": "review only; never automatic live approval"
+      },
+      "runtime": {
+        "BIAS": "",
+        "PA_MODE": "paper"
+      },
+      "execution_contract": "UTC spot M1; full TP1; aggregate cost 0.40 USD/oz; no broker fills"
     }
   ],
   "forward_review": {
-    "study_id": "2026-10-06-controls-v1:bfb3335c7e69:1792046735",
-    "days": 0.04,
+    "study_id": "2026-10-06-controls-v1:f51c3ca8e154:1792051244",
+    "days": 0.0,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2354,8 +2375,8 @@
     "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792050333.799917,
-    "ends_at": 1797230735.041323,
+    "cutoff": 1792051245.397935,
+    "ends_at": 1797235244.954668,
     "readiness": "COLLECTING",
     "issues": [
       "INSUFFICIENT_DAYS",
@@ -2368,7 +2389,10 @@
       "profit_factor": false,
       "drawdown": true
     },
-    "live_allowed": false
+    "live_allowed": false,
+    "extensions": 0,
+    "max_ends_at": 1823587244.954668,
+    "review_blockers": []
   },
   "observation_summary": {
     "count": 42,
@@ -2468,7 +2492,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792049442.163913,
+    "fetched_at": 1792051245.219876,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3145,7 +3169,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792050333.792286,
+    "checked_at": 1792051245.382098,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -33461,7 +33485,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792050240,
+        "last_bar_t": 1792051140,
         "initial_risk": 23.455315205060288,
         "active_sl": 4168.12273520506,
         "filled_ts": 1792030560,
@@ -33473,5 +33497,318 @@
   "momentum": {
     "dir": "BULL",
     "ts": 1791867646.280074
+  },
+  "data_watchdog": {
+    "consecutive": 0,
+    "since": null,
+    "last_reason": null,
+    "alerted": false,
+    "recent": [
+      [
+        1792051244.954668,
+        0
+      ]
+    ]
+  },
+  "pa_report": {
+    "generated_at": 1792051245.397935,
+    "week": {
+      "label": "Tuần 10/10 - 15/10/2026",
+      "start": 1791590400.0,
+      "end": 1792051245.397935,
+      "stats": {
+        "issued": 2,
+        "filled": 0,
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "flat": 0,
+        "tp": 0,
+        "sl": 0,
+        "no_trade": 2,
+        "unscored": 0,
+        "total_r": 0,
+        "avg_r": 0.0,
+        "win_rate": null,
+        "max_dd_r": 0.0,
+        "best_r": null,
+        "worst_r": null
+      },
+      "tiers": {
+        "1": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "2": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "3": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "none": {
+          "issued": 2,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 2,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        }
+      }
+    },
+    "month": {
+      "label": "Tháng 10/2026",
+      "start": 1790787600.0,
+      "end": 1792051245.397935,
+      "stats": {
+        "issued": 2,
+        "filled": 0,
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "flat": 0,
+        "tp": 0,
+        "sl": 0,
+        "no_trade": 2,
+        "unscored": 0,
+        "total_r": 0,
+        "avg_r": 0.0,
+        "win_rate": null,
+        "max_dd_r": 0.0,
+        "best_r": null,
+        "worst_r": null
+      },
+      "tiers": {
+        "1": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "2": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "3": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "none": {
+          "issued": 2,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 2,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        }
+      }
+    },
+    "all": {
+      "label": "Từ khi bắt đầu sổ lệnh v2",
+      "start": 0,
+      "end": 1792051245.397935,
+      "stats": {
+        "issued": 2,
+        "filled": 0,
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "flat": 0,
+        "tp": 0,
+        "sl": 0,
+        "no_trade": 2,
+        "unscored": 0,
+        "total_r": 0,
+        "avg_r": 0.0,
+        "win_rate": null,
+        "max_dd_r": 0.0,
+        "best_r": null,
+        "worst_r": null
+      },
+      "tiers": {
+        "1": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "2": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "3": {
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 0,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        },
+        "none": {
+          "issued": 2,
+          "filled": 0,
+          "n": 0,
+          "wins": 0,
+          "losses": 0,
+          "flat": 0,
+          "tp": 0,
+          "sl": 0,
+          "no_trade": 2,
+          "unscored": 0,
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
+        }
+      }
+    },
+    "sprt": {
+      "verdict": "CHUA_DU",
+      "llr": 0.0,
+      "n": 0,
+      "upper": 2.9444,
+      "lower": -2.9444
+    }
   }
 }
