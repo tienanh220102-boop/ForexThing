@@ -2234,9 +2234,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792032336.85437,
+    "ts": 1792033244.4067857,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792032240
+    "latest_bar_t": 1792033140
   },
   "monitor": {
     "n": 0,
@@ -2306,7 +2306,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 2.95,
+    "days": 2.96,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2329,7 +2329,7 @@
     "signals": 2,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792032337.222445,
+    "cutoff": 1792033245.15926,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2443,7 +2443,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792031438.354329,
+    "fetched_at": 1792033244.409193,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3120,7 +3120,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792032336.857008,
+    "checked_at": 1792033244.498094,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -33386,6 +33386,10 @@
         {
           "ts": 1792031439.090954,
           "reason": "COOLDOWN"
+        },
+        {
+          "ts": 1792033245.158865,
+          "reason": "INVALID_ORDER_GEOMETRY"
         }
       ],
       "shadow": {
@@ -33423,7 +33427,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.34801365612169904,
-        "mae_r": 0.10544006671318376,
+        "mae_r": 0.6589231423615931,
         "events": [
           {
             "type": "FILL",
@@ -33432,7 +33436,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792032240,
+        "last_bar_t": 1792033140,
         "initial_risk": 23.455315205060288,
         "active_sl": 4168.12273520506,
         "filled_ts": 1792030560,
