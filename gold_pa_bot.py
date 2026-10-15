@@ -55,6 +55,7 @@ import hashlib
 # main() cua no co __main__ guard nen khong bi kich hoat.
 import forex_notifier as fx
 import pa_ledger as ledger
+import pa_report
 from market_data import DataQualityError, closed_h4, usable_cache
 
 _ROOT      = Path(__file__).parent
@@ -1144,10 +1145,31 @@ def send_signal(p, session_lbl, now):
     return fx.send_telegram('\n'.join(lines))
 
 
-def send_weekly(state, now):
-    result = report_running_r(state, now)
+def notify_results(state):
+    """Reply ket qua vao dung tin lenh goc; that bai thi thu lai o run sau."""
+    sent = 0
+    for rec in state.get('signals', []):
+        if not rec.get('outcome') or rec.get('result_sent_at') or rec.get('ledger_version') != ledger.LEDGER_VERSION:
+            continue
+        text = pa_report.result_message(rec, state)
+        result = fx.send_telegram(text, reply_to=rec.get('message_id'))
+        # Tin goc bi xoa / khong reply duoc -> van gui ket qua, khong reply
+        if not result.get('ok') and rec.get('message_id'):
+            result = fx.send_telegram(text)
+        if result.get('ok'):
+            rec['result_sent_at'] = datetime.now(timezone.utc).timestamp()
+            rec['result_message_id'] = result.get('result', {}).get('message_id')
+            sent += 1
+        else:
+            log.info('RESULT_TG_FAIL %s %s', rec.get('trade_id'), result)
+    return sent
+
+
+def send_weekly(state, now, period_end):
+    result = fx.send_telegram(pa_report.weekly_message(state, period_end))
     if result.get('ok'):
         state['last_weekly'] = now.timestamp()
+        state['last_weekly_period_end'] = period_end
 
 
 def deliver_paper_order(order, session_lbl, source, analysis_ts, calendar=None, study_ends_at=None):
@@ -1233,9 +1255,11 @@ def main():
     # Chot ket qua keo cu (chay moi run, ke ca ngoai phien)
     n_closed = resolve_signals(state, now, bars)
 
-    # Co keo MOI chot -> gui bang diem tong R tu REPORT_SINCE (khong spam moi run)
-    if n_closed:
-        report_running_r(state, now)
+    # Lenh vua chot -> reply ket qua vao tin lenh goc (kem luy ke thang)
+    try:
+        notify_results(state)
+    except Exception as e:
+        log.info(f'RESULT_NOTIFY_FAIL {e}')
 
     # Kiem chung live: moi 50 keo da chot -> so WR/exp thuc vs backtest, canh bao
     try:
@@ -1243,10 +1267,11 @@ def main():
     except Exception as e:
         log.info(f'VALIDATION_FAIL {e}')
 
-    # Bao cao tuan rieng cua he PA
-    if (now.timestamp() - state.get('last_weekly', 0)) >= 7 * 86400:
+    # Bao cao tuan (Thu 7 07:00 VN): hieu qua tuan + thang
+    period_end = pa_report.weekly_due(state.get('last_weekly', 0), now.timestamp())
+    if period_end:
         try:
-            send_weekly(state, now)
+            send_weekly(state, now, period_end)
         except Exception as e:
             log.info(f'WEEKLY_FAIL {e}')
 
