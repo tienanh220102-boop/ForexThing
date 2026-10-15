@@ -61,6 +61,34 @@ class WeeklyTests(unittest.TestCase):
         self.assertIn('Thắng 1/2 (50%)', msg)
 
 
+class TierTests(unittest.TestCase):
+    def test_precedence_matches_sizing(self):
+        self.assertEqual(report.tier_of({'probe': True, 'high_conviction': True}), 3)
+        self.assertEqual(report.tier_of({'danger': True}), 3)
+        self.assertEqual(report.tier_of({'high_conviction': True}), 1)
+        self.assertEqual(report.tier_of({}), 2)
+
+    def test_tier_saved_shown_and_split(self):
+        b0 = (int(T+15)//60+1)*60
+        t1 = closed(order(tier=1), [bar(t=b0), bar(t=b0+60, h=102.5)])
+        t3 = closed(order(tier=3), [bar(t=b0), bar(t=b0+60, l=97.5)])
+        old = tp_rec()                                   # recorded before tiers existed
+        self.assertEqual((t1['tier'], t3['tier']), (1, 3))
+        state = {'signals': [t1, t3, old]}
+        self.assertIn('Cấp 1 (mạnh)', report.result_message(t1, state))
+        msg = report.weekly_message(state, report.week_end(T+86400*5))
+        self.assertIn('• Cấp 1 (mạnh): phát 1 · khớp 1 · 1W/0L', msg)
+        self.assertIn('• Cấp 3 (dò đường): phát 1 · khớp 1 · 0W/1L', msg)
+        self.assertIn('• Chưa phân cấp: phát 1', msg)
+        self.assertNotIn('Cấp 2', msg)
+
+    def test_signal_message_has_tier(self):
+        import gold_pa_bot as pa
+        with patch.object(pa.fx, 'send_telegram', return_value={'ok': True}) as send:
+            pa.send_signal(dict(order(tier=3), stars=3), 'Asia', datetime.fromtimestamp(T, timezone.utc))
+        self.assertIn('<b>Cấp 3 (dò đường)</b> - trend chưa', send.call_args.args[0])
+
+
 class NotifyTests(unittest.TestCase):
     def test_reply_fallback_and_no_resend(self):
         import gold_pa_bot as pa

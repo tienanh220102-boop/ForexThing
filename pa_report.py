@@ -11,6 +11,29 @@ import pa_ledger as ledger
 VN_TZ = timezone(timedelta(hours=7))
 WEEK = 7 * 86400
 
+TIER_LABELS = {1: 'Cấp 1 (mạnh)', 2: 'Cấp 2 (trung bình)', 3: 'Cấp 3 (dò đường)'}
+TIER_NOTES = {1: 'mốc giá mạnh (≥3 lần chạm) + phiên Á',
+              2: 'đủ điều kiện, chưa có điểm cộng đặc biệt',
+              3: 'trend chưa được cấu trúc xác nhận - lệnh dò, có thể là lúc bật trend'}
+ALL = object()
+
+
+def tier_of(p):
+    """Same precedence as build_order sizing: probe/danger first, then high-conviction."""
+    if p.get('probe') or p.get('danger'):
+        return 3
+    return 1 if p.get('high_conviction') else 2
+
+
+def tier_label(rec):
+    return TIER_LABELS.get(rec.get('tier'), 'Chưa phân cấp')
+
+
+def tier_line(p):
+    t = p.get('tier')
+    return f"<b>{tier_label(p)}</b>" + (f" - {TIER_NOTES[t]}" if t in TIER_NOTES else '')
+
+
 WIN_LABELS = {'TP1': 'CHẠM TP1', 'TP2': 'CHẠM TP2', 'SL': 'DÍNH SL', 'BE': 'VỀ HÒA VỐN',
               'TIMEOUT': 'HẾT 5 NGÀY - ĐÓNG THEO GIÁ', 'TRAIL': 'CHẠM SL KÉO THEO',
               'TIME_STOP': 'DỪNG THEO THỜI GIAN'}
@@ -57,9 +80,10 @@ def month_start(ts):
     return datetime(d.year, d.month, 1, tzinfo=VN_TZ).timestamp()
 
 
-def period_stats(state, start, end):
+def period_stats(state, start, end, tier=ALL):
     """Orders issued in [start, end) and results closed in [start, end)."""
-    recs = [r for r in state.get('signals', []) if r.get('ledger_version') == ledger.LEDGER_VERSION]
+    recs = [r for r in state.get('signals', []) if r.get('ledger_version') == ledger.LEDGER_VERSION
+            and (tier is ALL or r.get('tier') == tier)]
     closed = [r for r in recs if r.get('outcome') and start <= r.get('closed_ts', -1) < end]
     scored = {id(r) for r in ledger.scored(state)}
     rows = sorted((r for r in closed if id(r) in scored), key=lambda r: (r['closed_ts'], r['ts']))
@@ -89,7 +113,7 @@ def _tally(s):
 
 def result_message(rec, state):
     out = rec['outcome']
-    head = f"{rec['setup']} | {rec['dir']}"
+    head = f"{rec['setup']} | {rec['dir']} | {tier_label(rec)}"
     lines = []
     if out in ledger.SCORED:
         net = rec['net_r']
@@ -129,6 +153,20 @@ def weekly_due(last_weekly, now_ts):
     return end if (last_weekly or 0) < end else None
 
 
+def _tier_lines(state, start, end):
+    tiers = [1, 2, 3] + ([None] if any(r.get('tier') not in TIER_LABELS
+                                       for r in state.get('signals', [])) else [])
+    lines = []
+    for t in tiers:
+        s = period_stats(state, start, end, t)
+        if not s['issued'] and not s['n'] and not s['no_trade'] and not s['unscored']:
+            continue
+        wr = f" ({s['win_rate']:.0%})" if s['n'] else ''
+        lines.append(f"• {TIER_LABELS.get(t, 'Chưa phân cấp')}: phát {s['issued']} · khớp {s['filled']}"
+                     f" · {_tally(s)}{wr}")
+    return ['Theo cấp:'] + lines if lines else []
+
+
 def _block(title, s):
     if not s['issued'] and not s['n'] and not s['no_trade'] and not s['unscored']:
         return [f'<b>{title}</b>', 'Không có lệnh nào.']
@@ -146,10 +184,12 @@ def weekly_message(state, end):
     start = end - WEEK
     ms = month_start(end - 1)
     lines = ['📊 <b>PA PAPER - BÁO CÁO TUẦN</b>', '']
-    lines += _block(f"Tuần {_vn(start, '%d/%m')} - {_vn(end - 86400, '%d/%m/%Y')}", period_stats(state, start, end))
+    periods = [(f"Tuần {_vn(start, '%d/%m')} - {_vn(end - 86400, '%d/%m/%Y')}", start, end)]
     if ms > start:  # week crosses a month boundary: close the previous month too
         pms = month_start(ms - 1)
-        lines += [''] + _block(f"Tháng {_vn(pms, '%m/%Y')} (chốt cả tháng)", period_stats(state, pms, ms))
-    lines += [''] + _block(f"Tháng {_vn(ms, '%m/%Y')} (từ đầu tháng đến nay)", period_stats(state, ms, end))
+        periods.append((f"Tháng {_vn(pms, '%m/%Y')} (chốt cả tháng)", pms, ms))
+    periods.append((f"Tháng {_vn(ms, '%m/%Y')} (từ đầu tháng đến nay)", ms, end))
+    for i, (title, a, b) in enumerate(periods):
+        lines += ([''] if i else []) + _block(title, period_stats(state, a, b)) + _tier_lines(state, a, b)
     lines += ['', '<i>R = bội số rủi ro, đã trừ chi phí 0.40 USD/oz. Mô phỏng, không phải P&L broker.</i>']
     return '\n'.join(lines)

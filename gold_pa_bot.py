@@ -1133,6 +1133,7 @@ def send_photo(path, caption='', reply_to=None):
 def send_signal(p, session_lbl, now):
     # PAPER is the only enabled mode; no live execution/lot suggestion.
     lines = ['🧪 <b>PA PAPER - chi theo doi, khong vao lenh tien that</b>',
+             pa_report.tier_line(p),
              f'{p["setup"]} | {p["dir"]} | phien {session_lbl}',
              f'Gia tham chieu {p["entry"]:.2f} | SL {p["sl"]:.2f} | TP1 {p["tp1"]:.2f}',
             (f'Limit gia lap; het han sau {p.get("limit_ttl", 21600)/3600:g} gio, huy khi setup mat hieu luc.' if p.get('entry_type') == 'limit'
@@ -1493,6 +1494,8 @@ def main():
                                 and p.get('level_strength', 0) >= 3
                                 and 0 <= now.hour < 7
                                 and not p.get('probe') and not p.get('danger'))
+        # Nhan cap 1/2/3 chi de theo doi + thong ke, KHONG doi luat vao lenh/size
+        p['tier'] = pa_report.tier_of(p)
         raw=dict(p)
         p = build_order(p, atr_val, psych)
         if p is None:
