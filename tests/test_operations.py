@@ -62,11 +62,30 @@ class CalendarTests(unittest.TestCase):
             result,record=pa.deliver_paper_order(order(),'Asia','spot',T,study_ends_at=T+29)
             self.assertFalse(result['ok']);send.assert_not_called()
             result,record=pa.deliver_paper_order(order(entry_type='limit'),'Asia','spot',T,news.parse_week([event()],T),T+86400)
-        self.assertTrue(result['ok']);self.assertEqual(record['expires_at'],T+news.TTL)
+        # Limit song toi 1h truoc tin manh (event T+7200), KHONG bi kep 15 phut theo TTL lich tin
+        self.assertTrue(result['ok']);self.assertEqual(record['expires_at'],T+3600)
+        self.assertEqual(record['calendar_event'],'Test event')
         bars=[bar(t=t,o=101,h=101.5,l=100.5,c=101) for t in range(T+60,T+960,60)]
         bars.append(bar(t=T+960,o=101,h=101.5,l=99.5,c=100))
         ledger.advance(record,bars,T+1020,'spot')
-        self.assertEqual(record['outcome'],'NOFILL');self.assertNotIn('filled_ts',record)
+        self.assertIn('filled_ts',record)            # khop o phut 16, truoc day bi NOFILL oan
+        with patch.object(pa,'datetime') as clock,patch.object(pa,'send_signal',return_value={'ok':True}):
+            clock.now.return_value=datetime.fromtimestamp(T+30,timezone.utc)
+            later=pa.deliver_paper_order(order(entry_type='limit'),'Asia','spot',T,news.parse_week([event(T+86400)],T),T+5*86400)[1]
+        self.assertEqual(later['expires_at'],later['ts']+6*3600)   # khong co tin gan -> du limit_ttl
+        self.assertNotIn('calendar_event',later)
+
+    def test_news_cut_is_reported_as_cancel(self):
+        import gold_pa_bot as pa, pa_report
+        with patch.object(pa,'datetime') as clock,patch.object(pa,'send_signal',return_value={'ok':True}):
+            clock.now.return_value=datetime.fromtimestamp(T+30,timezone.utc)
+            o=order(entry_type='limit',entry=99,limit_ttl=7200)
+            record=pa.deliver_paper_order(o,'Asia','spot',T,news.parse_week([event(T+5400)],T),T+86400)[1]
+        self.assertEqual(record['expires_at'],T+1800)
+        ledger.advance(record,[bar(t=t) for t in range(T+60,T+1860,60)],T+1900,'spot')
+        msg=pa_report.result_message(record,{'signals':[record]})
+        self.assertIn('HUỶ LỆNH',msg);self.assertIn('trước tin mạnh: Test event',msg)
+        self.assertIn('Huỷ sớm lúc',pa_report.signal_message(o,'Asia',datetime.fromtimestamp(T+30,timezone.utc),0.4))
 
 
 class PortfolioTests(unittest.TestCase):

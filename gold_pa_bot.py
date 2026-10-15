@@ -1193,11 +1193,16 @@ def deliver_paper_order(order, session_lbl, source, analysis_ts, calendar=None, 
         cal_status, cal_reason = news_calendar.evaluate(calendar, issued_at.timestamp(), SYM)
         if cal_status in ('HARD','UNKNOWN'):
             return {'ok':False,'entry_rejected':'CALENDAR_'+cal_status}, None
-        deadlines=[e['ts']-3600 for e in calendar['events'] if e['currency'] in ('USD','ALL')
-                   and e['impact']=='high' and e['ts']-3600>issued_at.timestamp()]
+        news=[e for e in calendar['events'] if e['currency'] in ('USD','ALL')
+              and e['impact']=='high' and e['ts']-3600>issued_at.timestamp()]
+        # Lich tin chi kiem LUC VAO LENH (evaluate o tren) + huy lenh cho 1h truoc tin manh.
+        # KHONG kep doi lenh vao fetched_at+TTL (15 phut) nua: limit song du LIMIT_TTL.
         # Do not retrospectively renew pending orders with a later snapshot.
-        order['calendar_valid_until']=min([calendar['coverage_end']-3600,
-                                           calendar['fetched_at']+news_calendar.TTL]+deadlines)
+        order['calendar_valid_until']=min([calendar['coverage_end']-3600]+[e['ts']-3600 for e in news])
+        first=min(news,key=lambda e:e['ts']) if news else None
+        if (first and first['ts']-3600==order['calendar_valid_until']
+                and order['calendar_valid_until']<issued_at.timestamp()+order.get('limit_ttl',6*3600)):
+            order['calendar_event']=first['title']
     if study_ends_at is not None:
         order['calendar_valid_until']=min(order.get('calendar_valid_until',float('inf')),study_ends_at)
     ledger.new_record(order, issued_at.timestamp(), source,

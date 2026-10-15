@@ -45,7 +45,7 @@ def new_record(order, ts, source, *, policy='tp1_full', cost_price=0.4, executio
                 'max_drift_atr', 'max_signal_age', 'limit_ttl', 'invalidation_price',
                 'cancel_if_target_passed', 'risk_cost_price', 'level', 'structure',
                 'net_reward_risk', 'quote_t', 'quote_checked_at', 'quote_price',
-                'analysis_entry', 'target_wall', 'tier'):
+                'analysis_entry', 'target_wall', 'tier', 'calendar_event'):
         if key in order:
             rec[key] = order[key]
     if 'calendar_valid_until' in order:

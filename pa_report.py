@@ -47,6 +47,9 @@ def signal_message(p, session_lbl, now, cost_price):
              'Chot 100% tai TP1. TP2 chi de nghien cuu; khong co runner/nhoi lenh.',
              f'Chi phi gia lap: {cost_price:.2f} USD/oz/lenh. Khong phai P&L broker.',
              f'UTC: {now.isoformat()}']
+    ttl_end = now.timestamp() + p.get('limit_ttl', 21600)
+    if p.get('entry_type') == 'limit' and p.get('calendar_event') and p.get('calendar_valid_until', ttl_end) < ttl_end:
+        lines.insert(-1, f"Huỷ sớm lúc {_vn(p['calendar_valid_until'], '%H:%M %d/%m')} (giờ VN), 1 giờ trước tin mạnh: {p['calendar_event']}.")
     if p.get('rule_version'):
         lines.insert(-1, f'RR sau chi phi: {p["net_reward_risk"]:.2f}; gia thay doi/khong du RR thi huy khop PAPER.')
     return '\n'.join(lines)
@@ -144,9 +147,13 @@ def result_message(rec, state):
         lines += [f"Kết quả: <b>{net:+.2f}R</b> sau chi phí ({rec['pips']:+.1f} pip)",
                   f"Giữ lệnh {_duration(rec['closed_ts'] - rec['filled_ts'])}"]
     elif out in ledger.NON_TRADES:
-        title = 'KHÔNG KHỚP' if out == 'NOFILL' else 'HUỶ LỆNH'
+        news_cut = (out == 'NOFILL' and rec.get('calendar_event')
+                    and rec['closed_ts'] == rec.get('calendar_valid_until')
+                    and rec['closed_ts'] < rec['ts'] + rec.get('limit_ttl', 21600))
+        title = 'HUỶ LỆNH' if news_cut or out != 'NOFILL' else 'KHÔNG KHỚP'
         lines += [f"⚪ <b>KẾT QUẢ: {title}</b> | {head}",
-                  CANCEL_LABELS.get(out, out),
+                  f"Huỷ lệnh chờ 1 giờ trước tin mạnh: {rec['calendar_event']}." if news_cut
+                  else CANCEL_LABELS.get(out, out),
                   f"Limit {rec['entry_ref']:.2f} · đóng lúc {_vn(rec['closed_ts'])} (giờ VN)",
                   'Không tính vào thắng/thua.']
     else:
