@@ -29998,3 +29998,5 @@
 2026-10-14 15:15:42 UTC generated new fontManager
 2026-10-15 02:15:32 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
 2026-10-15 02:15:32 UTC generated new fontManager
+2026-10-15 14:15:37 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-10-15 14:15:37 UTC generated new fontManager
