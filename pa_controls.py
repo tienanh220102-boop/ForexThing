@@ -45,9 +45,18 @@ def admission(state, order):
     return None
 
 
+# Chi bam file LOGIC giao dich. pa_report.py / pa_notify.py (soan chu Telegram,
+# bao cao) co chu y KHONG nam o day: doi chu khong duoc reset nghien cuu forward.
+HASHED_FILES=('gold_pa_bot.py','forex_notifier.py','market_data.py','execution_rules.py',
+              'pa_ledger.py','pa_controls.py','news_calendar.py','pa_observations.py','requirements.txt')
+# Gia han tu dong khi CHI thieu mau: moi lan +30 ngay, tong toi da 365 ngay tu started_at.
+EXTENSION_DAYS=30
+STUDY_SETUPS=('sweep_reclaim','breakout')
+MAX_STUDY_DAYS=365
+
+
 def configuration_hash(root):
-    names=('gold_pa_bot.py','forex_notifier.py','market_data.py','execution_rules.py',
-           'pa_ledger.py','pa_controls.py','news_calendar.py','pa_observations.py','requirements.txt')
+    names=HASHED_FILES
     runtime={'BIAS':os.environ.get('BIAS','OFF'),'PA_MODE':os.environ.get('PA_MODE','paper')}
     return hashlib.sha256(b''.join((Path(root)/name).read_bytes() for name in names)+
                           json.dumps(runtime,sort_keys=True).encode()).hexdigest()
@@ -62,6 +71,38 @@ def study(state, now_ts, config_hash):
                         'runtime':{'BIAS':os.environ.get('BIAS','OFF'),'PA_MODE':os.environ.get('PA_MODE','paper')},
                         'execution_contract':'UTC spot M1; full TP1; aggregate cost 0.40 USD/oz; no broker fills'})
     current=studies[-1]
+    while True:
+        review=_review(state,current,now_ts)
+        new_end=_extension_end(current,review,now_ts)
+        if new_end is None:break
+        # Gia han: chi thieu mau, chua cham tran 365 ngay -> tiep tuc thu thap
+        current.setdefault('extensions',[]).append(
+            {'at':now_ts,'old_ends_at':current['ends_at'],'new_ends_at':new_end,
+             'issues':list(review['issues']),'resolved':review['metrics']['n'],
+             'per_setup':{k:review['groups'].get('setup:'+k,{}).get('n',0) for k in STUDY_SETUPS}})
+        current['ends_at']=new_end
+    state['forward_review']=review
+    return current['id']
+
+
+def _blockers(review):
+    """Van de KHONG phai thieu mau: chat luong du lieu + hieu suat (khi da tinh duoc)."""
+    out=[i for i in review['issues'] if not i.startswith('INSUFFICIENT_')]
+    m=review['metrics'];plan=review['plan']
+    if m['mean_r'] is not None and not m['mean_r']>plan['min_mean_net_r']:out.append('MEAN_R_NOT_POSITIVE')
+    if m['profit_factor'] is not None and m['profit_factor']<plan['min_profit_factor']:out.append('PROFIT_FACTOR_BELOW_MIN')
+    if m['max_dd_r']>plan['max_drawdown_r']:out.append('DRAWDOWN_ABOVE_MAX')
+    return out
+
+
+def _extension_end(current,review,now_ts):
+    if now_ts<current['ends_at'] or not review['issues'] or review['review_blockers']:
+        return None
+    new_end=min(current['ends_at']+EXTENSION_DAYS*86400,current['started_at']+MAX_STUDY_DAYS*86400)
+    return new_end if new_end>current['ends_at'] else None
+
+
+def _review(state, current, now_ts):
     cutoff=min(now_ts,current['ends_at'])
     rows=[r for r in state.get('signals',[]) if r.get('study_id')==current['id'] and r['ts']<=cutoff]
     resolved=[r for r in rows if r.get('status')=='CLOSED' and r.get('outcome') in ledger.SCORED and r['closed_ts']<=cutoff]
@@ -84,15 +125,18 @@ def study(state, now_ts, config_hash):
     issues=[]; plan=current['plan']
     if days<plan['min_calendar_days']:issues.append('INSUFFICIENT_DAYS')
     if metrics['n']<plan['min_resolved']:issues.append('INSUFFICIENT_RESOLVED')
-    for setup in ('sweep_reclaim','breakout'):
+    for setup in STUDY_SETUPS:
         if groups.get('setup:'+setup,{}).get('n',0)<plan['min_per_setup']:issues.append('INSUFFICIENT_'+setup.upper())
     if len(unknown)/max(1,len(rows))>plan['max_unknown_fraction']:issues.append('TOO_MUCH_UNKNOWN_DATA')
-    state['forward_review']={'study_id':current['id'],'days':round(days,2),'plan':plan,
+    review={'study_id':current['id'],'days':round(days,2),'plan':plan,
         'metrics':metrics,'groups':groups,'signals':len(rows),'unknown':len(unknown),'pending_at_cutoff':pending,
         'cutoff':cutoff,'ends_at':current['ends_at'],
-        'readiness':'REVIEW_DUE' if now_ts>=current['ends_at'] else 'COLLECTING','issues':issues,
+        'readiness':'REVIEW_DUE' if now_ts>=current['ends_at'] else
+                    'COLLECTING_EXTENDED' if current.get('extensions') else 'COLLECTING','issues':issues,
         'performance_checks':{'positive_mean':metrics['mean_r'] is not None and metrics['mean_r']>0,
                               'profit_factor':metrics['profit_factor'] is not None and metrics['profit_factor']>=plan['min_profit_factor'],
                               'drawdown':metrics['max_dd_r']<=plan['max_drawdown_r']},
-        'live_allowed':False}
-    return current['id']
+        'live_allowed':False,'extensions':len(current.get('extensions',[])),
+        'max_ends_at':current['started_at']+MAX_STUDY_DAYS*86400}
+    review['review_blockers']=_blockers(review)
+    return review

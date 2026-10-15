@@ -161,6 +161,104 @@ function renderResults(results) {
     </table>`;
 }
 
+// ---------- PA: hiệu quả (chỉ hiển thị số bot đã tính trong state.pa_report) ----------
+
+// Nhãn cấp phải trùng pa_report.TIER_LABELS (Telegram) — dashboard không tự suy cấp.
+const PA_TIER_LABELS = { 1: 'Cấp 1 (mạnh)', 2: 'Cấp 2 (trung bình)', 3: 'Cấp 3 (dò đường)' };
+const PA_TIER_KEYS = ['1', '2', '3', 'none'];
+const PA_SPRT_LABELS = {
+  CHUA_DU: 'Chưa đủ dữ liệu',
+  CONFIRM_EDGE: 'Có bằng chứng có edge',
+  REJECT_EDGE: 'Có bằng chứng KHÔNG có edge',
+};
+
+function paTierLabel(t) {
+  return PA_TIER_LABELS[t] || 'Chưa phân cấp';
+}
+
+function isNum(x) {
+  return typeof x === 'number' && isFinite(x);
+}
+
+function fmtNum(x) {
+  return isNum(x) ? String(x) : '—';
+}
+
+function fmtSigned(x, digits = 2) {
+  if (!isNum(x)) return '—';
+  return `${x > 0 ? '+' : ''}${x.toFixed(digits)}`;
+}
+
+function fmtR(x, signed = true) {
+  if (!isNum(x)) return '—';
+  const cls = x > 1e-9 ? 'pos' : x < -1e-9 ? 'neg' : '';
+  return `<span class="${cls}">${signed ? fmtSigned(x) : x.toFixed(2)}R</span>`;
+}
+
+function fmtWinRate(s) {
+  return isNum(s.win_rate) ? `${Math.round(s.win_rate * 100)}%` : '—';
+}
+
+function paStatsEmpty(s) {
+  // cùng điều kiện "Không có lệnh nào" của pa_report._block / _tier_lines
+  return !s || (!s.issued && !s.n && !s.no_trade && !s.unscored);
+}
+
+function renderPaPeriodCard(title, period) {
+  const s = period && period.stats;
+  const head = `<h3>${esc(title)}</h3>` + (period && period.label ? `<div class="muted">${esc(period.label)}</div>` : '');
+  if (!s) return `<div class="pa-period">${head}<span class="muted">Chưa có số liệu.</span></div>`;
+  if (paStatsEmpty(s)) return `<div class="pa-period">${head}<span class="muted">Không có lệnh nào.</span></div>`;
+
+  const other = isNum(s.n) && isNum(s.tp) && isNum(s.sl) ? s.n - s.tp - s.sl : 0;
+  const rows = [
+    ['Phát / khớp', `${esc(fmtNum(s.issued))} / ${esc(fmtNum(s.filled))}`],
+    ['Không khớp/huỷ', esc(fmtNum(s.no_trade)) + (s.unscored ? ` · không chấm ${esc(fmtNum(s.unscored))}` : '')],
+    ['TP / SL', `${esc(fmtNum(s.tp))} / ${esc(fmtNum(s.sl))}` + (other > 0 ? ` · ${esc(other)} khác` : '')],
+    ['Thắng / tổng', `${esc(fmtNum(s.wins))}/${esc(fmtNum(s.n))} (${esc(fmtWinRate(s))})`],
+    ['Tổng R', fmtR(s.total_r)],
+    ['TB R/lệnh', s.n ? fmtR(s.avg_r) : '—'],
+    ['Sụt giảm tối đa', s.n ? fmtR(s.max_dd_r, false) : '—'],
+    ['Tốt nhất / tệ nhất', `${fmtR(s.best_r)} / ${fmtR(s.worst_r)}`],
+  ];
+
+  const tiers = (period && period.tiers) || {};
+  const tierRows = PA_TIER_KEYS
+    .filter(k => tiers[k] && !paStatsEmpty(tiers[k]))
+    .map(k => {
+      const t = tiers[k];
+      return `<tr><td>${esc(paTierLabel(Number(k)))}</td><td>${esc(fmtNum(t.issued))}</td><td>${esc(fmtNum(t.filled))}</td>`
+        + `<td>${esc(fmtNum(t.wins))}/${esc(fmtNum(t.n))} (${esc(fmtWinRate(t))})</td><td>${fmtR(t.total_r)}</td></tr>`;
+    }).join('');
+  const tierTable = tierRows ? `<div class="table-wrap"><table class="pa-tier">
+      <thead><tr><th>Cấp</th><th>Phát</th><th>Khớp</th><th>Thắng/tổng</th><th>Tổng R</th></tr></thead>
+      <tbody>${tierRows}</tbody></table></div>` : '';
+
+  return `<div class="pa-period">${head}
+    <dl>${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl>${tierTable}</div>`;
+}
+
+function renderPaReport(report) {
+  if (!report || typeof report !== 'object') {
+    return '<div class="pa-report"><h3>Hiệu quả PA PAPER</h3>'
+      + '<span class="muted">Chưa có số liệu - sẽ có sau lượt chạy kế tiếp.</span></div>';
+  }
+  const sprt = report.sprt || {};
+  const verdict = PA_SPRT_LABELS[sprt.verdict] || (sprt.verdict ? String(sprt.verdict) : 'Chưa có');
+  const updated = isNum(report.generated_at)
+    ? new Date(report.generated_at * 1000).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }) + ' (giờ VN)'
+    : '—';
+  return `<div class="pa-report"><h3>Hiệu quả PA PAPER</h3>
+    <div class="pa-periods">
+      ${renderPaPeriodCard('Tuần', report.week)}
+      ${renderPaPeriodCard('Tháng', report.month)}
+      ${renderPaPeriodCard('Từ đầu', report.all)}
+    </div>
+    <p class="pa-sprt">SPRT: <b>${esc(verdict)}</b> · n = ${esc(fmtNum(sprt.n))} · LLR = ${esc(fmtSigned(sprt.llr))}
+      (ngưỡng bác ${esc(fmtSigned(sprt.lower))} / xác nhận ${esc(fmtSigned(sprt.upper))})</p>
+    <p class="muted">Số liệu do bot tính, trùng báo cáo Telegram · R đã trừ chi phí · cập nhật lúc ${esc(updated)}</p></div>`;
+}
+
 function renderGoldPa(state) {
   const target = document.getElementById('gold-pa');
   const legacyCount = (state.legacy?.state?.signals || (state.ledger_version === 2 ? [] : state.signals) || []).length;
@@ -173,21 +271,22 @@ function renderGoldPa(state) {
     <p>Lịch tin: <b>${esc(calendarStatus)}</b> — ${esc(calendar.reason || 'Chưa có dữ liệu')}.<br>
     Kiểm tra lúc: ${calendar.checked_at ? esc(new Date(calendar.checked_at*1000).toLocaleString('vi-VN')) : '—'}.<br>
     Lệnh đang giữ chỗ: ${esc(portfolio.active ?? '—')}/2; ngân sách PA PAPER: ${esc(portfolio.reserved_risk_units ?? '—')}/2 đơn vị. Không phản ánh tài khoản broker.<br>
-    Đợt đánh giá: ${esc(study.readiness || 'CHƯA BẮT ĐẦU')}, ${esc(study.days ?? 0)}/60 ngày,
+    Đợt đánh giá: ${esc(({COLLECTING: 'Đang thu thập', COLLECTING_EXTENDED: `Đang thu thập (đã gia hạn ${study.extensions || 0} lần vì thiếu mẫu)`, REVIEW_DUE: 'Đến hạn xem xét - tạm dừng lệnh mới'})[study.readiness] || study.readiness || 'CHƯA BẮT ĐẦU')}, đã chạy ${esc(study.days ?? 0)} ngày,
     ${esc(study.metrics?.n ?? 0)}/100 kết quả rõ. ${study.ends_at ? 'Mốc khóa: '+esc(new Date(study.ends_at*1000).toLocaleString('vi-VN'))+'.' : ''} Không tự bật tiền thật.</p>
     <details><summary>${esc(observations.count ?? 0)} ứng viên đã ghi nhận, gồm cả tín hiệu bị bỏ qua</summary>
     <p>Kết quả giả định từ lúc phát hiện, tách khỏi lệnh PAPER đã gửi; không phải bằng chứng một bộ lọc gây lỗ.</p>
     ${Object.entries(observations.groups || {}).map(([reason,g])=>`<p>${esc(reason)}: ${esc(g.candidates)} ứng viên; ${esc(g.shadow_resolved)} kết quả giả định rõ; ${Number(g.shadow_net_r).toFixed(2)}R.</p>`).join('')}</details>`;
+  const report = renderPaReport(state.pa_report);
   const signals = (state.ledger_version === 2 ? state.signals || [] : []).slice(-15).reverse();
   if (!signals.length) {
-    target.innerHTML = notice + '<span class="muted">Đang chờ tín hiệu PAPER dùng dữ liệu UTC đã kiểm tra.</span>';
+    target.innerHTML = notice + report + '<span class="muted">Đang chờ tín hiệu PAPER dùng dữ liệu UTC đã kiểm tra.</span>';
     return;
   }
 
-  target.innerHTML = notice + `
+  target.innerHTML = notice + report + `
     <table>
       <thead><tr>
-        <th>Ngày</th><th>Phiên</th><th>Setup</th><th>Hướng</th><th>⭐</th>
+        <th>Ngày</th><th>Phiên</th><th>Setup</th><th>Hướng</th><th>⭐</th><th>Cấp</th>
         <th>Entry</th><th>SL</th><th>TP1</th><th>TP2 tham khảo</th><th>Kết quả mô phỏng</th><th>R sau chi phí</th>
       </tr></thead>
       <tbody>${signals.map(s => `
@@ -197,11 +296,12 @@ function renderGoldPa(state) {
           <td>${esc(s.setup || '—')}</td>
           <td>${dirPill(s.dir)}</td>
           <td>${'★'.repeat(s.stars || 0)}</td>
+          <td>${esc(paTierLabel(s.tier))}</td>
           <td title="${esc(s.rule_version ? `RR sau phí: ${Number(s.net_reward_risk).toFixed(2)}; ${s.rule_version}` : 'Quy tắc gốc của lệnh')}">${fmtPrice(s.entry)}</td>
           <td>${fmtPrice(s.sl)}</td>
           <td>${fmtPrice(s.tp1)}</td>
           <td>${fmtPrice(s.tp2)}</td>
-          <td>${s.outcome ? `<span class="pill ${s.correct === true ? 'win' : s.correct === false ? 'loss' : 'open'}">${esc(s.outcome)}</span>` : esc(s.status || 'PENDING')}</td>
+          <td>${s.outcome ? `<span class="pill ${s.correct === true ? 'win' : s.correct === false ? 'loss' : 'open'}">${esc(s.outcome)}</span>` : esc(s.status || 'PENDING')}${isNum(s.result_sent_at) ? ` <span class="tg-sent" title="Đã gửi kết quả qua Telegram lúc ${esc(fmtEpoch(s.result_sent_at))}">✉</span>` : ''}</td>
           <td>${s.net_r == null ? '—' : Number(s.net_r).toFixed(3) + 'R'}</td>
         </tr>`).join('')}
       </tbody>

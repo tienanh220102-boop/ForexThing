@@ -560,12 +560,39 @@ def intermarket_signal(sym):
         return -dxy
     return 0.0
 
+FRED_DFII10_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10'
+
+def fetch_tips_real_yield(days=7, timeout=10):
+    """
+    TIPS 10Y real yield (series DFII10) tu FRED CSV - khong can key.
+    Thay cho yfinance '^DFII10' (da chet: 'possibly delisted' + 404 quoteSummary).
+    Tra ve pd.Series gia tri theo ngay (cung ngu nghia voi history()['Close'].dropna()),
+    chi giu cac ngay trong `days` ngay lich tinh tu quan sat cuoi.
+    Ngay nghi FRED ghi '.' hoac rong -> bo qua. Loi mang/parse -> Series rong (fail-safe).
+    """
+    try:
+        import io
+        r = requests.get(FRED_DFII10_URL, timeout=timeout)
+        r.raise_for_status()
+        df = pd.read_csv(io.StringIO(r.text))
+        if df.shape[1] < 2:
+            return pd.Series(dtype=float)
+        idx = pd.to_datetime(df.iloc[:, 0], errors='coerce')
+        vals = pd.to_numeric(df.iloc[:, 1], errors='coerce')   # '.' / rong -> NaN
+        s = pd.Series(vals.values, index=idx).dropna()
+        s = s[s.index.notna()].sort_index()
+        if s.empty:
+            return s
+        return s[s.index >= s.index[-1] - pd.Timedelta(days=days)]
+    except Exception:
+        return pd.Series(dtype=float)
+
 # ── Phuong trinh macro XAU/USD ───────────────────────────────
 def fetch_gold_macro():
     """
     Lay 5 nhan to macro anh huong den XAU/USD, cache 1 lan moi phien.
       DXY   (UUP)   — da co trong _im_cache, tai su dung
-      TIPS  (^DFII10)— US 10Y Real Yield = nominal - inflation expectations
+      TIPS  (FRED DFII10)— US 10Y Real Yield = nominal - inflation expectations
                         Driver MANH NHAT cua vang: real yield am → vang tang
       10Y   (^TNX)  — US Nominal Treasury Yield, nghich chieu Vang
       VIX   (^VIX)  — Chi so so hai, cung chieu Vang (safe haven)
@@ -582,11 +609,11 @@ def fetch_gold_macro():
         'vix_s':   0.0,
         'tips_s':  0.0,
     }
-    # TIPS 10Y Real Yield (^DFII10) — driver manh nhat cua vang
+    # TIPS 10Y Real Yield (FRED DFII10) — driver manh nhat cua vang
     # Real yield tang → co hoi tai chinh thuc su → Vang giam (no dividend/coupon)
     # Real yield < 0 → negative carry → Vang rat bullish
     try:
-        tips = yf.Ticker('^DFII10').history(period='7d', interval='1d')['Close'].dropna()
+        tips = fetch_tips_real_yield()
         if len(tips) >= 2:
             tips_now   = float(tips.iloc[-1])
             tips_delta = float(tips.iloc[-1] - tips.iloc[max(0, len(tips)-3)])

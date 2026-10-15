@@ -55,6 +55,7 @@ import hashlib
 # main() cua no co __main__ guard nen khong bi kich hoat.
 import forex_notifier as fx
 import pa_ledger as ledger
+import pa_notify
 import pa_report
 from market_data import DataQualityError, closed_h4, usable_cache
 
@@ -277,8 +278,14 @@ def load_state():
 def save_state(state):
     observations.summarize(state)
     state['portfolio'] = controls.portfolio(state)
+    now_ts = datetime.now(timezone.utc).timestamp()
     if state.get('forward_studies'):
-        controls.study(state, datetime.now(timezone.utc).timestamp(), controls.configuration_hash(_ROOT))
+        controls.study(state, now_ts, controls.configuration_hash(_ROOT))
+    # Snapshot bao cao cho dashboard (hop dong state['pa_report']) - moi run
+    try:
+        state['pa_report'] = pa_report.snapshot(state, now_ts, sprt_summary(state))
+    except Exception as e:
+        log.info(f'PA_REPORT_SNAPSHOT_FAIL {e}')
     temp = STATE_FILE + '.tmp'
     with open(temp, 'w', encoding='utf-8') as f:
         json.dump(state, f, indent=2, ensure_ascii=False)
@@ -1077,7 +1084,7 @@ def _trade_r(rec):
     return rec.get('net_r') if rec.get('ledger_version') == ledger.LEDGER_VERSION else None
 
 
-def report_running_r(state, now):
+def report_running_r(state, now):  # Khong con duoc goi: da thay boi pa_report (bao cao tuan + snapshot)
     rows = ledger.scored(state)
     unknown = sum(r.get('outcome') not in ledger.SCORED | ledger.NON_TRADES | {None}
                   for r in state.get('signals', []))
@@ -1110,6 +1117,17 @@ def _sprt_verdict(rs):
     return 'CHUA_DU', llr
 
 
+def sprt_summary(state):
+    """SPRT tren toan bo lenh v2 da cham diem, sap theo closed_ts (cho bao cao tuan + dashboard)."""
+    rows = sorted(ledger.scored(state), key=lambda r: (r['closed_ts'], r['ts']))
+    rs = [r['net_r'] for r in rows if math.isfinite(r['net_r'])]
+    verdict, llr = _sprt_verdict(rs)
+    if not math.isfinite(llr):
+        verdict, llr = 'CHUA_DU', 0.0
+    return {'verdict': verdict, 'llr': round(float(llr), 4), 'n': len(rs),
+            'upper': round(SPRT_A, 4), 'lower': round(SPRT_B, 4)}
+
+
 def check_live_validation(state, now):
     previous = state.get('monitor', {})
     current = ledger.monitor(state)
@@ -1132,42 +1150,25 @@ def send_photo(path, caption='', reply_to=None):
 
 def send_signal(p, session_lbl, now):
     # PAPER is the only enabled mode; no live execution/lot suggestion.
-    lines = ['🧪 <b>PA PAPER - chi theo doi, khong vao lenh tien that</b>',
-             pa_report.tier_line(p),
-             f'{p["setup"]} | {p["dir"]} | phien {session_lbl}',
-             f'Gia tham chieu {p["entry"]:.2f} | SL {p["sl"]:.2f} | TP1 {p["tp1"]:.2f}',
-            (f'Limit gia lap; het han sau {p.get("limit_ttl", 21600)/3600:g} gio, huy khi setup mat hieu luc.' if p.get('entry_type') == 'limit'
-              else 'Market gia lap khop tai OPEN phut day du tiep theo; gia khop co the khac.'),
-             'Chot 100% tai TP1. TP2 chi de nghien cuu; khong co runner/nhoi lenh.',
-             f'Chi phi gia lap: {PAPER_COST_PRICE:.2f} USD/oz/lenh. Khong phai P&L broker.',
-             f'UTC: {now.isoformat()}']
-    if p.get('rule_version'):
-        lines.insert(-1, f'RR sau chi phi: {p["net_reward_risk"]:.2f}; gia thay doi/khong du RR thi huy khop PAPER.')
-    return fx.send_telegram('\n'.join(lines))
+    # Chu tin nam o pa_report (ngoai configuration_hash) -> doi chu khong reset nghien cuu.
+    return fx.send_telegram(pa_report.signal_message(p, session_lbl, now, PAPER_COST_PRICE))
 
 
 def notify_results(state):
-    """Reply ket qua vao dung tin lenh goc; that bai thi thu lai o run sau."""
-    sent = 0
-    for rec in state.get('signals', []):
-        if not rec.get('outcome') or rec.get('result_sent_at') or rec.get('ledger_version') != ledger.LEDGER_VERSION:
-            continue
-        text = pa_report.result_message(rec, state)
-        result = fx.send_telegram(text, reply_to=rec.get('message_id'))
-        # Tin goc bi xoa / khong reply duoc -> van gui ket qua, khong reply
-        if not result.get('ok') and rec.get('message_id'):
-            result = fx.send_telegram(text)
-        if result.get('ok'):
-            rec['result_sent_at'] = datetime.now(timezone.utc).timestamp()
-            rec['result_message_id'] = result.get('result', {}).get('message_id')
-            sent += 1
-        else:
-            log.info('RESULT_TG_FAIL %s %s', rec.get('trade_id'), result)
-    return sent
+    """Reply ket qua vao dung tin lenh goc (vong gui nam o pa_notify)."""
+    return pa_notify.notify_results(state, send=fx.send_telegram)
+
+
+def data_watch(state, now, reason=None, detail=''):
+    """Canh bao bot mu du lieu (pa_notify.data_watchdog); loi khong lam hong run."""
+    try:
+        pa_notify.data_watchdog(state, now.timestamp(), reason, fx.send_telegram, detail)
+    except Exception as e:
+        log.info(f'DATA_WATCHDOG_FAIL {e}')
 
 
 def send_weekly(state, now, period_end):
-    result = fx.send_telegram(pa_report.weekly_message(state, period_end))
+    result = fx.send_telegram(pa_report.weekly_message(state, period_end, sprt=sprt_summary(state)))
     if result.get('ok'):
         state['last_weekly'] = now.timestamp()
         state['last_weekly_period_end'] = period_end
@@ -1224,6 +1225,11 @@ def main():
     now = datetime.now(timezone.utc)
     state = load_state()
     study_id=controls.study(state,now.timestamp(),controls.configuration_hash(_ROOT))
+    # Gia han (neu co) da xay ra trong study() o tren, TRUOC admission/deliver
+    try:
+        pa_notify.notify_extensions(state, fx.send_telegram)
+    except Exception as e:
+        log.info(f'EXTENSION_NOTIFY_FAIL {e}')
     state['entry_rules'] = {'version': entry_rules.RULE_VERSION,
                             'max_signal_age_seconds': entry_rules.MAX_SIGNAL_AGE,
                             'min_net_rr': dict(entry_rules.MIN_NET_RR),
@@ -1241,6 +1247,7 @@ def main():
             fx.save_price_history()
         else:
             state['data_health'] = {'ok': False, 'reason': 'H1 fetch failed', 'ts': now.timestamp()}
+            data_watch(state, now, 'H1_FETCH_FAILED')
             save_state(state)
             return
     cached = fx._price_history.get(SYM, {})
@@ -1285,6 +1292,7 @@ def main():
 
     if len(bars) < MIN_BARS:
         print('[PA] Chua du du lieu — thoat')
+        data_watch(state, now, 'NOT_ENOUGH_BARS', f'{len(bars)} nến')
         save_state(state)
         return
     run_blocks=[]
@@ -1302,6 +1310,7 @@ def main():
     if not 0 <= bar_age_h < MAX_BAR_AGE_H:
         print(f'[PA] Du lieu cu {bar_age_h:.1f}h (thi truong dong?) — khong quet keo moi')
         log.info(f'MARKET_STALE age={bar_age_h:.1f}h')
+        data_watch(state, now, 'MARKET_STALE', f'nến cuối cách {bar_age_h:.1f} giờ')
         save_state(state)
         return
 
@@ -1312,17 +1321,21 @@ def main():
     lo, hi = fx.PRICE_SANITY[SYM]
     if not (lo <= price <= hi):
         log.info(f'SANITY_FAIL price={price}')
+        data_watch(state, now, 'SANITY_FAIL', f'giá {price}')
         save_state(state)
         return
 
     atr_val = fx.atr(highs[:-1], lows[:-1], closes[:-1])
     if not atr_val or atr_val <= 0:
+        data_watch(state, now, 'ATR_INVALID')
         save_state(state)
         return
 
     if not state.get('data_health', {}).get('ok', True):
+        data_watch(state, now, 'EXECUTION_DATA_REJECTED', state['data_health'].get('reason', ''))
         save_state(state)
         return
+    data_watch(state, now)  # du lieu H1 + M1 deu dung duoc
 
     # [TRAM 2] Session
     session, session_lbl = get_session(now)

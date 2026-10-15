@@ -16,6 +16,7 @@ TIER_NOTES = {1: 'mốc giá mạnh (≥3 lần chạm) + phiên Á',
               2: 'đủ điều kiện, chưa có điểm cộng đặc biệt',
               3: 'trend chưa được cấu trúc xác nhận - lệnh dò, có thể là lúc bật trend'}
 ALL = object()
+SPRT_MIN_N = 5   # trung voi gold_pa_bot._sprt_verdict (duoi 5 lenh -> CHUA_DU)
 
 
 def tier_of(p):
@@ -32,6 +33,23 @@ def tier_label(rec):
 def tier_line(p):
     t = p.get('tier')
     return f"<b>{tier_label(p)}</b>" + (f" - {TIER_NOTES[t]}" if t in TIER_NOTES else '')
+
+
+def signal_message(p, session_lbl, now, cost_price):
+    """Noi dung tin lenh PAPER (chuyen tu gold_pa_bot.send_signal, giu nguyen chu).
+    Nam o day de doi chu khong lam doi configuration_hash cua nghien cuu forward."""
+    lines = ['🧪 <b>PA PAPER - chi theo doi, khong vao lenh tien that</b>',
+             tier_line(p),
+             f'{p["setup"]} | {p["dir"]} | phien {session_lbl}',
+             f'Gia tham chieu {p["entry"]:.2f} | SL {p["sl"]:.2f} | TP1 {p["tp1"]:.2f}',
+            (f'Limit gia lap; het han sau {p.get("limit_ttl", 21600)/3600:g} gio, huy khi setup mat hieu luc.' if p.get('entry_type') == 'limit'
+              else 'Market gia lap khop tai OPEN phut day du tiep theo; gia khop co the khac.'),
+             'Chot 100% tai TP1. TP2 chi de nghien cuu; khong co runner/nhoi lenh.',
+             f'Chi phi gia lap: {cost_price:.2f} USD/oz/lenh. Khong phai P&L broker.',
+             f'UTC: {now.isoformat()}']
+    if p.get('rule_version'):
+        lines.insert(-1, f'RR sau chi phi: {p["net_reward_risk"]:.2f}; gia thay doi/khong du RR thi huy khop PAPER.')
+    return '\n'.join(lines)
 
 
 WIN_LABELS = {'TP1': 'CHẠM TP1', 'TP2': 'CHẠM TP2', 'SL': 'DÍNH SL', 'BE': 'VỀ HÒA VỐN',
@@ -180,7 +198,24 @@ def _block(title, s):
     return lines
 
 
-def weekly_message(state, end):
+def sprt_line(sprt):
+    """1 dong tieng Viet cho ket qua SPRT (Wald) tren toan bo lenh v2 da cham diem."""
+    if not sprt:
+        return None
+    n, llr, up, lo = sprt['n'], sprt['llr'], sprt['upper'], sprt['lower']
+    if sprt['verdict'] == 'CONFIRM_EDGE':
+        return (f"🔬 Kiểm định SPRT: <b>có bằng chứng hệ thống có lợi thế</b> "
+                f"(n={n}, LLR {llr:+.2f} ≥ ngưỡng {up:+.2f}). Vẫn chỉ là mô phỏng PAPER.")
+    if sprt['verdict'] == 'REJECT_EDGE':
+        return (f"🔬 Kiểm định SPRT: <b>có bằng chứng hệ thống KHÔNG có lợi thế</b> "
+                f"(n={n}, LLR {llr:+.2f} ≤ ngưỡng {lo:+.2f}).")
+    if n < SPRT_MIN_N:
+        return f"🔬 Kiểm định SPRT: chưa đủ dữ liệu (mới {n} lệnh đã chấm, cần tối thiểu {SPRT_MIN_N})."
+    return (f"🔬 Kiểm định SPRT: chưa đủ dữ liệu để kết luận (n={n}, LLR {llr:+.2f}; "
+            f"cần ≥ {up:+.2f} để xác nhận có lợi thế, ≤ {lo:+.2f} để bác bỏ).")
+
+
+def weekly_message(state, end, sprt=None):
     start = end - WEEK
     ms = month_start(end - 1)
     lines = ['📊 <b>PA PAPER - BÁO CÁO TUẦN</b>', '']
@@ -191,5 +226,33 @@ def weekly_message(state, end):
     periods.append((f"Tháng {_vn(ms, '%m/%Y')} (từ đầu tháng đến nay)", ms, end))
     for i, (title, a, b) in enumerate(periods):
         lines += ([''] if i else []) + _block(title, period_stats(state, a, b)) + _tier_lines(state, a, b)
+    sprt_text = sprt_line(sprt)
+    if sprt_text:
+        lines += ['', sprt_text]
     lines += ['', '<i>R = bội số rủi ro, đã trừ chi phí 0.40 USD/oz. Mô phỏng, không phải P&L broker.</i>']
     return '\n'.join(lines)
+
+
+# ── Snapshot cho dashboard: state['pa_report'] (hop dong BOT ghi, DASH doc) ──
+def _period(state, label, start, end):
+    # end = thoi diem chup; +1s de lenh dong dung giay chup van duoc tinh (cua so nua mo)
+    stop = end + 1
+    tiers = {str(t): period_stats(state, start, stop, t) for t in (1, 2, 3)}
+    tiers['none'] = period_stats(state, start, stop, None)
+    return {'label': label, 'start': start, 'end': end,
+            'stats': period_stats(state, start, stop), 'tiers': tiers}
+
+
+def all_period(state, now_ts):
+    """Toan bo so lenh v2 (start=0)."""
+    return _period(state, 'Từ khi bắt đầu sổ lệnh v2', 0, now_ts)
+
+
+def snapshot(state, now_ts, sprt):
+    """Ham thuan: tuan (tu T7 00:00 UTC gan nhat), thang (theo gio VN), toan bo so v2 + SPRT."""
+    ws, ms = week_end(now_ts), month_start(now_ts)
+    return {'generated_at': now_ts,
+            'week': _period(state, f"Tuần {_vn(ws, '%d/%m')} - {_vn(now_ts, '%d/%m/%Y')}", ws, now_ts),
+            'month': _period(state, f"Tháng {_vn(ms, '%m/%Y')}", ms, now_ts),
+            'all': all_period(state, now_ts),
+            'sprt': dict(sprt)}

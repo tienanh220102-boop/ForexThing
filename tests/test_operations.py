@@ -96,10 +96,14 @@ class PortfolioTests(unittest.TestCase):
         state={'signals':[dict(self.rec(),ledger_version=1)],'observations':[{'shadow':self.rec()}]}
         self.assertEqual(controls.portfolio(state)['active'],0)
 
-    def test_fixed_cutoff_never_extends_and_never_auto_live(self):
+    def test_fixed_cutoff_with_data_issue_never_extends_and_never_auto_live(self):
+        # Co issue KHONG phai thieu mau (du lieu unknown) -> khong gia han, REVIEW_DUE
         state={};sid=controls.study(state,T,'abc');end=T+60*86400
         r=self.rec();r.update(study_id=sid,status='CLOSED',outcome='TP1',net_r=1,closed_ts=end+10)
-        state['signals']=[r];controls.study(state,end+100,'abc')
+        bad=self.rec();bad.update(study_id=sid,status='AMBIGUOUS',outcome='AMBIGUOUS',closed_ts=T+3600)
+        state['signals']=[r,bad];controls.study(state,end+100,'abc')
+        self.assertIn('TOO_MUCH_UNKNOWN_DATA',state['forward_review']['issues'])
+        self.assertNotIn('extensions',state['forward_studies'][-1])
         review=state['forward_review']
         self.assertEqual(review['cutoff'],end);self.assertEqual(review['metrics']['n'],0)
         self.assertEqual(review['pending_at_cutoff'],1)
