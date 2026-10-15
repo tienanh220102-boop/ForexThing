@@ -321,9 +321,17 @@ function renderDecisionsLog(text) {
 
   // Lấy timestamp dòng cuối cùng làm "cập nhật lần cuối"
   const m = text.trim().split('\n').pop().match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) UTC/);
+  data.logTs = m ? new Date(m[1].replace(' ', 'T') + 'Z').getTime() / 1000 : null;
+}
+
+// Mốc cập nhật = mới nhất giữa nhật ký phân tích (hệ vote đang tạm dừng nên có thể đứng yên)
+// và lượt chạy bot PA (pa_report.generated_at / data_health.ts).
+function renderUpdateBadge() {
+  const pa = data.goldPa || {};
+  const ts = [data.logTs, pa.pa_report?.generated_at, pa.data_health?.ts].filter(isNum);
   const badge = document.getElementById('last-update');
-  if (m) {
-    const t = new Date(m[1].replace(' ', 'T') + 'Z');
+  if (ts.length) {
+    const t = new Date(Math.max(...ts) * 1000);
     const ageMin = Math.round((Date.now() - t.getTime()) / 60000);
     badge.textContent = `Dữ liệu lúc ${t.toLocaleString('vi-VN')} (${ageMin} phút trước)`;
     badge.classList.toggle('stale', ageMin > 60);
@@ -502,6 +510,7 @@ async function load() {
     }),
   ];
   await Promise.allSettled(tasks);
+  renderUpdateBadge();
 
   if (data.prices) {
     populateSymbolSelect();
