@@ -72,7 +72,9 @@
       "last_bar_t": 1791991740,
       "outcome": "NOFILL",
       "correct": null,
-      "closed_ts": 1791991840.844069
+      "closed_ts": 1791991840.844069,
+      "result_sent_at": 1792046736.18762,
+      "result_message_id": 832
     },
     {
       "setup": "sweep_reclaim",
@@ -144,7 +146,9 @@
       "risk_scope": "PA_PAPER_only",
       "outcome": "NOFILL",
       "correct": null,
-      "closed_ts": 1792030544.78597
+      "closed_ts": 1792030544.78597,
+      "result_sent_at": 1792046736.901969,
+      "result_message_id": 833
     }
   ],
   "legacy": {
@@ -2234,9 +2238,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792045837.8619184,
+    "ts": 1792046735.381894,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792045740
+    "latest_bar_t": 1792046640
   },
   "monitor": {
     "n": 0,
@@ -2302,11 +2306,32 @@
         "PA_MODE": "paper"
       },
       "execution_contract": "UTC spot M1; full TP1; aggregate cost 0.40 USD/oz; no broker fills"
+    },
+    {
+      "id": "2026-10-06-controls-v1:bfb3335c7e69:1792046735",
+      "started_at": 1792046735.041323,
+      "ends_at": 1797230735.041323,
+      "configuration_hash": "bfb3335c7e6989df7fb83d40a9b34e5ebd4a638e63234dbf1d02218eaa887c03",
+      "plan": {
+        "min_calendar_days": 60,
+        "min_resolved": 100,
+        "min_per_setup": 25,
+        "max_unknown_fraction": 0.05,
+        "min_mean_net_r": 0,
+        "min_profit_factor": 1.2,
+        "max_drawdown_r": 5,
+        "purpose": "review only; never automatic live approval"
+      },
+      "runtime": {
+        "BIAS": "",
+        "PA_MODE": "paper"
+      },
+      "execution_contract": "UTC spot M1; full TP1; aggregate cost 0.40 USD/oz; no broker fills"
     }
   ],
   "forward_review": {
-    "study_id": "2026-10-06-controls-v1:687e6aa96554:1791777642",
-    "days": 3.1,
+    "study_id": "2026-10-06-controls-v1:bfb3335c7e69:1792046735",
+    "days": 0.0,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2326,11 +2351,11 @@
       "max_dd_r": 0
     },
     "groups": {},
-    "signals": 2,
+    "signals": 0,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792045837.958921,
-    "ends_at": 1796961642.567539,
+    "cutoff": 1792046736.911987,
+    "ends_at": 1797230735.041323,
     "readiness": "COLLECTING",
     "issues": [
       "INSUFFICIENT_DAYS",
@@ -3120,7 +3145,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792045837.952752,
+    "checked_at": 1792046736.902671,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -33436,7 +33461,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792045740,
+        "last_bar_t": 1792046640,
         "initial_risk": 23.455315205060288,
         "active_sl": 4168.12273520506,
         "filled_ts": 1792030560,
