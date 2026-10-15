@@ -36,22 +36,24 @@ def tier_line(p):
 
 
 def signal_message(p, session_lbl, now, cost_price):
-    """Noi dung tin lenh PAPER (chuyen tu gold_pa_bot.send_signal, giu nguyen chu).
-    Nam o day de doi chu khong lam doi configuration_hash cua nghien cuu forward."""
-    lines = ['🧪 <b>PA PAPER - chi theo doi, khong vao lenh tien that</b>',
+    """Noi dung tin lenh PAPER. Nam o day (ngoai configuration_hash) de doi chu
+    khong reset nghien cuu forward."""
+    ttl = p.get('limit_ttl', 21600)
+    ttl_end = now.timestamp() + ttl
+    lines = ['🧪 <b>PA PAPER - chỉ theo dõi, không vào lệnh tiền thật</b>',
              tier_line(p),
-             f'{p["setup"]} | {p["dir"]} | phien {session_lbl}',
-             f'Gia tham chieu {p["entry"]:.2f} | SL {p["sl"]:.2f} | TP1 {p["tp1"]:.2f}',
-            (f'Limit gia lap; het han sau {p.get("limit_ttl", 21600)/3600:g} gio, huy khi setup mat hieu luc.' if p.get('entry_type') == 'limit'
-              else 'Market gia lap khop tai OPEN phut day du tiep theo; gia khop co the khac.'),
-             'Chot 100% tai TP1. TP2 chi de nghien cuu; khong co runner/nhoi lenh.',
-             f'Chi phi gia lap: {cost_price:.2f} USD/oz/lenh. Khong phai P&L broker.',
-             f'UTC: {now.isoformat()}']
-    ttl_end = now.timestamp() + p.get('limit_ttl', 21600)
+             f'{p["setup"]} | {p["dir"]} | phiên {session_lbl}',
+             f'Giá vào {p["entry"]:.2f} | SL {p["sl"]:.2f} | TP1 {p["tp1"]:.2f}',
+             (f"Lệnh limit giả lập; hết hạn lúc {_vn(ttl_end, '%H:%M %d/%m')} (sau {ttl/3600:g} giờ), "
+              'huỷ nếu setup mất hiệu lực.' if p.get('entry_type') == 'limit'
+              else 'Lệnh market giả lập, khớp ở giá mở của phút kế tiếp; giá khớp có thể lệch.'),
+             'Chốt toàn bộ tại TP1. TP2 chỉ để nghiên cứu, không gồng/nhồi lệnh.',
+             f'Chi phí giả lập {cost_price:.2f} USD/oz/lệnh, không phải lãi lỗ tại sàn.',
+             f"Gửi lúc {_vn(now.timestamp(), '%H:%M %d/%m/%Y')} (giờ VN)"]
     if p.get('entry_type') == 'limit' and p.get('calendar_event') and p.get('calendar_valid_until', ttl_end) < ttl_end:
         lines.insert(-1, f"Huỷ sớm lúc {_vn(p['calendar_valid_until'], '%H:%M %d/%m')} (giờ VN), 1 giờ trước tin mạnh: {p['calendar_event']}.")
     if p.get('rule_version'):
-        lines.insert(-1, f'RR sau chi phi: {p["net_reward_risk"]:.2f}; gia thay doi/khong du RR thi huy khop PAPER.')
+        lines.insert(-1, f'Tỉ lệ lời/lỗ sau chi phí {p["net_reward_risk"]:.2f}; giá đổi làm tỉ lệ không còn đủ thì huỷ khớp.')
     return '\n'.join(lines)
 
 

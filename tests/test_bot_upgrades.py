@@ -358,7 +358,7 @@ class MovedMessageTests(unittest.TestCase):
         with patch.object(pa.fx, 'send_telegram', return_value=ok()) as send:
             pa.send_signal(p, 'Asia', now)
         self.assertEqual(send.call_args.args[0], report.signal_message(p, 'Asia', now, pa.PAPER_COST_PRICE))
-        self.assertIn('het han sau 2 gio', send.call_args.args[0])
+        self.assertIn('(sau 2 giờ)', send.call_args.args[0])
 
     def test_notify_results_direct_with_injected_send(self):
         state = {'signals': [tp_rec(msg=77)]}
