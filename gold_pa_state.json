@@ -2234,7 +2234,7 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792041330.4732072,
+    "ts": 1792041357.177383,
     "source": "twelvedata:XAU/USD",
     "latest_bar_t": 1792041240
   },
@@ -2329,7 +2329,7 @@
     "signals": 2,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792041330.483235,
+    "cutoff": 1792041357.253682,
     "ends_at": 1796961642.567539,
     "readiness": "COLLECTING",
     "issues": [
@@ -2443,7 +2443,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792040443.825966,
+    "fetched_at": 1792041357.180107,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3120,7 +3120,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792041330.476285,
+    "checked_at": 1792041357.245574,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
