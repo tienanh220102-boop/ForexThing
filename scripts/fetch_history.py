@@ -29,6 +29,7 @@ PAUSE = 9
 MAX_CALLS = int(os.environ.get('HISTORY_MAX_CALLS', '150'))
 RESERVE = int(os.environ.get('HISTORY_CREDIT_RESERVE', '450'))
 KEY = os.environ.get('TWELVE_DATA_KEY', '')
+DEADLINE = time.time() + 60 * float(os.environ.get('HISTORY_TIME_BUDGET_MIN', '1e9'))
 API = 'https://api.twelvedata.com'
 calls = 0
 
@@ -108,14 +109,18 @@ def page(tf, *, end_ts=None, start_ts=None):
     for attempt in range(4):
         if calls >= MAX_CALLS:
             raise Stop(f'MAX_CALLS={MAX_CALLS}')
+        if time.time() > DEADLINE:
+            raise Stop('het ngan sach thoi gian cua lan chay')
         if calls:
             time.sleep(PAUSE)
         left = credits_left()
         if left is None or left <= RESERVE:
             raise Stop(f'credit ngay con {left} <= du tru {RESERVE} cho bot')
         calls += 1
+        t_req = time.time()
         try:
             data = requests.get(f'{API}/time_series', params=params, timeout=60).json()
+            print(f'  goi #{calls} {tf} {time.time()-t_req:.1f}s code={data.get("code", "ok")} con~{left}', flush=True)
         except (requests.RequestException, ValueError):
             data = {'code': 'transport'}          # khong in URL: chua API key
         code = data.get('code')

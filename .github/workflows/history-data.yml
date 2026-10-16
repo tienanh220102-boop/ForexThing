@@ -25,7 +25,7 @@ concurrency:
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
       - name: Checkout branch du lieu (tao moi neu chua co)
@@ -47,7 +47,8 @@ jobs:
           TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
           HISTORY_DIR: ${{ github.workspace }}/hist
           HISTORY_MAX_CALLS: ${{ github.event.inputs.max_calls || '250' }}
-        run: python scripts/fetch_history.py ${{ github.event.inputs.timeframes || '1h 15min 5min 1min' }}
+          HISTORY_TIME_BUDGET_MIN: '270'   # tu dung em truoc timeout 300 de kip luu
+        run: python -u scripts/fetch_history.py ${{ github.event.inputs.timeframes || '1h 15min 5min 1min' }}
       - name: Commit vao branch history-data
         if: always()
         working-directory: hist
