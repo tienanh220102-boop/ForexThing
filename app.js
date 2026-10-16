@@ -7,6 +7,7 @@ const FILES = {
   goldPa: 'gold_pa_state.json',
   decisionsLog: 'data/decisions.log',
   prices: 'price_history.json',
+  scenarios: 'scenario_state.json',
 };
 
 const REFRESH_MS = 5 * 60 * 1000;
@@ -324,6 +325,57 @@ function renderDecisionsLog(text) {
   data.logTs = m ? new Date(m[1].replace(' ', 'T') + 'Z').getTime() / 1000 : null;
 }
 
+// ---------- Bảng kịch bản PA (scenario_state.json, do scenario_board.py ghi) ----------
+const SCN_TYPES = {
+  quet_dao: 'Quét đầu range rồi đảo chiều', pha_that: 'Phá thật range, chạy theo',
+  retest: 'Retest mốc vừa phá (BOS)', qml: 'Quasimodo (QML) sau CHoCH', ob: 'Retest vùng nến mạnh',
+};
+const SCN_STATUS = {
+  WAITING: ['open', 'Chờ kích hoạt'], TRIGGERED: ['open', 'Đã kích hoạt'], HIT: ['win', 'Chạm mục tiêu'],
+  FAILED: ['loss', 'Vô hiệu sau kích hoạt'], INVALIDATED: ['open', 'Vô hiệu trước kích hoạt'],
+  NOT_TRIGGERED: ['open', 'Không xảy ra'], EXPIRED_OPEN: ['open', 'Hết giờ chưa tới đích'], AMBIGUOUS: ['open', 'Không rõ'],
+};
+const SCN_BOARD = { EU: 'phiên Âu', US: 'phiên Mỹ' };
+
+function renderScenarios(state) {
+  const el = document.getElementById('scenarios');
+  const boards = (state.boards || []).filter(b => b.status !== 'SKIPPED');
+  if (!boards.length) {
+    el.innerHTML = '<span class="muted">Chưa có bảng nào — bảng đầu tiên đăng lúc 13:30 (phiên Âu) hoặc 19:30 (phiên Mỹ) giờ VN.</span>';
+    return;
+  }
+  const dirVN = d => d === 'BUY' ? 'MUA' : d === 'SELL' ? 'BÁN' : '—';
+  const latest = boards.slice(-2).reverse().map(b => {
+    const r = b.range || {};
+    const rows = (b.scenarios || []).map((x, i) => {
+      const [cls, label] = SCN_STATUS[x.status] || ['open', x.status];
+      return `<tr><td>${i === 0 && b.pick ? '⭐ ' : ''}${String.fromCharCode(65 + i)}</td>
+        <td>${esc(SCN_TYPES[x.type] || x.type)}</td><td>${dirVN(x.dir)}</td>
+        <td>${esc(x.score)}</td><td>${fmtPrice(x.target)}</td><td>${fmtPrice(x.stop)}</td>
+        <td><span class="pill ${cls}">${esc(label)}</span></td></tr>`;
+    }).join('');
+    const when = new Date(b.created_at * 1000).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+    const verdict = b.status === 'CLOSED' && b.pick
+      ? ` · kết quả: giá ${({ BUY: 'tăng', SELL: 'giảm', FLAT: 'đi ngang' })[b.actual_dir] || '—'} → ${b.actual_dir === b.pick ? '✅ nghiêng đúng' : '❌ nghiêng sai'}` : '';
+    return `<p><b>${esc(SCN_BOARD[b.name] || b.name)}</b> — ${esc(when)} · giá ${fmtPrice(b.price)} ·
+      ${esc(r.label || 'range')} ${fmtPrice(r.lo)}–${fmtPrice(r.hi)} · nghiêng <b>${dirVN(b.pick)}</b>${verdict}</p>
+      <table><thead><tr><th></th><th>Kịch bản</th><th>Hướng</th><th>Điểm</th><th>Mục tiêu</th><th>Vô hiệu</th><th>Trạng thái</th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  }).join('');
+  const st = state.stats || { by_type: [], pick: { n: 0, right: 0 } };
+  const p = st.pick || { n: 0, right: 0 };
+  const statRows = (st.by_type || []).filter(s => s.n).map(s => {
+    const done = s.hit + s.failed;
+    return `<tr><td>${esc(SCN_TYPES[s.type] || s.type)}</td><td>${s.regime === 'TREND' ? 'có trend' : 'đi ngang'}</td>
+      <td>${esc(s.n)}</td><td>${esc(s.triggered)}</td><td>${done ? `${s.hit}/${done} (${Math.round(100 * s.hit / done)}%)` : '—'}</td></tr>`;
+  }).join('');
+  el.innerHTML = latest + `
+    <p><b>Độ trúng tích luỹ</b> — "nghiêng" đúng ${p.n ? `${p.right}/${p.n} (${Math.round(100 * p.right / p.n)}%)` : 'chưa có dữ liệu'}.
+    Cần ít nhất vài chục bảng mới đáng tin.</p>
+    ${statRows ? `<table><thead><tr><th>Loại kịch bản</th><th>Ngày</th><th>Lần đưa ra</th><th>Kích hoạt</th><th>Chạm mục tiêu / đã phân định</th></tr></thead><tbody>${statRows}</tbody></table>` : ''}
+    <p class="muted">Chỉ là phân tích, không tạo hay thay đổi lệnh PAPER.</p>`;
+}
+
 // Mốc cập nhật = mới nhất giữa nhật ký phân tích (hệ vote đang tạm dừng nên có thể đứng yên)
 // và lượt chạy bot PA (pa_report.generated_at / data_health.ts).
 function renderUpdateBadge() {
@@ -497,6 +549,11 @@ async function load() {
       renderGoldPa(data.goldPa);
     }).catch(e => {
       document.getElementById('gold-pa').innerHTML = `<div class="error-box">${esc(e.message)}</div>`;
+    }),
+
+    fetchRaw(FILES.scenarios).then(t => renderScenarios(JSON.parse(t))).catch(() => {
+      document.getElementById('scenarios').innerHTML =
+        '<span class="muted">Chưa có bảng nào — bảng đầu tiên đăng lúc 13:30 (phiên Âu) hoặc 19:30 (phiên Mỹ) giờ VN.</span>';
     }),
 
     fetchRaw(FILES.decisionsLog).then(renderDecisionsLog).catch(e => {

@@ -48,6 +48,14 @@ jobs:
           BIAS:             ${{ vars.BIAS }}   # huong trend user cap: UP|DOWN|SIDE|OFF (trong rong = OFF)
         run: python gold_pa_bot.py
 
+      - name: Bang kich ban PA (chi phan tich, khong tao lenh)
+        continue-on-error: true   # loi o day khong duoc lam hong cron bot
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT:    ${{ secrets.TELEGRAM_CHAT }}
+          TWELVE_DATA_KEY:  ${{ secrets.TWELVE_DATA_KEY }}
+        run: python scenario_board.py
+
       - name: Save signal state and price history
         run: |
           git config user.name "github-actions[bot]"
@@ -56,6 +64,7 @@ jobs:
           git add price_history.json || true
           git add data/decisions.log || true
           git add gold_pa_state.json || true
+          git add scenario_state.json || true
           git add data/gold_pa.log || true
           if git diff --staged --quiet; then
             echo "Khong co thay doi state, bo qua commit"

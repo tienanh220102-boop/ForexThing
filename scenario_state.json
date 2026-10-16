@@ -1,0 +1,139 @@
+{
+ "boards": [],
+ "prior": {
+  "by_type": [
+   {
+    "type": "ob",
+    "regime": "RANGE",
+    "n": 59,
+    "triggered": 32,
+    "hit": 8,
+    "failed": 10,
+    "open": 14,
+    "n_r": 32,
+    "sum_r": -3.4039,
+    "avg_r": -0.1064
+   },
+   {
+    "type": "ob",
+    "regime": "TREND",
+    "n": 19,
+    "triggered": 11,
+    "hit": 2,
+    "failed": 4,
+    "open": 5,
+    "n_r": 11,
+    "sum_r": -2.5261,
+    "avg_r": -0.2296
+   },
+   {
+    "type": "pha_that",
+    "regime": "RANGE",
+    "n": 994,
+    "triggered": 275,
+    "hit": 193,
+    "failed": 48,
+    "open": 34,
+    "n_r": 275,
+    "sum_r": 6.91,
+    "avg_r": 0.0251
+   },
+   {
+    "type": "pha_that",
+    "regime": "TREND",
+    "n": 342,
+    "triggered": 83,
+    "hit": 60,
+    "failed": 10,
+    "open": 13,
+    "n_r": 83,
+    "sum_r": 7.5747,
+    "avg_r": 0.0913
+   },
+   {
+    "type": "qml",
+    "regime": "RANGE",
+    "n": 172,
+    "triggered": 34,
+    "hit": 5,
+    "failed": 12,
+    "open": 17,
+    "n_r": 34,
+    "sum_r": -1.4139,
+    "avg_r": -0.0416
+   },
+   {
+    "type": "qml",
+    "regime": "TREND",
+    "n": 29,
+    "triggered": 7,
+    "hit": 1,
+    "failed": 3,
+    "open": 3,
+    "n_r": 7,
+    "sum_r": 0.115,
+    "avg_r": 0.0164
+   },
+   {
+    "type": "quet_dao",
+    "regime": "RANGE",
+    "n": 1094,
+    "triggered": 397,
+    "hit": 67,
+    "failed": 206,
+    "open": 123,
+    "n_r": 396,
+    "sum_r": 16.6935,
+    "avg_r": 0.0422
+   },
+   {
+    "type": "quet_dao",
+    "regime": "TREND",
+    "n": 314,
+    "triggered": 98,
+    "hit": 21,
+    "failed": 58,
+    "open": 19,
+    "n_r": 98,
+    "sum_r": -13.7268,
+    "avg_r": -0.1401
+   },
+   {
+    "type": "retest",
+    "regime": "RANGE",
+    "n": 250,
+    "triggered": 90,
+    "hit": 36,
+    "failed": 44,
+    "open": 9,
+    "n_r": 89,
+    "sum_r": 10.1383,
+    "avg_r": 0.1139
+   },
+   {
+    "type": "retest",
+    "regime": "TREND",
+    "n": 90,
+    "triggered": 25,
+    "hit": 7,
+    "failed": 14,
+    "open": 4,
+    "n_r": 25,
+    "sum_r": -5.9858,
+    "avg_r": -0.2394
+   }
+  ],
+  "pick": {
+   "n": 471,
+   "right": 200,
+   "flat": 65
+  },
+  "source": "hyp35 backtest 2025-05-19..2026-10-15 (M15 gop tu M1 Twelve Data, khong co lich tin)",
+  "pick_skill": {
+   "period": "held-out 03–10/2026",
+   "right": 133,
+   "n": 290,
+   "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
+  }
+ }
+}
