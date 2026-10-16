@@ -4,7 +4,8 @@ name: Update XAU/USD history (Twelve Data)
 # checkout cua cron bot). Script tu dung khi credit ngay con <= du tru cho bot.
 on:
   schedule:
-    - cron: '17 1 * * *'     # moi ngay 08:17 VN: tai tiep backfill / cap nhat phan moi
+    - cron: '17 1,7,13,19 * * *'   # 4 lan/ngay: tu tai tiep backfill; script tu dung khi
+                                   # credit ngay chi con du tru cho bot (reset 00:00 UTC)
   workflow_dispatch:
     inputs:
       timeframes:
@@ -59,3 +60,32 @@ jobs:
             git push -q origin history-data
           fi
           cat summary.json || true
+      - name: Bao Telegram mot lan khi du lieu da du (tat ca khung cham 2020 hoac nguon het)
+        if: success()
+        working-directory: hist
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, subprocess, urllib.parse, urllib.request
+          s = json.loads(pathlib.Path('summary.json').read_text())
+          series = {x['tf']: x for x in s.get('series', [])}
+          need = ['1h', '15min', '5min', '1min']
+          done = all(t in series and (series[t].get('complete_to_start') or series[t].get('source_exhausted_before_start')) for t in need)
+          flag = pathlib.Path('COMPLETE')
+          if not done or flag.exists():
+              print('chua du' if not done else 'da bao truoc do'); raise SystemExit
+          lines = ['📦 <b>Dữ liệu lịch sử XAU/USD đã tải đủ</b> (Twelve Data, UTC)']
+          for t in need:
+              x = series[t]
+              lines.append(f"{t}: {x['bars']:,} nến, {x['first'][:10]} → {x['last'][:10]}, khoảng trống bất thường {x['gaps_over_6h_not_weekend']}")
+          lines.append('Có thể chạy kiểm định edge trên M1 (workshop/hyp34_live_replay_m1.py).')
+          data = urllib.parse.urlencode({'chat_id': os.environ['TELEGRAM_CHAT'], 'text': chr(10).join(lines), 'parse_mode': 'HTML'}).encode()
+          ok = json.load(urllib.request.urlopen(f"https://api.telegram.org/bot{os.environ['TELEGRAM_TOKEN']}/sendMessage", data, timeout=20)).get('ok')
+          if ok:
+              flag.write_text(s['updated_at'] + chr(10))
+              subprocess.run(['git', 'add', 'COMPLETE'], check=True)
+              subprocess.run(['git', 'commit', '-q', '-m', 'data: backfill complete'], check=True)
+              subprocess.run(['git', 'push', '-q', 'origin', 'history-data'], check=True)
+          PY
