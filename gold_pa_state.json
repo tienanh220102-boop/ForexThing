@@ -2491,9 +2491,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792175028.3610046,
+    "ts": 1792175441.483197,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792174920
+    "latest_bar_t": 1792175340
   },
   "monitor": {
     "n": 2,
@@ -2687,7 +2687,7 @@
     "signals": 2,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792175028.946512,
+    "cutoff": 1792175441.914554,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3497,7 +3497,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792175028.603141,
+    "checked_at": 1792175441.487376,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -39613,7 +39613,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792174920,
+        "last_bar_t": 1792175340,
         "initial_risk": 25.24436831098228,
         "active_sl": 4148.754171689017,
         "filled_ts": 1792120560,
@@ -43734,7 +43734,7 @@
         "mae_r": 0.0,
         "events": [],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792174920
+        "last_bar_t": 1792175340
       },
       "evaluation": "PENDING"
     },
@@ -44538,7 +44538,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.0058056781239906674,
-        "mae_r": 0.14360926492562193,
+        "mae_r": 0.21404419862070886,
         "events": [
           {
             "type": "FILL",
@@ -44547,7 +44547,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792174920,
+        "last_bar_t": 1792175340,
         "initial_risk": 22.118001938418274,
         "active_sl": 4142.350008061581,
         "filled_ts": 1792174560,
@@ -44566,10 +44566,6 @@
     "last_reason": null,
     "alerted": false,
     "recent": [
-      [
-        1792089040.940281,
-        0
-      ],
       [
         1792089940.69143,
         0
@@ -44977,15 +44973,19 @@
       [
         1792175028.158561,
         0
+      ],
+      [
+        1792175441.252959,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792175028.946512,
+    "generated_at": 1792175441.914554,
     "week": {
       "label": "Tuần 10/10 - 17/10/2026",
       "start": 1791590400.0,
-      "end": 1792175028.946512,
+      "end": 1792175441.914554,
       "stats": {
         "issued": 5,
         "filled": 2,
@@ -45082,7 +45082,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792175028.946512,
+      "end": 1792175441.914554,
       "stats": {
         "issued": 5,
         "filled": 2,
@@ -45179,7 +45179,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792175028.946512,
+      "end": 1792175441.914554,
       "stats": {
         "issued": 5,
         "filled": 2,
