@@ -2,46 +2,63 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-10-16T04:11:53+00:00",
- "calls_this_run": 7,
- "stopped": "credit ngay con None <= du tru 450 cho bot",
+ "updated_at": "2026-10-16T12:24:04+00:00",
+ "calls_this_run": 0,
+ "stopped": "credit ngay con 397 <= du tru 450 cho bot",
  "series": [
   {
    "tf": "1h",
-   "bars": 29999,
-   "first": "2022-03-24 06:00",
+   "bars": 42694,
+   "first": "2020-01-24 02:00",
    "last": "2026-10-16 03:00",
    "complete_to_start": false,
    "source_exhausted_before_start": false,
-   "gaps_over_6h_not_weekend": 7,
+   "gaps_over_6h_not_weekend": 14,
    "largest_gaps": [
     [
-     "2022-04-14 20:00",
-     "2022-04-17 22:00",
+     "2020-12-24 18:00",
+     "2020-12-27 23:00",
+     77.0
+    ],
+    [
+     "2020-12-31 19:00",
+     "2021-01-03 23:00",
+     76.0
+    ],
+    [
+     "2020-04-09 20:00",
+     "2020-04-12 22:00",
      74.0
     ],
     [
-     "2024-03-28 20:00",
-     "2024-03-31 22:00",
+     "2021-04-01 20:00",
+     "2021-04-04 22:00",
      74.0
     ],
     [
-     "2023-04-06 22:00",
-     "2023-04-09 22:00",
-     72.0
-    ],
-    [
-     "2025-04-14 10:00",
-     "2025-04-17 04:00",
-     66.0
-    ],
-    [
-     "2024-12-24 18:00",
-     "2024-12-25 23:00",
-     29.0
+     "2021-12-23 21:00",
+     "2021-12-26 23:00",
+     74.0
     ]
    ],
-   "added_this_run": 29999
+   "added_this_run": 0
+  },
+  {
+   "tf": "1min",
+   "bars": 670000,
+   "first": "2025-05-18 14:34",
+   "last": "2026-10-16 04:15",
+   "complete_to_start": false,
+   "source_exhausted_before_start": false,
+   "gaps_over_6h_not_weekend": 1,
+   "largest_gaps": [
+    [
+     "2025-06-15 14:27",
+     "2025-06-15 22:00",
+     7.5
+    ]
+   ],
+   "added_this_run": 0
   }
  ]
 }
