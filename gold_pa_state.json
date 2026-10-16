@@ -241,7 +241,7 @@
     {
       "setup": "sweep_reclaim",
       "dir": "BUY",
-      "entry": 4176.23846,
+      "entry": 4176.74972,
       "sl": 4156.042854053097,
       "tp1": 4196.434065946903,
       "tp2": 4206.531868920354,
@@ -278,7 +278,7 @@
       "source": "twelvedata:XAU/USD",
       "entry_type": "market",
       "entry_ref": 4176.23846,
-      "status": "PENDING",
+      "status": "OPEN",
       "policy": "tp1_full",
       "cost_price": 0.4,
       "not_before": 1792124160,
@@ -291,9 +291,15 @@
       },
       "remaining": 1.0,
       "realized_r": 0.0,
-      "mfe_r": 0.0,
-      "mae_r": 0.0,
-      "events": [],
+      "mfe_r": 0.23138846855366696,
+      "mae_r": 0.007903658642491929,
+      "events": [
+        {
+          "type": "FILL",
+          "ts": 1792124160,
+          "price": 4176.74972
+        }
+      ],
       "analysis_ts": 1792124131.791522,
       "issued_at": 1792124133.052869,
       "message_id": 837,
@@ -301,7 +307,12 @@
       "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
       "risk_units": 1.0,
       "trade_id": "911ec8637bcc-1792124133685",
-      "risk_scope": "PA_PAPER_only"
+      "risk_scope": "PA_PAPER_only",
+      "last_bar_t": 1792124940,
+      "initial_risk": 20.706865946903235,
+      "active_sl": 4156.042854053097,
+      "filled_ts": 1792124160,
+      "timeout_at": 1792556160
     }
   ],
   "legacy": {
@@ -2392,9 +2403,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792124132.1855807,
+    "ts": 1792125053.2105336,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792124040
+    "latest_bar_t": 1792124940
   },
   "monitor": {
     "n": 1,
@@ -2548,7 +2559,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 0.0,
+    "days": 0.01,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2571,7 +2582,7 @@
     "signals": 1,
     "unknown": 0,
     "pending_at_cutoff": 1,
-    "cutoff": 1792124136.399692,
+    "cutoff": 1792125054.036448,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -2600,7 +2611,7 @@
         "shadow_wins": 0,
         "evaluations": {
           "SL": 3,
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 4
       },
@@ -2646,7 +2657,7 @@
           "TP1": 9,
           "TIMEOUT": 1,
           "NOT_EVALUABLE": 5,
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 0
       },
@@ -2700,7 +2711,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792123237.963225,
+    "fetched_at": 1792125053.214101,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3377,7 +3388,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792124132.188025,
+    "checked_at": 1792125053.398442,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -39493,7 +39504,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792124040,
+        "last_bar_t": 1792124940,
         "initial_risk": 25.24436831098228,
         "active_sl": 4148.754171689017,
         "filled_ts": 1792120560,
@@ -40262,7 +40273,7 @@
       "shadow": {
         "setup": "breakout",
         "dir": "BUY",
-        "entry": 4176.23846,
+        "entry": 4176.74972,
         "sl": 4159.827745675517,
         "tp1": 4209.059888648966,
         "tp2": 4225.470602973449,
@@ -40280,7 +40291,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4176.23846,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1792124160,
@@ -40293,12 +40304,23 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mfe_r": 0.28314249319406154,
+        "mae_r": 0.00967144831105064,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1792124160,
+            "price": 4176.74972
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1792124940,
+        "initial_risk": 16.921974324483017,
+        "active_sl": 4159.827745675517,
+        "filled_ts": 1792124160,
+        "timeout_at": 1792556160
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     },
     {
       "id": "7fdccb614442944cd275",
@@ -41065,12 +41087,16 @@
         {
           "ts": 1792124133.685733,
           "reason": "ACCEPTED"
+        },
+        {
+          "ts": 1792125054.03607,
+          "reason": "COOLDOWN"
         }
       ],
       "shadow": {
         "setup": "sweep_reclaim",
         "dir": "BUY",
-        "entry": 4176.23846,
+        "entry": 4176.74972,
         "sl": 4156.042854053097,
         "tp1": 4196.434065946903,
         "tp2": 4206.531868920354,
@@ -41088,7 +41114,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4176.23846,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1792124160,
@@ -41101,12 +41127,23 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mfe_r": 0.23138846855366696,
+        "mae_r": 0.007903658642491929,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1792124160,
+            "price": 4176.74972
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1792124940,
+        "initial_risk": 20.706865946903235,
+        "active_sl": 4156.042854053097,
+        "filled_ts": 1792124160,
+        "timeout_at": 1792556160
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     }
   ],
   "momentum": {
@@ -41466,18 +41503,22 @@
       [
         1792124131.791522,
         0
+      ],
+      [
+        1792125052.866407,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792124136.399692,
+    "generated_at": 1792125054.036448,
     "week": {
       "label": "Tuần 10/10 - 16/10/2026",
       "start": 1791590400.0,
-      "end": 1792124136.399692,
+      "end": 1792125054.036448,
       "stats": {
         "issued": 4,
-        "filled": 1,
+        "filled": 2,
         "n": 1,
         "wins": 0,
         "losses": 1,
@@ -41496,7 +41537,7 @@
       "tiers": {
         "1": {
           "issued": 1,
-          "filled": 0,
+          "filled": 1,
           "n": 0,
           "wins": 0,
           "losses": 0,
@@ -41571,10 +41612,10 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792124136.399692,
+      "end": 1792125054.036448,
       "stats": {
         "issued": 4,
-        "filled": 1,
+        "filled": 2,
         "n": 1,
         "wins": 0,
         "losses": 1,
@@ -41593,7 +41634,7 @@
       "tiers": {
         "1": {
           "issued": 1,
-          "filled": 0,
+          "filled": 1,
           "n": 0,
           "wins": 0,
           "losses": 0,
@@ -41668,10 +41709,10 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792124136.399692,
+      "end": 1792125054.036448,
       "stats": {
         "issued": 4,
-        "filled": 1,
+        "filled": 2,
         "n": 1,
         "wins": 0,
         "losses": 1,
@@ -41690,7 +41731,7 @@
       "tiers": {
         "1": {
           "issued": 1,
-          "filled": 0,
+          "filled": 1,
           "n": 0,
           "wins": 0,
           "losses": 0,
