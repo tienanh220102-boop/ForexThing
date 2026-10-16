@@ -1,0 +1,61 @@
+name: Update XAU/USD history (Twelve Data)
+
+# Du lieu luu o branch rieng 'history-data' (khong publish len Pages, khong lam nang
+# checkout cua cron bot). Script tu dung khi credit ngay con <= du tru cho bot.
+on:
+  schedule:
+    - cron: '17 1 * * *'     # moi ngay 08:17 VN: tai tiep backfill / cap nhat phan moi
+  workflow_dispatch:
+    inputs:
+      timeframes:
+        description: 'Khung can tai (cach nhau boi dau cach)'
+        default: '1h 15min 5min 1min'
+      max_calls:
+        description: 'So request toi da lan nay'
+        default: '250'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: history-data
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout branch du lieu (tao moi neu chua co)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          if git ls-remote --exit-code --heads origin history-data >/dev/null; then
+            git clone -q --depth 1 --branch history-data "$url" hist
+          else
+            mkdir hist && cd hist && git init -q -b history-data && git remote add origin "$url"
+          fi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests tzdata
+      - name: Fetch history (cung nguon voi bot live)
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+          HISTORY_DIR: ${{ github.workspace }}/hist
+          HISTORY_MAX_CALLS: ${{ github.event.inputs.max_calls || '250' }}
+        run: python scripts/fetch_history.py ${{ github.event.inputs.timeframes || '1h 15min 5min 1min' }}
+      - name: Commit vao branch history-data
+        if: always()
+        working-directory: hist
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Khong co du lieu moi"
+          else
+            git commit -q -m "data: XAU/USD history $(date -u +%F)"
+            git push -q origin history-data
+          fi
+          cat summary.json || true
