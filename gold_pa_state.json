@@ -308,7 +308,7 @@
       "risk_units": 1.0,
       "trade_id": "911ec8637bcc-1792124133685",
       "risk_scope": "PA_PAPER_only",
-      "last_bar_t": 1792143780,
+      "last_bar_t": 1792144080,
       "initial_risk": 20.706865946903235,
       "active_sl": 4156.042854053097,
       "filled_ts": 1792124160,
@@ -2403,9 +2403,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792143929.4399984,
+    "ts": 1792144235.4922953,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792143780
+    "latest_bar_t": 1792144080
   },
   "monitor": {
     "n": 1,
@@ -2582,7 +2582,7 @@
     "signals": 1,
     "unknown": 0,
     "pending_at_cutoff": 1,
-    "cutoff": 1792143929.448307,
+    "cutoff": 1792144239.041687,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -2712,7 +2712,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792143039.876828,
+    "fetched_at": 1792144235.496225,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3389,7 +3389,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792143929.443311,
+    "checked_at": 1792144239.033806,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -39505,7 +39505,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792143780,
+        "last_bar_t": 1792144080,
         "initial_risk": 25.24436831098228,
         "active_sl": 4148.754171689017,
         "filled_ts": 1792120560,
@@ -40315,7 +40315,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792143780,
+        "last_bar_t": 1792144080,
         "initial_risk": 16.921974324483017,
         "active_sl": 4159.827745675517,
         "filled_ts": 1792124160,
@@ -41138,7 +41138,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792143780,
+        "last_bar_t": 1792144080,
         "initial_risk": 20.706865946903235,
         "active_sl": 4156.042854053097,
         "filled_ts": 1792124160,
@@ -41949,7 +41949,7 @@
         "mae_r": 0.0,
         "events": [],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792143780
+        "last_bar_t": 1792144080
       },
       "evaluation": "PENDING"
     },
@@ -42755,7 +42755,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792143780,
+        "last_bar_t": 1792144080,
         "initial_risk": 12.964063842574433,
         "active_sl": 4167.394576157426,
         "filled_ts": 1792138560,
@@ -42774,10 +42774,6 @@
     "last_reason": null,
     "alerted": false,
     "recent": [
-      [
-        1792057535.151344,
-        0
-      ],
       [
         1792058443.812053,
         0
@@ -43185,15 +43181,19 @@
       [
         1792143929.025303,
         0
+      ],
+      [
+        1792144235.148962,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792143929.448307,
+    "generated_at": 1792144239.041687,
     "week": {
       "label": "Tuần 10/10 - 16/10/2026",
       "start": 1791590400.0,
-      "end": 1792143929.448307,
+      "end": 1792144239.041687,
       "stats": {
         "issued": 4,
         "filled": 2,
@@ -43290,7 +43290,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792143929.448307,
+      "end": 1792144239.041687,
       "stats": {
         "issued": 4,
         "filled": 2,
@@ -43387,7 +43387,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792143929.448307,
+      "end": 1792144239.041687,
       "stats": {
         "issued": 4,
         "filled": 2,
