@@ -2,9 +2,9 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-10-16T12:24:04+00:00",
+ "updated_at": "2026-10-16T17:23:34+00:00",
  "calls_this_run": 0,
- "stopped": "credit ngay con 397 <= du tru 450 cho bot",
+ "stopped": "credit ngay con 301 <= du tru 450 cho bot",
  "series": [
   {
    "tf": "1h",
