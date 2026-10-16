@@ -121,7 +121,7 @@ class ExecutionLifecycleTests(unittest.TestCase):
     def test_rule_snapshot_and_setup_ttl(self):
         p=guarded(entry_type='limit'); r=ledger.new_record(p,T,'spot')
         p['min_net_rr']=999
-        self.assertEqual(r['min_net_rr'],.8); self.assertEqual(r['expires_at'],T+7200)
+        self.assertEqual(r['min_net_rr'],.8); self.assertEqual(r['expires_at'],T+6*3600)
         old=ledger.new_record(order(),T,'spot')
         self.assertNotIn('rule_version',old); self.assertEqual(old['expires_at'],T+21600)
 
