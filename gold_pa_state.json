@@ -308,7 +308,7 @@
       "risk_units": 1.0,
       "trade_id": "911ec8637bcc-1792124133685",
       "risk_scope": "PA_PAPER_only",
-      "last_bar_t": 1792131240,
+      "last_bar_t": 1792132140,
       "initial_risk": 20.706865946903235,
       "active_sl": 4156.042854053097,
       "filled_ts": 1792124160,
@@ -2399,13 +2399,13 @@
   "pa_knowledge": {
     "adjust": {},
     "disabled": "audit_recovery",
-    "updated": 1792044930.012103
+    "updated": 1792132232.926555
   },
   "data_health": {
     "ok": true,
-    "ts": 1792131329.798647,
+    "ts": 1792132233.2355616,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792131240
+    "latest_bar_t": 1792132140
   },
   "monitor": {
     "n": 1,
@@ -2415,7 +2415,7 @@
     "review_required": false
   },
   "last_weekly": 1791866738.811728,
-  "last_learn": 1792044930.012103,
+  "last_learn": 1792132232.926555,
   "entry_rules": {
     "version": "2026-10-06-entry-v3",
     "max_signal_age_seconds": 2700,
@@ -2559,7 +2559,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 0.08,
+    "days": 0.09,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2582,7 +2582,7 @@
     "signals": 1,
     "unknown": 0,
     "pending_at_cutoff": 1,
-    "cutoff": 1792131329.806441,
+    "cutoff": 1792132233.491884,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -2711,7 +2711,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792130442.287239,
+    "fetched_at": 1792132233.237657,
     "coverage_start": 1791691200.0,
     "coverage_end": 1792296000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3388,7 +3388,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792131329.801524,
+    "checked_at": 1792132233.487076,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -39504,7 +39504,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792131240,
+        "last_bar_t": 1792132140,
         "initial_risk": 25.24436831098228,
         "active_sl": 4148.754171689017,
         "filled_ts": 1792120560,
@@ -40314,7 +40314,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792131240,
+        "last_bar_t": 1792132140,
         "initial_risk": 16.921974324483017,
         "active_sl": 4159.827745675517,
         "filled_ts": 1792124160,
@@ -41137,7 +41137,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792131240,
+        "last_bar_t": 1792132140,
         "initial_risk": 20.706865946903235,
         "active_sl": 4156.042854053097,
         "filled_ts": 1792124160,
@@ -41539,15 +41539,19 @@
       [
         1792131329.480022,
         0
+      ],
+      [
+        1792132232.926555,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792131329.806441,
+    "generated_at": 1792132233.491884,
     "week": {
       "label": "Tuần 10/10 - 16/10/2026",
       "start": 1791590400.0,
-      "end": 1792131329.806441,
+      "end": 1792132233.491884,
       "stats": {
         "issued": 4,
         "filled": 2,
@@ -41644,7 +41648,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792131329.806441,
+      "end": 1792132233.491884,
       "stats": {
         "issued": 4,
         "filled": 2,
@@ -41741,7 +41745,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792131329.806441,
+      "end": 1792132233.491884,
       "stats": {
         "issued": 4,
         "filled": 2,
