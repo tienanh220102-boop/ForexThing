@@ -1,0 +1,47 @@
+{
+ "source": "twelvedata:XAU/USD",
+ "timezone": "UTC",
+ "t": "bar open time",
+ "updated_at": "2026-10-16T04:11:53+00:00",
+ "calls_this_run": 7,
+ "stopped": "credit ngay con None <= du tru 450 cho bot",
+ "series": [
+  {
+   "tf": "1h",
+   "bars": 29999,
+   "first": "2022-03-24 06:00",
+   "last": "2026-10-16 03:00",
+   "complete_to_start": false,
+   "source_exhausted_before_start": false,
+   "gaps_over_6h_not_weekend": 7,
+   "largest_gaps": [
+    [
+     "2022-04-14 20:00",
+     "2022-04-17 22:00",
+     74.0
+    ],
+    [
+     "2024-03-28 20:00",
+     "2024-03-31 22:00",
+     74.0
+    ],
+    [
+     "2023-04-06 22:00",
+     "2023-04-09 22:00",
+     72.0
+    ],
+    [
+     "2025-04-14 10:00",
+     "2025-04-17 04:00",
+     66.0
+    ],
+    [
+     "2024-12-24 18:00",
+     "2024-12-25 23:00",
+     29.0
+    ]
+   ],
+   "added_this_run": 29999
+  }
+ ]
+}
