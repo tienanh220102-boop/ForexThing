@@ -73,12 +73,26 @@ def save(tf, bars):
             os.replace(tmp, p)
 
 
+_last_left = {'calls': -999, 'left': None}
+
+
 def credits_left():
-    try:
-        u = requests.get(f'{API}/api_usage', params={'apikey': KEY}, timeout=30).json()
-        return int(u['plan_daily_limit']) - int(u['daily_usage'])
-    except Exception:
-        return None                     # khong biet -> coi nhu het, an toan cho bot
+    """Credit ngay con lai; None = khong doc duoc (coi nhu het, an toan cho bot).
+    Chi hoi lai sau moi 10 request (tru dan uoc luong o giua) de do ton luot/phut."""
+    if calls - _last_left['calls'] < 10 and _last_left['left'] is not None:
+        return _last_left['left'] - (calls - _last_left['calls'])
+    for attempt in range(2):
+        try:
+            u = requests.get(f'{API}/api_usage', params={'apikey': KEY}, timeout=30).json()
+            left = int(u['plan_daily_limit']) - int(u['daily_usage'])
+            _last_left.update(calls=calls, left=left)
+            return left
+        except Exception:
+            # Khong in URL/key; chi in ma loi + ten truong de sua neu API doi dinh dang
+            info = u if isinstance(locals().get('u'), dict) else {}
+            print(f'  api_usage loi (lan {attempt+1}): code={info.get("code")} keys={sorted(info)[:8]}')
+            time.sleep(61)
+    return None
 
 
 def page(tf, *, end_ts=None, start_ts=None):
