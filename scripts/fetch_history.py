@@ -123,7 +123,7 @@ def page(tf, *, end_ts=None, start_ts=None):
             time.sleep(61)
             continue
         if 'values' not in data:
-            if code == 400 or 'no data' in str(data.get('message', '')).lower():
+            if code in (400, 404) or 'no data' in str(data.get('message', '')).lower():
                 return []
             if attempt < 3:
                 continue
