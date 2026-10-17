@@ -2,17 +2,17 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-10-16T22:05:21+00:00",
- "calls_this_run": 0,
- "stopped": "credit ngay con 208 <= du tru 450 cho bot",
+ "updated_at": "2026-10-17T07:43:42+00:00",
+ "calls_this_run": 201,
+ "stopped": "credit ngay con 450 <= du tru 450 cho bot",
  "series": [
   {
    "tf": "1h",
-   "bars": 42694,
+   "bars": 42719,
    "first": "2020-01-24 02:00",
-   "last": "2026-10-16 03:00",
+   "last": "2026-10-17 04:00",
    "complete_to_start": false,
-   "source_exhausted_before_start": false,
+   "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
    "largest_gaps": [
     [
@@ -41,24 +41,113 @@
      74.0
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 25
+  },
+  {
+   "tf": "15min",
+   "bars": 170403,
+   "first": "2020-01-24 02:00",
+   "last": "2026-10-17 05:15",
+   "complete_to_start": false,
+   "source_exhausted_before_start": true,
+   "gaps_over_6h_not_weekend": 14,
+   "largest_gaps": [
+    [
+     "2020-12-24 18:30",
+     "2020-12-27 23:00",
+     76.5
+    ],
+    [
+     "2020-12-31 19:00",
+     "2021-01-03 23:00",
+     76.0
+    ],
+    [
+     "2020-04-09 20:45",
+     "2020-04-12 22:00",
+     73.2
+    ],
+    [
+     "2021-04-01 20:45",
+     "2021-04-04 22:00",
+     73.2
+    ],
+    [
+     "2021-12-23 21:45",
+     "2021-12-26 23:00",
+     73.2
+    ]
+   ],
+   "added_this_run": 170403
+  },
+  {
+   "tf": "5min",
+   "bars": 499970,
+   "first": "2020-03-16 01:10",
+   "last": "2026-10-17 05:35",
+   "complete_to_start": false,
+   "source_exhausted_before_start": true,
+   "gaps_over_6h_not_weekend": 14,
+   "largest_gaps": [
+    [
+     "2020-12-24 18:30",
+     "2020-12-27 23:00",
+     76.5
+    ],
+    [
+     "2020-12-31 19:00",
+     "2021-01-03 23:00",
+     76.0
+    ],
+    [
+     "2024-03-28 20:55",
+     "2024-03-31 22:05",
+     73.2
+    ],
+    [
+     "2020-04-09 20:55",
+     "2020-04-12 22:00",
+     73.1
+    ],
+    [
+     "2021-04-01 20:55",
+     "2021-04-04 22:00",
+     73.1
+    ]
+   ],
+   "added_this_run": 499970
   },
   {
    "tf": "1min",
-   "bars": 670000,
-   "first": "2025-05-18 14:34",
-   "last": "2026-10-16 04:15",
+   "bars": 961575,
+   "first": "2024-07-19 08:44",
+   "last": "2026-10-17 06:30",
    "complete_to_start": false,
    "source_exhausted_before_start": false,
-   "gaps_over_6h_not_weekend": 1,
+   "gaps_over_6h_not_weekend": 4,
    "largest_gaps": [
+    [
+     "2025-04-14 10:09",
+     "2025-04-17 04:00",
+     65.8
+    ],
+    [
+     "2024-12-24 18:44",
+     "2024-12-25 23:01",
+     28.3
+    ],
+    [
+     "2024-12-31 21:58",
+     "2025-01-01 23:01",
+     25.1
+    ],
     [
      "2025-06-15 14:27",
      "2025-06-15 22:00",
      7.5
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 291575
   }
  ]
 }
