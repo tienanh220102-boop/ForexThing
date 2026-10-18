@@ -2,15 +2,15 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-10-17T21:27:18+00:00",
- "calls_this_run": 0,
- "stopped": "credit ngay con 207 <= du tru 450 cho bot",
+ "updated_at": "2026-10-18T10:23:39+00:00",
+ "calls_this_run": 133,
+ "stopped": "het ngan sach thoi gian cua lan chay",
  "series": [
   {
    "tf": "1h",
-   "bars": 42719,
+   "bars": 42743,
    "first": "2020-01-24 02:00",
-   "last": "2026-10-17 04:00",
+   "last": "2026-10-18 04:00",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -41,13 +41,13 @@
      74.0
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 24
   },
   {
    "tf": "15min",
-   "bars": 170403,
+   "bars": 170500,
    "first": "2020-01-24 02:00",
-   "last": "2026-10-17 05:15",
+   "last": "2026-10-18 05:30",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -78,13 +78,13 @@
      73.2
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 97
   },
   {
    "tf": "5min",
-   "bars": 499970,
+   "bars": 500260,
    "first": "2020-03-16 01:10",
-   "last": "2026-10-17 05:35",
+   "last": "2026-10-18 05:45",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -115,17 +115,27 @@
      73.1
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 290
   },
   {
    "tf": "1min",
-   "bars": 961575,
-   "first": "2024-07-19 08:44",
-   "last": "2026-10-17 06:30",
+   "bars": 1592977,
+   "first": "2022-09-30 18:38",
+   "last": "2026-10-18 05:52",
    "complete_to_start": false,
    "source_exhausted_before_start": false,
-   "gaps_over_6h_not_weekend": 4,
+   "gaps_over_6h_not_weekend": 6,
    "largest_gaps": [
+    [
+     "2024-03-28 20:59",
+     "2024-03-31 22:05",
+     73.1
+    ],
+    [
+     "2023-04-06 22:16",
+     "2023-04-09 22:01",
+     71.8
+    ],
     [
      "2025-04-14 10:09",
      "2025-04-17 04:00",
@@ -140,14 +150,9 @@
      "2024-12-31 21:58",
      "2025-01-01 23:01",
      25.1
-    ],
-    [
-     "2025-06-15 14:27",
-     "2025-06-15 22:00",
-     7.5
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 631402
   }
  ]
 }
