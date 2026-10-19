@@ -484,7 +484,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "TRIGGERED",
+     "status": "FAILED",
      "id": "EU-20261019-4",
      "hist": {
       "n": 34,
@@ -494,15 +494,163 @@
      },
      "beyond": 0,
      "triggered_at": 1792400400,
-     "entry": 4170.57672
+     "entry": 4170.57672,
+     "closed_at": 1792412100,
+     "r": -1.0
+    }
+   ],
+   "status": "CLOSED",
+   "pick": "BUY",
+   "pick_basis": "history",
+   "message_id": 851,
+   "last_bar_t": 1792412100,
+   "last_price": 4166.32374,
+   "actual_dir": "SELL",
+   "result_sent": true
+  },
+  {
+   "name": "US",
+   "day": 1792368000.0,
+   "created_at": 1792413041.3630774,
+   "expire": 1792443600.0,
+   "atr": 8.951498190628481,
+   "range": {
+    "hi": 4190.12802,
+    "lo": 4158.24142,
+    "mid": 4174.18472,
+    "from": 1792393200.0,
+    "label": "range phiên Âu"
+   },
+   "price": 4166.32374,
+   "ctx": {
+    "h1": "UP",
+    "h1_ok": true,
+    "h4": "DOWN",
+    "h4_ok": false,
+    "regime": "RANGE",
+    "news": [],
+    "news_ts": null
+   },
+   "scenarios": [
+    {
+     "type": "quet_dao",
+     "dir": "BUY",
+     "trigger": "sweep_low",
+     "level": 4158.24142,
+     "target": 4190.12802,
+     "stop": 4153.765670904686,
+     "text": "Quét đáy range phiên Âu 4,158.2 (râu M15 xuống dưới) rồi đóng M15 lại trên → mua, mục tiêu đỉnh range 4,190.1",
+     "score": 3,
+     "why": [
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều",
+      "không có tin mạnh — dễ là phá giả"
+     ],
+     "status": "WAITING",
+     "id": "US-20261019-0",
+     "hist": {
+      "n": 399,
+      "avg_r": 0.0433,
+      "hit": 68,
+      "done": 275
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "SELL",
+     "trigger": "sweep_high",
+     "level": 4190.12802,
+     "target": 4158.24142,
+     "stop": 4194.603769095314,
+     "text": "Quét đỉnh range phiên Âu 4,190.1 (râu M15 lên trên) rồi đóng M15 lại dưới → bán, mục tiêu đáy range 4,158.2",
+     "score": 3,
+     "why": [
+      "H4 thuận",
+      "ngày đi ngang hợp đảo chiều",
+      "không có tin mạnh — dễ là phá giả"
+     ],
+     "status": "WAITING",
+     "id": "US-20261019-1",
+     "hist": {
+      "n": 399,
+      "avg_r": 0.0433,
+      "hit": 68,
+      "done": 275
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "BUY",
+     "trigger": "break_up",
+     "level": 4190.12802,
+     "target": 4199.079518190629,
+     "stop": 4174.18472,
+     "text": "Phá thật đỉnh 4,190.1: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 4,199.1",
+     "score": 1,
+     "why": [
+      "H1 thuận"
+     ],
+     "status": "WAITING",
+     "id": "US-20261019-2",
+     "hist": {
+      "n": 277,
+      "avg_r": 0.0259,
+      "hit": 194,
+      "done": 242
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "SELL",
+     "trigger": "break_down",
+     "level": 4158.24142,
+     "target": 4149.289921809372,
+     "stop": 4174.18472,
+     "text": "Phá thật đáy 4,158.2: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 4,149.3",
+     "score": 1,
+     "why": [
+      "H4 thuận"
+     ],
+     "status": "WAITING",
+     "id": "US-20261019-3",
+     "hist": {
+      "n": 277,
+      "avg_r": 0.0259,
+      "hit": 194,
+      "done": 242
+     }
+    },
+    {
+     "type": "qml",
+     "dir": "BUY",
+     "trigger": "touch_hold",
+     "level": 4164.60864,
+     "zone": [
+      4163.713490180938,
+      4165.503789819063
+     ],
+     "target": 4185.83752,
+     "stop": 4160.050220180938,
+     "text": "Giá hồi về QML 4,164.6 sau CHoCH → mua, mục tiêu 4,185.8",
+     "score": 2,
+     "why": [
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261019-4",
+     "hist": {
+      "n": 34,
+      "avg_r": -0.0416,
+      "hit": 5,
+      "done": 17
+     }
     }
    ],
    "status": "OPEN",
    "pick": "BUY",
    "pick_basis": "history",
-   "message_id": 851,
-   "last_bar_t": 1792410300,
-   "last_price": 4163.34713
+   "message_id": 854
   }
  ],
  "prior": {
@@ -641,13 +789,13 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792411248.9509788,
+ "last_fetch": 1792413041.3630774,
  "stats": {
   "by_type": [
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 4,
+    "n": 6,
     "triggered": 2,
     "hit": 1,
     "failed": 0,
@@ -657,16 +805,28 @@
     "avg_r": 0.1305
    },
    {
+    "type": "qml",
+    "regime": "RANGE",
+    "n": 1,
+    "triggered": 1,
+    "hit": 0,
+    "failed": 1,
+    "open": 0,
+    "n_r": 1,
+    "sum_r": -1.0,
+    "avg_r": -1.0
+   },
+   {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 4,
-    "triggered": 3,
-    "hit": 1,
-    "failed": 1,
+    "n": 6,
+    "triggered": 5,
+    "hit": 2,
+    "failed": 2,
     "open": 1,
-    "n_r": 3,
-    "sum_r": 0.5903,
-    "avg_r": 0.1968
+    "n_r": 5,
+    "sum_r": 2.3485,
+    "avg_r": 0.4697
    },
    {
     "type": "retest",
@@ -682,10 +842,10 @@
    }
   ],
   "pick": {
-   "n": 2,
+   "n": 3,
    "right": 0,
    "flat": 1
   }
  },
- "updated_at": 1792411248.9509788
+ "updated_at": 1792413041.3630774
 }
