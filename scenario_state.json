@@ -375,7 +375,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "EU-20261019-0",
      "hist": {
       "n": 399,
@@ -383,8 +383,10 @@
       "hit": 68,
       "done": 275
      },
-     "swept": false,
-     "beyond": 0
+     "swept": true,
+     "beyond": 0,
+     "triggered_at": 1792400400,
+     "entry": 4170.57672
     },
     {
      "type": "quet_dao",
@@ -400,7 +402,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "TRIGGERED",
+     "status": "HIT",
      "id": "EU-20261019-1",
      "hist": {
       "n": 399,
@@ -411,7 +413,9 @@
      "swept": true,
      "beyond": 0,
      "triggered_at": 1792394100,
-     "entry": 4184.75235
+     "entry": 4184.75235,
+     "closed_at": 1792400400,
+     "r": 2.758161184703558
     },
     {
      "type": "pha_that",
@@ -425,7 +429,7 @@
      "why": [
       "H1 thuận"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "EU-20261019-2",
      "hist": {
       "n": 277,
@@ -434,7 +438,8 @@
       "done": 242
      },
      "run": 0,
-     "beyond": 0
+     "beyond": 2,
+     "closed_at": 1792400400
     },
     {
      "type": "pha_that",
@@ -477,7 +482,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "EU-20261019-4",
      "hist": {
       "n": 34,
@@ -485,15 +490,17 @@
       "hit": 5,
       "done": 17
      },
-     "beyond": 0
+     "beyond": 0,
+     "triggered_at": 1792400400,
+     "entry": 4170.57672
     }
    ],
    "status": "OPEN",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 851,
-   "last_bar_t": 1792397700,
-   "last_price": 4177.94496
+   "last_bar_t": 1792399500,
+   "last_price": 4170.57672
   }
  ],
  "prior": {
@@ -632,7 +639,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792398643.0767179,
+ "last_fetch": 1792400444.1143186,
  "stats": {
   "by_type": [
    {
@@ -678,5 +685,5 @@
    "flat": 1
   }
  },
- "updated_at": 1792398643.0767179
+ "updated_at": 1792400444.1143186
 }
