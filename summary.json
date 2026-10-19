@@ -2,9 +2,9 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-10-19T10:44:02+00:00",
- "calls_this_run": 99,
- "stopped": "het ngan sach thoi gian cua lan chay",
+ "updated_at": "2026-10-19T14:40:00+00:00",
+ "calls_this_run": 0,
+ "stopped": "credit ngay con 423 <= du tru 450 cho bot",
  "series": [
   {
    "tf": "1h",
@@ -41,7 +41,7 @@
      74.0
     ]
    ],
-   "added_this_run": 25
+   "added_this_run": 0
   },
   {
    "tf": "15min",
@@ -78,7 +78,7 @@
      73.2
     ]
    ],
-   "added_this_run": 97
+   "added_this_run": 0
   },
   {
    "tf": "5min",
@@ -115,7 +115,7 @@
      73.1
     ]
    ],
-   "added_this_run": 292
+   "added_this_run": 0
   },
   {
    "tf": "1min",
@@ -152,7 +152,7 @@
      65.8
     ]
    ],
-   "added_this_run": 461459
+   "added_this_run": 0
   }
  ]
 }
