@@ -564,6 +564,71 @@
       "pips": -133.0905,
       "result_sent_at": 1792417536.952519,
       "result_message_id": 856
+    },
+    {
+      "setup": "breakout",
+      "dir": "SELL",
+      "entry": 4133.62014,
+      "sl": 4146.512433476792,
+      "tp1": 4107.835553046416,
+      "tp2": 4094.9432595696244,
+      "stars": 4,
+      "probe": false,
+      "align": "with",
+      "sl_dist_atr": 1.52,
+      "session": "ASIAN",
+      "regime": "RANGE (dailyER=0.114)",
+      "signal_bar_t": 1792447200,
+      "rule_version": "2026-10-06-entry-v3",
+      "atr_at_signal": 8.487453907168977,
+      "min_net_rr": 1.2,
+      "max_chase_atr": 0.75,
+      "max_drift_atr": 0.25,
+      "max_signal_age": 2700,
+      "limit_ttl": 3600,
+      "invalidation_price": 4144.39057,
+      "cancel_if_target_passed": true,
+      "risk_cost_price": 0.4,
+      "level": 4137.00422,
+      "structure": 4144.39057,
+      "net_reward_risk": 1.9097221256742263,
+      "quote_t": 1792451640,
+      "quote_checked_at": 1792451733.922801,
+      "quote_price": 4133.62014,
+      "analysis_entry": 4133.62014,
+      "tier": 2,
+      "calendar_valid_until": 1792897200.0,
+      "ts": 1792451734.522744,
+      "date": "2026-10-19",
+      "ledger_version": 2,
+      "mode": "paper",
+      "source": "twelvedata:XAU/USD",
+      "entry_type": "market",
+      "entry_ref": 4133.62014,
+      "status": "PENDING",
+      "policy": "tp1_full",
+      "cost_price": 0.4,
+      "not_before": 1792451760,
+      "expires_at": 1792455334.522744,
+      "execution": {
+        "pricing": "source_cost_allowance",
+        "spread": 0,
+        "slippage": 0,
+        "delay_seconds": 0
+      },
+      "remaining": 1.0,
+      "realized_r": 0.0,
+      "mfe_r": 0.0,
+      "mae_r": 0.0,
+      "events": [],
+      "analysis_ts": 1792451732.853201,
+      "issued_at": 1792451733.922934,
+      "message_id": 858,
+      "observation_id": "0083dce92e83d6f55238",
+      "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
+      "risk_units": 1.0,
+      "trade_id": "911ec8637bcc-1792451734522",
+      "risk_scope": "PA_PAPER_only"
     }
   ],
   "legacy": {
@@ -2641,11 +2706,12 @@
   },
   "cooldowns": {
     "sweep_reclaim|SELL": 1792163735.794253,
-    "sweep_reclaim|BUY": 1792408536.282966
+    "sweep_reclaim|BUY": 1792408536.282966,
+    "breakout|SELL": 1792451734.522744
   },
   "day_count": {
     "date": "2026-10-19",
-    "n": 2
+    "n": 3
   },
   "pa_knowledge": {
     "adjust": {},
@@ -2654,9 +2720,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792450839.5752044,
+    "ts": 1792451733.1978047,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792450740
+    "latest_bar_t": 1792451640
   },
   "monitor": {
     "n": 3,
@@ -2810,7 +2876,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 3.78,
+    "days": 3.79,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2855,10 +2921,10 @@
         "max_dd_r": 1.030986005009357
       }
     },
-    "signals": 4,
+    "signals": 5,
     "unknown": 0,
-    "pending_at_cutoff": 0,
-    "cutoff": 1792450839.72331,
+    "pending_at_cutoff": 1,
+    "cutoff": 1792451736.815257,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -2881,18 +2947,19 @@
     ]
   },
   "observation_summary": {
-    "count": 64,
+    "count": 65,
     "groups": {
       "ACCEPTED": {
-        "candidates": 7,
+        "candidates": 8,
         "shadow_resolved": 5,
         "shadow_net_r": -5.102052482734569,
         "shadow_wins": 0,
         "evaluations": {
           "SL": 5,
-          "NOFILL": 2
+          "NOFILL": 2,
+          "PENDING": 1
         },
-        "later_accepted": 7
+        "later_accepted": 8
       },
       "CALENDAR_HARD": {
         "candidates": 2,
@@ -3529,13 +3596,13 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792450839.700278,
+    "checked_at": 1792451733.200008,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
-    "active": 0,
+    "active": 1,
     "same_direction": 0,
-    "reserved_risk_units": 0,
+    "reserved_risk_units": 1.0,
     "unknown_reservations": 0,
     "max_active": 2,
     "max_same_direction": 1,
@@ -49842,7 +49909,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.307930279075328,
+        "mfe_r": 0.4203225261258183,
         "mae_r": 0.31883890088893757,
         "events": [
           {
@@ -49852,7 +49919,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792450740,
+        "last_bar_t": 1792451640,
         "initial_risk": 24.340379979867066,
         "active_sl": 4168.169069979867,
         "filled_ts": 1792419360,
@@ -50512,7 +50579,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.7422812280742235,
+        "mfe_r": 0.9961980728903758,
         "mae_r": 0.4865887929123716,
         "events": [
           {
@@ -50522,13 +50589,670 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792450740,
+        "last_bar_t": 1792451640,
         "initial_risk": 10.773881512196567,
         "active_sl": 4155.104681512196,
         "filled_ts": 1792426560,
         "timeout_at": 1792858560
       },
       "evaluation": "OPEN"
+    },
+    {
+      "id": "0083dce92e83d6f55238",
+      "first_seen": 1792451734.522902,
+      "first_reason": "ACCEPTED",
+      "order": {
+        "setup": "breakout",
+        "dir": "SELL",
+        "signal_bar_t": 1792447200,
+        "level": 4137.00422,
+        "structure": 4144.39057,
+        "entry": 4133.62014,
+        "sl": 4146.512433476792,
+        "tp1": 4107.835553046416,
+        "tp2": 4094.9432595696244,
+        "session": "ASIAN",
+        "regime": "RANGE (dailyER=0.114)",
+        "stars": 4,
+        "probe": false,
+        "align": "with",
+        "reason": "H1 đóng cửa phá đáy 20 nến 4,137.0 + dưới EMA50 — trend tiếp diễn",
+        "rule_version": "2026-10-06-entry-v3",
+        "net_reward_risk": 1.9097221256742263,
+        "atr_at_signal": 8.487453907168977,
+        "quote_t": 1792451640,
+        "quote_price": 4133.62014
+      },
+      "context": {
+        "source": "twelvedata:XAU/USD",
+        "data_fetched_at": 1792451732.4267704,
+        "bars_sha256": "506855361809d7bbb8a03d8bec48db587a0c5021fb48995c6c781ab7c5292da9",
+        "rule_version": "2026-10-06-entry-v3",
+        "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
+        "atr": 8.487453907168977,
+        "h1": {
+          "trend": "DOWN",
+          "confirmed": true,
+          "last_event": "BOS_DOWN",
+          "swing_hi": 4190.12802,
+          "swing_lo": null,
+          "hi_list": [
+            4164.85846,
+            4164.85846,
+            4164.85846,
+            4164.85846,
+            4164.85846,
+            4190.12802
+          ],
+          "lo_list": [
+            4164.60864,
+            4164.60864,
+            4164.60864,
+            4164.60864,
+            4160.94537,
+            4137.00422
+          ],
+          "note": "GIẢM đã xác nhận (BOS xuống)"
+        },
+        "h4": {
+          "trend": "DOWN",
+          "confirmed": true,
+          "last_event": "BOS_DOWN",
+          "swing_hi": 4190.12802,
+          "swing_lo": null,
+          "hi_list": [
+            4206.98359,
+            4202.03378,
+            4216.2071,
+            4200.44525,
+            4198.86565,
+            4190.12802
+          ],
+          "lo_list": [
+            4105.76449,
+            4169.1355,
+            4195.7313,
+            4150.51827,
+            4073.81757,
+            4154.57432
+          ],
+          "note": "GIẢM đã xác nhận (BOS xuống)"
+        },
+        "calendar": {
+          "status": "VERIFIED",
+          "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
+          "fetched_at": 1792450839.577354,
+          "coverage_start": 1792296000.0,
+          "coverage_end": 1792900800.0,
+          "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
+          "sha256": "f6249af320ff34b5c5a5255e8467c81d3e5b52314236b3d4d5207a7bd1199da0",
+          "events": [
+            {
+              "title": "IMF Meetings",
+              "currency": "ALL",
+              "ts": 1792332900.0,
+              "impact": "low"
+            },
+            {
+              "title": "BusinessNZ Services Index",
+              "currency": "NZD",
+              "ts": 1792359000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Trade Balance",
+              "currency": "NZD",
+              "ts": 1792359900.0,
+              "impact": "low"
+            },
+            {
+              "title": "Rightmove HPI m/m",
+              "currency": "GBP",
+              "ts": 1792364460.0,
+              "impact": "low"
+            },
+            {
+              "title": "RBA Assist Gov Kent Speaks",
+              "currency": "AUD",
+              "ts": 1792364700.0,
+              "impact": "low"
+            },
+            {
+              "title": "New Home Prices m/m",
+              "currency": "CNY",
+              "ts": 1792373400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Fixed Asset Investment ytd/y",
+              "currency": "CNY",
+              "ts": 1792375200.0,
+              "impact": "low"
+            },
+            {
+              "title": "GDP q/y",
+              "currency": "CNY",
+              "ts": 1792375200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Industrial Production y/y",
+              "currency": "CNY",
+              "ts": 1792375200.0,
+              "impact": "low"
+            },
+            {
+              "title": "NBS Press Conference",
+              "currency": "CNY",
+              "ts": 1792375200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Retail Sales y/y",
+              "currency": "CNY",
+              "ts": 1792375200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Unemployment Rate",
+              "currency": "CNY",
+              "ts": 1792375200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Tertiary Industry Activity m/m",
+              "currency": "JPY",
+              "ts": 1792384200.0,
+              "impact": "low"
+            },
+            {
+              "title": "CPI m/m",
+              "currency": "CAD",
+              "ts": 1792413000.0,
+              "impact": "high"
+            },
+            {
+              "title": "Median CPI y/y",
+              "currency": "CAD",
+              "ts": 1792413000.0,
+              "impact": "high"
+            },
+            {
+              "title": "Trimmed CPI y/y",
+              "currency": "CAD",
+              "ts": 1792413000.0,
+              "impact": "high"
+            },
+            {
+              "title": "Common CPI y/y",
+              "currency": "CAD",
+              "ts": 1792413000.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Core CPI m/m",
+              "currency": "CAD",
+              "ts": 1792413000.0,
+              "impact": "low"
+            },
+            {
+              "title": "NAHB Housing Market Index",
+              "currency": "USD",
+              "ts": 1792418400.0,
+              "impact": "low"
+            },
+            {
+              "title": "BOC Business Outlook Survey",
+              "currency": "CAD",
+              "ts": 1792423800.0,
+              "impact": "low"
+            },
+            {
+              "title": "1-y Loan Prime Rate",
+              "currency": "CNY",
+              "ts": 1792458000.0,
+              "impact": "low"
+            },
+            {
+              "title": "5-y Loan Prime Rate",
+              "currency": "CNY",
+              "ts": 1792458000.0,
+              "impact": "low"
+            },
+            {
+              "title": "German PPI m/m",
+              "currency": "EUR",
+              "ts": 1792476000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Average Earnings Index 3m/y",
+              "currency": "GBP",
+              "ts": 1792476000.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Claimant Count Change",
+              "currency": "GBP",
+              "ts": 1792476000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Unemployment Rate",
+              "currency": "GBP",
+              "ts": 1792476000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Current Account",
+              "currency": "EUR",
+              "ts": 1792483200.0,
+              "impact": "low"
+            },
+            {
+              "title": "German ZEW Economic Sentiment",
+              "currency": "EUR",
+              "ts": 1792486800.0,
+              "impact": "low"
+            },
+            {
+              "title": "ZEW Economic Sentiment",
+              "currency": "EUR",
+              "ts": 1792486800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Foreign Direct Investment ytd/y",
+              "currency": "CNY",
+              "ts": 1792487400.0,
+              "impact": "low"
+            },
+            {
+              "title": "10-y Bond Auction",
+              "currency": "GBP",
+              "ts": 1792488780.0,
+              "impact": "low"
+            },
+            {
+              "title": "ADP Weekly Employment Change",
+              "currency": "USD",
+              "ts": 1792498500.0,
+              "impact": "low"
+            },
+            {
+              "title": "Building Permits",
+              "currency": "USD",
+              "ts": 1792499400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Housing Starts",
+              "currency": "USD",
+              "ts": 1792499400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Pending Home Sales m/m",
+              "currency": "USD",
+              "ts": 1792504800.0,
+              "impact": "low"
+            },
+            {
+              "title": "GDT Price Index",
+              "currency": "NZD",
+              "ts": 1792507800.0,
+              "impact": "low"
+            },
+            {
+              "title": "MPC Member Greene Speaks",
+              "currency": "GBP",
+              "ts": 1792515600.0,
+              "impact": "low"
+            },
+            {
+              "title": "API Weekly Statistical Bulletin",
+              "currency": "USD",
+              "ts": 1792528200.0,
+              "impact": "low"
+            },
+            {
+              "title": "RBA Deputy Gov Hauser Speaks",
+              "currency": "AUD",
+              "ts": 1792535400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Trade Balance",
+              "currency": "JPY",
+              "ts": 1792540200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Credit Card Spending y/y",
+              "currency": "NZD",
+              "ts": 1792548000.0,
+              "impact": "low"
+            },
+            {
+              "title": "CPI y/y",
+              "currency": "GBP",
+              "ts": 1792562400.0,
+              "impact": "high"
+            },
+            {
+              "title": "Core CPI y/y",
+              "currency": "GBP",
+              "ts": 1792562400.0,
+              "impact": "low"
+            },
+            {
+              "title": "PPI Input m/m",
+              "currency": "GBP",
+              "ts": 1792562400.0,
+              "impact": "low"
+            },
+            {
+              "title": "PPI Output m/m",
+              "currency": "GBP",
+              "ts": 1792562400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Public Sector Net Borrowing",
+              "currency": "GBP",
+              "ts": 1792562400.0,
+              "impact": "low"
+            },
+            {
+              "title": "RPI y/y",
+              "currency": "GBP",
+              "ts": 1792562400.0,
+              "impact": "low"
+            },
+            {
+              "title": "German Buba President Nagel Speaks",
+              "currency": "EUR",
+              "ts": 1792566900.0,
+              "impact": "low"
+            },
+            {
+              "title": "HPI y/y",
+              "currency": "GBP",
+              "ts": 1792571400.0,
+              "impact": "low"
+            },
+            {
+              "title": "German Buba Monthly Report",
+              "currency": "EUR",
+              "ts": 1792576800.0,
+              "impact": "low"
+            },
+            {
+              "title": "BOE Gov Bailey Speaks",
+              "currency": "GBP",
+              "ts": 1792587600.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Crude Oil Inventories",
+              "currency": "USD",
+              "ts": 1792593000.0,
+              "impact": "low"
+            },
+            {
+              "title": "CPI q/q",
+              "currency": "NZD",
+              "ts": 1792619100.0,
+              "impact": "high"
+            },
+            {
+              "title": "Summary of Monetary Policy Discussions",
+              "currency": "CHF",
+              "ts": 1792654200.0,
+              "impact": "low"
+            },
+            {
+              "title": "CBI Industrial Order Expectations",
+              "currency": "GBP",
+              "ts": 1792663200.0,
+              "impact": "low"
+            },
+            {
+              "title": "IPPI m/m",
+              "currency": "CAD",
+              "ts": 1792672200.0,
+              "impact": "low"
+            },
+            {
+              "title": "NHPI m/m",
+              "currency": "CAD",
+              "ts": 1792672200.0,
+              "impact": "low"
+            },
+            {
+              "title": "RMPI m/m",
+              "currency": "CAD",
+              "ts": 1792672200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Unemployment Claims",
+              "currency": "USD",
+              "ts": 1792672200.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Consumer Confidence",
+              "currency": "EUR",
+              "ts": 1792677600.0,
+              "impact": "low"
+            },
+            {
+              "title": "CB Leading Index m/m",
+              "currency": "USD",
+              "ts": 1792677600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Natural Gas Storage",
+              "currency": "USD",
+              "ts": 1792679400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash Manufacturing PMI",
+              "currency": "AUD",
+              "ts": 1792706400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash Services PMI",
+              "currency": "AUD",
+              "ts": 1792706400.0,
+              "impact": "low"
+            },
+            {
+              "title": "GfK Consumer Confidence",
+              "currency": "GBP",
+              "ts": 1792710060.0,
+              "impact": "low"
+            },
+            {
+              "title": "National Core CPI y/y",
+              "currency": "JPY",
+              "ts": 1792711800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash Manufacturing PMI",
+              "currency": "JPY",
+              "ts": 1792715400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Retail Sales m/m",
+              "currency": "GBP",
+              "ts": 1792735200.0,
+              "impact": "medium"
+            },
+            {
+              "title": "French Flash Manufacturing PMI",
+              "currency": "EUR",
+              "ts": 1792739700.0,
+              "impact": "medium"
+            },
+            {
+              "title": "French Flash Services PMI",
+              "currency": "EUR",
+              "ts": 1792739700.0,
+              "impact": "medium"
+            },
+            {
+              "title": "German Flash Manufacturing PMI",
+              "currency": "EUR",
+              "ts": 1792740600.0,
+              "impact": "medium"
+            },
+            {
+              "title": "German Flash Services PMI",
+              "currency": "EUR",
+              "ts": 1792740600.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Flash Manufacturing PMI",
+              "currency": "EUR",
+              "ts": 1792742400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash Services PMI",
+              "currency": "EUR",
+              "ts": 1792742400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash Manufacturing PMI",
+              "currency": "GBP",
+              "ts": 1792744200.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Flash Services PMI",
+              "currency": "GBP",
+              "ts": 1792744200.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Core Retail Sales m/m",
+              "currency": "CAD",
+              "ts": 1792758600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Retail Sales m/m",
+              "currency": "CAD",
+              "ts": 1792758600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Belgian NBB Business Climate",
+              "currency": "EUR",
+              "ts": 1792760400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash Manufacturing PMI",
+              "currency": "USD",
+              "ts": 1792763100.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Flash Services PMI",
+              "currency": "USD",
+              "ts": 1792763100.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Revised UoM Consumer Sentiment",
+              "currency": "USD",
+              "ts": 1792764000.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Revised UoM Inflation Expectations",
+              "currency": "USD",
+              "ts": 1792764000.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Daylight Saving Time Shift",
+              "currency": "CHF",
+              "ts": 1792890000.0,
+              "impact": "holiday"
+            },
+            {
+              "title": "Daylight Saving Time Shift",
+              "currency": "EUR",
+              "ts": 1792890000.0,
+              "impact": "holiday"
+            },
+            {
+              "title": "Daylight Saving Time Shift",
+              "currency": "GBP",
+              "ts": 1792890000.0,
+              "impact": "holiday"
+            }
+          ]
+        },
+        "regime": "RANGE (dailyER=0.114)"
+      },
+      "decisions": [
+        {
+          "ts": 1792451734.522902,
+          "reason": "ACCEPTED"
+        }
+      ],
+      "shadow": {
+        "setup": "breakout",
+        "dir": "SELL",
+        "entry": 4133.62014,
+        "sl": 4146.512433476792,
+        "tp1": 4107.835553046416,
+        "tp2": 4094.9432595696244,
+        "stars": null,
+        "probe": null,
+        "align": null,
+        "sl_dist_atr": null,
+        "session": "ASIAN",
+        "regime": null,
+        "signal_bar_t": 1792447200,
+        "ts": 1792451734.522902,
+        "date": "2026-10-19",
+        "ledger_version": 2,
+        "mode": "paper",
+        "source": "twelvedata:XAU/USD",
+        "entry_type": "market",
+        "entry_ref": 4133.62014,
+        "status": "PENDING",
+        "policy": "tp1_full",
+        "cost_price": 0.4,
+        "not_before": 1792451760,
+        "expires_at": 1792473334.522902,
+        "execution": {
+          "pricing": "source_cost_allowance",
+          "spread": 0,
+          "slippage": 0,
+          "delay_seconds": 0
+        },
+        "remaining": 1.0,
+        "realized_r": 0.0,
+        "mfe_r": 0.0,
+        "mae_r": 0.0,
+        "events": [],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+      },
+      "evaluation": "PENDING"
     }
   ],
   "momentum": {
@@ -50541,10 +51265,6 @@
     "last_reason": null,
     "alerted": false,
     "recent": [
-      [
-        1792364447.972301,
-        0
-      ],
       [
         1792365336.539302,
         0
@@ -50948,17 +51668,21 @@
       [
         1792450839.252506,
         0
+      ],
+      [
+        1792451732.853201,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792450839.72331,
+    "generated_at": 1792451736.815257,
     "week": {
       "label": "Tuần 17/10 - 20/10/2026",
       "start": 1792195200.0,
-      "end": 1792450839.72331,
+      "end": 1792451736.815257,
       "stats": {
-        "issued": 2,
+        "issued": 3,
         "filled": 1,
         "n": 1,
         "wins": 0,
@@ -50995,7 +51719,7 @@
           "worst_r": null
         },
         "2": {
-          "issued": 1,
+          "issued": 2,
           "filled": 1,
           "n": 1,
           "wins": 0,
@@ -51053,9 +51777,9 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792450839.72331,
+      "end": 1792451736.815257,
       "stats": {
-        "issued": 7,
+        "issued": 8,
         "filled": 3,
         "n": 3,
         "wins": 0,
@@ -51092,7 +51816,7 @@
           "worst_r": -1.0193172641879116
         },
         "2": {
-          "issued": 2,
+          "issued": 3,
           "filled": 2,
           "n": 2,
           "wins": 0,
@@ -51150,9 +51874,9 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792450839.72331,
+      "end": 1792451736.815257,
       "stats": {
-        "issued": 7,
+        "issued": 8,
         "filled": 3,
         "n": 3,
         "wins": 0,
@@ -51189,7 +51913,7 @@
           "worst_r": -1.0193172641879116
         },
         "2": {
-          "issued": 2,
+          "issued": 3,
           "filled": 2,
           "n": 2,
           "wins": 0,

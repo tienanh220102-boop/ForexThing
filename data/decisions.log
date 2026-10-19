@@ -1,5 +1,3 @@
-2026-08-11 09:45:35 UTC [EUR/USD] COOLDOWN SELL 1.5h/6h
-2026-08-11 09:45:36 UTC [USD/JPY] BLOCKED rsi_extreme RSI=71 BUY votes=3
 2026-08-11 09:45:36 UTC [USD/JPY] NO_SIGNAL
 2026-08-11 09:45:37 UTC [XAU/USD] BLOCKED low_votes BUY=1 BEAR=2 need=4 H4=BULL
 2026-08-11 09:45:37 UTC [XAU/USD] NO_SIGNAL
@@ -29998,3 +29996,5 @@
 2026-10-19 02:30:45 UTC generated new fontManager
 2026-10-19 11:15:36 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
 2026-10-19 11:15:36 UTC generated new fontManager
+2026-10-19 23:15:34 UTC Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-10-19 23:15:34 UTC generated new fontManager
