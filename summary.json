@@ -2,15 +2,15 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-10-20T10:32:46+00:00",
- "calls_this_run": 85,
- "stopped": "het ngan sach thoi gian cua lan chay",
+ "updated_at": "2026-10-20T13:11:18+00:00",
+ "calls_this_run": 15,
+ "stopped": null,
  "series": [
   {
    "tf": "1h",
-   "bars": 42791,
+   "bars": 42798,
    "first": "2020-01-24 02:00",
-   "last": "2026-10-20 04:00",
+   "last": "2026-10-20 11:00",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -41,13 +41,13 @@
      74.0
     ]
    ],
-   "added_this_run": 23
+   "added_this_run": 7
   },
   {
    "tf": "15min",
-   "bars": 170693,
+   "bars": 170719,
    "first": "2020-01-24 02:00",
-   "last": "2026-10-20 05:45",
+   "last": "2026-10-20 12:15",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -78,13 +78,13 @@
      73.2
     ]
    ],
-   "added_this_run": 96
+   "added_this_run": 26
   },
   {
    "tf": "5min",
-   "bars": 500838,
+   "bars": 500918,
    "first": "2020-03-16 01:10",
-   "last": "2026-10-20 05:55",
+   "last": "2026-10-20 12:35",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -115,16 +115,16 @@
      73.1
     ]
    ],
-   "added_this_run": 286
+   "added_this_run": 80
   },
   {
    "tf": "1min",
-   "bars": 2440865,
-   "first": "2020-05-07 13:42",
-   "last": "2026-10-20 06:00",
+   "bars": 2472037,
+   "first": "2020-04-06 06:40",
+   "last": "2026-10-20 12:42",
    "complete_to_start": false,
-   "source_exhausted_before_start": false,
-   "gaps_over_6h_not_weekend": 11,
+   "source_exhausted_before_start": true,
+   "gaps_over_6h_not_weekend": 12,
    "largest_gaps": [
     [
      "2020-12-24 18:30",
@@ -142,17 +142,17 @@
      73.1
     ],
     [
-     "2021-04-01 20:59",
-     "2021-04-04 22:00",
+     "2020-04-09 20:59",
+     "2020-04-12 22:00",
      73.0
     ],
     [
-     "2021-12-23 21:59",
-     "2021-12-26 23:00",
+     "2021-04-01 20:59",
+     "2021-04-04 22:00",
      73.0
     ]
    ],
-   "added_this_run": 386429
+   "added_this_run": 31172
   }
  ]
 }
