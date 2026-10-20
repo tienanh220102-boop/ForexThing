@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792511133.5972667,
+    "ts": 1792512044.7157733,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792511040
+    "latest_bar_t": 1792511940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 4.48,
+    "days": 4.49,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792511133.627243,
+    "cutoff": 1792512044.887292,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3202,11 +3202,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792510247.304409,
+    "fetched_at": 1792512044.718547,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "f8718bad9625c190fa6686736a3d62cd0936a2f663ad3737fd803084e36556a4",
+    "sha256": "0e4db315c1a1b62a3afbd53cf909d235424016e5ce2ab3532ee5952626d2ab68",
     "events": [
       {
         "title": "IMF Meetings",
@@ -3415,7 +3415,7 @@
       {
         "title": "GDT Price Index",
         "currency": "NZD",
-        "ts": 1792507800.0,
+        "ts": 1792509540.0,
         "impact": "low"
       },
       {
@@ -3729,7 +3729,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792511133.599639,
+    "checked_at": 1792512044.849744,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -50052,7 +50052,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792511040,
+        "last_bar_t": 1792511940,
         "initial_risk": 24.340379979867066,
         "active_sl": 4168.169069979867,
         "filled_ts": 1792419360,
@@ -54497,15 +54497,19 @@
       [
         1792511133.244518,
         0
+      ],
+      [
+        1792512044.330513,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792511133.627243,
+    "generated_at": 1792512044.887292,
     "week": {
       "label": "Tuần 17/10 - 20/10/2026",
       "start": 1792195200.0,
-      "end": 1792511133.627243,
+      "end": 1792512044.887292,
       "stats": {
         "issued": 4,
         "filled": 3,
@@ -54602,7 +54606,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792511133.627243,
+      "end": 1792512044.887292,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -54699,7 +54703,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792511133.627243,
+      "end": 1792512044.887292,
       "stats": {
         "issued": 9,
         "filled": 5,
