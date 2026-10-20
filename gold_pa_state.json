@@ -694,7 +694,7 @@
       "source": "twelvedata:XAU/USD",
       "entry_type": "market",
       "entry_ref": 4114.74622,
-      "status": "OPEN",
+      "status": "CLOSED",
       "policy": "tp1_full",
       "cost_price": 0.4,
       "not_before": 1792491360,
@@ -705,15 +705,21 @@
         "slippage": 0,
         "delay_seconds": 0
       },
-      "remaining": 1.0,
-      "realized_r": 0.0,
+      "remaining": 0.0,
+      "realized_r": -1.0,
       "mfe_r": 0.14986300218790616,
-      "mae_r": 0.8319570911490743,
+      "mae_r": 0.9830581692879607,
       "events": [
         {
           "type": "FILL",
           "ts": 1792491360,
           "price": 4114.38209
+        },
+        {
+          "type": "SL",
+          "ts": 1792503780,
+          "price": 4129.074241951152,
+          "fraction": 1.0
         }
       ],
       "analysis_ts": 1792491335.343484,
@@ -724,11 +730,18 @@
       "risk_units": 1.0,
       "trade_id": "911ec8637bcc-1792491339429",
       "risk_scope": "PA_PAPER_only",
-      "last_bar_t": 1792502940,
+      "last_bar_t": 1792503720,
       "initial_risk": 14.692151951151573,
       "active_sl": 4129.074241951152,
       "filled_ts": 1792491360,
-      "timeout_at": 1792923360
+      "timeout_at": 1792923360,
+      "outcome": "SL",
+      "closed_ts": 1792503780,
+      "net_r": -1.027225419484492,
+      "correct": false,
+      "pips": -150.9215,
+      "result_sent_at": 1792503936.509937,
+      "result_message_id": 867
     }
   ],
   "legacy": {
@@ -2820,16 +2833,19 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792503034.4025114,
+    "ts": 1792503935.8233492,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792502940
+    "latest_bar_t": 1792503840
   },
   "monitor": {
-    "n": 4,
-    "total_r": -4.099990752382372,
-    "max_dd_r": 4.099990752382372,
-    "reasons": [],
-    "review_required": false
+    "n": 5,
+    "total_r": -5.1272161718668645,
+    "max_dd_r": 5.1272161718668645,
+    "reasons": [
+      "five_consecutive_losses",
+      "drawdown_at_least_5R"
+    ],
+    "review_required": true
   },
   "last_weekly": 1792195244.335146,
   "last_learn": 1792477839.584914,
@@ -2976,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 4.39,
+    "days": 4.4,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2988,21 +3004,21 @@
       "purpose": "review only; never automatic live approval"
     },
     "metrics": {
-      "n": 3,
+      "n": 4,
       "wins": 0,
-      "net_r": -3.0815979779017226,
-      "mean_r": -1.027199325967241,
+      "net_r": -4.108823397386215,
+      "mean_r": -1.0272058493465537,
       "profit_factor": 0.0,
-      "max_dd_r": 3.0815979779017226
+      "max_dd_r": 4.108823397386215
     },
     "groups": {
       "setup:breakout": {
-        "n": 1,
+        "n": 2,
         "wins": 0,
-        "net_r": -1.031294708704454,
-        "mean_r": -1.031294708704454,
+        "net_r": -2.0585201281889463,
+        "mean_r": -1.0292600640944731,
         "profit_factor": 0.0,
-        "max_dd_r": 1.031294708704454
+        "max_dd_r": 2.0585201281889463
       },
       "setup:sweep_reclaim": {
         "n": 2,
@@ -3021,18 +3037,18 @@
         "max_dd_r": 2.0506119728923657
       },
       "session:EU_US": {
-        "n": 1,
+        "n": 2,
         "wins": 0,
-        "net_r": -1.030986005009357,
-        "mean_r": -1.030986005009357,
+        "net_r": -2.058211424493849,
+        "mean_r": -1.0291057122469245,
         "profit_factor": 0.0,
-        "max_dd_r": 1.030986005009357
+        "max_dd_r": 2.058211424493849
       }
     },
     "signals": 6,
     "unknown": 0,
-    "pending_at_cutoff": 1,
-    "cutoff": 1792503034.430452,
+    "pending_at_cutoff": 0,
+    "cutoff": 1792503937.226278,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3059,13 +3075,12 @@
     "groups": {
       "ACCEPTED": {
         "candidates": 9,
-        "shadow_resolved": 6,
-        "shadow_net_r": -6.133347191439023,
+        "shadow_resolved": 7,
+        "shadow_net_r": -7.1605726109235155,
         "shadow_wins": 0,
         "evaluations": {
-          "SL": 6,
-          "NOFILL": 2,
-          "OPEN": 1
+          "SL": 7,
+          "NOFILL": 2
         },
         "later_accepted": 9
       },
@@ -3187,7 +3202,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792502143.487178,
+    "fetched_at": 1792503937.050898,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3714,13 +3729,13 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792503034.40513,
+    "checked_at": 1792503937.196153,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
-    "active": 1,
+    "active": 0,
     "same_direction": 0,
-    "reserved_risk_units": 1.0,
+    "reserved_risk_units": 0,
     "unknown_reservations": 0,
     "max_active": 2,
     "max_same_direction": 1,
@@ -50037,7 +50052,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792502940,
+        "last_bar_t": 1792503840,
         "initial_risk": 24.340379979867066,
         "active_sl": 4168.169069979867,
         "filled_ts": 1792419360,
@@ -54026,7 +54041,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4114.74622,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1792491360,
@@ -54037,25 +54052,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 0.14986300218790616,
-        "mae_r": 0.8319570911490743,
+        "mae_r": 0.9830581692879607,
         "events": [
           {
             "type": "FILL",
             "ts": 1792491360,
             "price": 4114.38209
+          },
+          {
+            "type": "SL",
+            "ts": 1792503780,
+            "price": 4129.074241951152,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792502940,
+        "last_bar_t": 1792503720,
         "initial_risk": 14.692151951151573,
         "active_sl": 4129.074241951152,
         "filled_ts": 1792491360,
-        "timeout_at": 1792923360
+        "timeout_at": 1792923360,
+        "outcome": "SL",
+        "closed_ts": 1792503780,
+        "net_r": -1.027225419484492,
+        "correct": false,
+        "pips": -150.9215
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     }
   ],
   "momentum": {
@@ -54068,10 +54094,6 @@
     "last_reason": null,
     "alerted": false,
     "recent": [
-      [
-        1792416636.627742,
-        0
-      ],
       [
         1792417536.094,
         0
@@ -54479,31 +54501,35 @@
       [
         1792503034.144273,
         0
+      ],
+      [
+        1792503935.641053,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792503034.430452,
+    "generated_at": 1792503937.226278,
     "week": {
       "label": "Tuần 17/10 - 20/10/2026",
       "start": 1792195200.0,
-      "end": 1792503034.430452,
+      "end": 1792503937.226278,
       "stats": {
         "issued": 4,
         "filled": 3,
-        "n": 2,
+        "n": 3,
         "wins": 0,
-        "losses": 2,
+        "losses": 3,
         "flat": 0,
         "tp": 0,
-        "sl": 2,
+        "sl": 3,
         "no_trade": 1,
         "unscored": 0,
-        "total_r": -2.062280713713811,
-        "avg_r": -1.0311403568569055,
+        "total_r": -3.089506133198303,
+        "avg_r": -1.0298353777327678,
         "win_rate": 0.0,
-        "max_dd_r": 2.062280713713811,
-        "best_r": -1.030986005009357,
+        "max_dd_r": 3.089506133198303,
+        "best_r": -1.027225419484492,
         "worst_r": -1.031294708704454
       },
       "tiers": {
@@ -54528,19 +54554,19 @@
         "2": {
           "issued": 3,
           "filled": 3,
-          "n": 2,
+          "n": 3,
           "wins": 0,
-          "losses": 2,
+          "losses": 3,
           "flat": 0,
           "tp": 0,
-          "sl": 2,
+          "sl": 3,
           "no_trade": 0,
           "unscored": 0,
-          "total_r": -2.062280713713811,
-          "avg_r": -1.0311403568569055,
+          "total_r": -3.089506133198303,
+          "avg_r": -1.0298353777327678,
           "win_rate": 0.0,
-          "max_dd_r": 2.062280713713811,
-          "best_r": -1.030986005009357,
+          "max_dd_r": 3.089506133198303,
+          "best_r": -1.027225419484492,
           "worst_r": -1.031294708704454
         },
         "3": {
@@ -54584,22 +54610,22 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792503034.430452,
+      "end": 1792503937.226278,
       "stats": {
         "issued": 9,
         "filled": 5,
-        "n": 4,
+        "n": 5,
         "wins": 0,
-        "losses": 4,
+        "losses": 5,
         "flat": 0,
         "tp": 0,
-        "sl": 4,
+        "sl": 5,
         "no_trade": 4,
         "unscored": 0,
-        "total_r": -4.099990752382372,
-        "avg_r": -1.024997688095593,
+        "total_r": -5.1272161718668645,
+        "avg_r": -1.0254432343733728,
         "win_rate": 0.0,
-        "max_dd_r": 4.099990752382372,
+        "max_dd_r": 5.1272161718668645,
         "best_r": -1.0183927744806496,
         "worst_r": -1.031294708704454
       },
@@ -54625,18 +54651,18 @@
         "2": {
           "issued": 4,
           "filled": 4,
-          "n": 3,
+          "n": 4,
           "wins": 0,
-          "losses": 3,
+          "losses": 4,
           "flat": 0,
           "tp": 0,
-          "sl": 3,
+          "sl": 4,
           "no_trade": 0,
           "unscored": 0,
-          "total_r": -3.080673488194461,
-          "avg_r": -1.026891162731487,
+          "total_r": -4.107898907678953,
+          "avg_r": -1.0269747269197382,
           "win_rate": 0.0,
-          "max_dd_r": 3.080673488194461,
+          "max_dd_r": 4.107898907678953,
           "best_r": -1.0183927744806496,
           "worst_r": -1.031294708704454
         },
@@ -54681,22 +54707,22 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792503034.430452,
+      "end": 1792503937.226278,
       "stats": {
         "issued": 9,
         "filled": 5,
-        "n": 4,
+        "n": 5,
         "wins": 0,
-        "losses": 4,
+        "losses": 5,
         "flat": 0,
         "tp": 0,
-        "sl": 4,
+        "sl": 5,
         "no_trade": 4,
         "unscored": 0,
-        "total_r": -4.099990752382372,
-        "avg_r": -1.024997688095593,
+        "total_r": -5.1272161718668645,
+        "avg_r": -1.0254432343733728,
         "win_rate": 0.0,
-        "max_dd_r": 4.099990752382372,
+        "max_dd_r": 5.1272161718668645,
         "best_r": -1.0183927744806496,
         "worst_r": -1.031294708704454
       },
@@ -54722,18 +54748,18 @@
         "2": {
           "issued": 4,
           "filled": 4,
-          "n": 3,
+          "n": 4,
           "wins": 0,
-          "losses": 3,
+          "losses": 4,
           "flat": 0,
           "tp": 0,
-          "sl": 3,
+          "sl": 4,
           "no_trade": 0,
           "unscored": 0,
-          "total_r": -3.080673488194461,
-          "avg_r": -1.026891162731487,
+          "total_r": -4.107898907678953,
+          "avg_r": -1.0269747269197382,
           "win_rate": 0.0,
-          "max_dd_r": 3.080673488194461,
+          "max_dd_r": 4.107898907678953,
           "best_r": -1.0183927744806496,
           "worst_r": -1.031294708704454
         },
@@ -54776,9 +54802,9 @@
       }
     },
     "sprt": {
-      "verdict": "CHUA_DU",
-      "llr": 0.0,
-      "n": 4,
+      "verdict": "REJECT_EDGE",
+      "llr": -10189.3324,
+      "n": 5,
       "upper": 2.9444,
       "lower": -2.9444
     }
