@@ -2744,9 +2744,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792489536.5922859,
+    "ts": 1792490448.3232138,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792489440
+    "latest_bar_t": 1792490340
   },
   "monitor": {
     "n": 4,
@@ -2900,7 +2900,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 4.23,
+    "days": 4.24,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -2956,7 +2956,7 @@
     "signals": 5,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792489536.625954,
+    "cutoff": 1792490448.475533,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3110,11 +3110,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792488645.50145,
+    "fetched_at": 1792490448.326505,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "bb9a8a988c10810e8c291c04b3b5adb7fbd0e17140a5c3e8c9d59fb84d522f64",
+    "sha256": "5c3b6add14a98f6c23c103ff46877bd94b909d978a48d4cb0069209dee493fd6",
     "events": [
       {
         "title": "IMF Meetings",
@@ -3291,15 +3291,9 @@
         "impact": "low"
       },
       {
-        "title": "Foreign Direct Investment ytd/y",
-        "currency": "CNY",
-        "ts": 1792487400.0,
-        "impact": "low"
-      },
-      {
         "title": "10-y Bond Auction",
         "currency": "GBP",
-        "ts": 1792488780.0,
+        "ts": 1792486980.0,
         "impact": "low"
       },
       {
@@ -3408,6 +3402,12 @@
         "title": "HPI y/y",
         "currency": "GBP",
         "ts": 1792571400.0,
+        "impact": "low"
+      },
+      {
+        "title": "Foreign Direct Investment ytd/y",
+        "currency": "CNY",
+        "ts": 1792573800.0,
         "impact": "low"
       },
       {
@@ -3637,7 +3637,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792489536.595194,
+    "checked_at": 1792490448.446163,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -49950,7 +49950,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 1.1611823654100155,
+        "mfe_r": 1.277440205359114,
         "mae_r": 0.31883890088893757,
         "events": [
           {
@@ -49960,7 +49960,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792489440,
+        "last_bar_t": 1792490340,
         "initial_risk": 24.340379979867066,
         "active_sl": 4168.169069979867,
         "filled_ts": 1792419360,
@@ -53320,10 +53320,6 @@
     "alerted": false,
     "recent": [
       [
-        1792404045.477346,
-        0
-      ],
-      [
         1792404933.356017,
         0
       ],
@@ -53722,15 +53718,19 @@
       [
         1792489536.213625,
         0
+      ],
+      [
+        1792490448.084198,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792489536.625954,
+    "generated_at": 1792490448.475533,
     "week": {
       "label": "Tuần 17/10 - 20/10/2026",
       "start": 1792195200.0,
-      "end": 1792489536.625954,
+      "end": 1792490448.475533,
       "stats": {
         "issued": 3,
         "filled": 2,
@@ -53827,7 +53827,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792489536.625954,
+      "end": 1792490448.475533,
       "stats": {
         "issued": 8,
         "filled": 4,
@@ -53924,7 +53924,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792489536.625954,
+      "end": 1792490448.475533,
       "stats": {
         "issued": 8,
         "filled": 4,
