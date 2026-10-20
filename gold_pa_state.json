@@ -708,7 +708,7 @@
       "remaining": 1.0,
       "realized_r": 0.0,
       "mfe_r": 0.14986300218790616,
-      "mae_r": 0.7276061420779079,
+      "mae_r": 0.7855275413956715,
       "events": [
         {
           "type": "FILL",
@@ -724,7 +724,7 @@
       "risk_units": 1.0,
       "trade_id": "911ec8637bcc-1792491339429",
       "risk_scope": "PA_PAPER_only",
-      "last_bar_t": 1792496640,
+      "last_bar_t": 1792497540,
       "initial_risk": 14.692151951151573,
       "active_sl": 4129.074241951152,
       "filled_ts": 1792491360,
@@ -2820,9 +2820,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792496737.990862,
+    "ts": 1792497648.0494661,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792496640
+    "latest_bar_t": 1792497540
   },
   "monitor": {
     "n": 4,
@@ -2976,7 +2976,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 4.31,
+    "days": 4.32,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3032,7 +3032,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 1,
-    "cutoff": 1792496738.160128,
+    "cutoff": 1792497648.590167,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3187,7 +3187,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792496737.994233,
+    "fetched_at": 1792497648.053268,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3714,7 +3714,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792496738.130115,
+    "checked_at": 1792497648.561585,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -50037,7 +50037,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792496640,
+        "last_bar_t": 1792497540,
         "initial_risk": 24.340379979867066,
         "active_sl": 4168.169069979867,
         "filled_ts": 1792419360,
@@ -54040,7 +54040,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.14986300218790616,
-        "mae_r": 0.7276061420779079,
+        "mae_r": 0.7855275413956715,
         "events": [
           {
             "type": "FILL",
@@ -54049,7 +54049,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792496640,
+        "last_bar_t": 1792497540,
         "initial_risk": 14.692151951151573,
         "active_sl": 4129.074241951152,
         "filled_ts": 1792491360,
@@ -54068,14 +54068,6 @@
     "last_reason": null,
     "alerted": false,
     "recent": [
-      [
-        1792410339.048959,
-        0
-      ],
-      [
-        1792411247.52498,
-        0
-      ],
       [
         1792412131.886811,
         0
@@ -54475,15 +54467,19 @@
       [
         1792496737.667712,
         0
+      ],
+      [
+        1792497647.654865,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792496738.160128,
+    "generated_at": 1792497648.590167,
     "week": {
       "label": "Tuần 17/10 - 20/10/2026",
       "start": 1792195200.0,
-      "end": 1792496738.160128,
+      "end": 1792497648.590167,
       "stats": {
         "issued": 4,
         "filled": 3,
@@ -54580,7 +54576,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792496738.160128,
+      "end": 1792497648.590167,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -54677,7 +54673,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792496738.160128,
+      "end": 1792497648.590167,
       "stats": {
         "issued": 9,
         "filled": 5,
