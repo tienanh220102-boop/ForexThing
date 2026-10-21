@@ -1101,7 +1101,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261021-2",
      "hist": {
       "n": 402,
@@ -1160,12 +1160,158 @@
      "closed_at": 1792566000
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 870,
-   "last_bar_t": 1792584000,
-   "last_price": 4136.86458
+   "last_bar_t": 1792584900,
+   "last_price": 4131.98142,
+   "actual_dir": "BUY",
+   "result_sent": true
+  },
+  {
+   "name": "US",
+   "day": 1792540800.0,
+   "created_at": 1792585840.0892074,
+   "expire": 1792616400.0,
+   "atr": 11.31827107256251,
+   "range": {
+    "hi": 4142.0345,
+    "lo": 4111.72516,
+    "mid": 4126.87983,
+    "from": 1792566000.0,
+    "label": "range phiên Âu"
+   },
+   "price": 4131.98142,
+   "ctx": {
+    "h1": "UP",
+    "h1_ok": false,
+    "h4": "DOWN",
+    "h4_ok": true,
+    "regime": "RANGE",
+    "news": [],
+    "news_ts": null
+   },
+   "scenarios": [
+    {
+     "type": "quet_dao",
+     "dir": "SELL",
+     "trigger": "sweep_high",
+     "level": 4142.0345,
+     "target": 4111.72516,
+     "stop": 4147.693635536281,
+     "text": "Quét đỉnh range phiên Âu 4,142.0 (râu M15 lên trên) rồi đóng M15 lại dưới → bán, mục tiêu đáy range 4,111.7",
+     "score": 4,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "ngày đi ngang hợp đảo chiều",
+      "không có tin mạnh — dễ là phá giả"
+     ],
+     "status": "WAITING",
+     "id": "US-20261021-0",
+     "hist": {
+      "n": 402,
+      "avg_r": 0.0479,
+      "hit": 69,
+      "done": 277
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "BUY",
+     "trigger": "sweep_low",
+     "level": 4111.72516,
+     "target": 4142.0345,
+     "stop": 4106.066024463718,
+     "text": "Quét đáy range phiên Âu 4,111.7 (râu M15 xuống dưới) rồi đóng M15 lại trên → mua, mục tiêu đỉnh range 4,142.0",
+     "score": 3,
+     "why": [
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều",
+      "không có tin mạnh — dễ là phá giả"
+     ],
+     "status": "WAITING",
+     "id": "US-20261021-1",
+     "hist": {
+      "n": 402,
+      "avg_r": 0.0479,
+      "hit": 69,
+      "done": 277
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "SELL",
+     "trigger": "break_down",
+     "level": 4111.72516,
+     "target": 4100.406888927438,
+     "stop": 4126.87983,
+     "text": "Phá thật đáy 4,111.7: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 4,100.4",
+     "score": 2,
+     "why": [
+      "H4 thuận (đã xác nhận)"
+     ],
+     "status": "WAITING",
+     "id": "US-20261021-2",
+     "hist": {
+      "n": 278,
+      "avg_r": 0.0267,
+      "hit": 195,
+      "done": 243
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "BUY",
+     "trigger": "break_up",
+     "level": 4142.0345,
+     "target": 4153.352771072562,
+     "stop": 4126.87983,
+     "text": "Phá thật đỉnh 4,142.0: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 4,153.4",
+     "score": 1,
+     "why": [
+      "H1 thuận"
+     ],
+     "status": "WAITING",
+     "id": "US-20261021-3",
+     "hist": {
+      "n": 278,
+      "avg_r": 0.0267,
+      "hit": 195,
+      "done": 243
+     }
+    },
+    {
+     "type": "qml",
+     "dir": "BUY",
+     "trigger": "touch_hold",
+     "level": 4117.59862,
+     "zone": [
+      4116.466792892744,
+      4118.730447107256
+     ],
+     "target": 4140.38046,
+     "stop": 4105.7525528927445,
+     "text": "Giá hồi về QML 4,117.6 sau CHoCH → mua, mục tiêu 4,140.4",
+     "score": 2,
+     "why": [
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261021-4",
+     "hist": {
+      "n": 36,
+      "avg_r": -0.0948,
+      "hit": 5,
+      "done": 19
+     }
+    }
+   ],
+   "status": "OPEN",
+   "pick": "SELL",
+   "pick_basis": "history",
+   "message_id": 871
   }
  ],
  "prior": {
@@ -1304,7 +1450,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792584935.8638854,
+ "last_fetch": 1792585840.0892074,
  "stats": {
   "by_type": [
    {
@@ -1322,7 +1468,7 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 11,
+    "n": 13,
     "triggered": 3,
     "hit": 2,
     "failed": 0,
@@ -1346,7 +1492,7 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 12,
+    "n": 14,
     "triggered": 6,
     "hit": 2,
     "failed": 2,
@@ -1358,21 +1504,21 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 3,
-    "triggered": 2,
+    "n": 4,
+    "triggered": 3,
     "hit": 2,
-    "failed": 0,
+    "failed": 1,
     "open": 0,
-    "n_r": 2,
-    "sum_r": 6.0223,
-    "avg_r": 3.0112
+    "n_r": 3,
+    "sum_r": 5.0223,
+    "avg_r": 1.6741
    }
   ],
   "pick": {
-   "n": 6,
+   "n": 7,
    "right": 1,
    "flat": 1
   }
  },
- "updated_at": 1792584935.8638854
+ "updated_at": 1792585840.0892074
 }
