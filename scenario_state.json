@@ -1214,7 +1214,9 @@
       "avg_r": 0.0479,
       "hit": 69,
       "done": 277
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -1237,7 +1239,9 @@
       "avg_r": 0.0479,
       "hit": 69,
       "done": 277
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -1258,7 +1262,9 @@
       "avg_r": 0.0267,
       "hit": 195,
       "done": 243
-     }
+     },
+     "run": 0,
+     "beyond": 1
     },
     {
      "type": "pha_that",
@@ -1279,7 +1285,9 @@
       "avg_r": 0.0267,
       "hit": 195,
       "done": 243
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "qml",
@@ -1305,13 +1313,16 @@
       "avg_r": -0.0948,
       "hit": 5,
       "done": 19
-     }
+     },
+     "beyond": 0
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 871
+   "message_id": 871,
+   "last_bar_t": 1792586700,
+   "last_price": 4129.30511
   }
  ],
  "prior": {
@@ -1450,7 +1461,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792585840.0892074,
+ "last_fetch": 1792587651.6168559,
  "stats": {
   "by_type": [
    {
@@ -1520,5 +1531,5 @@
    "flat": 1
   }
  },
- "updated_at": 1792585840.0892074
+ "updated_at": 1792587651.6168559
 }
