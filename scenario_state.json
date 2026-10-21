@@ -1207,7 +1207,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261021-0",
      "hist": {
       "n": 402,
@@ -1232,7 +1232,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "TRIGGERED",
+     "status": "HIT",
      "id": "US-20261021-1",
      "hist": {
       "n": 402,
@@ -1243,7 +1243,9 @@
      "swept": true,
      "beyond": 0,
      "triggered_at": 1792610100,
-     "entry": 4117.0604
+     "entry": 4117.0604,
+     "closed_at": 1792616400,
+     "r": 2.2715341965156424
     },
     {
      "type": "pha_that",
@@ -1322,12 +1324,14 @@
      "closed_at": 1792609200
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 871,
-   "last_bar_t": 1792613700,
-   "last_price": 4133.48872
+   "last_bar_t": 1792615500,
+   "last_price": 4141.17265,
+   "actual_dir": "BUY",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -1466,7 +1470,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792614636.9685788,
+ "last_fetch": 1792616442.9984064,
  "stats": {
   "by_type": [
    {
@@ -1484,7 +1488,7 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 13,
+    "n": 15,
     "triggered": 3,
     "hit": 2,
     "failed": 0,
@@ -1496,7 +1500,7 @@
    {
     "type": "qml",
     "regime": "RANGE",
-    "n": 3,
+    "n": 4,
     "triggered": 2,
     "hit": 0,
     "failed": 2,
@@ -1508,14 +1512,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 14,
-    "triggered": 6,
-    "hit": 2,
+    "n": 16,
+    "triggered": 7,
+    "hit": 3,
     "failed": 2,
     "open": 2,
-    "n_r": 6,
-    "sum_r": 2.5499,
-    "avg_r": 0.425
+    "n_r": 7,
+    "sum_r": 4.8215,
+    "avg_r": 0.6888
    },
    {
     "type": "retest",
@@ -1531,10 +1535,10 @@
    }
   ],
   "pick": {
-   "n": 7,
+   "n": 8,
    "right": 1,
    "flat": 1
   }
  },
- "updated_at": 1792614636.9685788
+ "updated_at": 1792616442.9984064
 }
