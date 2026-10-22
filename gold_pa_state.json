@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792673131.5783494,
+    "ts": 1792674047.617659,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792673040
+    "latest_bar_t": 1792673940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 6.35,
+    "days": 6.36,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792673131.585524,
+    "cutoff": 1792674047.750971,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3185,12 +3185,12 @@
       },
       "MONITOR_REVIEW": {
         "candidates": 4,
-        "shadow_resolved": 1,
-        "shadow_net_r": -1.0209555282314073,
+        "shadow_resolved": 2,
+        "shadow_net_r": -2.043644590822281,
         "shadow_wins": 0,
         "evaluations": {
-          "SL": 1,
-          "OPEN": 2,
+          "SL": 2,
+          "OPEN": 1,
           "NOT_EVALUABLE": 1
         },
         "later_accepted": 0
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792672243.795834,
+    "fetched_at": 1792674047.6209,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "1cb598a4f94628992235613d664b735cb5a7db6d036b2dfc01bb0083148a762d",
+    "sha256": "cf5f529458c3e23ad685bd39eb9b193adbb023def3ed4ba0f898ab05fef6e1f6",
     "events": [
       {
         "title": "IMF Meetings",
@@ -3550,28 +3550,28 @@
         "impact": "low"
       },
       {
-        "title": "IPPI m/m",
-        "currency": "CAD",
+        "title": "Unemployment Claims",
+        "currency": "USD",
         "ts": 1792672200.0,
-        "impact": "low"
+        "impact": "medium"
       },
       {
-        "title": "NHPI m/m",
+        "title": "IPPI m/m",
         "currency": "CAD",
-        "ts": 1792672200.0,
+        "ts": 1792672680.0,
         "impact": "low"
       },
       {
         "title": "RMPI m/m",
         "currency": "CAD",
-        "ts": 1792672200.0,
+        "ts": 1792672680.0,
         "impact": "low"
       },
       {
-        "title": "Unemployment Claims",
-        "currency": "USD",
-        "ts": 1792672200.0,
-        "impact": "medium"
+        "title": "NHPI m/m",
+        "currency": "CAD",
+        "ts": 1792673940.0,
+        "impact": "low"
       },
       {
         "title": "Consumer Confidence",
@@ -3740,7 +3740,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792673131.580832,
+    "checked_at": 1792674047.745278,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -55429,7 +55429,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792673040,
+        "last_bar_t": 1792673940,
         "initial_risk": 29.332837758247933,
         "active_sl": 4120.863387758248,
         "filled_ts": 1792642560,
@@ -56674,7 +56674,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4076.12693,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1792671360,
@@ -56685,25 +56685,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 0.4765644740180962,
-        "mae_r": 0.6250677920347659,
+        "mae_r": 0.8745363041276818,
         "events": [
           {
             "type": "FILL",
             "ts": 1792671360,
             "price": 4072.94663
+          },
+          {
+            "type": "SL",
+            "ts": 1792673340,
+            "price": 4090.5762697613577,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792673040,
+        "last_bar_t": 1792673280,
         "initial_risk": 17.629639761357794,
         "active_sl": 4090.5762697613577,
         "filled_ts": 1792671360,
-        "timeout_at": 1793103360
+        "timeout_at": 1793103360,
+        "outcome": "SL",
+        "closed_ts": 1792673340,
+        "net_r": -1.0226890625908736,
+        "correct": false,
+        "pips": -180.2964
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     }
   ],
   "momentum": {
@@ -56716,10 +56727,6 @@
     "last_reason": null,
     "alerted": false,
     "recent": [
-      [
-        1792586742.250251,
-        0
-      ],
       [
         1792587650.346186,
         0
@@ -57127,15 +57134,19 @@
       [
         1792673131.172446,
         0
+      ],
+      [
+        1792674047.338033,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792673131.585524,
+    "generated_at": 1792674047.750971,
     "week": {
       "label": "Tuần 17/10 - 22/10/2026",
       "start": 1792195200.0,
-      "end": 1792673131.585524,
+      "end": 1792674047.750971,
       "stats": {
         "issued": 4,
         "filled": 3,
@@ -57232,7 +57243,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792673131.585524,
+      "end": 1792674047.750971,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -57329,7 +57340,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792673131.585524,
+      "end": 1792674047.750971,
       "stats": {
         "issued": 9,
         "filled": 5,
