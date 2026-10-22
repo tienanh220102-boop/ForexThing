@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792676738.032541,
+    "ts": 1792677648.9176655,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792676580
+    "latest_bar_t": 1792677540
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 6.4,
+    "days": 6.41,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792676738.043556,
+    "cutoff": 1792677649.032763,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792675843.464399,
+    "fetched_at": 1792677648.920571,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "cf5f529458c3e23ad685bd39eb9b193adbb023def3ed4ba0f898ab05fef6e1f6",
+    "sha256": "9f6477ee70af0067ddd174984ef45b5ba02579569d5f8caecb770b1170f0dba4",
     "events": [
       {
         "title": "IMF Meetings",
@@ -3568,12 +3568,6 @@
         "impact": "low"
       },
       {
-        "title": "NHPI m/m",
-        "currency": "CAD",
-        "ts": 1792673940.0,
-        "impact": "low"
-      },
-      {
         "title": "Consumer Confidence",
         "currency": "EUR",
         "ts": 1792677600.0,
@@ -3589,6 +3583,12 @@
         "title": "Natural Gas Storage",
         "currency": "USD",
         "ts": 1792679400.0,
+        "impact": "low"
+      },
+      {
+        "title": "NHPI m/m",
+        "currency": "CAD",
+        "ts": 1792681140.0,
         "impact": "low"
       },
       {
@@ -3740,7 +3740,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792676738.035598,
+    "checked_at": 1792677649.024486,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -55419,7 +55419,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 1.1702481799718796,
+        "mfe_r": 1.2682901772618027,
         "mae_r": 0.35320210357374116,
         "events": [
           {
@@ -55429,7 +55429,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792676580,
+        "last_bar_t": 1792677540,
         "initial_risk": 29.332837758247933,
         "active_sl": 4120.863387758248,
         "filled_ts": 1792642560,
@@ -56728,10 +56728,6 @@
     "alerted": false,
     "recent": [
       [
-        1792590339.862635,
-        0
-      ],
-      [
         1792591251.450846,
         0
       ],
@@ -57138,15 +57134,19 @@
       [
         1792676737.831828,
         0
+      ],
+      [
+        1792677648.450357,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792676738.043556,
+    "generated_at": 1792677649.032763,
     "week": {
       "label": "Tuần 17/10 - 22/10/2026",
       "start": 1792195200.0,
-      "end": 1792676738.043556,
+      "end": 1792677649.032763,
       "stats": {
         "issued": 4,
         "filled": 3,
@@ -57243,7 +57243,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792676738.043556,
+      "end": 1792677649.032763,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -57340,7 +57340,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792676738.043556,
+      "end": 1792677649.032763,
       "stats": {
         "issued": 9,
         "filled": 5,
