@@ -1566,7 +1566,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "TRIGGERED",
+     "status": "FAILED",
      "id": "US-20261022-1",
      "hist": {
       "n": 403,
@@ -1577,7 +1577,9 @@
      "swept": true,
      "beyond": 1,
      "triggered_at": 1792680300,
-     "entry": 4058.51897
+     "entry": 4058.51897,
+     "closed_at": 1792684800,
+     "r": -1.0
     },
     {
      "type": "pha_that",
@@ -1664,8 +1666,8 @@
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 875,
-   "last_bar_t": 1792682100,
-   "last_price": 4053.20593
+   "last_bar_t": 1792683900,
+   "last_price": 4051.73272
   }
  ],
  "prior": {
@@ -1804,7 +1806,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792683044.2077756,
+ "last_fetch": 1792684854.1585028,
  "stats": {
   "by_type": [
    {
@@ -1874,5 +1876,5 @@
    "flat": 1
   }
  },
- "updated_at": 1792683044.2077756
+ "updated_at": 1792684854.1585028
 }
