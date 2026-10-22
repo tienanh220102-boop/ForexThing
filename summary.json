@@ -2,15 +2,15 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-10-22T12:59:48+00:00",
- "calls_this_run": 8,
- "stopped": null,
+ "updated_at": "2026-10-22T17:59:22+00:00",
+ "calls_this_run": 4,
+ "stopped": "credit ngay con 450 <= du tru 450 cho bot",
  "series": [
   {
    "tf": "1h",
-   "bars": 42846,
+   "bars": 42851,
    "first": "2020-01-24 02:00",
-   "last": "2026-10-22 11:00",
+   "last": "2026-10-22 16:00",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -41,13 +41,13 @@
      74.0
     ]
    ],
-   "added_this_run": 6
+   "added_this_run": 5
   },
   {
    "tf": "15min",
-   "bars": 170912,
+   "bars": 170932,
    "first": "2020-01-24 02:00",
-   "last": "2026-10-22 12:30",
+   "last": "2026-10-22 17:30",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -78,7 +78,7 @@
      73.2
     ]
    ],
-   "added_this_run": 27
+   "added_this_run": 20
   },
   {
    "tf": "5min",
@@ -115,7 +115,7 @@
      73.1
     ]
    ],
-   "added_this_run": 82
+   "added_this_run": 0
   },
   {
    "tf": "1min",
@@ -152,7 +152,7 @@
      73.0
     ]
    ],
-   "added_this_run": 411
+   "added_this_run": 0
   }
  ]
 }
