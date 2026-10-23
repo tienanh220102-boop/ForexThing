@@ -1990,12 +1990,14 @@
      "closed_at": 1792765800
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 879,
-   "last_bar_t": 1792786500,
-   "last_price": 3997.5371
+   "last_bar_t": 1792788300,
+   "last_price": 3995.78411,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -2134,7 +2136,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792787442.9882822,
+ "last_fetch": 1792789243.655343,
  "stats": {
   "by_type": [
    {
@@ -2152,7 +2154,7 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 19,
+    "n": 21,
     "triggered": 4,
     "hit": 2,
     "failed": 0,
@@ -2176,19 +2178,19 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 21,
-    "triggered": 9,
-    "hit": 3,
+    "n": 23,
+    "triggered": 10,
+    "hit": 4,
     "failed": 3,
     "open": 3,
-    "n_r": 9,
-    "sum_r": 3.9017,
-    "avg_r": 0.4335
+    "n_r": 10,
+    "sum_r": 5.5743,
+    "avg_r": 0.5574
    },
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 6,
+    "n": 7,
     "triggered": 4,
     "hit": 2,
     "failed": 2,
@@ -2199,10 +2201,10 @@
    }
   ],
   "pick": {
-   "n": 11,
-   "right": 3,
+   "n": 12,
+   "right": 4,
    "flat": 1
   }
  },
- "updated_at": 1792787442.9882822
+ "updated_at": 1792789243.655343
 }
