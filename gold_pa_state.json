@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792719941.6626348,
+    "ts": 1792720849.2255986,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792719840
+    "latest_bar_t": 1792720740
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 6.9,
+    "days": 6.91,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792719941.674522,
+    "cutoff": 1792720849.306184,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3185,14 +3185,13 @@
       },
       "MONITOR_REVIEW": {
         "candidates": 8,
-        "shadow_resolved": 3,
-        "shadow_net_r": -0.051158013213157716,
-        "shadow_wins": 1,
+        "shadow_resolved": 6,
+        "shadow_net_r": 4.3205283184380425,
+        "shadow_wins": 4,
         "evaluations": {
           "SL": 2,
-          "TP1": 1,
-          "NOT_EVALUABLE": 2,
-          "OPEN": 3
+          "TP1": 4,
+          "NOT_EVALUABLE": 2
         },
         "later_accepted": 0
       },
@@ -3214,7 +3213,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792719107.240778,
+    "fetched_at": 1792720849.229196,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3741,7 +3740,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792719941.666526,
+    "checked_at": 1792720849.298156,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -57965,7 +57964,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4039.70944,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1792689360,
@@ -57976,25 +57975,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 1.7712612721980712,
+        "remaining": 0.0,
+        "realized_r": 2.089899009415461,
+        "mfe_r": 2.17565920455164,
         "mae_r": 0.4824947543535251,
         "events": [
           {
             "type": "FILL",
             "ts": 1792689360,
             "price": 4040.20783
+          },
+          {
+            "type": "TP1",
+            "ts": 1792720380,
+            "price": 4005.4493346370045,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792719840,
+        "last_bar_t": 1792720320,
         "initial_risk": 16.631662681498256,
         "active_sl": 4056.839492681498,
         "filled_ts": 1792689360,
-        "timeout_at": 1793121360
+        "timeout_at": 1793121360,
+        "outcome": "TP1",
+        "closed_ts": 1792720380,
+        "net_r": 2.065848497589907,
+        "correct": true,
+        "pips": 343.585
       },
-      "evaluation": "OPEN"
+      "evaluation": "TP1"
     },
     {
       "id": "d34a996c36ee54ba7fc4",
@@ -58625,7 +58635,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4029.478,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1792696560,
@@ -58636,25 +58646,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 0.7463349515729681,
+        "remaining": 0.0,
+        "realized_r": 1.0973945059111112,
+        "mfe_r": 1.1709635081305367,
         "mae_r": 0.17172345636536135,
         "events": [
           {
             "type": "FILL",
             "ts": 1792696560,
             "price": 4028.23474
+          },
+          {
+            "type": "TP1",
+            "ts": 1792720440,
+            "price": 4002.523812925898,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792719840,
+        "last_bar_t": 1792720380,
         "initial_risk": 23.42906487649634,
         "active_sl": 4051.663804876496,
         "filled_ts": 1792696560,
-        "timeout_at": 1793128560
+        "timeout_at": 1793128560,
+        "outcome": "TP1",
+        "closed_ts": 1792720440,
+        "net_r": 1.0803216947635663,
+        "correct": true,
+        "pips": 253.1093
       },
-      "evaluation": "OPEN"
+      "evaluation": "TP1"
     },
     {
       "id": "d2e0209ad5fd29f51f28",
@@ -59285,7 +59306,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4023.74874,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1792700160,
@@ -59296,25 +59317,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 0.7550463226157389,
+        "remaining": 0.0,
+        "realized_r": 1.2493795014112192,
+        "mfe_r": 1.3485669163417409,
         "mae_r": 0.5281612312333458,
         "events": [
           {
             "type": "FILL",
             "ts": 1792700160,
             "price": 4023.40497
+          },
+          {
+            "type": "TP1",
+            "ts": 1792720440,
+            "price": 4002.462749109762,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792719840,
+        "last_bar_t": 1792720380,
         "initial_risk": 16.76209739841488,
         "active_sl": 4040.167067398415,
         "filled_ts": 1792700160,
-        "timeout_at": 1793132160
+        "timeout_at": 1793132160,
+        "outcome": "TP1",
+        "closed_ts": 1792720440,
+        "net_r": 1.225516139297727,
+        "correct": true,
+        "pips": 205.4222
       },
-      "evaluation": "OPEN"
+      "evaluation": "TP1"
     }
   ],
   "momentum": {
@@ -59327,10 +59359,6 @@
     "last_reason": null,
     "alerted": false,
     "recent": [
-      [
-        1792634443.53242,
-        0
-      ],
       [
         1792635333.5117,
         0
@@ -59734,15 +59762,19 @@
       [
         1792719941.181091,
         0
+      ],
+      [
+        1792720849.006808,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792719941.674522,
+    "generated_at": 1792720849.306184,
     "week": {
       "label": "Tuần 17/10 - 23/10/2026",
       "start": 1792195200.0,
-      "end": 1792719941.674522,
+      "end": 1792720849.306184,
       "stats": {
         "issued": 4,
         "filled": 3,
@@ -59839,7 +59871,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792719941.674522,
+      "end": 1792720849.306184,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -59936,7 +59968,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792719941.674522,
+      "end": 1792720849.306184,
       "stats": {
         "issued": 9,
         "filled": 5,
