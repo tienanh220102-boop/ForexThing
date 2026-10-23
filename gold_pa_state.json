@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792760452.1573775,
+    "ts": 1792761335.9599147,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792760340
+    "latest_bar_t": 1792761240
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 7.36,
+    "days": 7.38,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792760452.24844,
+    "cutoff": 1792761335.970127,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3738,9 +3738,9 @@
     ]
   },
   "calendar_health": {
-    "status": "PASS",
-    "reason": "verified_no_blocking_event",
-    "checked_at": 1792760452.240063,
+    "status": "SOFT",
+    "reason": "Flash Manufacturing PMI; Flash Services PMI",
+    "checked_at": 1792761335.961893,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -60031,10 +60031,6 @@
     "alerted": false,
     "recent": [
       [
-        1792674934.884792,
-        0
-      ],
-      [
         1792675843.046787,
         0
       ],
@@ -60437,15 +60433,19 @@
       [
         1792760451.99608,
         0
+      ],
+      [
+        1792761335.881734,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1792760452.24844,
+    "generated_at": 1792761335.970127,
     "week": {
       "label": "Tuần 17/10 - 23/10/2026",
       "start": 1792195200.0,
-      "end": 1792760452.24844,
+      "end": 1792761335.970127,
       "stats": {
         "issued": 4,
         "filled": 3,
@@ -60542,7 +60542,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792760452.24844,
+      "end": 1792761335.970127,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -60639,7 +60639,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792760452.24844,
+      "end": 1792761335.970127,
       "stats": {
         "issued": 9,
         "filled": 5,
