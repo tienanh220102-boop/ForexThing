@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792799138.1583595,
+    "ts": 1792800047.866434,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1792799040
+    "latest_bar_t": 1792799940
   },
   "monitor": {
     "n": 5,
@@ -2847,7 +2847,7 @@
     ],
     "review_required": true
   },
-  "last_weekly": 1792195244.335146,
+  "last_weekly": 1792800047.631433,
   "last_learn": 1792737934.948814,
   "entry_rules": {
     "version": "2026-10-06-entry-v3",
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 7.81,
+    "days": 7.82,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792799138.169204,
+    "cutoff": 1792800048.456167,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792798248.292874,
+    "fetched_at": 1792800048.381623,
     "coverage_start": 1792296000.0,
     "coverage_end": 1792900800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3741,7 +3741,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792799138.161751,
+    "checked_at": 1792800048.447676,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -60673,7 +60673,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1792799040,
+        "last_bar_t": 1792799940,
         "initial_risk": 25.236441867418762,
         "active_sl": 3979.4196981325813,
         "filled_ts": 1792772160,
@@ -61107,32 +61107,32 @@
     ]
   },
   "pa_report": {
-    "generated_at": 1792799138.169204,
+    "generated_at": 1792800048.456167,
     "week": {
-      "label": "Tuần 17/10 - 24/10/2026",
-      "start": 1792195200.0,
-      "end": 1792799138.169204,
+      "label": "Tuần 24/10 - 24/10/2026",
+      "start": 1792800000.0,
+      "end": 1792800048.456167,
       "stats": {
-        "issued": 4,
-        "filled": 3,
-        "n": 3,
+        "issued": 0,
+        "filled": 0,
+        "n": 0,
         "wins": 0,
-        "losses": 3,
+        "losses": 0,
         "flat": 0,
         "tp": 0,
-        "sl": 3,
-        "no_trade": 1,
+        "sl": 0,
+        "no_trade": 0,
         "unscored": 0,
-        "total_r": -3.089506133198303,
-        "avg_r": -1.0298353777327678,
-        "win_rate": 0.0,
-        "max_dd_r": 3.089506133198303,
-        "best_r": -1.027225419484492,
-        "worst_r": -1.031294708704454
+        "total_r": 0,
+        "avg_r": 0.0,
+        "win_rate": null,
+        "max_dd_r": 0.0,
+        "best_r": null,
+        "worst_r": null
       },
       "tiers": {
         "1": {
-          "issued": 1,
+          "issued": 0,
           "filled": 0,
           "n": 0,
           "wins": 0,
@@ -61140,7 +61140,7 @@
           "flat": 0,
           "tp": 0,
           "sl": 0,
-          "no_trade": 1,
+          "no_trade": 0,
           "unscored": 0,
           "total_r": 0,
           "avg_r": 0.0,
@@ -61150,22 +61150,22 @@
           "worst_r": null
         },
         "2": {
-          "issued": 3,
-          "filled": 3,
-          "n": 3,
+          "issued": 0,
+          "filled": 0,
+          "n": 0,
           "wins": 0,
-          "losses": 3,
+          "losses": 0,
           "flat": 0,
           "tp": 0,
-          "sl": 3,
+          "sl": 0,
           "no_trade": 0,
           "unscored": 0,
-          "total_r": -3.089506133198303,
-          "avg_r": -1.0298353777327678,
-          "win_rate": 0.0,
-          "max_dd_r": 3.089506133198303,
-          "best_r": -1.027225419484492,
-          "worst_r": -1.031294708704454
+          "total_r": 0,
+          "avg_r": 0.0,
+          "win_rate": null,
+          "max_dd_r": 0.0,
+          "best_r": null,
+          "worst_r": null
         },
         "3": {
           "issued": 0,
@@ -61208,7 +61208,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792799138.169204,
+      "end": 1792800048.456167,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -61305,7 +61305,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792799138.169204,
+      "end": 1792800048.456167,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -61407,5 +61407,5 @@
       "lower": -2.9444
     }
   },
-  "last_weekly_period_end": 1792195200.0
+  "last_weekly_period_end": 1792800000.0
 }
