@@ -2833,7 +2833,7 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1792950336.6599176,
+    "ts": 1792950367.3910234,
     "source": "twelvedata:XAU/USD",
     "latest_bar_t": 1792950240
   },
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1792950336.670788,
+    "cutoff": 1792950367.506426,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1792949446.448337,
+    "fetched_at": 1792950367.39404,
     "coverage_start": 1792900800.0,
     "coverage_end": 1793505600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3801,7 +3801,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1792950336.663055,
+    "checked_at": 1792950367.498267,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -61167,11 +61167,11 @@
     ]
   },
   "pa_report": {
-    "generated_at": 1792950336.670788,
+    "generated_at": 1792950367.506426,
     "week": {
       "label": "Tuần 24/10 - 26/10/2026",
       "start": 1792800000.0,
-      "end": 1792950336.670788,
+      "end": 1792950367.506426,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -61268,7 +61268,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1792950336.670788,
+      "end": 1792950367.506426,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -61365,7 +61365,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1792950336.670788,
+      "end": 1792950367.506426,
       "stats": {
         "issued": 9,
         "filled": 5,
