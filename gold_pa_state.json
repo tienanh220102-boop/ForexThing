@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793021443.7489512,
+    "ts": 1793022337.3625157,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793021340
+    "latest_bar_t": 1793022240
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 10.39,
+    "days": 10.4,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793021443.759321,
+    "cutoff": 1793022337.490879,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793020613.007029,
+    "fetched_at": 1793022337.366166,
     "coverage_start": 1792900800.0,
     "coverage_end": 1793505600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "3aba99df27c20ead5528d45726b6c5088222497a7f4d3525f2516bf345c455db",
+    "sha256": "1553f40ec0fbf5392d027cfe6384ccb095b6b3e0d04a43797c1afabcc32d903b",
     "events": [
       {
         "title": "Bank Holiday",
@@ -3801,7 +3801,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793021443.752182,
+    "checked_at": 1793022337.482413,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -63522,7 +63522,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 1.3738498497866836,
-        "mae_r": 0.49719719579592814,
+        "mae_r": 0.6731323893803116,
         "events": [
           {
             "type": "FILL",
@@ -63531,7 +63531,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793021340,
+        "last_bar_t": 1793022240,
         "initial_risk": 12.178688961241278,
         "active_sl": 3997.137751038759,
         "filled_ts": 1792988160,
@@ -63825,15 +63825,19 @@
       [
         1793021443.474988,
         0
+      ],
+      [
+        1793022336.875107,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793021443.759321,
+    "generated_at": 1793022337.490879,
     "week": {
       "label": "Tuần 24/10 - 26/10/2026",
       "start": 1792800000.0,
-      "end": 1793021443.759321,
+      "end": 1793022337.490879,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -63930,7 +63934,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1793021443.759321,
+      "end": 1793022337.490879,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -64027,7 +64031,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793021443.759321,
+      "end": 1793022337.490879,
       "stats": {
         "issued": 9,
         "filled": 5,
