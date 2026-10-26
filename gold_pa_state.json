@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793029537.7198434,
+    "ts": 1793030446.269799,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793029440
+    "latest_bar_t": 1793030340
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 10.48,
+    "days": 10.49,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793029537.7299,
+    "cutoff": 1793030446.413475,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793028645.187312,
+    "fetched_at": 1793030446.271602,
     "coverage_start": 1792900800.0,
     "coverage_end": 1793505600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "1553f40ec0fbf5392d027cfe6384ccb095b6b3e0d04a43797c1afabcc32d903b",
+    "sha256": "2f0308b1ec4c7e5a469c2d5bd03094ddffcde745db089fb96f46761435675199",
     "events": [
       {
         "title": "Bank Holiday",
@@ -3556,6 +3556,12 @@
         "impact": "low"
       },
       {
+        "title": "Gov Council Member Gravelle Speaks",
+        "currency": "CAD",
+        "ts": 1793278200.0,
+        "impact": "low"
+      },
+      {
         "title": "Main Refinancing Rate",
         "currency": "EUR",
         "ts": 1793279700.0,
@@ -3582,7 +3588,7 @@
       {
         "title": "Gov Council Member Vincent Speaks",
         "currency": "CAD",
-        "ts": 1793289540.0,
+        "ts": 1793287800.0,
         "impact": "low"
       },
       {
@@ -3800,7 +3806,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793029537.721712,
+    "checked_at": 1793030446.407579,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -64539,15 +64545,19 @@
       [
         1793029537.553033,
         0
+      ],
+      [
+        1793030446.141483,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793029537.7299,
+    "generated_at": 1793030446.413475,
     "week": {
       "label": "Tuần 24/10 - 26/10/2026",
       "start": 1792800000.0,
-      "end": 1793029537.7299,
+      "end": 1793030446.413475,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -64644,7 +64654,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1793029537.7299,
+      "end": 1793030446.413475,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -64741,7 +64751,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793029537.7299,
+      "end": 1793030446.413475,
       "stats": {
         "issued": 9,
         "filled": 5,
