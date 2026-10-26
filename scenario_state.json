@@ -2040,14 +2040,16 @@
       "H4 thuận",
       "H1 thuận"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "EU-20261026-0",
      "hist": {
       "n": 93,
       "avg_r": 0.1523,
       "hit": 38,
       "done": 84
-     }
+     },
+     "triggered_at": 1792997100,
+     "entry": 4007.06102
     },
     {
      "type": "quet_dao",
@@ -2071,7 +2073,9 @@
       "avg_r": 0.0548,
       "hit": 71,
       "done": 280
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -2093,7 +2097,9 @@
       "avg_r": 0.0548,
       "hit": 71,
       "done": 280
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -2115,7 +2121,9 @@
       "avg_r": 0.0257,
       "hit": 195,
       "done": 243
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "qml",
@@ -2133,20 +2141,23 @@
      "why": [
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "EU-20261026-4",
      "hist": {
       "n": 36,
       "avg_r": -0.0948,
       "hit": 5,
       "done": 19
-     }
+     },
+     "closed_at": 1792997100
     }
    ],
    "status": "OPEN",
    "pick": "BUY",
    "pick_basis": "history",
-   "message_id": 883
+   "message_id": 883,
+   "last_bar_t": 1792997100,
+   "last_price": 4007.99797
   }
  ],
  "prior": {
@@ -2285,7 +2296,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1792996243.800922,
+ "last_fetch": 1792998043.7742858,
  "stats": {
   "by_type": [
    {
@@ -2355,5 +2366,5 @@
    "flat": 1
   }
  },
- "updated_at": 1792996243.800922
+ "updated_at": 1792998043.7742858
 }
