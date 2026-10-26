@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793047531.822058,
+    "ts": 1793048446.4641387,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793047380
+    "latest_bar_t": 1793048340
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 10.69,
+    "days": 10.7,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793047531.828895,
+    "cutoff": 1793048446.537028,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793046642.580675,
+    "fetched_at": 1793048446.466017,
     "coverage_start": 1792900800.0,
     "coverage_end": 1793505600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "0155b926fe46f5d1ff901f78b5934acd9c72a8966569c46443f85e8ea0122bba",
+    "sha256": "a5001661b61674bfc731551d6905bed66312ec481ddbac08ba7b157dce362e22",
     "events": [
       {
         "title": "Bank Holiday",
@@ -3664,12 +3664,6 @@
         "impact": "high"
       },
       {
-        "title": "German Prelim CPI m/m",
-        "currency": "EUR",
-        "ts": 1793341740.0,
-        "impact": "medium"
-      },
-      {
         "title": "French Consumer Spending m/m",
         "currency": "EUR",
         "ts": 1793341800.0,
@@ -3692,6 +3686,12 @@
         "currency": "GBP",
         "ts": 1793343600.0,
         "impact": "low"
+      },
+      {
+        "title": "German Prelim CPI m/m",
+        "currency": "EUR",
+        "ts": 1793345340.0,
+        "impact": "medium"
       },
       {
         "title": "French Prelim CPI m/m",
@@ -3806,7 +3806,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793047531.823038,
+    "checked_at": 1793048446.528638,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -64235,10 +64235,6 @@
     "alerted": false,
     "recent": [
       [
-        1792962043.118519,
-        0
-      ],
-      [
         1792962935.679529,
         0
       ],
@@ -64629,15 +64625,19 @@
       [
         1793047531.677237,
         0
+      ],
+      [
+        1793048446.303452,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793047531.828895,
+    "generated_at": 1793048446.537028,
     "week": {
       "label": "Tuần 24/10 - 27/10/2026",
       "start": 1792800000.0,
-      "end": 1793047531.828895,
+      "end": 1793048446.537028,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -64734,7 +64734,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1793047531.828895,
+      "end": 1793048446.537028,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -64831,7 +64831,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793047531.828895,
+      "end": 1793048446.537028,
       "stats": {
         "issued": 9,
         "filled": 5,
