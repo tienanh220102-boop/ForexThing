@@ -2747,7 +2747,7 @@
      "text": "Phá thật đáy 4,028.6: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 4,018.9",
      "score": 0,
      "why": [],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "EU-20261028-3",
      "hist": {
       "n": 281,
@@ -2756,7 +2756,8 @@
       "done": 245
      },
      "run": 0,
-     "beyond": 1
+     "beyond": 2,
+     "closed_at": 1793177100
     },
     {
      "type": "qml",
@@ -2791,8 +2792,8 @@
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 891,
-   "last_bar_t": 1793175300,
-   "last_price": 4050.49527
+   "last_bar_t": 1793177100,
+   "last_price": 4054.10038
   }
  ],
  "prior": {
@@ -2931,7 +2932,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1793176241.9251447,
+ "last_fetch": 1793178040.1810617,
  "stats": {
   "by_type": [
    {
@@ -3001,5 +3002,5 @@
    "flat": 1
   }
  },
- "updated_at": 1793176241.9251447
+ "updated_at": 1793178040.1810617
 }
