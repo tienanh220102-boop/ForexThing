@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793331034.754762,
+    "ts": 1793331939.4366043,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793330940
+    "latest_bar_t": 1793331840
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 13.97,
+    "days": 13.98,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793331034.872615,
+    "cutoff": 1793331939.551068,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793331034.756737,
+    "fetched_at": 1793331939.439278,
     "coverage_start": 1792900800.0,
     "coverage_end": 1793505600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "a0d92af7a394baed0e9e8c1006593f0495c4069eecd47a562aa5552a996d9f50",
+    "sha256": "b3e1820a04eff5660717edd37647086d42869e52c35858b5aac1d91750c3b682",
     "events": [
       {
         "title": "Bank Holiday",
@@ -3635,21 +3635,21 @@
         "impact": "low"
       },
       {
+        "title": "BOJ Outlook Report",
+        "currency": "JPY",
+        "ts": 1793329320.0,
+        "impact": "high"
+      },
+      {
         "title": "BOJ Policy Rate",
         "currency": "JPY",
-        "ts": 1793327400.0,
+        "ts": 1793329320.0,
         "impact": "high"
       },
       {
         "title": "Monetary Policy Statement",
         "currency": "JPY",
-        "ts": 1793327400.0,
-        "impact": "high"
-      },
-      {
-        "title": "BOJ Outlook Report",
-        "currency": "JPY",
-        "ts": 1793327460.0,
+        "ts": 1793329320.0,
         "impact": "high"
       },
       {
@@ -3807,7 +3807,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793331034.868193,
+    "checked_at": 1793331939.544775,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -72256,7 +72256,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793330940,
+        "last_bar_t": 1793331840,
         "initial_risk": 20.872587318423484,
         "active_sl": 3980.518918502805,
         "filled_ts": 1793327640,
@@ -72275,14 +72275,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED provider HTTP 429",
     "alerted": false,
     "recent": [
-      [
-        1793244642.654597,
-        0
-      ],
-      [
-        1793245530.34169,
-        0
-      ],
       [
         1793246450.604556,
         0
@@ -72682,15 +72674,19 @@
       [
         1793331034.408209,
         0
+      ],
+      [
+        1793331939.271297,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793331034.872615,
+    "generated_at": 1793331939.551068,
     "week": {
       "label": "Tuần 24/10 - 30/10/2026",
       "start": 1792800000.0,
-      "end": 1793331034.872615,
+      "end": 1793331939.551068,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -72787,7 +72783,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1793331034.872615,
+      "end": 1793331939.551068,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -72884,7 +72880,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793331034.872615,
+      "end": 1793331939.551068,
       "stats": {
         "issued": 9,
         "filled": 5,
