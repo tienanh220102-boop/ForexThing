@@ -3295,7 +3295,8 @@
       "avg_r": 0.1573,
       "hit": 39,
       "done": 86
-     }
+     },
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -3319,7 +3320,9 @@
       "avg_r": 0.0621,
       "hit": 73,
       "done": 284
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -3334,14 +3337,17 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "EU-20261030-2",
      "hist": {
       "n": 413,
       "avg_r": 0.0621,
       "hit": 73,
       "done": 284
-     }
+     },
+     "swept": true,
+     "triggered_at": 1793342700,
+     "entry": 3987.01321
     },
     {
      "type": "pha_that",
@@ -3363,7 +3369,9 @@
       "avg_r": 0.024,
       "hit": 196,
       "done": 245
-     }
+     },
+     "run": 1,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -3375,20 +3383,25 @@
      "text": "Phá thật đỉnh 4,019.7: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 4,033.9",
      "score": 0,
      "why": [],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "EU-20261030-4",
      "hist": {
       "n": 281,
       "avg_r": 0.024,
       "hit": 196,
       "done": 245
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1793343600
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 899
+   "message_id": 899,
+   "last_bar_t": 1793342700,
+   "last_price": 3981.99253
   }
  ],
  "prior": {
@@ -3527,7 +3540,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1793341840.0336676,
+ "last_fetch": 1793343639.6802506,
  "stats": {
   "by_type": [
    {
@@ -3597,5 +3610,5 @@
    "flat": 2
   }
  },
- "updated_at": 1793341840.0336676
+ "updated_at": 1793343639.6802506
 }
