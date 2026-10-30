@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793336446.402725,
+    "ts": 1793337331.7796638,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793336340
+    "latest_bar_t": 1793337180
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 14.03,
+    "days": 14.04,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793336446.501523,
+    "cutoff": 1793337331.789403,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3807,7 +3807,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793336446.493533,
+    "checked_at": 1793337331.782564,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -72256,7 +72256,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793336340,
+        "last_bar_t": 1793337180,
         "initial_risk": 20.872587318423484,
         "active_sl": 3980.518918502805,
         "filled_ts": 1793327640,
@@ -72973,7 +72973,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.14171002193503923,
-        "mae_r": 0.4138097677619133,
+        "mae_r": 0.6663782722606582,
         "events": [
           {
             "type": "FILL",
@@ -72982,7 +72982,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793336340,
+        "last_bar_t": 1793337180,
         "initial_risk": 14.420998402902114,
         "active_sl": 4006.0915684029023,
         "filled_ts": 1793333760,
@@ -73001,10 +73001,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED provider HTTP 429",
     "alerted": false,
     "recent": [
-      [
-        1793250046.034703,
-        0
-      ],
       [
         1793250937.543679,
         0
@@ -73408,15 +73404,19 @@
       [
         1793336445.932662,
         0
+      ],
+      [
+        1793337331.524826,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793336446.501523,
+    "generated_at": 1793337331.789403,
     "week": {
       "label": "Tuần 24/10 - 30/10/2026",
       "start": 1792800000.0,
-      "end": 1793336446.501523,
+      "end": 1793337331.789403,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -73513,7 +73513,7 @@
     "month": {
       "label": "Tháng 10/2026",
       "start": 1790787600.0,
-      "end": 1793336446.501523,
+      "end": 1793337331.789403,
       "stats": {
         "issued": 9,
         "filled": 5,
@@ -73610,7 +73610,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793336446.501523,
+      "end": 1793337331.789403,
       "stats": {
         "issued": 9,
         "filled": 5,
