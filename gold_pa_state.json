@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793574933.6578507,
+    "ts": 1793575840.2787051,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793574840
+    "latest_bar_t": 1793575740
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 16.79,
+    "days": 16.8,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793574933.666483,
+    "cutoff": 1793575840.435661,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3185,14 +3185,13 @@
       },
       "MONITOR_REVIEW": {
         "candidates": 34,
-        "shadow_resolved": 26,
-        "shadow_net_r": 2.458132218658131,
+        "shadow_resolved": 27,
+        "shadow_net_r": 1.4394863171991268,
         "shadow_wins": 13,
         "evaluations": {
-          "SL": 13,
+          "SL": 14,
           "TP1": 13,
-          "NOT_EVALUABLE": 7,
-          "OPEN": 1
+          "NOT_EVALUABLE": 7
         },
         "later_accepted": 0
       },
@@ -3214,7 +3213,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793574043.048022,
+    "fetched_at": 1793575840.281402,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3921,7 +3920,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793574933.660511,
+    "checked_at": 1793575840.429485,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -78188,7 +78187,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 3879.8572,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1793384160,
@@ -78199,25 +78198,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": -1.0,
         "mfe_r": 0.6539154933475748,
-        "mae_r": 0.852227241347566,
+        "mae_r": 0.9913424475430476,
         "events": [
           {
             "type": "FILL",
             "ts": 1793384160,
             "price": 3880.04916
+          },
+          {
+            "type": "SL",
+            "ts": 1793575740,
+            "price": 3901.5015955864187,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793574840,
+        "last_bar_t": 1793575680,
         "initial_risk": 21.452435586418687,
         "active_sl": 3901.5015955864187,
         "filled_ts": 1793384160,
-        "timeout_at": 1793816160
+        "timeout_at": 1793816160,
+        "outcome": "SL",
+        "closed_ts": 1793575740,
+        "net_r": -1.0186459014590044,
+        "correct": false,
+        "pips": -218.5244
       },
-      "evaluation": "OPEN"
+      "evaluation": "SL"
     }
   ],
   "momentum": {
@@ -78273,15 +78283,19 @@
       [
         1793574933.367245,
         0
+      ],
+      [
+        1793575839.889952,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793574933.666483,
+    "generated_at": 1793575840.435661,
     "week": {
       "label": "Tuần 31/10 - 02/11/2026",
       "start": 1793404800.0,
-      "end": 1793574933.666483,
+      "end": 1793575840.435661,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -78378,7 +78392,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793574933.666483,
+      "end": 1793575840.435661,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -78475,7 +78489,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793574933.666483,
+      "end": 1793575840.435661,
       "stats": {
         "issued": 9,
         "filled": 5,
