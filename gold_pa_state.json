@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793568638.7854729,
+    "ts": 1793569534.0026042,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793568540
+    "latest_bar_t": 1793569440
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 16.72,
+    "days": 16.73,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793568638.79318,
+    "cutoff": 1793569534.190546,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793568004.563549,
+    "fetched_at": 1793569534.005457,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3921,7 +3921,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793568638.788153,
+    "checked_at": 1793569534.183708,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -78211,7 +78211,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793568540,
+        "last_bar_t": 1793569440,
         "initial_risk": 21.452435586418687,
         "active_sl": 3901.5015955864187,
         "filled_ts": 1793384160,
@@ -78245,15 +78245,19 @@
       [
         1793568638.503685,
         0
+      ],
+      [
+        1793569533.677095,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793568638.79318,
+    "generated_at": 1793569534.190546,
     "week": {
       "label": "Tuần 31/10 - 02/11/2026",
       "start": 1793404800.0,
-      "end": 1793568638.79318,
+      "end": 1793569534.190546,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -78350,7 +78354,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793568638.79318,
+      "end": 1793569534.190546,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -78447,7 +78451,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793568638.79318,
+      "end": 1793569534.190546,
       "stats": {
         "issued": 9,
         "filled": 5,
