@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793632535.1844125,
+    "ts": 1793633444.2132592,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793632440
+    "latest_bar_t": 1793633340
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 17.46,
+    "days": 17.47,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793632535.194247,
+    "cutoff": 1793633444.327921,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3192,7 +3192,7 @@
           "SL": 16,
           "TP1": 15,
           "NOT_EVALUABLE": 11,
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 0
       },
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793631650.800288,
+    "fetched_at": 1793633444.21807,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3915,7 +3915,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793632535.185804,
+    "checked_at": 1793633444.319969,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -85528,7 +85528,7 @@
       "shadow": {
         "setup": "breakout",
         "dir": "BUY",
-        "entry": 3957.04198,
+        "entry": 3956.33248,
         "sl": 3925.975180402381,
         "tp1": 3997.9338822414284,
         "tp2": 4050.2423787928574,
@@ -85546,7 +85546,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 3957.04198,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1793632560,
@@ -85559,12 +85559,23 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mfe_r": 0.15969635192387335,
+        "mae_r": 0.050052541567931354,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1793632560,
+            "price": 3956.33248
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1793633340,
+        "initial_risk": 30.357299597619203,
+        "active_sl": 3925.975180402381,
+        "filled_ts": 1793632560,
+        "timeout_at": 1794064560
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     }
   ],
   "momentum": {
@@ -85884,15 +85895,19 @@
       [
         1793632535.108686,
         0
+      ],
+      [
+        1793633443.951527,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793632535.194247,
+    "generated_at": 1793633444.327921,
     "week": {
       "label": "Tuần 31/10 - 02/11/2026",
       "start": 1793404800.0,
-      "end": 1793632535.194247,
+      "end": 1793633444.327921,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -85989,7 +86004,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793632535.194247,
+      "end": 1793633444.327921,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86086,7 +86101,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793632535.194247,
+      "end": 1793633444.327921,
       "stats": {
         "issued": 9,
         "filled": 5,
