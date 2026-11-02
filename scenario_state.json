@@ -3634,7 +3634,7 @@
       "H1 thuận",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "EU-20261102-2",
      "hist": {
       "n": 98,
@@ -3642,8 +3642,10 @@
       "hit": 21,
       "done": 79
      },
-     "swept": false,
-     "beyond": 0
+     "swept": true,
+     "beyond": 0,
+     "triggered_at": 1793608200,
+     "entry": 3894.12315
     },
     {
      "type": "retest",
@@ -3695,8 +3697,8 @@
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 904,
-   "last_bar_t": 1793605500,
-   "last_price": 3903.4339
+   "last_bar_t": 1793607300,
+   "last_price": 3894.12315
   }
  ],
  "prior": {
@@ -3835,7 +3837,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1793606447.895291,
+ "last_fetch": 1793608241.6594775,
  "stats": {
   "by_type": [
    {
@@ -3905,5 +3907,5 @@
    "flat": 2
   }
  },
- "updated_at": 1793606447.895291
+ "updated_at": 1793608241.6594775
 }
