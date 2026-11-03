@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793720742.4479816,
+    "ts": 1793721648.6223972,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793720640
+    "latest_bar_t": 1793721540
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 18.48,
+    "days": 18.49,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793720742.459348,
+    "cutoff": 1793721648.908369,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793719843.252143,
+    "fetched_at": 1793721648.624292,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "a34d9b97d3bc3eacb9fc12c9fa84e8cc0548f6e89089ac3721b30b083fabb5bf",
+    "sha256": "81a92418180e49f142860cabd0300517af0c2969a8820c3bbad2ad26f19dad1e",
     "events": [
       {
         "title": "Daylight Saving Time Shift",
@@ -3444,7 +3444,7 @@
       {
         "title": "GDT Price Index",
         "currency": "NZD",
-        "ts": 1793721060.0,
+        "ts": 1793719620.0,
         "impact": "low"
       },
       {
@@ -3914,7 +3914,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793720742.450332,
+    "checked_at": 1793721648.900073,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -85993,15 +85993,19 @@
       [
         1793720742.305561,
         0
+      ],
+      [
+        1793721648.457061,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793720742.459348,
+    "generated_at": 1793721648.908369,
     "week": {
       "label": "Tuần 31/10 - 03/11/2026",
       "start": 1793404800.0,
-      "end": 1793720742.459348,
+      "end": 1793721648.908369,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86098,7 +86102,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793720742.459348,
+      "end": 1793721648.908369,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86195,7 +86199,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793720742.459348,
+      "end": 1793721648.908369,
       "stats": {
         "issued": 9,
         "filled": 5,
