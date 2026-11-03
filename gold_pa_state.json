@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793675743.358276,
+    "ts": 1793676642.0311236,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793675640
+    "latest_bar_t": 1793676540
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 17.96,
+    "days": 17.97,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793675743.368917,
+    "cutoff": 1793676642.39377,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793674852.594317,
+    "fetched_at": 1793676642.034467,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3915,7 +3915,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793675743.36115,
+    "checked_at": 1793676642.385501,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -85560,7 +85560,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.4497903364590013,
-        "mae_r": 0.5957120771512316,
+        "mae_r": 0.6927121410248659,
         "events": [
           {
             "type": "FILL",
@@ -85569,7 +85569,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793675640,
+        "last_bar_t": 1793676540,
         "initial_risk": 30.357299597619203,
         "active_sl": 3925.975180402381,
         "filled_ts": 1793632560,
@@ -85588,10 +85588,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED provider HTTP 429",
     "alerted": false,
     "recent": [
-      [
-        1793590239.921691,
-        0
-      ],
       [
         1793591138.570634,
         0
@@ -85979,15 +85975,19 @@
       [
         1793675743.025885,
         0
+      ],
+      [
+        1793676641.719942,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793675743.368917,
+    "generated_at": 1793676642.39377,
     "week": {
       "label": "Tuần 31/10 - 03/11/2026",
       "start": 1793404800.0,
-      "end": 1793675743.368917,
+      "end": 1793676642.39377,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86084,7 +86084,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793675743.368917,
+      "end": 1793676642.39377,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86181,7 +86181,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793675743.368917,
+      "end": 1793676642.39377,
       "stats": {
         "issued": 9,
         "filled": 5,
