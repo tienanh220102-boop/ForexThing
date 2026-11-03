@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793706333.8148372,
+    "ts": 1793707246.9193728,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793706180
+    "latest_bar_t": 1793707140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 18.31,
+    "days": 18.32,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793706333.820931,
+    "cutoff": 1793707246.974136,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793705440.285845,
+    "fetched_at": 1793707246.920881,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "d6526f90998186e3584b5196ebfb462ffad3cea6487d9b3d1a51de88d3731539",
+    "sha256": "8f3f7493f4e8ac75527f13ec86b436eac992b7cc921b77133ca24d73a9a326ac",
     "events": [
       {
         "title": "Daylight Saving Time Shift",
@@ -3408,7 +3408,7 @@
       {
         "title": "10-y Bond Auction",
         "currency": "GBP",
-        "ts": 1793701980.0,
+        "ts": 1793700120.0,
         "impact": "low"
       },
       {
@@ -3914,7 +3914,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793706333.815855,
+    "checked_at": 1793707246.966742,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -85599,10 +85599,6 @@
     "alerted": false,
     "recent": [
       [
-        1793619937.636494,
-        0
-      ],
-      [
         1793620847.288996,
         0
       ],
@@ -85993,15 +85989,19 @@
       [
         1793706333.726411,
         0
+      ],
+      [
+        1793707246.845273,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793706333.820931,
+    "generated_at": 1793707246.974136,
     "week": {
       "label": "Tuần 31/10 - 03/11/2026",
       "start": 1793404800.0,
-      "end": 1793706333.820931,
+      "end": 1793707246.974136,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86098,7 +86098,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793706333.820931,
+      "end": 1793707246.974136,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86195,7 +86195,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793706333.820931,
+      "end": 1793707246.974136,
       "stats": {
         "issued": 9,
         "filled": 5,
