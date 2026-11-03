@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793717584.844004,
+    "ts": 1793718046.6145816,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793717460
+    "latest_bar_t": 1793717940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 18.44,
+    "days": 18.45,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793717584.942436,
+    "cutoff": 1793718046.621207,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3914,7 +3914,7 @@
   "calendar_health": {
     "status": "HARD",
     "reason": "Congressional Elections",
-    "checked_at": 1793717584.93408,
+    "checked_at": 1793718046.616113,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -85993,15 +85993,19 @@
       [
         1793717584.705343,
         0
+      ],
+      [
+        1793718046.436094,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793717584.942436,
+    "generated_at": 1793718046.621207,
     "week": {
       "label": "Tuần 31/10 - 03/11/2026",
       "start": 1793404800.0,
-      "end": 1793717584.942436,
+      "end": 1793718046.621207,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86098,7 +86102,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793717584.942436,
+      "end": 1793718046.621207,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86195,7 +86199,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793717584.942436,
+      "end": 1793718046.621207,
       "stats": {
         "issued": 9,
         "filled": 5,
