@@ -2832,10 +2832,9 @@
     "updated": 1793696454.02406
   },
   "data_health": {
-    "ok": true,
-    "ts": 1793775640.5701246,
-    "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793775540
+    "ok": false,
+    "reason": "M1 feed is stale",
+    "ts": 1793776539.428127
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2991,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 19.11,
+    "days": 19.13,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3047,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793775640.727501,
+    "cutoff": 1793776539.528487,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -86375,19 +86374,11 @@
     "ts": 1793588445.590793
   },
   "data_watchdog": {
-    "consecutive": 0,
-    "since": null,
-    "last_reason": "EXECUTION_DATA_REJECTED provider HTTP 429",
+    "consecutive": 1,
+    "since": 1793776539.428127,
+    "last_reason": "EXECUTION_DATA_REJECTED M1 feed is stale",
     "alerted": false,
     "recent": [
-      [
-        1793689245.088341,
-        0
-      ],
-      [
-        1793690138.091516,
-        0
-      ],
       [
         1793691038.236941,
         0
@@ -86779,15 +86770,19 @@
       [
         1793775640.467397,
         0
+      ],
+      [
+        1793776539.428127,
+        1
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793775640.727501,
+    "generated_at": 1793776539.528487,
     "week": {
       "label": "Tuần 31/10 - 04/11/2026",
       "start": 1793404800.0,
-      "end": 1793775640.727501,
+      "end": 1793776539.528487,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86884,7 +86879,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793775640.727501,
+      "end": 1793776539.528487,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -86981,7 +86976,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793775640.727501,
+      "end": 1793776539.528487,
       "stats": {
         "issued": 9,
         "filled": 5,
