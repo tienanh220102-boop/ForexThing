@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793816138.9499393,
+    "ts": 1793817043.683981,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793816040
+    "latest_bar_t": 1793816940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 19.58,
+    "days": 19.59,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793816138.96198,
+    "cutoff": 1793817043.781199,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793815250.026057,
+    "fetched_at": 1793817043.687828,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3915,7 +3915,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793816138.954019,
+    "checked_at": 1793817043.773392,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -87196,7 +87196,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793816040,
+        "last_bar_t": 1793816940,
         "initial_risk": 32.764075100315495,
         "active_sl": 3990.3996448996845,
         "filled_ts": 1793777400,
@@ -88030,7 +88030,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793816040,
+        "last_bar_t": 1793816940,
         "initial_risk": 28.254843670680202,
         "active_sl": 4016.69458632932,
         "filled_ts": 1793783760,
@@ -88864,7 +88864,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793816040,
+        "last_bar_t": 1793816940,
         "initial_risk": 18.348845776812595,
         "active_sl": 4026.9636542231874,
         "filled_ts": 1793788260,
@@ -89689,7 +89689,7 @@
         "remaining": 1.0,
         "realized_r": 0.0,
         "mfe_r": 0.15946104587369528,
-        "mae_r": 0.06367103405597363,
+        "mae_r": 0.09082702485415688,
         "events": [
           {
             "type": "FILL",
@@ -89698,7 +89698,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793816040,
+        "last_bar_t": 1793816940,
         "initial_risk": 30.939029485028186,
         "active_sl": 4034.584870514972,
         "filled_ts": 1793812560,
@@ -89717,10 +89717,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED M1 feed is stale",
     "alerted": false,
     "recent": [
-      [
-        1793729740.960985,
-        0
-      ],
       [
         1793730646.962766,
         0
@@ -90096,15 +90092,19 @@
       [
         1793816138.741166,
         0
+      ],
+      [
+        1793817043.233089,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793816138.96198,
+    "generated_at": 1793817043.781199,
     "week": {
       "label": "Tuần 31/10 - 05/11/2026",
       "start": 1793404800.0,
-      "end": 1793816138.96198,
+      "end": 1793817043.781199,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -90201,7 +90201,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793816138.96198,
+      "end": 1793817043.781199,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -90298,7 +90298,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793816138.96198,
+      "end": 1793817043.781199,
       "stats": {
         "issued": 9,
         "filled": 5,
