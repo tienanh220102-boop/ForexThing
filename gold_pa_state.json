@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793777440.427796,
+    "ts": 1793778332.8702576,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793777340
+    "latest_bar_t": 1793778180
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 19.14,
+    "days": 19.15,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793777440.438597,
+    "cutoff": 1793778332.958066,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3192,7 +3192,7 @@
           "SL": 17,
           "TP1": 15,
           "NOT_EVALUABLE": 12,
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 0
       },
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793777394.336842,
+    "fetched_at": 1793778332.872649,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3915,7 +3915,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793777440.430576,
+    "checked_at": 1793778332.951975,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -87155,7 +87155,7 @@
       "shadow": {
         "setup": "breakout",
         "dir": "BUY",
-        "entry": 4024.22409,
+        "entry": 4023.16372,
         "sl": 3990.3996448996845,
         "tp1": 4091.872980200632,
         "tp2": 4125.6974253009475,
@@ -87173,7 +87173,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4024.22409,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1793777400,
@@ -87186,17 +87186,28 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mfe_r": 0.17671916519151518,
+        "mae_r": 0.019459423104353994,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1793777400,
+            "price": 4023.16372
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1793778180,
+        "initial_risk": 32.764075100315495,
+        "active_sl": 3990.3996448996845,
+        "filled_ts": 1793777400,
+        "timeout_at": 1794209400
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     }
   ],
   "momentum": {
     "dir": "BULL",
-    "ts": 1793777440.167007
+    "ts": 1793778332.633493
   },
   "data_watchdog": {
     "consecutive": 0,
@@ -87603,15 +87614,19 @@
       [
         1793777440.167007,
         0
+      ],
+      [
+        1793778332.633493,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793777440.438597,
+    "generated_at": 1793778332.958066,
     "week": {
       "label": "Tuần 31/10 - 04/11/2026",
       "start": 1793404800.0,
-      "end": 1793777440.438597,
+      "end": 1793778332.958066,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -87708,7 +87723,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793777440.438597,
+      "end": 1793778332.958066,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -87805,7 +87820,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793777440.438597,
+      "end": 1793778332.958066,
       "stats": {
         "issued": 9,
         "filled": 5,
