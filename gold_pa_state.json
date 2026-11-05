@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793918737.5044858,
+    "ts": 1793918811.1630206,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793918640
+    "latest_bar_t": 1793918700
   },
   "monitor": {
     "n": 5,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793918737.514505,
+    "cutoff": 1793918811.216399,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,7 +3213,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793917842.894881,
+    "fetched_at": 1793918811.164798,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3914,7 +3914,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793918737.506332,
+    "checked_at": 1793918811.208145,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -92556,15 +92556,19 @@
       [
         1793918737.438335,
         0
+      ],
+      [
+        1793918811.099712,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793918737.514505,
+    "generated_at": 1793918811.216399,
     "week": {
       "label": "Tuần 31/10 - 06/11/2026",
       "start": 1793404800.0,
-      "end": 1793918737.514505,
+      "end": 1793918811.216399,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -92661,7 +92665,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793918737.514505,
+      "end": 1793918811.216399,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -92758,7 +92762,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793918737.514505,
+      "end": 1793918811.216399,
       "stats": {
         "issued": 9,
         "filled": 5,
