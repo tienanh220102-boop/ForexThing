@@ -4643,7 +4643,7 @@
       "H4 thuận (đã xác nhận)",
       "H1 thuận"
      ],
-     "status": "TRIGGERED",
+     "status": "EXPIRED_OPEN",
      "id": "US-20261105-0",
      "hist": {
       "n": 96,
@@ -4653,7 +4653,9 @@
      },
      "beyond": 0,
      "triggered_at": 1793894400,
-     "entry": 4082.89715
+     "entry": 4082.89715,
+     "r_at_expiry": 1.4151838844629987,
+     "r": 1.4151838844629987
     },
     {
      "type": "quet_dao",
@@ -4698,7 +4700,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261105-2",
      "hist": {
       "n": 416,
@@ -4766,12 +4768,14 @@
      "r": -1.0
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 922,
-   "last_bar_t": 1793909700,
-   "last_price": 4105.34729
+   "last_bar_t": 1793911500,
+   "last_price": 4095.99945,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -4910,25 +4914,25 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1793910654.6577787,
+ "last_fetch": 1793912447.752827,
  "stats": {
   "by_type": [
    {
     "type": "ob",
     "regime": "RANGE",
-    "n": 4,
-    "triggered": 1,
+    "n": 5,
+    "triggered": 2,
     "hit": 1,
-    "failed": 0,
+    "failed": 1,
     "open": 0,
-    "n_r": 1,
-    "sum_r": 0.7371,
-    "avg_r": 0.7371
+    "n_r": 2,
+    "sum_r": -0.2629,
+    "avg_r": -0.1314
    },
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 48,
+    "n": 49,
     "triggered": 12,
     "hit": 9,
     "failed": 1,
@@ -4976,14 +4980,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 52,
-    "triggered": 20,
+    "n": 54,
+    "triggered": 21,
     "hit": 6,
-    "failed": 8,
+    "failed": 9,
     "open": 6,
-    "n_r": 20,
-    "sum_r": 5.9701,
-    "avg_r": 0.2985
+    "n_r": 21,
+    "sum_r": 4.9701,
+    "avg_r": 0.2367
    },
    {
     "type": "quet_dao",
@@ -5000,14 +5004,14 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 14,
-    "triggered": 7,
+    "n": 15,
+    "triggered": 8,
     "hit": 3,
     "failed": 4,
-    "open": 0,
-    "n_r": 7,
-    "sum_r": 3.8005,
-    "avg_r": 0.5429
+    "open": 1,
+    "n_r": 8,
+    "sum_r": 5.2157,
+    "avg_r": 0.652
    },
    {
     "type": "retest",
@@ -5023,10 +5027,10 @@
    }
   ],
   "pick": {
-   "n": 29,
+   "n": 30,
    "right": 13,
    "flat": 3
   }
  },
- "updated_at": 1793910654.6577787
+ "updated_at": 1793912447.752827
 }
