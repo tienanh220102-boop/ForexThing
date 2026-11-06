@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793974533.6098328,
+    "ts": 1793975442.071226,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793974440
+    "latest_bar_t": 1793975340
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 21.42,
+    "days": 21.43,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793974533.617976,
+    "cutoff": 1793975442.14277,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793973651.77663,
+    "fetched_at": 1793975442.073884,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3913,9 +3913,9 @@
     ]
   },
   "calendar_health": {
-    "status": "PASS",
-    "reason": "verified_no_blocking_event",
-    "checked_at": 1793974533.612789,
+    "status": "SOFT",
+    "reason": "Prelim UoM Consumer Sentiment; Prelim UoM Inflation Expectations",
+    "checked_at": 1793975442.134963,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -94667,7 +94667,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 1.1262596937051885,
+        "mfe_r": 1.170377159818703,
         "mae_r": 0.3427836456015537,
         "events": [
           {
@@ -94677,7 +94677,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793974440,
+        "last_bar_t": 1793975340,
         "initial_risk": 33.15648265556683,
         "active_sl": 4102.757352655567,
         "filled_ts": 1793931360,
@@ -95542,10 +95542,6 @@
     "alerted": false,
     "recent": [
       [
-        1793888134.158366,
-        0
-      ],
-      [
         1793889044.599948,
         0
       ],
@@ -95932,15 +95928,19 @@
       [
         1793974533.234036,
         0
+      ],
+      [
+        1793975441.58693,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793974533.617976,
+    "generated_at": 1793975442.14277,
     "week": {
       "label": "Tuần 31/10 - 06/11/2026",
       "start": 1793404800.0,
-      "end": 1793974533.617976,
+      "end": 1793975442.14277,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -96037,7 +96037,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793974533.617976,
+      "end": 1793975442.14277,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -96134,7 +96134,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793974533.617976,
+      "end": 1793975442.14277,
       "stats": {
         "issued": 9,
         "filled": 5,
