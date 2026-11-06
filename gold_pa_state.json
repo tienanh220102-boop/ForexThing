@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1793938534.8553698,
+    "ts": 1793939435.2638433,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1793938440
+    "latest_bar_t": 1793939340
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 21.0,
+    "days": 21.01,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1793938534.864367,
+    "cutoff": 1793939435.358633,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3192,8 +3192,7 @@
           "SL": 19,
           "TP1": 20,
           "NOT_EVALUABLE": 14,
-          "OPEN": 1,
-          "PENDING": 1
+          "OPEN": 2
         },
         "later_accepted": 0
       },
@@ -3215,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1793937652.294712,
+    "fetched_at": 1793939435.265939,
     "coverage_start": 1793505600.0,
     "coverage_end": 1794114000.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3916,7 +3915,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1793938534.857892,
+    "checked_at": 1793939435.354273,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -94678,7 +94677,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1793938440,
+        "last_bar_t": 1793939340,
         "initial_risk": 33.15648265556683,
         "active_sl": 4102.757352655567,
         "filled_ts": 1793931360,
@@ -95471,7 +95470,7 @@
       "shadow": {
         "setup": "breakout",
         "dir": "SELL",
-        "entry": 4040.0962,
+        "entry": 4040.41601,
         "sl": 4070.619825070361,
         "tp1": 4003.2483550422166,
         "tp2": 3948.525324788917,
@@ -95489,7 +95488,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 4040.0962,
-        "status": "PENDING",
+        "status": "OPEN",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1793938560,
@@ -95502,12 +95501,23 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
-        "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "mfe_r": 0.011205206998241145,
+        "mae_r": 0.1511468001431393,
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1793938560,
+            "price": 4040.41601
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1793939340,
+        "initial_risk": 30.203815070361088,
+        "active_sl": 4070.619825070361,
+        "filled_ts": 1793938560,
+        "timeout_at": 1794370560
       },
-      "evaluation": "PENDING"
+      "evaluation": "OPEN"
     }
   ],
   "momentum": {
@@ -95520,10 +95530,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED M1 feed is stale",
     "alerted": false,
     "recent": [
-      [
-        1793852134.569947,
-        0
-      ],
       [
         1793853038.491674,
         0
@@ -95911,15 +95917,19 @@
       [
         1793938534.301174,
         0
+      ],
+      [
+        1793939434.951339,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1793938534.864367,
+    "generated_at": 1793939435.358633,
     "week": {
       "label": "Tuần 31/10 - 06/11/2026",
       "start": 1793404800.0,
-      "end": 1793938534.864367,
+      "end": 1793939435.358633,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -96016,7 +96026,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1793938534.864367,
+      "end": 1793939435.358633,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -96113,7 +96123,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1793938534.864367,
+      "end": 1793939435.358633,
       "stats": {
         "issued": 9,
         "filled": 5,
