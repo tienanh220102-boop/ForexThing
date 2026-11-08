@@ -2,9 +2,9 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-11-08T18:23:15+00:00",
- "calls_this_run": 8,
- "stopped": null,
+ "updated_at": "2026-11-08T22:53:05+00:00",
+ "calls_this_run": 0,
+ "stopped": "credit ngay con 397 <= du tru 450 cho bot",
  "series": [
   {
    "tf": "1h",
@@ -41,7 +41,7 @@
      74.0
     ]
    ],
-   "added_this_run": 11
+   "added_this_run": 0
   },
   {
    "tf": "15min",
@@ -78,7 +78,7 @@
      73.2
     ]
    ],
-   "added_this_run": 44
+   "added_this_run": 0
   },
   {
    "tf": "5min",
@@ -115,7 +115,7 @@
      73.1
     ]
    ],
-   "added_this_run": 133
+   "added_this_run": 0
   },
   {
    "tf": "1min",
@@ -152,7 +152,7 @@
      73.0
     ]
    ],
-   "added_this_run": 663
+   "added_this_run": 0
   }
  ]
 }
