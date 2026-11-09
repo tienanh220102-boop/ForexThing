@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794257131.942013,
+    "ts": 1794258044.5545418,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794256980
+    "latest_bar_t": 1794257940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 24.69,
+    "days": 24.7,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794257131.949088,
+    "cutoff": 1794258044.655751,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794256240.884972,
+    "fetched_at": 1794258044.555983,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "39b1ccf02ac99fa81033da5a7b7d276fdee6cb37635f5ffd2ba177ce9d09aeb8",
+    "sha256": "90acdee4f49263c3e45077c2a869be7073f55642cddd9ee1dc6c15cb6e0a987b",
     "events": [
       {
         "title": "RBA Assist Gov Hunter Speaks",
@@ -3522,7 +3522,7 @@
       {
         "title": "German Buba President Nagel Speaks",
         "currency": "EUR",
-        "ts": 1794385200.0,
+        "ts": 1794384900.0,
         "impact": "low"
       },
       {
@@ -3654,7 +3654,7 @@
       {
         "title": "FOMC Member Hammack Speaks",
         "currency": "USD",
-        "ts": 1794492000.0,
+        "ts": 1794490200.0,
         "impact": "low"
       },
       {
@@ -3684,13 +3684,19 @@
       {
         "title": "FOMC Member Goolsbee Speaks",
         "currency": "USD",
-        "ts": 1794501000.0,
+        "ts": 1794500100.0,
         "impact": "low"
       },
       {
         "title": "Crude Oil Inventories",
         "currency": "USD",
         "ts": 1794502800.0,
+        "impact": "low"
+      },
+      {
+        "title": "German Buba President Nagel Speaks",
+        "currency": "EUR",
+        "ts": 1794504600.0,
         "impact": "low"
       },
       {
@@ -3848,7 +3854,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794257131.943113,
+    "checked_at": 1794258044.650766,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -100212,15 +100218,19 @@
       [
         1794257131.778717,
         0
+      ],
+      [
+        1794258044.417816,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794257131.949088,
+    "generated_at": 1794258044.655751,
     "week": {
       "label": "Tuần 07/11 - 10/11/2026",
       "start": 1794009600.0,
-      "end": 1794257131.949088,
+      "end": 1794258044.655751,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -100317,7 +100327,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794257131.949088,
+      "end": 1794258044.655751,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -100414,7 +100424,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794257131.949088,
+      "end": 1794258044.655751,
       "stats": {
         "issued": 9,
         "filled": 5,

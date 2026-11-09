@@ -5349,7 +5349,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261109-1",
      "hist": {
       "n": 418,
@@ -5431,7 +5431,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261109-4",
      "hist": {
       "n": 36,
@@ -5442,12 +5442,14 @@
      "beyond": 0
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 932,
-   "last_bar_t": 1794255300,
-   "last_price": 4147.40248
+   "last_bar_t": 1794257100,
+   "last_price": 4142.02389,
+   "actual_dir": "BUY",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -5586,7 +5588,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794256242.0555887,
+ "last_fetch": 1794258045.1588316,
  "stats": {
   "by_type": [
    {
@@ -5604,14 +5606,14 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 54,
-    "triggered": 12,
-    "hit": 9,
+    "n": 55,
+    "triggered": 13,
+    "hit": 10,
     "failed": 1,
     "open": 2,
-    "n_r": 12,
-    "sum_r": 1.8534,
-    "avg_r": 0.1544
+    "n_r": 13,
+    "sum_r": 1.9389,
+    "avg_r": 0.1491
    },
    {
     "type": "pha_that",
@@ -5628,7 +5630,7 @@
    {
     "type": "qml",
     "regime": "RANGE",
-    "n": 10,
+    "n": 11,
     "triggered": 2,
     "hit": 0,
     "failed": 2,
@@ -5652,7 +5654,7 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 60,
+    "n": 62,
     "triggered": 22,
     "hit": 6,
     "failed": 10,
@@ -5676,14 +5678,14 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 18,
-    "triggered": 11,
+    "n": 19,
+    "triggered": 12,
     "hit": 4,
-    "failed": 5,
+    "failed": 6,
     "open": 2,
-    "n_r": 11,
-    "sum_r": 5.0403,
-    "avg_r": 0.4582
+    "n_r": 12,
+    "sum_r": 4.0403,
+    "avg_r": 0.3367
    },
    {
     "type": "retest",
@@ -5699,10 +5701,10 @@
    }
   ],
   "pick": {
-   "n": 33,
-   "right": 13,
+   "n": 34,
+   "right": 14,
    "flat": 4
   }
  },
- "updated_at": 1794256242.0555887
+ "updated_at": 1794258045.1588316
 }
