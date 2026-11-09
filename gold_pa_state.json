@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794246337.9880793,
+    "ts": 1794247254.941933,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794246240
+    "latest_bar_t": 1794247140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 24.56,
+    "days": 24.57,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794246337.997493,
+    "cutoff": 1794247255.082834,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794245441.930055,
+    "fetched_at": 1794247254.943839,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "479ae055f6518f79b9d30507e43e2eeb16278376a0e1699353b08034e5cdfabc",
+    "sha256": "7c31a7667c9b750a2289802cddfd7ed868c7cb23fce65587526ad341fd3cdc24",
     "events": [
       {
         "title": "RBA Assist Gov Hunter Speaks",
@@ -3518,6 +3518,12 @@
         "currency": "EUR",
         "ts": 1794387600.0,
         "impact": "low"
+      },
+      {
+        "title": "ECB President Lagarde Speaks",
+        "currency": "EUR",
+        "ts": 1794390300.0,
+        "impact": "medium"
       },
       {
         "title": "German 30-y Bond Auction",
@@ -3830,7 +3836,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794246337.989708,
+    "checked_at": 1794247255.074973,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -99430,15 +99436,19 @@
       [
         1794246337.83619,
         0
+      ],
+      [
+        1794247254.76168,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794246337.997493,
+    "generated_at": 1794247255.082834,
     "week": {
       "label": "Tuần 07/11 - 10/11/2026",
       "start": 1794009600.0,
-      "end": 1794246337.997493,
+      "end": 1794247255.082834,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -99535,7 +99545,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794246337.997493,
+      "end": 1794247255.082834,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -99632,7 +99642,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794246337.997493,
+      "end": 1794247255.082834,
       "stats": {
         "issued": 9,
         "filled": 5,
