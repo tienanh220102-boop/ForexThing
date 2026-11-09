@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794249938.2691212,
+    "ts": 1794250849.0918152,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794249840
+    "latest_bar_t": 1794250740
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 24.6,
+    "days": 24.61,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794249938.277012,
+    "cutoff": 1794250849.274533,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794249091.301198,
+    "fetched_at": 1794250849.093739,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "7c31a7667c9b750a2289802cddfd7ed868c7cb23fce65587526ad341fd3cdc24",
+    "sha256": "39b1ccf02ac99fa81033da5a7b7d276fdee6cb37635f5ffd2ba177ce9d09aeb8",
     "events": [
       {
         "title": "RBA Assist Gov Hunter Speaks",
@@ -3253,6 +3253,12 @@
         "title": "Sentix Investor Confidence",
         "currency": "EUR",
         "ts": 1794216600.0,
+        "impact": "low"
+      },
+      {
+        "title": "G7 Meetings",
+        "currency": "ALL",
+        "ts": 1794217500.0,
         "impact": "low"
       },
       {
@@ -3385,6 +3391,12 @@
         "title": "New Loans",
         "currency": "CNY",
         "ts": 1794301380.0,
+        "impact": "low"
+      },
+      {
+        "title": "G7 Meetings",
+        "currency": "ALL",
+        "ts": 1794303900.0,
         "impact": "low"
       },
       {
@@ -3836,7 +3848,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794249938.270746,
+    "checked_at": 1794250849.266292,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -99452,15 +99464,19 @@
       [
         1794249938.001089,
         0
+      ],
+      [
+        1794250848.937974,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794249938.277012,
+    "generated_at": 1794250849.274533,
     "week": {
       "label": "Tuần 07/11 - 10/11/2026",
       "start": 1794009600.0,
-      "end": 1794249938.277012,
+      "end": 1794250849.274533,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -99557,7 +99573,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794249938.277012,
+      "end": 1794250849.274533,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -99654,7 +99670,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794249938.277012,
+      "end": 1794250849.274533,
       "stats": {
         "issued": 9,
         "filled": 5,
