@@ -2829,13 +2829,13 @@
   "pa_knowledge": {
     "adjust": {},
     "disabled": "audit_recovery",
-    "updated": 1794132040.914109
+    "updated": 1794218441.693582
   },
   "data_health": {
     "ok": true,
-    "ts": 1794217531.2100136,
+    "ts": 1794218441.7556763,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794217380
+    "latest_bar_t": 1794218340
   },
   "monitor": {
     "n": 5,
@@ -2848,7 +2848,7 @@
     "review_required": true
   },
   "last_weekly": 1794009643.795203,
-  "last_learn": 1794132040.914109,
+  "last_learn": 1794218441.693582,
   "entry_rules": {
     "version": "2026-10-06-entry-v3",
     "max_signal_age_seconds": 2700,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 24.23,
+    "days": 24.24,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794217531.216386,
+    "cutoff": 1794218441.797645,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794216638.35322,
+    "fetched_at": 1794218441.756971,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "3638cfa9c23cf57f00d7a8d4489f83332f2055b00c0b04355487987b8c99a8eb",
+    "sha256": "479ae055f6518f79b9d30507e43e2eeb16278376a0e1699353b08034e5cdfabc",
     "events": [
       {
         "title": "RBA Assist Gov Hunter Speaks",
@@ -3247,18 +3247,6 @@
         "title": "German Trade Balance",
         "currency": "EUR",
         "ts": 1794207600.0,
-        "impact": "low"
-      },
-      {
-        "title": "M2 Money Supply y/y",
-        "currency": "CNY",
-        "ts": 1794214980.0,
-        "impact": "low"
-      },
-      {
-        "title": "New Loans",
-        "currency": "CNY",
-        "ts": 1794214980.0,
         "impact": "low"
       },
       {
@@ -3386,6 +3374,18 @@
         "currency": "USD",
         "ts": 1794301200.0,
         "impact": "medium"
+      },
+      {
+        "title": "M2 Money Supply y/y",
+        "currency": "CNY",
+        "ts": 1794301380.0,
+        "impact": "low"
+      },
+      {
+        "title": "New Loans",
+        "currency": "CNY",
+        "ts": 1794301380.0,
+        "impact": "low"
       },
       {
         "title": "NFIB Small Business Index",
@@ -3830,7 +3830,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794217531.211481,
+    "checked_at": 1794218441.791396,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -99302,15 +99302,19 @@
       [
         1794217530.837838,
         0
+      ],
+      [
+        1794218441.693582,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794217531.216386,
+    "generated_at": 1794218441.797645,
     "week": {
       "label": "Tuần 07/11 - 09/11/2026",
       "start": 1794009600.0,
-      "end": 1794217531.216386,
+      "end": 1794218441.797645,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -99407,7 +99411,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794217531.216386,
+      "end": 1794218441.797645,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -99504,7 +99508,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794217531.216386,
+      "end": 1794218441.797645,
       "stats": {
         "issued": 9,
         "filled": 5,
