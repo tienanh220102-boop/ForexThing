@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794318334.6598306,
+    "ts": 1794319244.3741632,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794318240
+    "latest_bar_t": 1794319140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 25.4,
+    "days": 25.41,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794318334.674179,
+    "cutoff": 1794319244.479392,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,11 +3213,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794317437.804731,
+    "fetched_at": 1794319244.37565,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "f8a1dc725951d83f805d8113519fcfbffab7ef261bc80ede6d16f3c49d56334f",
+    "sha256": "2a4f9e46b14203699feafde965f25c8e87b9775800a53df600218322c1179e8d",
     "events": [
       {
         "title": "RBA Assist Gov Hunter Speaks",
@@ -3408,13 +3408,13 @@
       {
         "title": "ADP Weekly Employment Change",
         "currency": "USD",
-        "ts": 1794316500.0,
+        "ts": 1794316440.0,
         "impact": "low"
       },
       {
         "title": "ADP Weekly Employment Change",
         "currency": "USD",
-        "ts": 1794316560.0,
+        "ts": 1794316500.0,
         "impact": "low"
       },
       {
@@ -3854,7 +3854,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794318334.662821,
+    "checked_at": 1794319244.474291,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -102838,10 +102838,6 @@
     "alerted": false,
     "recent": [
       [
-        1794231936.442868,
-        0
-      ],
-      [
         1794232845.798785,
         0
       ],
@@ -103232,15 +103228,19 @@
       [
         1794318334.18229,
         0
+      ],
+      [
+        1794319244.215815,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794318334.674179,
+    "generated_at": 1794319244.479392,
     "week": {
       "label": "Tuần 07/11 - 10/11/2026",
       "start": 1794009600.0,
-      "end": 1794318334.674179,
+      "end": 1794319244.479392,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -103337,7 +103337,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794318334.674179,
+      "end": 1794319244.479392,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -103434,7 +103434,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794318334.674179,
+      "end": 1794319244.479392,
       "stats": {
         "issued": 9,
         "filled": 5,
