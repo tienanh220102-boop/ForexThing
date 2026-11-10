@@ -5653,7 +5653,7 @@
       "H4 thuận (đã xác nhận)",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "US-20261110-0",
      "hist": {
       "n": 418,
@@ -5661,8 +5661,10 @@
       "hit": 73,
       "done": 289
      },
-     "swept": false,
-     "beyond": 0
+     "swept": true,
+     "beyond": 0,
+     "triggered_at": 1794317400,
+     "entry": 4071.60879
     },
     {
      "type": "quet_dao",
@@ -5769,8 +5771,8 @@
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 936,
-   "last_bar_t": 1794314700,
-   "last_price": 4078.18615
+   "last_bar_t": 1794316500,
+   "last_price": 4071.60879
   }
  ],
  "prior": {
@@ -5909,7 +5911,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794315649.8466618,
+ "last_fetch": 1794317438.4016995,
  "stats": {
   "by_type": [
    {
@@ -6027,5 +6029,5 @@
    "flat": 4
   }
  },
- "updated_at": 1794315649.8466618
+ "updated_at": 1794317438.4016995
 }
