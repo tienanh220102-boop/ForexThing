@@ -5730,7 +5730,7 @@
       "H1 thuận",
       "có tin mạnh — phá thật hay trùng tin"
      ],
-     "status": "TRIGGERED",
+     "status": "HIT",
      "id": "US-20261110-3",
      "hist": {
       "n": 288,
@@ -5741,7 +5741,9 @@
      "run": 2,
      "beyond": 0,
      "triggered_at": 1794319200,
-     "entry": 4052.68987
+     "entry": 4052.68987,
+     "closed_at": 1794320100,
+     "r": 0.0426634144821493
     },
     {
      "type": "qml",
@@ -5775,8 +5777,8 @@
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 936,
-   "last_bar_t": 1794318300,
-   "last_price": 4052.68987
+   "last_bar_t": 1794320100,
+   "last_price": 4048.69322
   }
  ],
  "prior": {
@@ -5915,7 +5917,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794319245.0006142,
+ "last_fetch": 1794321043.6812148,
  "stats": {
   "by_type": [
    {
@@ -6033,5 +6035,5 @@
    "flat": 4
   }
  },
- "updated_at": 1794319245.0006142
+ "updated_at": 1794321043.6812148
 }
