@@ -5681,7 +5681,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261110-1",
      "hist": {
       "n": 418,
@@ -5762,7 +5762,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261110-4",
      "hist": {
       "n": 36,
@@ -5773,12 +5773,14 @@
      "beyond": 0
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 936,
-   "last_bar_t": 1794341700,
-   "last_price": 4035.14282
+   "last_bar_t": 1794343500,
+   "last_price": 4031.3269,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -5917,7 +5919,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794342644.6925263,
+ "last_fetch": 1794344445.0259576,
  "stats": {
   "by_type": [
    {
@@ -5935,14 +5937,14 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 57,
-    "triggered": 14,
-    "hit": 11,
+    "n": 59,
+    "triggered": 15,
+    "hit": 12,
     "failed": 1,
     "open": 2,
-    "n_r": 14,
-    "sum_r": 2.0312,
-    "avg_r": 0.1451
+    "n_r": 15,
+    "sum_r": 2.0739,
+    "avg_r": 0.1383
    },
    {
     "type": "pha_that",
@@ -5959,7 +5961,7 @@
    {
     "type": "qml",
     "regime": "RANGE",
-    "n": 11,
+    "n": 12,
     "triggered": 2,
     "hit": 0,
     "failed": 2,
@@ -5983,14 +5985,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 64,
-    "triggered": 22,
+    "n": 66,
+    "triggered": 23,
     "hit": 6,
-    "failed": 10,
+    "failed": 11,
     "open": 6,
-    "n_r": 22,
-    "sum_r": 3.9701,
-    "avg_r": 0.1805
+    "n_r": 23,
+    "sum_r": 2.9701,
+    "avg_r": 0.1291
    },
    {
     "type": "quet_dao",
@@ -6030,10 +6032,10 @@
    }
   ],
   "pick": {
-   "n": 35,
+   "n": 36,
    "right": 14,
    "flat": 4
   }
  },
- "updated_at": 1794342644.6925263
+ "updated_at": 1794344445.0259576
 }
