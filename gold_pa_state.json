@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794311135.3844724,
+    "ts": 1794312049.0258226,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794311040
+    "latest_bar_t": 1794311940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 25.31,
+    "days": 25.32,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794311135.3935,
+    "cutoff": 1794312049.154294,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794310243.255736,
+    "fetched_at": 1794312049.028987,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "6e055fa38cfba2d6bb5eea8aee408cd8c53b2321de118565767939dcbfdc491b",
+    "sha256": "f8a1dc725951d83f805d8113519fcfbffab7ef261bc80ede6d16f3c49d56334f",
     "events": [
       {
         "title": "RBA Assist Gov Hunter Speaks",
@@ -3389,15 +3389,15 @@
         "impact": "low"
       },
       {
-        "title": "NFIB Small Business Index",
-        "currency": "USD",
-        "ts": 1794308400.0,
+        "title": "30-y Bond Auction",
+        "currency": "GBP",
+        "ts": 1794304920.0,
         "impact": "low"
       },
       {
-        "title": "30-y Bond Auction",
-        "currency": "GBP",
-        "ts": 1794310320.0,
+        "title": "NFIB Small Business Index",
+        "currency": "USD",
+        "ts": 1794308400.0,
         "impact": "low"
       },
       {
@@ -3855,7 +3855,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794311135.3873,
+    "checked_at": 1794312049.146218,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -102076,7 +102076,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.3229115879231959,
+        "mfe_r": 0.3960012830921176,
         "mae_r": 0.07343595780402025,
         "events": [
           {
@@ -102086,7 +102086,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1794311040,
+        "last_bar_t": 1794311940,
         "initial_risk": 15.912776723337629,
         "active_sl": 4091.8836867233376,
         "filled_ts": 1794309360,
@@ -102105,10 +102105,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED M1 feed is stale",
     "alerted": false,
     "recent": [
-      [
-        1794224735.806046,
-        0
-      ],
       [
         1794225650.974142,
         0
@@ -102500,15 +102496,19 @@
       [
         1794311135.043664,
         0
+      ],
+      [
+        1794312048.820195,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794311135.3935,
+    "generated_at": 1794312049.154294,
     "week": {
       "label": "Tuần 07/11 - 10/11/2026",
       "start": 1794009600.0,
-      "end": 1794311135.3935,
+      "end": 1794312049.154294,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -102605,7 +102605,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794311135.3935,
+      "end": 1794312049.154294,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -102702,7 +102702,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794311135.3935,
+      "end": 1794312049.154294,
       "stats": {
         "issued": 9,
         "filled": 5,
