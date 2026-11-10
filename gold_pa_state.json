@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794321936.9714017,
+    "ts": 1794322852.2259688,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794321780
+    "latest_bar_t": 1794322740
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 25.44,
+    "days": 25.45,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794321936.982023,
+    "cutoff": 1794322852.474129,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794321042.821433,
+    "fetched_at": 1794322852.229106,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3855,7 +3855,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794321936.97412,
+    "checked_at": 1794322852.466133,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -103583,7 +103583,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.5764161627271132,
+        "mfe_r": 0.7852580505591046,
         "mae_r": 0.21087120017178204,
         "events": [
           {
@@ -103593,7 +103593,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1794321780,
+        "last_bar_t": 1794322740,
         "initial_risk": 30.177710350281814,
         "active_sl": 4083.5737603502816,
         "filled_ts": 1794320160,
@@ -103612,14 +103612,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED M1 feed is stale",
     "alerted": false,
     "recent": [
-      [
-        1794235536.585359,
-        0
-      ],
-      [
-        1794236441.557155,
-        0
-      ],
       [
         1794237329.298995,
         0
@@ -104007,15 +103999,19 @@
       [
         1794321936.503213,
         0
+      ],
+      [
+        1794322851.789764,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794321936.982023,
+    "generated_at": 1794322852.474129,
     "week": {
       "label": "Tuần 07/11 - 10/11/2026",
       "start": 1794009600.0,
-      "end": 1794321936.982023,
+      "end": 1794322852.474129,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -104112,7 +104108,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794321936.982023,
+      "end": 1794322852.474129,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -104209,7 +104205,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794321936.982023,
+      "end": 1794322852.474129,
       "stats": {
         "issued": 9,
         "filled": 5,
