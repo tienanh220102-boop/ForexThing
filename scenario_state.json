@@ -5660,7 +5660,9 @@
       "avg_r": 0.0494,
       "hit": 73,
       "done": 289
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -5682,7 +5684,9 @@
       "avg_r": 0.0494,
       "hit": 73,
       "done": 289
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -5697,14 +5701,17 @@
       "H4 thuận (đã xác nhận)",
       "có tin mạnh — phá thật hay trùng tin"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261110-2",
      "hist": {
       "n": 288,
       "avg_r": 0.0307,
       "hit": 203,
       "done": 252
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1794315600
     },
     {
      "type": "pha_that",
@@ -5726,7 +5733,9 @@
       "avg_r": 0.0307,
       "hit": 203,
       "done": 252
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "qml",
@@ -5752,13 +5761,16 @@
       "avg_r": -0.0948,
       "hit": 5,
       "done": 19
-     }
+     },
+     "beyond": 0
     }
    ],
    "status": "OPEN",
    "pick": "BUY",
    "pick_basis": "history",
-   "message_id": 936
+   "message_id": 936,
+   "last_bar_t": 1794314700,
+   "last_price": 4078.18615
   }
  ],
  "prior": {
@@ -5897,7 +5909,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794313840.1900134,
+ "last_fetch": 1794315649.8466618,
  "stats": {
   "by_type": [
    {
@@ -6015,5 +6027,5 @@
    "flat": 4
   }
  },
- "updated_at": 1794313840.1900134
+ "updated_at": 1794315649.8466618
 }
