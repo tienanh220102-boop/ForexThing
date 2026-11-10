@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794302133.1569211,
+    "ts": 1794302572.1084197,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794302040
+    "latest_bar_t": 1794302460
   },
   "monitor": {
     "n": 5,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794302133.163339,
+    "cutoff": 1794302572.208271,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3213,7 +3213,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794301243.908153,
+    "fetched_at": 1794302572.110042,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3854,7 +3854,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794302133.158429,
+    "checked_at": 1794302572.201849,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -100609,10 +100609,6 @@
     "alerted": false,
     "recent": [
       [
-        1794215736.480055,
-        0
-      ],
-      [
         1794216638.195849,
         0
       ],
@@ -100999,15 +100995,19 @@
       [
         1794302133.046049,
         0
+      ],
+      [
+        1794302571.996632,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794302133.163339,
+    "generated_at": 1794302572.208271,
     "week": {
       "label": "Tuần 07/11 - 10/11/2026",
       "start": 1794009600.0,
-      "end": 1794302133.163339,
+      "end": 1794302572.208271,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -101104,7 +101104,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794302133.163339,
+      "end": 1794302572.208271,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -101201,7 +101201,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794302133.163339,
+      "end": 1794302572.208271,
       "stats": {
         "issued": 9,
         "filled": 5,
