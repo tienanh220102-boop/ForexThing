@@ -6010,7 +6010,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261111-1",
      "hist": {
       "n": 419,
@@ -6019,7 +6019,8 @@
       "done": 290
      },
      "swept": true,
-     "beyond": 0
+     "beyond": 2,
+     "closed_at": 1794407400
     },
     {
      "type": "quet_dao",
@@ -6082,7 +6083,7 @@
      "why": [
       "H4 thuận"
      ],
-     "status": "TRIGGERED",
+     "status": "HIT",
      "id": "US-20261111-4",
      "hist": {
       "n": 290,
@@ -6093,15 +6094,17 @@
      "run": 2,
      "beyond": 0,
      "triggered_at": 1794402000,
-     "entry": 4042.89656
+     "entry": 4042.89656,
+     "closed_at": 1794406500,
+     "r": 0.9802013465225655
     }
    ],
    "status": "OPEN",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 940,
-   "last_bar_t": 1794404700,
-   "last_price": 4037.44583
+   "last_bar_t": 1794406500,
+   "last_price": 4031.37877
   }
  ],
  "prior": {
@@ -6240,7 +6243,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794405650.674786,
+ "last_fetch": 1794407446.0810163,
  "stats": {
   "by_type": [
    {
@@ -6358,5 +6361,5 @@
    "flat": 4
   }
  },
- "updated_at": 1794405650.674786
+ "updated_at": 1794407446.0810163
 }
