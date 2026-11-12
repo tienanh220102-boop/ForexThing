@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794492046.9204097,
+    "ts": 1794492939.2889955,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794491940
+    "latest_bar_t": 1794492840
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 27.41,
+    "days": 27.42,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794492047.281466,
+    "cutoff": 1794492939.299855,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3071,7 +3071,7 @@
     ]
   },
   "observation_summary": {
-    "count": 145,
+    "count": 146,
     "groups": {
       "ACCEPTED": {
         "candidates": 9,
@@ -3184,15 +3184,15 @@
         "later_accepted": 0
       },
       "MONITOR_REVIEW": {
-        "candidates": 76,
+        "candidates": 77,
         "shadow_resolved": 54,
         "shadow_net_r": 10.803975934793685,
         "shadow_wins": 27,
         "evaluations": {
           "SL": 27,
           "TP1": 27,
-          "NOT_EVALUABLE": 21,
-          "PENDING": 1
+          "NOT_EVALUABLE": 22,
+          "DATA_GAP": 1
         },
         "later_accepted": 0
       },
@@ -3861,7 +3861,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794492047.273359,
+    "checked_at": 1794492939.291708,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -110684,7 +110684,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "limit",
         "entry_ref": 3968.263749096697,
-        "status": "PENDING",
+        "status": "DATA_GAP",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1794471360,
@@ -110699,11 +110699,19 @@
         "realized_r": 0.0,
         "mfe_r": 0.0,
         "mae_r": 0.0,
-        "events": [],
+        "events": [
+          {
+            "type": "DATA_GAP",
+            "ts": 1794492939.101936
+          }
+        ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1794491940
+        "last_bar_t": 1794492840,
+        "outcome": "DATA_GAP",
+        "correct": null,
+        "closed_ts": 1794492939.101936
       },
-      "evaluation": "PENDING"
+      "evaluation": "DATA_GAP"
     },
     {
       "id": "8fea2e4da642eb9664a8",
@@ -111432,6 +111440,734 @@
       ],
       "shadow": null,
       "evaluation": "NOT_EVALUABLE"
+    },
+    {
+      "id": "05cb2fdf0f26b88009fd",
+      "first_seen": 1794492939.297627,
+      "first_reason": "MONITOR_REVIEW",
+      "order": {
+        "setup": "breakout",
+        "dir": "SELL",
+        "signal_bar_t": 1794488400,
+        "level": 3924.00668,
+        "structure": 3944.64775,
+        "entry": 3890.06172,
+        "session": "EU_US",
+        "regime": "RANGE (dailyER=0.056)",
+        "reason": "H1 đóng cửa phá đáy 20 nến 3,924.0 + dưới EMA50 — trend tiếp diễn"
+      },
+      "context": {
+        "source": "twelvedata:XAU/USD",
+        "data_fetched_at": 1794492938.4170976,
+        "bars_sha256": "cf7988895136ad9bd6778e1fc6915780d31b400ca304b005078b58734fe5cb3b",
+        "rule_version": "2026-10-06-entry-v3",
+        "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
+        "atr": 18.479998234395403,
+        "h1": {
+          "trend": "DOWN",
+          "confirmed": true,
+          "last_event": "BOS_DOWN",
+          "swing_hi": 4000.93773,
+          "swing_lo": null,
+          "hi_list": [
+            4130.0128,
+            4149.00711,
+            4127.68319,
+            4054.67836,
+            4066.5284,
+            4000.93773
+          ],
+          "lo_list": [
+            4100.18101,
+            4108.12822,
+            4013.8075,
+            4024.24327,
+            3969.04148,
+            3924.00668
+          ],
+          "note": "GIẢM đã xác nhận (BOS xuống)"
+        },
+        "h4": {
+          "trend": "DOWN",
+          "confirmed": true,
+          "last_event": "BOS_DOWN",
+          "swing_hi": 4066.5284,
+          "swing_lo": null,
+          "hi_list": [
+            3875.53592,
+            3969.9869,
+            4147.60021,
+            4066.16904,
+            4149.00711,
+            4066.5284
+          ],
+          "lo_list": [
+            3871.18522,
+            3866.02108,
+            3896.2051,
+            4028.58706,
+            4054.85948,
+            4013.8075
+          ],
+          "note": "GIẢM đã xác nhận (BOS xuống)"
+        },
+        "calendar": {
+          "status": "VERIFIED",
+          "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
+          "fetched_at": 1794492046.923207,
+          "coverage_start": 1794114000.0,
+          "coverage_end": 1794718800.0,
+          "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
+          "sha256": "2594f60981073cfb3b34fd2559b96d7b8ec9c239d89a4b389505dcd4975d1733",
+          "events": [
+            {
+              "title": "RBA Assist Gov Hunter Speaks",
+              "currency": "AUD",
+              "ts": 1794177000.0,
+              "impact": "low"
+            },
+            {
+              "title": "CPI y/y",
+              "currency": "CNY",
+              "ts": 1794187800.0,
+              "impact": "low"
+            },
+            {
+              "title": "PPI y/y",
+              "currency": "CNY",
+              "ts": 1794187800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Leading Indicators",
+              "currency": "JPY",
+              "ts": 1794200400.0,
+              "impact": "low"
+            },
+            {
+              "title": "German Trade Balance",
+              "currency": "EUR",
+              "ts": 1794207600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Sentix Investor Confidence",
+              "currency": "EUR",
+              "ts": 1794216600.0,
+              "impact": "low"
+            },
+            {
+              "title": "G7 Meetings",
+              "currency": "ALL",
+              "ts": 1794217500.0,
+              "impact": "low"
+            },
+            {
+              "title": "ECOFIN Meetings",
+              "currency": "EUR",
+              "ts": 1794219300.0,
+              "impact": "low"
+            },
+            {
+              "title": "Eurogroup Meetings",
+              "currency": "EUR",
+              "ts": 1794219300.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Bowman Speaks",
+              "currency": "USD",
+              "ts": 1794231600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Final Wholesale Inventories m/m",
+              "currency": "USD",
+              "ts": 1794236400.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Goolsbee Speaks",
+              "currency": "USD",
+              "ts": 1794236400.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Barkin Speaks",
+              "currency": "USD",
+              "ts": 1794244500.0,
+              "impact": "low"
+            },
+            {
+              "title": "BOE Gov Bailey Speaks",
+              "currency": "GBP",
+              "ts": 1794245100.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Westpac Consumer Sentiment",
+              "currency": "AUD",
+              "ts": 1794267000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Household Spending y/y",
+              "currency": "JPY",
+              "ts": 1794267000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Bank Lending y/y",
+              "currency": "JPY",
+              "ts": 1794268200.0,
+              "impact": "low"
+            },
+            {
+              "title": "BOJ Summary of Opinions",
+              "currency": "JPY",
+              "ts": 1794268200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Current Account",
+              "currency": "JPY",
+              "ts": 1794268200.0,
+              "impact": "low"
+            },
+            {
+              "title": "BRC Retail Sales Monitor y/y",
+              "currency": "GBP",
+              "ts": 1794268860.0,
+              "impact": "low"
+            },
+            {
+              "title": "NAB Business Confidence",
+              "currency": "AUD",
+              "ts": 1794270600.0,
+              "impact": "low"
+            },
+            {
+              "title": "USD-Denominated Trade Balance",
+              "currency": "CNY",
+              "ts": 1794277920.0,
+              "impact": "low"
+            },
+            {
+              "title": "Trade Balance",
+              "currency": "CNY",
+              "ts": 1794277980.0,
+              "impact": "low"
+            },
+            {
+              "title": "30-y Bond Auction",
+              "currency": "JPY",
+              "ts": 1794281700.0,
+              "impact": "low"
+            },
+            {
+              "title": "Economy Watchers Sentiment",
+              "currency": "JPY",
+              "ts": 1794286800.0,
+              "impact": "low"
+            },
+            {
+              "title": "MPC Member Breeden Speaks",
+              "currency": "GBP",
+              "ts": 1794299400.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Waller Speaks",
+              "currency": "USD",
+              "ts": 1794301200.0,
+              "impact": "medium"
+            },
+            {
+              "title": "G7 Meetings",
+              "currency": "ALL",
+              "ts": 1794303900.0,
+              "impact": "low"
+            },
+            {
+              "title": "30-y Bond Auction",
+              "currency": "GBP",
+              "ts": 1794304920.0,
+              "impact": "low"
+            },
+            {
+              "title": "NFIB Small Business Index",
+              "currency": "USD",
+              "ts": 1794308400.0,
+              "impact": "low"
+            },
+            {
+              "title": "MPC Member Lombardelli Speaks",
+              "currency": "GBP",
+              "ts": 1794313800.0,
+              "impact": "low"
+            },
+            {
+              "title": "ADP Weekly Employment Change",
+              "currency": "USD",
+              "ts": 1794316440.0,
+              "impact": "low"
+            },
+            {
+              "title": "ADP Weekly Employment Change",
+              "currency": "USD",
+              "ts": 1794316500.0,
+              "impact": "low"
+            },
+            {
+              "title": "Core CPI m/m",
+              "currency": "USD",
+              "ts": 1794317400.0,
+              "impact": "high"
+            },
+            {
+              "title": "CPI m/m",
+              "currency": "USD",
+              "ts": 1794317400.0,
+              "impact": "high"
+            },
+            {
+              "title": "FOMC Member Logan Speaks",
+              "currency": "USD",
+              "ts": 1794325800.0,
+              "impact": "low"
+            },
+            {
+              "title": "10-y Bond Auction",
+              "currency": "USD",
+              "ts": 1794333660.0,
+              "impact": "low"
+            },
+            {
+              "title": "BOC Summary of Deliberations",
+              "currency": "CAD",
+              "ts": 1794335400.0,
+              "impact": "low"
+            },
+            {
+              "title": "MPC Member Pill Speaks",
+              "currency": "GBP",
+              "ts": 1794335400.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Schmid Speaks",
+              "currency": "USD",
+              "ts": 1794335400.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Bowman Speaks",
+              "currency": "USD",
+              "ts": 1794342600.0,
+              "impact": "low"
+            },
+            {
+              "title": "API Weekly Statistical Bulletin",
+              "currency": "USD",
+              "ts": 1794346200.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Bowman Speaks",
+              "currency": "USD",
+              "ts": 1794353400.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Paulson Speaks",
+              "currency": "USD",
+              "ts": 1794353400.0,
+              "impact": "low"
+            },
+            {
+              "title": "M2 Money Stock y/y",
+              "currency": "JPY",
+              "ts": 1794354600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Prelim Machine Tool Orders y/y",
+              "currency": "JPY",
+              "ts": 1794376800.0,
+              "impact": "low"
+            },
+            {
+              "title": "German Final CPI m/m",
+              "currency": "EUR",
+              "ts": 1794380400.0,
+              "impact": "low"
+            },
+            {
+              "title": "French Bank Holiday",
+              "currency": "EUR",
+              "ts": 1794380460.0,
+              "impact": "holiday"
+            },
+            {
+              "title": "German Buba President Nagel Speaks",
+              "currency": "EUR",
+              "ts": 1794384900.0,
+              "impact": "low"
+            },
+            {
+              "title": "Italian Industrial Production m/m",
+              "currency": "EUR",
+              "ts": 1794387600.0,
+              "impact": "low"
+            },
+            {
+              "title": "ECB President Lagarde Speaks",
+              "currency": "EUR",
+              "ts": 1794390300.0,
+              "impact": "medium"
+            },
+            {
+              "title": "German 30-y Bond Auction",
+              "currency": "EUR",
+              "ts": 1794393300.0,
+              "impact": "low"
+            },
+            {
+              "title": "Bank Holiday",
+              "currency": "CAD",
+              "ts": 1794402000.0,
+              "impact": "holiday"
+            },
+            {
+              "title": "Bank Holiday",
+              "currency": "USD",
+              "ts": 1794402000.0,
+              "impact": "holiday"
+            },
+            {
+              "title": "Visitor Arrivals m/m",
+              "currency": "NZD",
+              "ts": 1794433500.0,
+              "impact": "low"
+            },
+            {
+              "title": "PPI y/y",
+              "currency": "JPY",
+              "ts": 1794441000.0,
+              "impact": "low"
+            },
+            {
+              "title": "MI Inflation Expectations",
+              "currency": "AUD",
+              "ts": 1794441600.0,
+              "impact": "low"
+            },
+            {
+              "title": "RICS House Price Balance",
+              "currency": "GBP",
+              "ts": 1794441660.0,
+              "impact": "low"
+            },
+            {
+              "title": "GDP m/m",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "high"
+            },
+            {
+              "title": "Prelim GDP q/q",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "medium"
+            },
+            {
+              "title": "Construction Output m/m",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Goods Trade Balance",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Index of Services 3m/3m",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Industrial Production m/m",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Manufacturing Production m/m",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Prelim Business Investment q/q",
+              "currency": "GBP",
+              "ts": 1794466800.0,
+              "impact": "low"
+            },
+            {
+              "title": "ECB Economic Bulletin",
+              "currency": "EUR",
+              "ts": 1794474000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Building Permits m/m",
+              "currency": "CAD",
+              "ts": 1794490200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Unemployment Claims",
+              "currency": "USD",
+              "ts": 1794490200.0,
+              "impact": "medium"
+            },
+            {
+              "title": "FOMC Member Hammack Speaks",
+              "currency": "USD",
+              "ts": 1794490200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Existing Home Sales",
+              "currency": "USD",
+              "ts": 1794495600.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Barr Speaks",
+              "currency": "USD",
+              "ts": 1794495600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Mortgage Delinquencies",
+              "currency": "USD",
+              "ts": 1794495600.0,
+              "impact": "low"
+            },
+            {
+              "title": "CB Leading Index m/m",
+              "currency": "AUD",
+              "ts": 1794497400.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Goolsbee Speaks",
+              "currency": "USD",
+              "ts": 1794500100.0,
+              "impact": "low"
+            },
+            {
+              "title": "Crude Oil Inventories",
+              "currency": "USD",
+              "ts": 1794502800.0,
+              "impact": "low"
+            },
+            {
+              "title": "German Buba President Nagel Speaks",
+              "currency": "EUR",
+              "ts": 1794504600.0,
+              "impact": "low"
+            },
+            {
+              "title": "30-y Bond Auction",
+              "currency": "USD",
+              "ts": 1794506460.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Daly Speaks",
+              "currency": "USD",
+              "ts": 1794507000.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Schmid Speaks",
+              "currency": "USD",
+              "ts": 1794508200.0,
+              "impact": "low"
+            },
+            {
+              "title": "Federal Budget Balance",
+              "currency": "USD",
+              "ts": 1794510000.0,
+              "impact": "low"
+            },
+            {
+              "title": "ECB President Lagarde Speaks",
+              "currency": "EUR",
+              "ts": 1794511800.0,
+              "impact": "medium"
+            },
+            {
+              "title": "BusinessNZ Manufacturing Index",
+              "currency": "NZD",
+              "ts": 1794519000.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Williams Speaks",
+              "currency": "USD",
+              "ts": 1794526200.0,
+              "impact": "low"
+            },
+            {
+              "title": "German WPI m/m",
+              "currency": "EUR",
+              "ts": 1794553200.0,
+              "impact": "low"
+            },
+            {
+              "title": "PPI m/m",
+              "currency": "CHF",
+              "ts": 1794555000.0,
+              "impact": "low"
+            },
+            {
+              "title": "French Final CPI m/m",
+              "currency": "EUR",
+              "ts": 1794555900.0,
+              "impact": "low"
+            },
+            {
+              "title": "Italian Trade Balance",
+              "currency": "EUR",
+              "ts": 1794560400.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash Employment Change q/q",
+              "currency": "EUR",
+              "ts": 1794564000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Flash GDP q/q",
+              "currency": "EUR",
+              "ts": 1794564000.0,
+              "impact": "low"
+            },
+            {
+              "title": "Trade Balance",
+              "currency": "EUR",
+              "ts": 1794564000.0,
+              "impact": "low"
+            },
+            {
+              "title": "M2 Money Supply y/y",
+              "currency": "CNY",
+              "ts": 1794564180.0,
+              "impact": "low"
+            },
+            {
+              "title": "New Loans",
+              "currency": "CNY",
+              "ts": 1794564180.0,
+              "impact": "low"
+            },
+            {
+              "title": "Manufacturing Sales m/m",
+              "currency": "CAD",
+              "ts": 1794576600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Wholesale Sales m/m",
+              "currency": "CAD",
+              "ts": 1794576600.0,
+              "impact": "low"
+            },
+            {
+              "title": "Core PPI m/m",
+              "currency": "USD",
+              "ts": 1794576600.0,
+              "impact": "high"
+            },
+            {
+              "title": "PPI m/m",
+              "currency": "USD",
+              "ts": 1794576600.0,
+              "impact": "high"
+            },
+            {
+              "title": "FOMC Member Collins Speaks",
+              "currency": "USD",
+              "ts": 1794579000.0,
+              "impact": "low"
+            },
+            {
+              "title": "CB Leading Index m/m",
+              "currency": "GBP",
+              "ts": 1794580200.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Logan Speaks",
+              "currency": "USD",
+              "ts": 1794580800.0,
+              "impact": "low"
+            },
+            {
+              "title": "Natural Gas Storage",
+              "currency": "USD",
+              "ts": 1794583800.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Bowman Speaks",
+              "currency": "USD",
+              "ts": 1794585000.0,
+              "impact": "low"
+            },
+            {
+              "title": "German Buba President Nagel Speaks",
+              "currency": "EUR",
+              "ts": 1794585600.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Daly Speaks",
+              "currency": "USD",
+              "ts": 1794589200.0,
+              "impact": "low"
+            },
+            {
+              "title": "FOMC Member Jefferson Speaks",
+              "currency": "USD",
+              "ts": 1794614400.0,
+              "impact": "low"
+            },
+            {
+              "title": "MPC Member Greene Speaks",
+              "currency": "GBP",
+              "ts": 1794654000.0,
+              "impact": "low"
+            }
+          ]
+        },
+        "regime": "RANGE (dailyER=0.056)"
+      },
+      "decisions": [
+        {
+          "ts": 1794492939.297627,
+          "reason": "MONITOR_REVIEW"
+        }
+      ],
+      "shadow": null,
+      "evaluation": "NOT_EVALUABLE"
     }
   ],
   "momentum": {
@@ -111444,14 +112180,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED M1 feed is stale",
     "alerted": false,
     "recent": [
-      [
-        1794405649.474861,
-        0
-      ],
-      [
-        1794406537.665029,
-        0
-      ],
       [
         1794407445.21147,
         0
@@ -111839,15 +112567,19 @@
       [
         1794492046.577265,
         0
+      ],
+      [
+        1794492939.101936,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794492047.281466,
+    "generated_at": 1794492939.299855,
     "week": {
       "label": "Tuần 07/11 - 12/11/2026",
       "start": 1794009600.0,
-      "end": 1794492047.281466,
+      "end": 1794492939.299855,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -111944,7 +112676,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794492047.281466,
+      "end": 1794492939.299855,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -112041,7 +112773,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794492047.281466,
+      "end": 1794492939.299855,
       "stats": {
         "issued": 9,
         "filled": 5,
