@@ -6312,7 +6312,7 @@
       "H4 thuận (đã xác nhận)",
       "H1 thuận"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261112-0",
      "hist": {
       "n": 102,
@@ -6337,7 +6337,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261112-1",
      "hist": {
       "n": 420,
@@ -6419,7 +6419,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261112-4",
      "hist": {
       "n": 36,
@@ -6430,12 +6430,14 @@
      "beyond": 0
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 944,
-   "last_bar_t": 1794514500,
-   "last_price": 3884.51896
+   "last_bar_t": 1794516300,
+   "last_price": 3875.17542,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -6574,7 +6576,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794515438.8485923,
+ "last_fetch": 1794517244.488109,
  "stats": {
   "by_type": [
    {
@@ -6592,14 +6594,14 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 65,
-    "triggered": 17,
-    "hit": 14,
+    "n": 66,
+    "triggered": 18,
+    "hit": 15,
     "failed": 1,
     "open": 2,
-    "n_r": 17,
-    "sum_r": 3.2272,
-    "avg_r": 0.1898
+    "n_r": 18,
+    "sum_r": 3.2383,
+    "avg_r": 0.1799
    },
    {
     "type": "pha_that",
@@ -6616,7 +6618,7 @@
    {
     "type": "qml",
     "regime": "RANGE",
-    "n": 13,
+    "n": 14,
     "triggered": 2,
     "hit": 0,
     "failed": 2,
@@ -6640,7 +6642,7 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 72,
+    "n": 74,
     "triggered": 24,
     "hit": 6,
     "failed": 11,
@@ -6664,7 +6666,7 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 22,
+    "n": 23,
     "triggered": 13,
     "hit": 5,
     "failed": 6,
@@ -6687,10 +6689,10 @@
    }
   ],
   "pick": {
-   "n": 39,
-   "right": 15,
+   "n": 40,
+   "right": 16,
    "flat": 4
   }
  },
- "updated_at": 1794515438.8485923
+ "updated_at": 1794517244.488109
 }
