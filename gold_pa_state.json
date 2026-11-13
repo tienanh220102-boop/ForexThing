@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794584735.4054306,
+    "ts": 1794585649.7180188,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794584640
+    "latest_bar_t": 1794585540
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 28.48,
+    "days": 28.49,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794584735.41352,
+    "cutoff": 1794585649.797466,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794583853.530797,
+    "fetched_at": 1794585649.719927,
     "coverage_start": 1794114000.0,
     "coverage_end": 1794718800.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "59cb4ae7dddbdb4cd66f631c6fd075d09ef7a7c016be129ca3c7d7578e7999fa",
+    "sha256": "c04431fc907934d990ecf9ef67ad414c6be3b1d51a6998e3cb64ed8cf1dd67e1",
     "events": [
       {
         "title": "RBA Assist Gov Hunter Speaks",
@@ -3815,12 +3815,6 @@
         "impact": "low"
       },
       {
-        "title": "Mortgage Delinquencies",
-        "currency": "USD",
-        "ts": 1794582900.0,
-        "impact": "low"
-      },
-      {
         "title": "Natural Gas Storage",
         "currency": "USD",
         "ts": 1794583800.0,
@@ -3861,7 +3855,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794584735.408299,
+    "checked_at": 1794585649.789182,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -113701,14 +113695,6 @@
     "alerted": false,
     "recent": [
       [
-        1794498340.822432,
-        0
-      ],
-      [
-        1794499247.914237,
-        0
-      ],
-      [
         1794500137.2041,
         0
       ],
@@ -114099,15 +114085,19 @@
       [
         1794584735.074918,
         0
+      ],
+      [
+        1794585649.57604,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794584735.41352,
+    "generated_at": 1794585649.797466,
     "week": {
       "label": "Tuần 07/11 - 13/11/2026",
       "start": 1794009600.0,
-      "end": 1794584735.41352,
+      "end": 1794585649.797466,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -114204,7 +114194,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794584735.41352,
+      "end": 1794585649.797466,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -114301,7 +114291,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794584735.41352,
+      "end": 1794585649.797466,
       "stats": {
         "issued": 9,
         "filled": 5,
