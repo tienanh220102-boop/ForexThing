@@ -6669,7 +6669,7 @@
       "H4 thuận (đã xác nhận)",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261113-1",
      "hist": {
       "n": 420,
@@ -6762,12 +6762,14 @@
      "closed_at": 1794574800
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 948,
-   "last_bar_t": 1794600900,
-   "last_price": 3877.63914
+   "last_bar_t": 1794602700,
+   "last_price": 3877.48251,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -6906,7 +6908,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794601841.929576,
+ "last_fetch": 1794603647.4142501,
  "stats": {
   "by_type": [
    {
@@ -6924,14 +6926,14 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 68,
-    "triggered": 18,
+    "n": 70,
+    "triggered": 19,
     "hit": 15,
-    "failed": 1,
+    "failed": 2,
     "open": 2,
-    "n_r": 18,
-    "sum_r": 3.2383,
-    "avg_r": 0.1799
+    "n_r": 19,
+    "sum_r": 2.2383,
+    "avg_r": 0.1178
    },
    {
     "type": "pha_that",
@@ -6972,14 +6974,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 76,
-    "triggered": 24,
+    "n": 78,
+    "triggered": 25,
     "hit": 6,
-    "failed": 11,
+    "failed": 12,
     "open": 7,
-    "n_r": 24,
-    "sum_r": 5.4498,
-    "avg_r": 0.2271
+    "n_r": 25,
+    "sum_r": 4.4498,
+    "avg_r": 0.178
    },
    {
     "type": "quet_dao",
@@ -6996,14 +6998,14 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 24,
-    "triggered": 14,
+    "n": 25,
+    "triggered": 15,
     "hit": 5,
-    "failed": 6,
+    "failed": 7,
     "open": 3,
-    "n_r": 14,
-    "sum_r": 5.4417,
-    "avg_r": 0.3887
+    "n_r": 15,
+    "sum_r": 4.4417,
+    "avg_r": 0.2961
    },
    {
     "type": "retest",
@@ -7019,10 +7021,10 @@
    }
   ],
   "pick": {
-   "n": 41,
+   "n": 42,
    "right": 16,
    "flat": 5
   }
  },
- "updated_at": 1794601841.929576
+ "updated_at": 1794603647.4142501
 }
