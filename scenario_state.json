@@ -6479,7 +6479,7 @@
      "why": [
       "H1 thuận"
      ],
-     "status": "TRIGGERED",
+     "status": "EXPIRED_OPEN",
      "id": "EU-20261113-0",
      "hist": {
       "n": 102,
@@ -6489,7 +6489,9 @@
      },
      "beyond": 0,
      "triggered_at": 1794553200,
-     "entry": 3898.25334
+     "entry": 3898.25334,
+     "r_at_expiry": -0.21326490681441518,
+     "r": -0.21326490681441518
     },
     {
      "type": "quet_dao",
@@ -6505,7 +6507,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261113-1",
      "hist": {
       "n": 420,
@@ -6530,7 +6532,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261113-2",
      "hist": {
       "n": 420,
@@ -6553,7 +6555,7 @@
      "why": [
       "H4 thuận (đã xác nhận)"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261113-3",
      "hist": {
       "n": 293,
@@ -6589,12 +6591,160 @@
      "closed_at": 1794553200
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 947,
-   "last_bar_t": 1794570300,
-   "last_price": 3895.37103
+   "last_bar_t": 1794572100,
+   "last_price": 3894.22008,
+   "actual_dir": "FLAT",
+   "result_sent": true
+  },
+  {
+   "name": "US",
+   "day": 1794528000.0,
+   "created_at": 1794573037.1147213,
+   "expire": 1794603600.0,
+   "atr": 15.270546258242419,
+   "range": {
+    "hi": 3905.02968,
+    "lo": 3885.66556,
+    "mid": 3895.34762,
+    "from": 1794553200.0,
+    "label": "range phiên Âu"
+   },
+   "price": 3894.22008,
+   "ctx": {
+    "h1": "UP",
+    "h1_ok": false,
+    "h4": "DOWN",
+    "h4_ok": true,
+    "regime": "RANGE",
+    "news": [
+     "Core PPI m/m",
+     "PPI m/m"
+    ],
+    "news_ts": 1794576600.0
+   },
+   "scenarios": [
+    {
+     "type": "retest",
+     "dir": "BUY",
+     "trigger": "touch_hold",
+     "level": 3887.66544,
+     "zone": [
+      3886.138385374176,
+      3889.1924946258246
+     ],
+     "target": 3923.92045,
+     "stop": 3880.030166870879,
+     "text": "Retest mốc vừa phá 3,887.7 (BOS H1) giữ được → mua theo, mục tiêu 3,923.9",
+     "score": 1,
+     "why": [
+      "H1 thuận"
+     ],
+     "status": "WAITING",
+     "id": "US-20261113-0",
+     "hist": {
+      "n": 102,
+      "avg_r": 0.1548,
+      "hit": 41,
+      "done": 91
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "SELL",
+     "trigger": "sweep_high",
+     "level": 3905.02968,
+     "target": 3885.66556,
+     "stop": 3912.6649531291214,
+     "text": "Quét đỉnh range phiên Âu 3,905.0 (râu M15 lên trên) rồi đóng M15 lại dưới → bán, mục tiêu đáy range 3,885.7",
+     "score": 3,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261113-1",
+     "hist": {
+      "n": 420,
+      "avg_r": 0.0527,
+      "hit": 73,
+      "done": 290
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "BUY",
+     "trigger": "sweep_low",
+     "level": 3885.66556,
+     "target": 3905.02968,
+     "stop": 3878.0302868708786,
+     "text": "Quét đáy range phiên Âu 3,885.7 (râu M15 xuống dưới) rồi đóng M15 lại trên → mua, mục tiêu đỉnh range 3,905.0",
+     "score": 2,
+     "why": [
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261113-2",
+     "hist": {
+      "n": 420,
+      "avg_r": 0.0527,
+      "hit": 73,
+      "done": 290
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "SELL",
+     "trigger": "break_down",
+     "level": 3885.66556,
+     "target": 3870.3950137417573,
+     "stop": 3895.34762,
+     "text": "Phá thật đáy 3,885.7: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 3,870.4",
+     "score": 3,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261113-3",
+     "hist": {
+      "n": 293,
+      "avg_r": 0.0346,
+      "hit": 208,
+      "done": 257
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "BUY",
+     "trigger": "break_up",
+     "level": 3905.02968,
+     "target": 3920.3002262582427,
+     "stop": 3895.34762,
+     "text": "Phá thật đỉnh 3,905.0: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 3,920.3",
+     "score": 2,
+     "why": [
+      "H1 thuận",
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261113-4",
+     "hist": {
+      "n": 293,
+      "avg_r": 0.0346,
+      "hit": 208,
+      "done": 257
+     }
+    }
+   ],
+   "status": "OPEN",
+   "pick": "BUY",
+   "pick_basis": "history",
+   "message_id": 948
   }
  ],
  "prior": {
@@ -6733,7 +6883,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794571245.0965822,
+ "last_fetch": 1794573037.1147213,
  "stats": {
   "by_type": [
    {
@@ -6751,7 +6901,7 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 66,
+    "n": 68,
     "triggered": 18,
     "hit": 15,
     "failed": 1,
@@ -6799,7 +6949,7 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 74,
+    "n": 76,
     "triggered": 24,
     "hit": 6,
     "failed": 11,
@@ -6823,14 +6973,14 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 23,
-    "triggered": 13,
+    "n": 24,
+    "triggered": 14,
     "hit": 5,
     "failed": 6,
-    "open": 2,
-    "n_r": 13,
-    "sum_r": 5.655,
-    "avg_r": 0.435
+    "open": 3,
+    "n_r": 14,
+    "sum_r": 5.4417,
+    "avg_r": 0.3887
    },
    {
     "type": "retest",
@@ -6846,10 +6996,10 @@
    }
   ],
   "pick": {
-   "n": 40,
+   "n": 41,
    "right": 16,
-   "flat": 4
+   "flat": 5
   }
  },
- "updated_at": 1794571245.0965822
+ "updated_at": 1794573037.1147213
 }
