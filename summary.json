@@ -2,15 +2,15 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-11-15T07:52:13+00:00",
+ "updated_at": "2026-11-15T19:24:38+00:00",
  "calls_this_run": 8,
  "stopped": null,
  "series": [
   {
    "tf": "1h",
-   "bars": 43417,
+   "bars": 43429,
    "first": "2020-01-24 02:00",
-   "last": "2026-11-15 06:00",
+   "last": "2026-11-15 18:00",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -41,13 +41,13 @@
      74.0
     ]
    ],
-   "added_this_run": 13
+   "added_this_run": 12
   },
   {
    "tf": "15min",
-   "bars": 173196,
+   "bars": 173242,
    "first": "2020-01-24 02:00",
-   "last": "2026-11-15 07:30",
+   "last": "2026-11-15 19:00",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -78,13 +78,13 @@
      73.2
     ]
    ],
-   "added_this_run": 53
+   "added_this_run": 46
   },
   {
    "tf": "5min",
-   "bars": 508348,
+   "bars": 508486,
    "first": "2020-03-16 01:10",
-   "last": "2026-11-15 07:45",
+   "last": "2026-11-15 19:15",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -115,13 +115,13 @@
      73.1
     ]
    ],
-   "added_this_run": 158
+   "added_this_run": 138
   },
   {
    "tf": "1min",
-   "bars": 2509184,
+   "bars": 2509876,
    "first": "2020-04-06 06:40",
-   "last": "2026-11-15 07:49",
+   "last": "2026-11-15 19:21",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 12,
@@ -152,7 +152,7 @@
      73.0
     ]
    ],
-   "added_this_run": 786
+   "added_this_run": 692
   }
  ]
 }
