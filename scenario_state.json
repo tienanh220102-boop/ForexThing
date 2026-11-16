@@ -6999,7 +6999,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "TRIGGERED",
+     "status": "HIT",
      "id": "US-20261116-1",
      "hist": {
       "n": 421,
@@ -7010,7 +7010,9 @@
      "swept": true,
      "beyond": 0,
      "triggered_at": 1794842100,
-     "entry": 3871.43157
+     "entry": 3871.43157,
+     "closed_at": 1794852900,
+     "r": 2.156663789164293
     },
     {
      "type": "pha_that",
@@ -7099,8 +7101,8 @@
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 953,
-   "last_bar_t": 1794851100,
-   "last_price": 3857.40947
+   "last_bar_t": 1794852900,
+   "last_price": 3850.96384
   }
  ],
  "prior": {
@@ -7239,7 +7241,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794852045.387521,
+ "last_fetch": 1794853841.8244336,
  "stats": {
   "by_type": [
    {
@@ -7357,5 +7359,5 @@
    "flat": 5
   }
  },
- "updated_at": 1794852045.387521
+ "updated_at": 1794853841.8244336
 }
