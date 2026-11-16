@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794848460.5164235,
+    "ts": 1794849337.8911443,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794848340
+    "latest_bar_t": 1794849240
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 31.53,
+    "days": 31.54,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794848460.595134,
+    "cutoff": 1794849337.902718,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3943,9 +3943,9 @@
     ]
   },
   "calendar_health": {
-    "status": "HARD",
-    "reason": "Fed Chairman Warsh Speaks",
-    "checked_at": 1794848460.589312,
+    "status": "PASS",
+    "reason": "verified_no_blocking_event",
+    "checked_at": 1794849337.893,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -116596,15 +116596,19 @@
       [
         1794848460.282321,
         0
+      ],
+      [
+        1794849337.72858,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794848460.595134,
+    "generated_at": 1794849337.902718,
     "week": {
       "label": "Tuần 14/11 - 17/11/2026",
       "start": 1794614400.0,
-      "end": 1794848460.595134,
+      "end": 1794849337.902718,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116701,7 +116705,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794848460.595134,
+      "end": 1794849337.902718,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116798,7 +116802,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794848460.595134,
+      "end": 1794849337.902718,
       "stats": {
         "issued": 9,
         "filled": 5,
