@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794865539.7388263,
+    "ts": 1794866444.6211498,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794865440
+    "latest_bar_t": 1794866340
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 31.73,
+    "days": 31.74,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794865539.748989,
+    "cutoff": 1794866444.887469,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794864646.269022,
+    "fetched_at": 1794866444.622773,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "15e47186da4bd200a817271ca6757ca37405b60917a53d8556241d3f218c9f73",
+    "sha256": "fafb4f757a93c48ea6d5e2387432d7b83dcdb13e6853b1d0f7ea6a20cd0b3a4f",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3683,6 +3683,12 @@
         "impact": "low"
       },
       {
+        "title": "FOMC Member Daly Speaks",
+        "currency": "USD",
+        "ts": 1795022100.0,
+        "impact": "low"
+      },
+      {
         "title": "Gov Council Member Gravelle Speaks",
         "currency": "CAD",
         "ts": 1795023000.0,
@@ -3963,7 +3969,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794865539.740731,
+    "checked_at": 1794866444.881138,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -116296,10 +116302,6 @@
     "alerted": false,
     "recent": [
       [
-        1794780043.305114,
-        0
-      ],
-      [
         1794780935.380064,
         0
       ],
@@ -116658,15 +116660,19 @@
       [
         1794865539.629873,
         0
+      ],
+      [
+        1794866444.471355,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794865539.748989,
+    "generated_at": 1794866444.887469,
     "week": {
       "label": "Tuần 14/11 - 17/11/2026",
       "start": 1794614400.0,
-      "end": 1794865539.748989,
+      "end": 1794866444.887469,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116763,7 +116769,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794865539.748989,
+      "end": 1794866444.887469,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116860,7 +116866,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794865539.748989,
+      "end": 1794866444.887469,
       "stats": {
         "issued": 9,
         "filled": 5,
