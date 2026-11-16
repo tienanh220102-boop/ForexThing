@@ -6809,7 +6809,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261116-0",
      "hist": {
       "n": 421,
@@ -6834,7 +6834,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261116-1",
      "hist": {
       "n": 421,
@@ -6923,12 +6923,166 @@
      "r": -1.0
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 952,
-   "last_bar_t": 1794829500,
-   "last_price": 3873.45213
+   "last_bar_t": 1794831300,
+   "last_price": 3873.16079,
+   "actual_dir": "BUY",
+   "result_sent": true
+  },
+  {
+   "name": "US",
+   "day": 1794787200.0,
+   "created_at": 1794832239.7382364,
+   "expire": 1794862800.0,
+   "atr": 11.873238070328116,
+   "range": {
+    "hi": 3876.40227,
+    "lo": 3847.90815,
+    "mid": 3862.15521,
+    "from": 1794812400.0,
+    "label": "range phiên Âu"
+   },
+   "price": 3873.16079,
+   "ctx": {
+    "h1": "DOWN",
+    "h1_ok": false,
+    "h4": "DOWN",
+    "h4_ok": true,
+    "regime": "RANGE",
+    "news": [
+     "Fed Chairman Warsh Speaks"
+    ],
+    "news_ts": 1794848400.0
+   },
+   "scenarios": [
+    {
+     "type": "retest",
+     "dir": "SELL",
+     "trigger": "touch_hold",
+     "level": 3866.02108,
+     "zone": [
+      3864.833756192967,
+      3867.208403807033
+     ],
+     "target": 3833.62085,
+     "stop": 3871.957699035164,
+     "text": "Retest mốc vừa phá 3,866.0 (BOS H1) giữ được → bán theo, mục tiêu 3,833.6",
+     "score": 3,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "H1 thuận"
+     ],
+     "status": "WAITING",
+     "id": "US-20261116-0",
+     "hist": {
+      "n": 104,
+      "avg_r": 0.1402,
+      "hit": 41,
+      "done": 92
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "SELL",
+     "trigger": "sweep_high",
+     "level": 3876.40227,
+     "target": 3847.90815,
+     "stop": 3882.338889035164,
+     "text": "Quét đỉnh range phiên Âu 3,876.4 (râu M15 lên trên) rồi đóng M15 lại dưới → bán, mục tiêu đáy range 3,847.9",
+     "score": 4,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261116-1",
+     "hist": {
+      "n": 421,
+      "avg_r": 0.0502,
+      "hit": 73,
+      "done": 291
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "SELL",
+     "trigger": "break_down",
+     "level": 3847.90815,
+     "target": 3836.034911929672,
+     "stop": 3862.15521,
+     "text": "Phá thật đáy 3,847.9: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 3,836.0",
+     "score": 4,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "H1 thuận",
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261116-2",
+     "hist": {
+      "n": 294,
+      "avg_r": 0.0311,
+      "hit": 208,
+      "done": 258
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "BUY",
+     "trigger": "break_up",
+     "level": 3876.40227,
+     "target": 3888.275508070328,
+     "stop": 3862.15521,
+     "text": "Phá thật đỉnh 3,876.4: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 3,888.3",
+     "score": 1,
+     "why": [
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261116-3",
+     "hist": {
+      "n": 294,
+      "avg_r": 0.0311,
+      "hit": 208,
+      "done": 258
+     }
+    },
+    {
+     "type": "qml",
+     "dir": "SELL",
+     "trigger": "touch_hold",
+     "level": 3874.60859,
+     "zone": [
+      3873.421266192967,
+      3875.795913807033
+     ],
+     "target": 3836.3872,
+     "stop": 3902.365263807033,
+     "text": "Giá hồi về QML 3,874.6 sau CHoCH → bán, mục tiêu 3,836.4",
+     "score": 4,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261116-4",
+     "hist": {
+      "n": 36,
+      "avg_r": -0.0948,
+      "hit": 5,
+      "done": 19
+     }
+    }
+   ],
+   "status": "OPEN",
+   "pick": "SELL",
+   "pick_basis": "history",
+   "message_id": 953
   }
  ],
  "prior": {
@@ -7067,25 +7221,25 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794830450.4120579,
+ "last_fetch": 1794832239.7382364,
  "stats": {
   "by_type": [
    {
     "type": "ob",
     "regime": "RANGE",
-    "n": 6,
-    "triggered": 3,
+    "n": 7,
+    "triggered": 4,
     "hit": 1,
-    "failed": 2,
+    "failed": 3,
     "open": 0,
-    "n_r": 3,
-    "sum_r": -1.2629,
-    "avg_r": -0.421
+    "n_r": 4,
+    "sum_r": -2.2629,
+    "avg_r": -0.5657
    },
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 70,
+    "n": 72,
     "triggered": 19,
     "hit": 15,
     "failed": 2,
@@ -7133,7 +7287,7 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 78,
+    "n": 80,
     "triggered": 25,
     "hit": 6,
     "failed": 12,
@@ -7180,10 +7334,10 @@
    }
   ],
   "pick": {
-   "n": 42,
-   "right": 16,
+   "n": 43,
+   "right": 17,
    "flat": 5
   }
  },
- "updated_at": 1794830450.4120579
+ "updated_at": 1794832239.7382364
 }
