@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794861936.1719637,
+    "ts": 1794862852.1047637,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794861840
+    "latest_bar_t": 1794862740
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 31.69,
+    "days": 31.7,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794861936.179727,
+    "cutoff": 1794862852.161932,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794861044.099623,
+    "fetched_at": 1794862852.106576,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "1ea98358510bc710c708fd5d04776d18c3815799230d17ffa51c3e6c5a96601d",
+    "sha256": "15e47186da4bd200a817271ca6757ca37405b60917a53d8556241d3f218c9f73",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3375,6 +3375,18 @@
         "currency": "AUD",
         "ts": 1794869400.0,
         "impact": "high"
+      },
+      {
+        "title": "FOMC Member Barkin Speaks",
+        "currency": "USD",
+        "ts": 1794870600.0,
+        "impact": "low"
+      },
+      {
+        "title": "FOMC Member Goolsbee Speaks",
+        "currency": "USD",
+        "ts": 1794871800.0,
+        "impact": "low"
       },
       {
         "title": "Monetary Policy Meeting Minutes",
@@ -3797,6 +3809,12 @@
         "impact": "low"
       },
       {
+        "title": "FOMC Member Jefferson Speaks",
+        "currency": "USD",
+        "ts": 1795098300.0,
+        "impact": "low"
+      },
+      {
         "title": "CB Leading Index m/m",
         "currency": "USD",
         "ts": 1795100400.0,
@@ -3945,7 +3963,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794861936.173688,
+    "checked_at": 1794862852.153801,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -116278,10 +116296,6 @@
     "alerted": false,
     "recent": [
       [
-        1794776447.78084,
-        0
-      ],
-      [
         1794777338.605721,
         0
       ],
@@ -116640,15 +116654,19 @@
       [
         1794861936.004109,
         0
+      ],
+      [
+        1794862851.898667,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794861936.179727,
+    "generated_at": 1794862852.161932,
     "week": {
       "label": "Tuần 14/11 - 17/11/2026",
       "start": 1794614400.0,
-      "end": 1794861936.179727,
+      "end": 1794862852.161932,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116745,7 +116763,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794861936.179727,
+      "end": 1794862852.161932,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116842,7 +116860,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794861936.179727,
+      "end": 1794862852.161932,
       "stats": {
         "issued": 9,
         "filled": 5,

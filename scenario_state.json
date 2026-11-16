@@ -7085,7 +7085,7 @@
       "H1 thuận",
       "ngày đi ngang hợp đảo chiều"
      ],
-     "status": "TRIGGERED",
+     "status": "EXPIRED_OPEN",
      "id": "US-20261116-4",
      "hist": {
       "n": 36,
@@ -7094,15 +7094,19 @@
       "done": 19
      },
      "triggered_at": 1794833100,
-     "entry": 3868.31094
+     "entry": 3868.31094,
+     "r_at_expiry": 0.4860052454361605,
+     "r": 0.4860052454361605
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 953,
-   "last_bar_t": 1794860100,
-   "last_price": 3858.13194
+   "last_bar_t": 1794861900,
+   "last_price": 3851.76036,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -7241,7 +7245,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794861045.0530627,
+ "last_fetch": 1794862852.898962,
  "stats": {
   "by_type": [
    {
@@ -7259,14 +7263,14 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 72,
-    "triggered": 19,
+    "n": 74,
+    "triggered": 20,
     "hit": 15,
-    "failed": 2,
+    "failed": 3,
     "open": 2,
-    "n_r": 19,
-    "sum_r": 2.2383,
-    "avg_r": 0.1178
+    "n_r": 20,
+    "sum_r": 1.2383,
+    "avg_r": 0.0619
    },
    {
     "type": "pha_that",
@@ -7283,14 +7287,14 @@
    {
     "type": "qml",
     "regime": "RANGE",
-    "n": 14,
-    "triggered": 2,
+    "n": 15,
+    "triggered": 3,
     "hit": 0,
     "failed": 2,
-    "open": 0,
-    "n_r": 2,
-    "sum_r": -2.0,
-    "avg_r": -1.0
+    "open": 1,
+    "n_r": 3,
+    "sum_r": -1.514,
+    "avg_r": -0.5047
    },
    {
     "type": "qml",
@@ -7307,14 +7311,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 80,
-    "triggered": 25,
-    "hit": 6,
+    "n": 81,
+    "triggered": 26,
+    "hit": 7,
     "failed": 12,
     "open": 7,
-    "n_r": 25,
-    "sum_r": 4.4498,
-    "avg_r": 0.178
+    "n_r": 26,
+    "sum_r": 6.6064,
+    "avg_r": 0.2541
    },
    {
     "type": "quet_dao",
@@ -7331,7 +7335,7 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 25,
+    "n": 26,
     "triggered": 15,
     "hit": 5,
     "failed": 7,
@@ -7354,10 +7358,10 @@
    }
   ],
   "pick": {
-   "n": 43,
-   "right": 17,
+   "n": 44,
+   "right": 18,
    "flat": 5
   }
  },
- "updated_at": 1794861045.0530627
+ "updated_at": 1794862852.898962
 }
