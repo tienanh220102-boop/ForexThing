@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794925842.3942351,
+    "ts": 1794926734.916186,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794925740
+    "latest_bar_t": 1794926640
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 32.43,
+    "days": 32.44,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794925842.404501,
+    "cutoff": 1794926735.138371,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794925477.754589,
+    "fetched_at": 1794926734.917783,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "221772ec2bd18f2749bdef7bce60d20342bfcec50983c2ede18e83f7ba142a8e",
+    "sha256": "bc557af7b82125aa484e02c57b25db295dfa1d66480f7cb4ad8da9f1d316ae8c",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3509,6 +3509,12 @@
         "impact": "low"
       },
       {
+        "title": "GDT Price Index",
+        "currency": "NZD",
+        "ts": 1794925740.0,
+        "impact": "low"
+      },
+      {
         "title": "FOMC Member Hammack Speaks",
         "currency": "USD",
         "ts": 1794925800.0,
@@ -3524,12 +3530,6 @@
         "title": "NAHB Housing Market Index",
         "currency": "USD",
         "ts": 1794927600.0,
-        "impact": "low"
-      },
-      {
-        "title": "GDT Price Index",
-        "currency": "NZD",
-        "ts": 1794930600.0,
         "impact": "low"
       },
       {
@@ -3975,7 +3975,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794925842.396181,
+    "checked_at": 1794926735.131454,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -116686,15 +116686,19 @@
       [
         1794925842.22946,
         0
+      ],
+      [
+        1794926734.797266,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794925842.404501,
+    "generated_at": 1794926735.138371,
     "week": {
       "label": "Tuần 14/11 - 17/11/2026",
       "start": 1794614400.0,
-      "end": 1794925842.404501,
+      "end": 1794926735.138371,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116791,7 +116795,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794925842.404501,
+      "end": 1794926735.138371,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116888,7 +116892,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794925842.404501,
+      "end": 1794926735.138371,
       "stats": {
         "issued": 9,
         "filled": 5,
