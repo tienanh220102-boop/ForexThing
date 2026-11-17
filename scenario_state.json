@@ -7287,7 +7287,9 @@
       "avg_r": 0.0552,
       "hit": 74,
       "done": 292
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -7308,7 +7310,9 @@
       "avg_r": 0.0552,
       "hit": 74,
       "done": 292
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -7331,7 +7335,9 @@
       "avg_r": 0.0276,
       "hit": 208,
       "done": 259
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -7345,20 +7351,25 @@
      "why": [
       "có tin mạnh — phá thật hay trùng tin"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261117-3",
      "hist": {
       "n": 295,
       "avg_r": 0.0276,
       "hit": 208,
       "done": 259
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1794920400
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 957
+   "message_id": 957,
+   "last_bar_t": 1794919500,
+   "last_price": 3860.2339
   }
  ],
  "prior": {
@@ -7497,7 +7508,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794918637.1916702,
+ "last_fetch": 1794920448.0434084,
  "stats": {
   "by_type": [
    {
@@ -7615,5 +7626,5 @@
    "flat": 5
   }
  },
- "updated_at": 1794918637.1916702
+ "updated_at": 1794920448.0434084
 }
