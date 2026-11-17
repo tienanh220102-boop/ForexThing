@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1794875438.728785,
+    "ts": 1794876340.5300908,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1794875340
+    "latest_bar_t": 1794876240
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 31.84,
+    "days": 31.85,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1794875439.075287,
+    "cutoff": 1794876340.586815,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1794875438.730459,
+    "fetched_at": 1794876340.532124,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "fafb4f757a93c48ea6d5e2387432d7b83dcdb13e6853b1d0f7ea6a20cd0b3a4f",
+    "sha256": "503be102a7d4ed4933a6a68f1442ca1685e48faff09ea5fff53854d8add3126b",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3387,6 +3387,12 @@
         "currency": "USD",
         "ts": 1794871800.0,
         "impact": "low"
+      },
+      {
+        "title": "RBNZ Gov Breman Speaks",
+        "currency": "NZD",
+        "ts": 1794873600.0,
+        "impact": "medium"
       },
       {
         "title": "Monetary Policy Meeting Minutes",
@@ -3969,7 +3975,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1794875439.068707,
+    "checked_at": 1794876340.578611,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -116302,14 +116308,6 @@
     "alerted": false,
     "recent": [
       [
-        1794789046.722825,
-        0
-      ],
-      [
-        1794789937.926929,
-        0
-      ],
-      [
         1794790840.717407,
         0
       ],
@@ -116668,15 +116666,19 @@
       [
         1794875438.576507,
         0
+      ],
+      [
+        1794876340.457639,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1794875439.075287,
+    "generated_at": 1794876340.586815,
     "week": {
       "label": "Tuần 14/11 - 17/11/2026",
       "start": 1794614400.0,
-      "end": 1794875439.075287,
+      "end": 1794876340.586815,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116773,7 +116775,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1794875439.075287,
+      "end": 1794876340.586815,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -116870,7 +116872,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1794875439.075287,
+      "end": 1794876340.586815,
       "stats": {
         "issued": 9,
         "filled": 5,
