@@ -7147,7 +7147,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261117-0",
      "hist": {
       "n": 422,
@@ -7171,7 +7171,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261117-1",
      "hist": {
       "n": 422,
@@ -7230,12 +7230,135 @@
      "closed_at": 1794911400
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 956,
-   "last_bar_t": 1794915900,
-   "last_price": 3867.65624
+   "last_bar_t": 1794917700,
+   "last_price": 3861.77422,
+   "actual_dir": "SELL",
+   "result_sent": true
+  },
+  {
+   "name": "US",
+   "day": 1794873600.0,
+   "created_at": 1794918637.1916702,
+   "expire": 1794949200.0,
+   "atr": 12.998675128182521,
+   "range": {
+    "hi": 3879.25913,
+    "lo": 3852.76068,
+    "mid": 3866.009905,
+    "from": 1794898800.0,
+    "label": "range phiên Âu"
+   },
+   "price": 3861.77422,
+   "ctx": {
+    "h1": "DOWN",
+    "h1_ok": false,
+    "h4": "DOWN",
+    "h4_ok": true,
+    "regime": "RANGE",
+    "news": [
+     "Core Retail Sales m/m",
+     "Retail Sales m/m"
+    ],
+    "news_ts": 1794922200.0
+   },
+   "scenarios": [
+    {
+     "type": "quet_dao",
+     "dir": "SELL",
+     "trigger": "sweep_high",
+     "level": 3879.25913,
+     "target": 3852.76068,
+     "stop": 3885.758467564091,
+     "text": "Quét đỉnh range phiên Âu 3,879.3 (râu M15 lên trên) rồi đóng M15 lại dưới → bán, mục tiêu đáy range 3,852.8",
+     "score": 4,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261117-0",
+     "hist": {
+      "n": 422,
+      "avg_r": 0.0552,
+      "hit": 74,
+      "done": 292
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "BUY",
+     "trigger": "sweep_low",
+     "level": 3852.76068,
+     "target": 3879.25913,
+     "stop": 3846.261342435909,
+     "text": "Quét đáy range phiên Âu 3,852.8 (râu M15 xuống dưới) rồi đóng M15 lại trên → mua, mục tiêu đỉnh range 3,879.3",
+     "score": 1,
+     "why": [
+      "ngày đi ngang hợp đảo chiều"
+     ],
+     "status": "WAITING",
+     "id": "US-20261117-1",
+     "hist": {
+      "n": 422,
+      "avg_r": 0.0552,
+      "hit": 74,
+      "done": 292
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "SELL",
+     "trigger": "break_down",
+     "level": 3852.76068,
+     "target": 3839.762004871817,
+     "stop": 3866.009905,
+     "text": "Phá thật đáy 3,852.8: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 3,839.8",
+     "score": 4,
+     "why": [
+      "H4 thuận (đã xác nhận)",
+      "H1 thuận",
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261117-2",
+     "hist": {
+      "n": 295,
+      "avg_r": 0.0276,
+      "hit": 208,
+      "done": 259
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "BUY",
+     "trigger": "break_up",
+     "level": 3879.25913,
+     "target": 3892.2578051281826,
+     "stop": 3866.009905,
+     "text": "Phá thật đỉnh 3,879.3: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 3,892.3",
+     "score": 1,
+     "why": [
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261117-3",
+     "hist": {
+      "n": 295,
+      "avg_r": 0.0276,
+      "hit": 208,
+      "done": 259
+     }
+    }
+   ],
+   "status": "OPEN",
+   "pick": "SELL",
+   "pick_basis": "history",
+   "message_id": 957
   }
  ],
  "prior": {
@@ -7374,7 +7497,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1794916847.456509,
+ "last_fetch": 1794918637.1916702,
  "stats": {
   "by_type": [
    {
@@ -7392,7 +7515,7 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 74,
+    "n": 76,
     "triggered": 20,
     "hit": 15,
     "failed": 3,
@@ -7440,7 +7563,7 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 81,
+    "n": 83,
     "triggered": 26,
     "hit": 7,
     "failed": 12,
@@ -7487,10 +7610,10 @@
    }
   ],
   "pick": {
-   "n": 44,
-   "right": 18,
+   "n": 45,
+   "right": 19,
    "flat": 5
   }
  },
- "updated_at": 1794916847.456509
+ "updated_at": 1794918637.1916702
 }
