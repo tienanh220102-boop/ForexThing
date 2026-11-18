@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795020340.984738,
+    "ts": 1795021244.3663278,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795020240
+    "latest_bar_t": 1795021140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 33.52,
+    "days": 33.53,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795020340.995627,
+    "cutoff": 1795021244.492181,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795019444.870787,
+    "fetched_at": 1795021244.367778,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "3df8bca7f70b271036ceec4c04282c9b019f72374a7fb0be9341992211030f4c",
+    "sha256": "4b6357916530a0f57eefec4e177c1ddd2e843ad273d3710fc17c85805186fb82",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3755,12 +3755,6 @@
         "impact": "high"
       },
       {
-        "title": "Foreign Direct Investment ytd/y",
-        "currency": "CNY",
-        "ts": 1795071720.0,
-        "impact": "low"
-      },
-      {
         "title": "Current Account",
         "currency": "EUR",
         "ts": 1795078800.0,
@@ -3917,6 +3911,12 @@
         "impact": "low"
       },
       {
+        "title": "Foreign Direct Investment ytd/y",
+        "currency": "CNY",
+        "ts": 1795158120.0,
+        "impact": "low"
+      },
+      {
         "title": "ECB President Lagarde Speaks",
         "currency": "EUR",
         "ts": 1795162500.0,
@@ -3975,7 +3975,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795020340.986919,
+    "checked_at": 1795021244.486998,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -123548,10 +123548,6 @@
     "alerted": false,
     "recent": [
       [
-        1794933945.398263,
-        0
-      ],
-      [
         1794934858.70488,
         0
       ],
@@ -123946,15 +123942,19 @@
       [
         1795020340.905107,
         0
+      ],
+      [
+        1795021244.217773,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795020340.995627,
+    "generated_at": 1795021244.492181,
     "week": {
-      "label": "Tuần 14/11 - 18/11/2026",
+      "label": "Tuần 14/11 - 19/11/2026",
       "start": 1794614400.0,
-      "end": 1795020340.995627,
+      "end": 1795021244.492181,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -124051,7 +124051,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795020340.995627,
+      "end": 1795021244.492181,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -124148,7 +124148,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795020340.995627,
+      "end": 1795021244.492181,
       "stats": {
         "issued": 9,
         "filled": 5,
