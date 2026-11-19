@@ -7922,7 +7922,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261119-1",
      "hist": {
       "n": 427,
@@ -8012,12 +8012,14 @@
      "closed_at": 1795093200
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 965,
-   "last_bar_t": 1795119300,
-   "last_price": 3669.33519
+   "last_bar_t": 1795121100,
+   "last_price": 3659.2718,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -8156,7 +8158,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795120248.0891564,
+ "last_fetch": 1795122049.5187614,
  "stats": {
   "by_type": [
    {
@@ -8174,14 +8176,14 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 84,
-    "triggered": 23,
-    "hit": 16,
+    "n": 86,
+    "triggered": 24,
+    "hit": 17,
     "failed": 5,
     "open": 2,
-    "n_r": 23,
-    "sum_r": -0.4473,
-    "avg_r": -0.0194
+    "n_r": 24,
+    "sum_r": 0.7232,
+    "avg_r": 0.0301
    },
    {
     "type": "pha_that",
@@ -8222,14 +8224,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 91,
-    "triggered": 31,
+    "n": 93,
+    "triggered": 32,
     "hit": 11,
-    "failed": 13,
+    "failed": 14,
     "open": 7,
-    "n_r": 31,
-    "sum_r": 12.3236,
-    "avg_r": 0.3975
+    "n_r": 32,
+    "sum_r": 11.3236,
+    "avg_r": 0.3539
    },
    {
     "type": "quet_dao",
@@ -8246,14 +8248,14 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 28,
-    "triggered": 15,
-    "hit": 5,
+    "n": 29,
+    "triggered": 16,
+    "hit": 6,
     "failed": 7,
     "open": 3,
-    "n_r": 15,
-    "sum_r": 4.4417,
-    "avg_r": 0.2961
+    "n_r": 16,
+    "sum_r": 5.5449,
+    "avg_r": 0.3466
    },
    {
     "type": "retest",
@@ -8269,10 +8271,10 @@
    }
   ],
   "pick": {
-   "n": 49,
-   "right": 23,
+   "n": 50,
+   "right": 24,
    "flat": 5
   }
  },
- "updated_at": 1795120248.0891564
+ "updated_at": 1795122049.5187614
 }
