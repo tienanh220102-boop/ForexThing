@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795103142.3998396,
+    "ts": 1795104043.4981453,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795103040
+    "latest_bar_t": 1795103940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 34.48,
+    "days": 34.49,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795103142.424407,
+    "cutoff": 1795104043.631029,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795102246.578816,
+    "fetched_at": 1795104043.499682,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "4b6357916530a0f57eefec4e177c1ddd2e843ad273d3710fc17c85805186fb82",
+    "sha256": "3b759cc993c6a1dd1397f9f9f570961cef81b0d50ca98a9d9fe5e0468163f815",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3827,15 +3827,15 @@
         "impact": "low"
       },
       {
-        "title": "Mortgage Delinquencies",
-        "currency": "USD",
-        "ts": 1795101300.0,
-        "impact": "low"
-      },
-      {
         "title": "Natural Gas Storage",
         "currency": "USD",
         "ts": 1795102200.0,
+        "impact": "low"
+      },
+      {
+        "title": "Mortgage Delinquencies",
+        "currency": "USD",
+        "ts": 1795105800.0,
         "impact": "low"
       },
       {
@@ -3975,7 +3975,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795103142.401029,
+    "checked_at": 1795104043.600969,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -126595,15 +126595,19 @@
       [
         1795103142.277012,
         0
+      ],
+      [
+        1795104043.370347,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795103142.424407,
+    "generated_at": 1795104043.631029,
     "week": {
       "label": "Tuần 14/11 - 19/11/2026",
       "start": 1794614400.0,
-      "end": 1795103142.424407,
+      "end": 1795104043.631029,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -126700,7 +126704,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795103142.424407,
+      "end": 1795104043.631029,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -126797,7 +126801,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795103142.424407,
+      "end": 1795104043.631029,
       "stats": {
         "issued": 9,
         "filled": 5,
