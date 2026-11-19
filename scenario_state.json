@@ -7894,14 +7894,16 @@
       "H4 thuận (đã xác nhận)",
       "H1 thuận"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "US-20261119-0",
      "hist": {
       "n": 104,
       "avg_r": 0.1402,
       "hit": 41,
       "done": 92
-     }
+     },
+     "triggered_at": 1795092300,
+     "entry": 3712.27355
     },
     {
      "type": "quet_dao",
@@ -7925,7 +7927,9 @@
       "avg_r": 0.068,
       "hit": 78,
       "done": 297
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -7940,14 +7944,18 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "US-20261119-2",
      "hist": {
       "n": 427,
       "avg_r": 0.068,
       "hit": 78,
       "done": 297
-     }
+     },
+     "swept": true,
+     "beyond": 0,
+     "triggered_at": 1795093200,
+     "entry": 3719.78598
     },
     {
      "type": "pha_that",
@@ -7969,7 +7977,9 @@
       "avg_r": 0.0217,
       "hit": 209,
       "done": 262
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -7981,20 +7991,25 @@
      "text": "Phá thật đỉnh 3,741.5: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 3,758.9",
      "score": 0,
      "why": [],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261119-4",
      "hist": {
       "n": 298,
       "avg_r": 0.0217,
       "hit": 209,
       "done": 262
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1795093200
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 965
+   "message_id": 965,
+   "last_bar_t": 1795092300,
+   "last_price": 3719.78598
   }
  ],
  "prior": {
@@ -8133,7 +8148,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795091447.8327808,
+ "last_fetch": 1795093251.674179,
  "stats": {
   "by_type": [
    {
@@ -8251,5 +8266,5 @@
    "flat": 5
   }
  },
- "updated_at": 1795091447.8327808
+ "updated_at": 1795093251.674179
 }
