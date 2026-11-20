@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795137371.8010955,
+    "ts": 1795138245.5325403,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795137240
+    "latest_bar_t": 1795138140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 34.88,
+    "days": 34.89,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795137371.868605,
+    "cutoff": 1795138245.541811,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3185,16 +3185,15 @@
       },
       "MONITOR_REVIEW": {
         "candidates": 99,
-        "shadow_resolved": 69,
-        "shadow_net_r": 26.11081871418786,
-        "shadow_wins": 38,
+        "shadow_resolved": 71,
+        "shadow_net_r": 28.612974071292683,
+        "shadow_wins": 40,
         "evaluations": {
           "SL": 31,
-          "TP1": 38,
+          "TP1": 40,
           "NOT_EVALUABLE": 26,
           "DATA_GAP": 1,
-          "OPEN": 2,
-          "PENDING": 1
+          "OPEN": 1
         },
         "later_accepted": 0
       },
@@ -3977,7 +3976,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795137371.86363,
+    "checked_at": 1795138245.535673,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -129782,7 +129781,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 1.1577080631481478,
+        "mfe_r": 1.347106355478741,
         "mae_r": 0.22797476932813637,
         "events": [
           {
@@ -129792,7 +129791,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795137240,
+        "last_bar_t": 1795138140,
         "initial_risk": 39.92718153340229,
         "active_sl": 3667.056201533402,
         "filled_ts": 1795126560,
@@ -130663,7 +130662,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 3620.07616,
-        "status": "OPEN",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1795133760,
@@ -130674,25 +130673,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 1.9138815067287192,
+        "remaining": 0.0,
+        "realized_r": 2.071726607616858,
+        "mfe_r": 2.0752008757333615,
         "mae_r": 0.2435112032085093,
         "events": [
           {
             "type": "FILL",
             "ts": 1795133760,
             "price": 3620.57169
+          },
+          {
+            "type": "TP1",
+            "ts": 1795137960,
+            "price": 3577.6335369219905,
+            "fraction": 1.0
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795137240,
+        "last_bar_t": 1795137900,
         "initial_risk": 20.7257815390044,
         "active_sl": 3641.2974715390046,
         "filled_ts": 1795133760,
-        "timeout_at": 1795565760
+        "timeout_at": 1795565760,
+        "outcome": "TP1",
+        "closed_ts": 1795137960,
+        "net_r": 2.05242697352358,
+        "correct": true,
+        "pips": 425.3815
       },
-      "evaluation": "OPEN"
+      "evaluation": "TP1"
     },
     {
       "id": "c0b43660dc1c3158a7d8",
@@ -131540,7 +131550,7 @@
       "shadow": {
         "setup": "sweep_reclaim",
         "dir": "SELL",
-        "entry": 3608.70881,
+        "entry": 3596.64559,
         "sl": 3641.217105717313,
         "tp1": 3576.200514282687,
         "tp2": 3559.9463664240307,
@@ -131558,7 +131568,7 @@
         "source": "twelvedata:XAU/USD",
         "entry_type": "market",
         "entry_ref": 3608.70881,
-        "status": "PENDING",
+        "status": "CLOSED",
         "policy": "tp1_full",
         "cost_price": 0.4,
         "not_before": 1795137420,
@@ -131569,14 +131579,36 @@
           "slippage": 0,
           "delay_seconds": 0
         },
-        "remaining": 1.0,
-        "realized_r": 0.0,
-        "mfe_r": 0.0,
+        "remaining": 0.0,
+        "realized_r": 0.45870272500900244,
+        "mfe_r": 0.4665876774731668,
         "mae_r": 0.0,
-        "events": [],
-        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent"
+        "events": [
+          {
+            "type": "FILL",
+            "ts": 1795137420,
+            "price": 3596.64559
+          },
+          {
+            "type": "TP1",
+            "ts": 1795138140,
+            "price": 3576.200514282687,
+            "fraction": 1.0
+          }
+        ],
+        "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
+        "last_bar_t": 1795138080,
+        "initial_risk": 44.571515717313105,
+        "active_sl": 3641.217105717313,
+        "filled_ts": 1795137420,
+        "timeout_at": 1795569420,
+        "outcome": "TP1",
+        "closed_ts": 1795138140,
+        "net_r": 0.44972838358124106,
+        "correct": true,
+        "pips": 200.4508
       },
-      "evaluation": "PENDING"
+      "evaluation": "TP1"
     }
   ],
   "momentum": {
@@ -131984,15 +132016,19 @@
       [
         1795137371.517541,
         0
+      ],
+      [
+        1795138245.353362,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795137371.868605,
+    "generated_at": 1795138245.541811,
     "week": {
       "label": "Tuần 14/11 - 20/11/2026",
       "start": 1794614400.0,
-      "end": 1795137371.868605,
+      "end": 1795138245.541811,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -132089,7 +132125,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795137371.868605,
+      "end": 1795138245.541811,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -132186,7 +132222,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795137371.868605,
+      "end": 1795138245.541811,
       "stats": {
         "issued": 9,
         "filled": 5,
