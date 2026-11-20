@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795155335.7610836,
+    "ts": 1795156238.2066402,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795155240
+    "latest_bar_t": 1795156140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 35.08,
+    "days": 35.09,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795155335.772033,
+    "cutoff": 1795156238.29074,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3215,7 +3215,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795154443.107611,
+    "fetched_at": 1795156238.208628,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3976,7 +3976,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795155335.764291,
+    "checked_at": 1795156238.286432,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -133349,7 +133349,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795155240,
+        "last_bar_t": 1795156140,
         "initial_risk": 42.59912660393411,
         "active_sl": 3566.455266603934,
         "filled_ts": 1795144560,
@@ -133368,10 +133368,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED M1 feed is stale",
     "alerted": false,
     "recent": [
-      [
-        1795068936.007455,
-        0
-      ],
       [
         1795069845.811313,
         0
@@ -133763,15 +133759,19 @@
       [
         1795155335.421482,
         0
+      ],
+      [
+        1795156237.763576,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795155335.772033,
+    "generated_at": 1795156238.29074,
     "week": {
       "label": "Tuần 14/11 - 20/11/2026",
       "start": 1794614400.0,
-      "end": 1795155335.772033,
+      "end": 1795156238.29074,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133868,7 +133868,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795155335.772033,
+      "end": 1795156238.29074,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133965,7 +133965,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795155335.772033,
+      "end": 1795156238.29074,
       "stats": {
         "issued": 9,
         "filled": 5,
