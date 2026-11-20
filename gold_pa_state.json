@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795182336.8512912,
+    "ts": 1795183250.464879,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795182180
+    "latest_bar_t": 1795183140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 35.4,
+    "days": 35.41,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795182336.861872,
+    "cutoff": 1795183250.525742,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795181441.743044,
+    "fetched_at": 1795183250.466567,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "b457a3cefa4ada41fcfc93f5a101f82d6499adef07a8722bc0a7d23c9abbc32e",
+    "sha256": "d51af7f58aa2880958ebec6c9d11f01957ad9111d716fceeaf251e10328a93d1",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3965,6 +3965,12 @@
         "impact": "medium"
       },
       {
+        "title": "President Trump Speaks",
+        "currency": "USD",
+        "ts": 1795194000.0,
+        "impact": "medium"
+      },
+      {
         "title": "FOMC Member Cook Speaks",
         "currency": "USD",
         "ts": 1795194900.0,
@@ -3975,7 +3981,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795182336.853415,
+    "checked_at": 1795183250.519355,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -133769,15 +133775,19 @@
       [
         1795182336.737174,
         0
+      ],
+      [
+        1795183250.273357,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795182336.861872,
+    "generated_at": 1795183250.525742,
     "week": {
       "label": "Tuần 14/11 - 20/11/2026",
       "start": 1794614400.0,
-      "end": 1795182336.861872,
+      "end": 1795183250.525742,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133874,7 +133884,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795182336.861872,
+      "end": 1795183250.525742,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133971,7 +133981,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795182336.861872,
+      "end": 1795183250.525742,
       "stats": {
         "issued": 9,
         "filled": 5,
