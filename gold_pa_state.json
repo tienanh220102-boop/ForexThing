@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795164337.5828116,
+    "ts": 1795164934.8111405,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795164240
+    "latest_bar_t": 1795164840
   },
   "monitor": {
     "n": 5,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795164337.592441,
+    "cutoff": 1795164934.91733,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795163445.612182,
+    "fetched_at": 1795164934.812887,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "08695c5fc28e3cf7883bb8ec2c1abd185ea280ab1a9c4c09b0fb03953e956345",
+    "sha256": "6189d04bdc6aba22a9ef802d934d96a3181afd3baaf7647287a5135913ae1322",
     "events": [
       {
         "title": "BusinessNZ Services Index",
@@ -3911,12 +3911,6 @@
         "impact": "low"
       },
       {
-        "title": "Foreign Direct Investment ytd/y",
-        "currency": "CNY",
-        "ts": 1795158120.0,
-        "impact": "low"
-      },
-      {
         "title": "ECB President Lagarde Speaks",
         "currency": "EUR",
         "ts": 1795162500.0,
@@ -3975,7 +3969,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795164337.584421,
+    "checked_at": 1795164934.909929,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -133769,15 +133763,19 @@
       [
         1795164337.443624,
         0
+      ],
+      [
+        1795164934.658253,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795164337.592441,
+    "generated_at": 1795164934.91733,
     "week": {
       "label": "Tuần 14/11 - 20/11/2026",
       "start": 1794614400.0,
-      "end": 1795164337.592441,
+      "end": 1795164934.91733,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133874,7 +133872,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795164337.592441,
+      "end": 1795164934.91733,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133971,7 +133969,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795164337.592441,
+      "end": 1795164934.91733,
       "stats": {
         "issued": 9,
         "filled": 5,
