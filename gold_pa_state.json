@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795216876.5298038,
+    "ts": 1795217447.4287171,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795216740
+    "latest_bar_t": 1795217340
   },
   "monitor": {
     "n": 5,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795216876.798738,
+    "cutoff": 1795217447.43543,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3981,7 +3981,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795216876.790746,
+    "checked_at": 1795217447.429949,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -133779,11 +133779,11 @@
     ]
   },
   "pa_report": {
-    "generated_at": 1795216876.798738,
+    "generated_at": 1795217447.43543,
     "week": {
       "label": "Tuần 14/11 - 21/11/2026",
       "start": 1794614400.0,
-      "end": 1795216876.798738,
+      "end": 1795217447.43543,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133880,7 +133880,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795216876.798738,
+      "end": 1795217447.43543,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133977,7 +133977,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795216876.798738,
+      "end": 1795217447.43543,
       "stats": {
         "issued": 9,
         "filled": 5,
