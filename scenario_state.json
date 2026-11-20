@@ -8198,7 +8198,9 @@
       "avg_r": 0.0655,
       "hit": 78,
       "done": 298
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -8220,7 +8222,9 @@
       "avg_r": 0.0655,
       "hit": 78,
       "done": 298
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -8235,14 +8239,17 @@
       "H4 thuận (đã xác nhận)",
       "H1 thuận"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261120-2",
      "hist": {
       "n": 299,
       "avg_r": 0.0255,
       "hit": 210,
       "done": 263
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1795179600
     },
     {
      "type": "pha_that",
@@ -8261,13 +8268,17 @@
       "avg_r": 0.0255,
       "hit": 210,
       "done": 263
-     }
+     },
+     "run": 0,
+     "beyond": 0
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 969
+   "message_id": 969,
+   "last_bar_t": 1795178700,
+   "last_price": 3570.16159
   }
  ],
  "prior": {
@@ -8406,7 +8417,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795177848.7956717,
+ "last_fetch": 1795179648.3092382,
  "stats": {
   "by_type": [
    {
@@ -8524,5 +8535,5 @@
    "flat": 5
   }
  },
- "updated_at": 1795177848.7956717
+ "updated_at": 1795179648.3092382
 }
