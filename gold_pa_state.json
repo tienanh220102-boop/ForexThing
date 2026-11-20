@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795193140.6026478,
+    "ts": 1795194047.5446618,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795193040
+    "latest_bar_t": 1795193940
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 35.52,
+    "days": 35.53,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795193140.610723,
+    "cutoff": 1795194047.61888,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795192249.189045,
+    "fetched_at": 1795194047.546474,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3979,9 +3979,9 @@
     ]
   },
   "calendar_health": {
-    "status": "SOFT",
-    "reason": "President Trump Speaks",
-    "checked_at": 1795193140.604424,
+    "status": "PASS",
+    "reason": "verified_no_blocking_event",
+    "checked_at": 1795194047.612146,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -133775,15 +133775,19 @@
       [
         1795193140.393365,
         0
+      ],
+      [
+        1795194047.424407,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795193140.610723,
+    "generated_at": 1795194047.61888,
     "week": {
-      "label": "Tuần 14/11 - 20/11/2026",
+      "label": "Tuần 14/11 - 21/11/2026",
       "start": 1794614400.0,
-      "end": 1795193140.610723,
+      "end": 1795194047.61888,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133880,7 +133884,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795193140.610723,
+      "end": 1795194047.61888,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133977,7 +133981,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795193140.610723,
+      "end": 1795194047.61888,
       "stats": {
         "issued": 9,
         "filled": 5,
