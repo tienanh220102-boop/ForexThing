@@ -8067,7 +8067,9 @@
       "avg_r": 0.0655,
       "hit": 78,
       "done": 298
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -8089,7 +8091,9 @@
       "avg_r": 0.0655,
       "hit": 78,
       "done": 298
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -8111,7 +8115,9 @@
       "avg_r": 0.0255,
       "hit": 210,
       "done": 263
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "pha_that",
@@ -8123,20 +8129,25 @@
      "text": "Phá thật đỉnh 3,625.6: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 3,652.7",
      "score": 0,
      "why": [],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "EU-20261120-3",
      "hist": {
       "n": 299,
       "avg_r": 0.0255,
       "hit": 210,
       "done": 263
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1795158000
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 968
+   "message_id": 968,
+   "last_bar_t": 1795157100,
+   "last_price": 3560.63868
   }
  ],
  "prior": {
@@ -8275,7 +8286,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795156238.7647417,
+ "last_fetch": 1795158050.5807414,
  "stats": {
   "by_type": [
    {
@@ -8393,5 +8404,5 @@
    "flat": 5
   }
  },
- "updated_at": 1795156238.7647417
+ "updated_at": 1795158050.5807414
 }
