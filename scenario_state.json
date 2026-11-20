@@ -8191,7 +8191,7 @@
       "ngày đi ngang hợp đảo chiều",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261120-0",
      "hist": {
       "n": 428,
@@ -8278,12 +8278,14 @@
      "closed_at": 1795182300
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 969,
-   "last_bar_t": 1795205700,
-   "last_price": 3517.55963
+   "last_bar_t": 1795207500,
+   "last_price": 3520.91164,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -8422,7 +8424,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795206644.410149,
+ "last_fetch": 1795208450.3527079,
  "stats": {
   "by_type": [
    {
@@ -8440,7 +8442,7 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 88,
+    "n": 90,
     "triggered": 24,
     "hit": 17,
     "failed": 5,
@@ -8488,14 +8490,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 95,
-    "triggered": 32,
+    "n": 97,
+    "triggered": 33,
     "hit": 11,
-    "failed": 14,
+    "failed": 15,
     "open": 7,
-    "n_r": 32,
-    "sum_r": 11.3236,
-    "avg_r": 0.3539
+    "n_r": 33,
+    "sum_r": 10.3236,
+    "avg_r": 0.3128
    },
    {
     "type": "quet_dao",
@@ -8535,10 +8537,10 @@
    }
   ],
   "pick": {
-   "n": 51,
-   "right": 24,
+   "n": 52,
+   "right": 25,
    "flat": 5
   }
  },
- "updated_at": 1795206644.410149
+ "updated_at": 1795208450.3527079
 }
