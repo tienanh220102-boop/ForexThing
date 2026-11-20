@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795172444.151021,
+    "ts": 1795173335.5494263,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795172340
+    "latest_bar_t": 1795173180
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 35.28,
+    "days": 35.29,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795172444.341932,
+    "cutoff": 1795173335.557598,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3969,7 +3969,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795172444.335607,
+    "checked_at": 1795173335.551199,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -133373,10 +133373,6 @@
     "alerted": false,
     "recent": [
       [
-        1795086044.529645,
-        0
-      ],
-      [
         1795086938.680708,
         0
       ],
@@ -133767,15 +133763,19 @@
       [
         1795172444.044105,
         0
+      ],
+      [
+        1795173335.414649,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795172444.341932,
+    "generated_at": 1795173335.557598,
     "week": {
       "label": "Tuần 14/11 - 20/11/2026",
       "start": 1794614400.0,
-      "end": 1795172444.341932,
+      "end": 1795173335.557598,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133872,7 +133872,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795172444.341932,
+      "end": 1795173335.557598,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133969,7 +133969,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795172444.341932,
+      "end": 1795173335.557598,
       "stats": {
         "issued": 9,
         "filled": 5,
