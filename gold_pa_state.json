@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795248932.2664235,
+    "ts": 1795249842.3768797,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795248840
+    "latest_bar_t": 1795249740
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 36.17,
+    "days": 36.18,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795248932.27274,
+    "cutoff": 1795249842.462938,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,7 +3214,7 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795248044.890916,
+    "fetched_at": 1795249842.378629,
     "coverage_start": 1794718800.0,
     "coverage_end": 1795323600.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
@@ -3981,7 +3981,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795248932.267945,
+    "checked_at": 1795249842.454889,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -133779,11 +133779,11 @@
     ]
   },
   "pa_report": {
-    "generated_at": 1795248932.27274,
+    "generated_at": 1795249842.462938,
     "week": {
       "label": "Tuần 21/11 - 21/11/2026",
       "start": 1795219200.0,
-      "end": 1795248932.27274,
+      "end": 1795249842.462938,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133880,7 +133880,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795248932.27274,
+      "end": 1795249842.462938,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -133977,7 +133977,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795248932.27274,
+      "end": 1795249842.462938,
       "stats": {
         "issued": 9,
         "filled": 5,
