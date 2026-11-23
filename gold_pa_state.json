@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795448733.5962908,
+    "ts": 1795449645.9004085,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795448640
+    "latest_bar_t": 1795449540
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 38.48,
+    "days": 38.49,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795448733.6038,
+    "cutoff": 1795449645.994191,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3215,11 +3215,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795447845.953405,
+    "fetched_at": 1795449645.903151,
     "coverage_start": 1795323600.0,
     "coverage_end": 1795928400.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "7b2025390528570144bd12eb9778d2166a40f2af9549eb4a1e2ad692e162e4a1",
+    "sha256": "c9223ff5e400e523098efcd3e7272ed8fca23a6242111ac7964e7cf42ebe9f50",
     "events": [
       {
         "title": "Core Retail Sales q/q",
@@ -3336,12 +3336,6 @@
         "impact": "low"
       },
       {
-        "title": "Foreign Direct Investment ytd/y",
-        "currency": "CNY",
-        "ts": 1795503720.0,
-        "impact": "low"
-      },
-      {
         "title": "German ifo Business Climate",
         "currency": "EUR",
         "ts": 1795510800.0,
@@ -3453,6 +3447,12 @@
         "title": "German Final GDP q/q",
         "currency": "EUR",
         "ts": 1795590000.0,
+        "impact": "low"
+      },
+      {
+        "title": "Foreign Direct Investment ytd/y",
+        "currency": "CNY",
+        "ts": 1795590120.0,
         "impact": "low"
       },
       {
@@ -3676,7 +3676,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795448733.598749,
+    "checked_at": 1795449645.987851,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -135885,7 +135885,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795448640,
+        "last_bar_t": 1795449540,
         "initial_risk": 16.505894514520605,
         "active_sl": 3643.2007954854794,
         "filled_ts": 1795446960,
@@ -136219,15 +136219,19 @@
       [
         1795448733.308159,
         0
+      ],
+      [
+        1795449645.693309,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795448733.6038,
+    "generated_at": 1795449645.994191,
     "week": {
       "label": "Tuần 21/11 - 23/11/2026",
       "start": 1795219200.0,
-      "end": 1795448733.6038,
+      "end": 1795449645.994191,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -136324,7 +136328,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795448733.6038,
+      "end": 1795449645.994191,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -136421,7 +136425,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795448733.6038,
+      "end": 1795449645.994191,
       "stats": {
         "issued": 9,
         "filled": 5,
