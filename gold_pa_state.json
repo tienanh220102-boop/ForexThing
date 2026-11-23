@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795466734.0559604,
+    "ts": 1795467654.4195657,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795466640
+    "latest_bar_t": 1795467540
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 38.69,
+    "days": 38.7,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795466734.087724,
+    "cutoff": 1795467654.550779,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795465845.902887,
+    "fetched_at": 1795467654.420949,
     "coverage_start": 1795323600.0,
     "coverage_end": 1795928400.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "286a808792c764335ecd5a138b957d3442ddeb576e05f701515cd9da37e55fb7",
+    "sha256": "c0e2f40e0672e03c8d034aa8d73afe2b2701f478191894adceab53bb2eb790b0",
     "events": [
       {
         "title": "Core Retail Sales q/q",
@@ -3449,12 +3449,6 @@
         "impact": "low"
       },
       {
-        "title": "Foreign Direct Investment ytd/y",
-        "currency": "CNY",
-        "ts": 1795590120.0,
-        "impact": "low"
-      },
-      {
         "title": "UBS Economic Expectations",
         "currency": "CHF",
         "ts": 1795597200.0,
@@ -3675,7 +3669,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795466734.057787,
+    "checked_at": 1795467654.525089,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -136309,15 +136303,19 @@
       [
         1795466733.918784,
         0
+      ],
+      [
+        1795467654.265467,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795466734.087724,
+    "generated_at": 1795467654.550779,
     "week": {
       "label": "Tuần 21/11 - 24/11/2026",
       "start": 1795219200.0,
-      "end": 1795466734.087724,
+      "end": 1795467654.550779,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -136414,7 +136412,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795466734.087724,
+      "end": 1795467654.550779,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -136511,7 +136509,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795466734.087724,
+      "end": 1795467654.550779,
       "stats": {
         "issued": 9,
         "filled": 5,
