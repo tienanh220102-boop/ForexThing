@@ -8915,8 +8915,8 @@
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 978,
-   "last_bar_t": 1795538700,
-   "last_price": 3565.10216
+   "last_bar_t": 1795540500,
+   "last_price": 3563.91889
   }
  ],
  "prior": {
@@ -9055,7 +9055,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795539649.3692245,
+ "last_fetch": 1795541444.8266404,
  "stats": {
   "by_type": [
    {
@@ -9173,5 +9173,5 @@
    "flat": 5
   }
  },
- "updated_at": 1795539649.3692245
+ "updated_at": 1795541444.8266404
 }
