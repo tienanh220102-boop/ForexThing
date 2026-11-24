@@ -8620,6 +8620,123 @@
    "last_price": 3635.7807,
    "actual_dir": "BUY",
    "result_sent": true
+  },
+  {
+   "name": "EU",
+   "day": 1795478400.0,
+   "created_at": 1795501845.9017472,
+   "expire": 1795523400.0,
+   "atr": 18.14045874152384,
+   "range": {
+    "hi": 3681.19669,
+    "lo": 3616.63653,
+    "mid": 3648.91661,
+    "from": 1795478400.0,
+    "label": "range phiên Á"
+   },
+   "price": 3617.10784,
+   "ctx": {
+    "h1": "UP",
+    "h1_ok": true,
+    "h4": "UP",
+    "h4_ok": false,
+    "regime": "RANGE",
+    "news": [],
+    "news_ts": null
+   },
+   "scenarios": [
+    {
+     "type": "quet_dao",
+     "dir": "BUY",
+     "trigger": "sweep_low",
+     "level": 3616.63653,
+     "target": 3681.19669,
+     "stop": 3607.5663006292384,
+     "text": "Quét đáy range phiên Á 3,616.6 (râu M15 xuống dưới) rồi đóng M15 lại trên → mua, mục tiêu đỉnh range 3,681.2",
+     "score": 4,
+     "why": [
+      "H4 thuận",
+      "H1 thuận",
+      "ngày đi ngang hợp đảo chiều",
+      "không có tin mạnh — dễ là phá giả"
+     ],
+     "status": "WAITING",
+     "id": "EU-20261124-0",
+     "hist": {
+      "n": 430,
+      "avg_r": 0.065,
+      "hit": 78,
+      "done": 299
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "SELL",
+     "trigger": "sweep_high",
+     "level": 3681.19669,
+     "target": 3616.63653,
+     "stop": 3690.266919370762,
+     "text": "Quét đỉnh range phiên Á 3,681.2 (râu M15 lên trên) rồi đóng M15 lại dưới → bán, mục tiêu đáy range 3,616.6",
+     "score": 2,
+     "why": [
+      "ngày đi ngang hợp đảo chiều",
+      "không có tin mạnh — dễ là phá giả"
+     ],
+     "status": "WAITING",
+     "id": "EU-20261124-1",
+     "hist": {
+      "n": 430,
+      "avg_r": 0.065,
+      "hit": 78,
+      "done": 299
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "BUY",
+     "trigger": "break_up",
+     "level": 3681.19669,
+     "target": 3699.337148741524,
+     "stop": 3648.91661,
+     "text": "Phá thật đỉnh 3,681.2: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 3,699.3",
+     "score": 2,
+     "why": [
+      "H4 thuận",
+      "H1 thuận"
+     ],
+     "status": "WAITING",
+     "id": "EU-20261124-2",
+     "hist": {
+      "n": 300,
+      "avg_r": 0.0235,
+      "hit": 210,
+      "done": 263
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "SELL",
+     "trigger": "break_down",
+     "level": 3616.63653,
+     "target": 3598.4960712584766,
+     "stop": 3648.91661,
+     "text": "Phá thật đáy 3,616.6: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 3,598.5",
+     "score": 0,
+     "why": [],
+     "status": "WAITING",
+     "id": "EU-20261124-3",
+     "hist": {
+      "n": 300,
+      "avg_r": 0.0235,
+      "hit": 210,
+      "done": 263
+     }
+    }
+   ],
+   "status": "OPEN",
+   "pick": "BUY",
+   "pick_basis": "history",
+   "message_id": 977
   }
  ],
  "prior": {
@@ -8758,7 +8875,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795467655.0894787,
+ "last_fetch": 1795501845.9017472,
  "stats": {
   "by_type": [
    {
@@ -8876,5 +8993,5 @@
    "flat": 5
   }
  },
- "updated_at": 1795467655.0894787
+ "updated_at": 1795501845.9017472
 }
