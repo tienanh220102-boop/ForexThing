@@ -8911,12 +8911,14 @@
      "closed_at": 1795525200
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 978,
-   "last_bar_t": 1795551300,
-   "last_price": 3551.53257
+   "last_bar_t": 1795553100,
+   "last_price": 3552.80258,
+   "actual_dir": "SELL",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -9055,7 +9057,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795552254.6893787,
+ "last_fetch": 1795554043.580084,
  "stats": {
   "by_type": [
    {
@@ -9073,14 +9075,14 @@
    {
     "type": "pha_that",
     "regime": "RANGE",
-    "n": 94,
-    "triggered": 25,
+    "n": 96,
+    "triggered": 26,
     "hit": 17,
-    "failed": 5,
+    "failed": 6,
     "open": 3,
-    "n_r": 25,
-    "sum_r": 0.1273,
-    "avg_r": 0.0051
+    "n_r": 26,
+    "sum_r": -0.8727,
+    "avg_r": -0.0336
    },
    {
     "type": "pha_that",
@@ -9121,14 +9123,14 @@
    {
     "type": "quet_dao",
     "regime": "RANGE",
-    "n": 103,
-    "triggered": 35,
-    "hit": 11,
+    "n": 105,
+    "triggered": 36,
+    "hit": 12,
     "failed": 15,
     "open": 9,
-    "n_r": 35,
-    "sum_r": 11.4201,
-    "avg_r": 0.3263
+    "n_r": 36,
+    "sum_r": 12.8738,
+    "avg_r": 0.3576
    },
    {
     "type": "quet_dao",
@@ -9145,7 +9147,7 @@
    {
     "type": "retest",
     "regime": "RANGE",
-    "n": 31,
+    "n": 32,
     "triggered": 16,
     "hit": 6,
     "failed": 7,
@@ -9168,10 +9170,10 @@
    }
   ],
   "pick": {
-   "n": 55,
-   "right": 27,
+   "n": 56,
+   "right": 28,
    "flat": 5
   }
  },
- "updated_at": 1795552254.6893787
+ "updated_at": 1795554043.580084
 }
