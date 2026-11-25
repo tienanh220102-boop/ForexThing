@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795563935.7516513,
+    "ts": 1795564854.3235793,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795563840
+    "latest_bar_t": 1795564740
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 39.81,
+    "days": 39.82,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795563935.760836,
+    "cutoff": 1795564854.381892,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3215,11 +3215,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795563041.432034,
+    "fetched_at": 1795564854.326703,
     "coverage_start": 1795323600.0,
     "coverage_end": 1795928400.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "2c15ca2559a918072befa01f814e634419d7171d797744fddc2c16d00c4b32de",
+    "sha256": "fcaf12f08ca87bd9090ddace7074f87645c3a117846daf41c5f0fc801a004e92",
     "events": [
       {
         "title": "Core Retail Sales q/q",
@@ -3462,6 +3462,12 @@
         "impact": "low"
       },
       {
+        "title": "FOMC Member Bowman Speaks",
+        "currency": "USD",
+        "ts": 1795609500.0,
+        "impact": "low"
+      },
+      {
         "title": "Core PCE Price Index m/m",
         "currency": "USD",
         "ts": 1795613400.0,
@@ -3670,7 +3676,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795563935.754758,
+    "checked_at": 1795564854.376152,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -137014,7 +137020,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795563840,
+        "last_bar_t": 1795564740,
         "initial_risk": 23.70217678237941,
         "active_sl": 3588.251706782379,
         "filled_ts": 1795539960,
@@ -137602,7 +137608,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795563840,
+        "last_bar_t": 1795564740,
         "initial_risk": 19.622220439908233,
         "active_sl": 3579.064550439908,
         "filled_ts": 1795547760,
@@ -138180,7 +138186,7 @@
         },
         "remaining": 1.0,
         "realized_r": 0.0,
-        "mfe_r": 0.0,
+        "mfe_r": 0.06936376374218137,
         "mae_r": 0.9587177727333526,
         "events": [
           {
@@ -138190,7 +138196,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795563840,
+        "last_bar_t": 1795564740,
         "initial_risk": 19.217094460941553,
         "active_sl": 3569.4179744609414,
         "filled_ts": 1795554960,
@@ -138209,14 +138215,6 @@
     "last_reason": "EXECUTION_DATA_REJECTED provider HTTP 429",
     "alerted": false,
     "recent": [
-      [
-        1795477536.425315,
-        0
-      ],
-      [
-        1795478448.312335,
-        0
-      ],
       [
         1795479334.569864,
         0
@@ -138600,15 +138598,19 @@
       [
         1795563935.345922,
         0
+      ],
+      [
+        1795564853.886585,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795563935.760836,
+    "generated_at": 1795564854.381892,
     "week": {
       "label": "Tuần 21/11 - 25/11/2026",
       "start": 1795219200.0,
-      "end": 1795563935.760836,
+      "end": 1795564854.381892,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -138705,7 +138707,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795563935.760836,
+      "end": 1795564854.381892,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -138802,7 +138804,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795563935.760836,
+      "end": 1795564854.381892,
       "stats": {
         "issued": 9,
         "filled": 5,
