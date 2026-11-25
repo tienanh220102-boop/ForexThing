@@ -9151,7 +9151,7 @@
       "H4 thuận",
       "H1 thuận"
      ],
-     "status": "TRIGGERED",
+     "status": "FAILED",
      "id": "US-20261125-2",
      "hist": {
       "n": 99,
@@ -9162,7 +9162,9 @@
      "swept": true,
      "beyond": 0,
      "triggered_at": 1795631400,
-     "entry": 3534.97731
+     "entry": 3534.97731,
+     "closed_at": 1795633200,
+     "r": -1.0
     },
     {
      "type": "ob",
@@ -9218,8 +9220,8 @@
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 982,
-   "last_bar_t": 1795630500,
-   "last_price": 3534.97731
+   "last_bar_t": 1795632300,
+   "last_price": 3539.99579
   }
  ],
  "prior": {
@@ -9358,7 +9360,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795631446.4765832,
+ "last_fetch": 1795633253.3351219,
  "stats": {
   "by_type": [
    {
@@ -9476,5 +9478,5 @@
    "flat": 6
   }
  },
- "updated_at": 1795631446.4765832
+ "updated_at": 1795633253.3351219
 }
