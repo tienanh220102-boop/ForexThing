@@ -9101,14 +9101,17 @@
       "ngày có trend hợp đi theo",
       "có tin mạnh — phá thật hay trùng tin"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261125-0",
      "hist": {
       "n": 84,
       "avg_r": 0.0974,
       "hit": 61,
       "done": 71
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1795611600
     },
     {
      "type": "pha_that",
@@ -9130,7 +9133,9 @@
       "avg_r": 0.0974,
       "hit": 61,
       "done": 71
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -9152,7 +9157,9 @@
       "avg_r": -0.1204,
       "hit": 21,
       "done": 79
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "ob",
@@ -9172,9 +9179,11 @@
       "H1 thuận",
       "ngày có trend hợp đi theo"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "US-20261125-3",
-     "hist": null
+     "hist": null,
+     "triggered_at": 1795610700,
+     "entry": 3521.8081
     },
     {
      "type": "retest",
@@ -9194,15 +9203,18 @@
       "H1 thuận",
       "ngày có trend hợp đi theo"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261125-4",
-     "hist": null
+     "hist": null,
+     "closed_at": 1795610700
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 982
+   "message_id": 982,
+   "last_bar_t": 1795610700,
+   "last_price": 3521.02155
   }
  ],
  "prior": {
@@ -9341,7 +9353,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795609839.933613,
+ "last_fetch": 1795611650.9795363,
  "stats": {
   "by_type": [
    {
@@ -9459,5 +9471,5 @@
    "flat": 6
   }
  },
- "updated_at": 1795609839.933613
+ "updated_at": 1795611650.9795363
 }
