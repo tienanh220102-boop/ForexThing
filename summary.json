@@ -2,15 +2,15 @@
  "source": "twelvedata:XAU/USD",
  "timezone": "UTC",
  "t": "bar open time",
- "updated_at": "2026-11-24T23:00:28+00:00",
- "calls_this_run": 0,
- "stopped": "credit ngay con 375 <= du tru 450 cho bot",
+ "updated_at": "2026-11-25T09:53:21+00:00",
+ "calls_this_run": 8,
+ "stopped": null,
  "series": [
   {
    "tf": "1h",
-   "bars": 43636,
+   "bars": 43659,
    "first": "2020-01-24 02:00",
-   "last": "2026-11-24 09:00",
+   "last": "2026-11-25 08:00",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -41,13 +41,13 @@
      74.0
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 23
   },
   {
    "tf": "15min",
-   "bars": 174072,
+   "bars": 174164,
    "first": "2020-01-24 02:00",
-   "last": "2026-11-24 10:30",
+   "last": "2026-11-25 09:30",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -78,13 +78,13 @@
      73.2
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 92
   },
   {
    "tf": "5min",
-   "bars": 510976,
+   "bars": 511252,
    "first": "2020-03-16 01:10",
-   "last": "2026-11-24 10:45",
+   "last": "2026-11-25 09:45",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 14,
@@ -115,13 +115,13 @@
      73.1
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 276
   },
   {
    "tf": "1min",
-   "bars": 2522329,
+   "bars": 2523705,
    "first": "2020-04-06 06:40",
-   "last": "2026-11-24 10:54",
+   "last": "2026-11-25 09:50",
    "complete_to_start": false,
    "source_exhausted_before_start": true,
    "gaps_over_6h_not_weekend": 12,
@@ -152,7 +152,7 @@
      73.0
     ]
    ],
-   "added_this_run": 0
+   "added_this_run": 1376
   }
  ]
 }
