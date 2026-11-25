@@ -8982,7 +8982,7 @@
       "H1 thuận",
       "ngày có trend hợp đi theo"
      ],
-     "status": "TRIGGERED",
+     "status": "HIT",
      "id": "EU-20261125-1",
      "hist": {
       "n": 84,
@@ -8993,7 +8993,9 @@
      "run": 2,
      "beyond": 0,
      "triggered_at": 1795608000,
-     "entry": 3497.57095
+     "entry": 3497.57095,
+     "closed_at": 1795608900,
+     "r": 0.01106981112958375
     },
     {
      "type": "quet_dao",
@@ -9036,7 +9038,7 @@
       "H1 thuận",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "EU-20261125-3",
      "hist": {
       "n": 99,
@@ -9048,12 +9050,159 @@
      "beyond": 0
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 981,
-   "last_bar_t": 1795607100,
-   "last_price": 3497.57095
+   "last_bar_t": 1795608900,
+   "last_price": 3523.92767,
+   "actual_dir": "FLAT",
+   "result_sent": true
+  },
+  {
+   "name": "US",
+   "day": 1795564800.0,
+   "created_at": 1795609839.933613,
+   "expire": 1795640400.0,
+   "atr": 19.208115088120973,
+   "range": {
+    "hi": 3539.59733,
+    "lo": 3484.44197,
+    "mid": 3512.01965,
+    "from": 1795590000.0,
+    "label": "range phiên Âu"
+   },
+   "price": 3523.92767,
+   "ctx": {
+    "h1": "DOWN",
+    "h1_ok": true,
+    "h4": "DOWN",
+    "h4_ok": false,
+    "regime": "TREND",
+    "news": [
+     "Core PCE Price Index m/m",
+     "Prelim GDP q/q"
+    ],
+    "news_ts": 1795613400.0
+   },
+   "scenarios": [
+    {
+     "type": "pha_that",
+     "dir": "SELL",
+     "trigger": "break_down",
+     "level": 3484.44197,
+     "target": 3465.233854911879,
+     "stop": 3512.01965,
+     "text": "Phá thật đáy 3,484.4: 2 nến M15 đóng dưới, không quay lại → theo bán, mục tiêu 3,465.2",
+     "score": 4,
+     "why": [
+      "H4 thuận",
+      "H1 thuận",
+      "ngày có trend hợp đi theo",
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261125-0",
+     "hist": {
+      "n": 84,
+      "avg_r": 0.0974,
+      "hit": 61,
+      "done": 71
+     }
+    },
+    {
+     "type": "pha_that",
+     "dir": "BUY",
+     "trigger": "break_up",
+     "level": 3539.59733,
+     "target": 3558.805445088121,
+     "stop": 3512.01965,
+     "text": "Phá thật đỉnh 3,539.6: 2 nến M15 đóng trên, không quay lại → theo mua, mục tiêu 3,558.8",
+     "score": 2,
+     "why": [
+      "ngày có trend hợp đi theo",
+      "có tin mạnh — phá thật hay trùng tin"
+     ],
+     "status": "WAITING",
+     "id": "US-20261125-1",
+     "hist": {
+      "n": 84,
+      "avg_r": 0.0974,
+      "hit": 61,
+      "done": 71
+     }
+    },
+    {
+     "type": "quet_dao",
+     "dir": "SELL",
+     "trigger": "sweep_high",
+     "level": 3539.59733,
+     "target": 3484.44197,
+     "stop": 3549.2013875440607,
+     "text": "Quét đỉnh range phiên Âu 3,539.6 (râu M15 lên trên) rồi đóng M15 lại dưới → bán, mục tiêu đáy range 3,484.4",
+     "score": 2,
+     "why": [
+      "H4 thuận",
+      "H1 thuận"
+     ],
+     "status": "WAITING",
+     "id": "US-20261125-2",
+     "hist": {
+      "n": 99,
+      "avg_r": -0.1204,
+      "hit": 21,
+      "done": 79
+     }
+    },
+    {
+     "type": "ob",
+     "dir": "SELL",
+     "trigger": "touch_hold",
+     "level": 3531.23266,
+     "zone": [
+      3514.401805,
+      3531.23266
+     ],
+     "target": 3491.97888,
+     "stop": 3540.836717544061,
+     "text": "Giá về vùng nến mạnh 3,514.4–3,531.2 lần đầu, giữ được → bán, mục tiêu 3,492.0",
+     "score": 3,
+     "why": [
+      "H4 thuận",
+      "H1 thuận",
+      "ngày có trend hợp đi theo"
+     ],
+     "status": "WAITING",
+     "id": "US-20261125-3",
+     "hist": null
+    },
+    {
+     "type": "retest",
+     "dir": "SELL",
+     "trigger": "touch_hold",
+     "level": 3503.97701,
+     "zone": [
+      3502.056198491188,
+      3505.8978215088123
+     ],
+     "target": 3491.97888,
+     "stop": 3513.5810675440607,
+     "text": "Retest mốc vừa phá 3,504.0 (BOS H1) giữ được → bán theo, mục tiêu 3,492.0",
+     "score": 3,
+     "why": [
+      "H4 thuận",
+      "H1 thuận",
+      "ngày có trend hợp đi theo"
+     ],
+     "status": "WAITING",
+     "id": "US-20261125-4",
+     "hist": null
+    }
+   ],
+   "status": "OPEN",
+   "pick": "SELL",
+   "pick_basis": "history",
+   "message_id": 982
   }
  ],
  "prior": {
@@ -9192,7 +9341,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795608053.2516823,
+ "last_fetch": 1795609839.933613,
  "stats": {
   "by_type": [
    {
@@ -9222,14 +9371,14 @@
    {
     "type": "pha_that",
     "regime": "TREND",
-    "n": 4,
-    "triggered": 1,
-    "hit": 1,
+    "n": 6,
+    "triggered": 2,
+    "hit": 2,
     "failed": 0,
     "open": 0,
-    "n_r": 1,
-    "sum_r": 0.6105,
-    "avg_r": 0.6105
+    "n_r": 2,
+    "sum_r": 0.6216,
+    "avg_r": 0.3108
    },
    {
     "type": "qml",
@@ -9270,14 +9419,14 @@
    {
     "type": "quet_dao",
     "regime": "TREND",
-    "n": 3,
-    "triggered": 1,
+    "n": 5,
+    "triggered": 2,
     "hit": 0,
-    "failed": 0,
+    "failed": 1,
     "open": 1,
-    "n_r": 1,
-    "sum_r": 1.8095,
-    "avg_r": 1.8095
+    "n_r": 2,
+    "sum_r": 0.8095,
+    "avg_r": 0.4048
    },
    {
     "type": "retest",
@@ -9305,10 +9454,10 @@
    }
   ],
   "pick": {
-   "n": 56,
+   "n": 57,
    "right": 28,
-   "flat": 5
+   "flat": 6
   }
  },
- "updated_at": 1795608053.2516823
+ "updated_at": 1795609839.933613
 }
