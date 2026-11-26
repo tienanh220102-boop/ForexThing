@@ -9416,14 +9416,17 @@
       "H1 thuận",
       "ngày có trend hợp đi theo"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261126-0",
      "hist": {
       "n": 85,
       "avg_r": 0.0964,
       "hit": 62,
       "done": 72
-     }
+     },
+     "run": 0,
+     "beyond": 2,
+     "closed_at": 1795698000
     },
     {
      "type": "pha_that",
@@ -9444,7 +9447,9 @@
       "avg_r": 0.0964,
       "hit": 62,
       "done": 72
-     }
+     },
+     "run": 0,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -9467,7 +9472,9 @@
       "avg_r": -0.1378,
       "hit": 21,
       "done": 81
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "quet_dao",
@@ -9488,7 +9495,9 @@
       "avg_r": -0.1378,
       "hit": 21,
       "done": 81
-     }
+     },
+     "swept": false,
+     "beyond": 0
     },
     {
      "type": "retest",
@@ -9508,15 +9517,18 @@
       "H1 thuận",
       "ngày có trend hợp đi theo"
      ],
-     "status": "WAITING",
+     "status": "INVALIDATED",
      "id": "US-20261126-4",
-     "hist": null
+     "hist": null,
+     "closed_at": 1795697100
     }
    ],
    "status": "OPEN",
    "pick": "SELL",
    "pick_basis": "history",
-   "message_id": 986
+   "message_id": 986,
+   "last_bar_t": 1795697100,
+   "last_price": 3565.99906
   }
  ],
  "prior": {
@@ -9655,7 +9667,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795696245.2167993,
+ "last_fetch": 1795698050.8400333,
  "stats": {
   "by_type": [
    {
@@ -9785,5 +9797,5 @@
    "flat": 7
   }
  },
- "updated_at": 1795696245.2167993
+ "updated_at": 1795698050.8400333
 }
