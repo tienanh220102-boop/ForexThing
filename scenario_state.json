@@ -9440,7 +9440,7 @@
      "why": [
       "ngày có trend hợp đi theo"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261126-1",
      "hist": {
       "n": 85,
@@ -9465,7 +9465,7 @@
       "H1 thuận",
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "TRIGGERED",
+     "status": "EXPIRED_OPEN",
      "id": "US-20261126-2",
      "hist": {
       "n": 101,
@@ -9476,7 +9476,9 @@
      "swept": true,
      "beyond": 0,
      "triggered_at": 1795704300,
-     "entry": 3571.23514
+     "entry": 3571.23514,
+     "r_at_expiry": 0.21251213786796108,
+     "r": 0.21251213786796108
     },
     {
      "type": "quet_dao",
@@ -9490,7 +9492,7 @@
      "why": [
       "không có tin mạnh — dễ là phá giả"
      ],
-     "status": "WAITING",
+     "status": "NOT_TRIGGERED",
      "id": "US-20261126-3",
      "hist": {
       "n": 101,
@@ -9525,12 +9527,14 @@
      "closed_at": 1795697100
     }
    ],
-   "status": "OPEN",
+   "status": "CLOSED",
    "pick": "SELL",
    "pick_basis": "history",
    "message_id": 986,
-   "last_bar_t": 1795724100,
-   "last_price": 3567.4396
+   "last_bar_t": 1795725900,
+   "last_price": 3567.5839,
+   "actual_dir": "FLAT",
+   "result_sent": true
   }
  ],
  "prior": {
@@ -9669,7 +9673,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795725039.0563104,
+ "last_fetch": 1795726841.4562678,
  "stats": {
   "by_type": [
    {
@@ -9711,7 +9715,7 @@
    {
     "type": "pha_that",
     "regime": "TREND",
-    "n": 10,
+    "n": 12,
     "triggered": 2,
     "hit": 2,
     "failed": 0,
@@ -9759,14 +9763,14 @@
    {
     "type": "quet_dao",
     "regime": "TREND",
-    "n": 8,
-    "triggered": 3,
+    "n": 10,
+    "triggered": 4,
     "hit": 0,
     "failed": 2,
-    "open": 1,
-    "n_r": 3,
-    "sum_r": -0.1905,
-    "avg_r": -0.0635
+    "open": 2,
+    "n_r": 4,
+    "sum_r": 0.0221,
+    "avg_r": 0.0055
    },
    {
     "type": "retest",
@@ -9783,7 +9787,7 @@
    {
     "type": "retest",
     "regime": "TREND",
-    "n": 3,
+    "n": 4,
     "triggered": 0,
     "hit": 0,
     "failed": 0,
@@ -9794,10 +9798,10 @@
    }
   ],
   "pick": {
-   "n": 59,
+   "n": 60,
    "right": 28,
-   "flat": 7
+   "flat": 8
   }
  },
- "updated_at": 1795725039.0563104
+ "updated_at": 1795726841.4562678
 }
