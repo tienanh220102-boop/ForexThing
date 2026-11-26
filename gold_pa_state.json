@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795656642.7295387,
+    "ts": 1795657543.7574768,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795656540
+    "latest_bar_t": 1795657440
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 40.89,
+    "days": 40.9,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795656642.953865,
+    "cutoff": 1795657543.830811,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3214,11 +3214,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795656642.731146,
+    "fetched_at": 1795657543.758558,
     "coverage_start": 1795323600.0,
     "coverage_end": 1795928400.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "a52fc120743e31ad80d64d337b13b9397a9ae5c65b5fcedb6f68ff6c4a9115c3",
+    "sha256": "3b62c50c09a505bcd0a8b22a2a4740a5536cee930d56934cd8697dda1d339edf",
     "events": [
       {
         "title": "Core Retail Sales q/q",
@@ -3575,6 +3575,12 @@
         "impact": "low"
       },
       {
+        "title": "Euro Summit",
+        "currency": "EUR",
+        "ts": 1795684500.0,
+        "impact": "low"
+      },
+      {
         "title": "BOE Financial Stability Report",
         "currency": "GBP",
         "ts": 1795689000.0,
@@ -3681,7 +3687,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795656642.947212,
+    "checked_at": 1795657543.825232,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -143050,10 +143056,6 @@
     "alerted": false,
     "recent": [
       [
-        1795571138.199263,
-        0
-      ],
-      [
         1795572046.385773,
         0
       ],
@@ -143440,15 +143442,19 @@
       [
         1795656642.625981,
         0
+      ],
+      [
+        1795657543.677924,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795656642.953865,
+    "generated_at": 1795657543.830811,
     "week": {
       "label": "Tuần 21/11 - 26/11/2026",
       "start": 1795219200.0,
-      "end": 1795656642.953865,
+      "end": 1795657543.830811,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -143545,7 +143551,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795656642.953865,
+      "end": 1795657543.830811,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -143642,7 +143648,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795656642.953865,
+      "end": 1795657543.830811,
       "stats": {
         "issued": 9,
         "filled": 5,
