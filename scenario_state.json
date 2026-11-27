@@ -9574,7 +9574,7 @@
       "H1 thuận",
       "ngày có trend hợp đi theo"
      ],
-     "status": "WAITING",
+     "status": "TRIGGERED",
      "id": "EU-20261127-0",
      "hist": {
       "n": 85,
@@ -9582,8 +9582,10 @@
       "hit": 62,
       "done": 72
      },
-     "run": 0,
-     "beyond": 0
+     "run": 2,
+     "beyond": 0,
+     "triggered_at": 1795768200,
+     "entry": 3671.73131
     },
     {
      "type": "pha_that",
@@ -9654,7 +9656,7 @@
       "hit": 21,
       "done": 81
      },
-     "swept": false,
+     "swept": true,
      "beyond": 0
     },
     {
@@ -9685,8 +9687,8 @@
    "pick": "BUY",
    "pick_basis": "history",
    "message_id": 989,
-   "last_bar_t": 1795765500,
-   "last_price": 3660.34915
+   "last_bar_t": 1795767300,
+   "last_price": 3671.73131
   }
  ],
  "prior": {
@@ -9825,7 +9827,7 @@
    "basis": "hyp35, nghieng theo ky vong lich su TRAIN 60%"
   }
  },
- "last_fetch": 1795766450.4055653,
+ "last_fetch": 1795768241.0478199,
  "stats": {
   "by_type": [
    {
@@ -9955,5 +9957,5 @@
    "flat": 8
   }
  },
- "updated_at": 1795766450.4055653
+ "updated_at": 1795768241.0478199
 }
