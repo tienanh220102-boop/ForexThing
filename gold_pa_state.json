@@ -2833,9 +2833,9 @@
   },
   "data_health": {
     "ok": true,
-    "ts": 1795776338.0793488,
+    "ts": 1795777247.9380858,
     "source": "twelvedata:XAU/USD",
-    "latest_bar_t": 1795776240
+    "latest_bar_t": 1795777140
   },
   "monitor": {
     "n": 5,
@@ -2992,7 +2992,7 @@
   ],
   "forward_review": {
     "study_id": "2026-10-06-controls-v1:911ec8637bcc:1792124131",
-    "days": 42.27,
+    "days": 42.28,
     "plan": {
       "min_calendar_days": 60,
       "min_resolved": 100,
@@ -3048,7 +3048,7 @@
     "signals": 6,
     "unknown": 0,
     "pending_at_cutoff": 0,
-    "cutoff": 1795776338.091283,
+    "cutoff": 1795777247.990609,
     "ends_at": 1797308131.791522,
     "readiness": "COLLECTING",
     "issues": [
@@ -3215,11 +3215,11 @@
   "calendar_snapshot": {
     "status": "VERIFIED",
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-    "fetched_at": 1795775448.823956,
+    "fetched_at": 1795777247.941561,
     "coverage_start": 1795323600.0,
     "coverage_end": 1795928400.0,
     "coverage_basis": "thisweek export contract; America/New_York week, not event min/max",
-    "sha256": "3b62c50c09a505bcd0a8b22a2a4740a5536cee930d56934cd8697dda1d339edf",
+    "sha256": "9ed6a4e8034edee14c5bf41f193a902a9b80b9cced46121ea2222a703cad9e06",
     "events": [
       {
         "title": "Core Retail Sales q/q",
@@ -3656,7 +3656,7 @@
       {
         "title": "Italian 10-y Bond Auction",
         "currency": "EUR",
-        "ts": 1795775580.0,
+        "ts": 1795773900.0,
         "impact": "low"
       },
       {
@@ -3688,7 +3688,7 @@
   "calendar_health": {
     "status": "PASS",
     "reason": "verified_no_blocking_event",
-    "checked_at": 1795776338.082762,
+    "checked_at": 1795777247.982104,
     "source": "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
   },
   "portfolio": {
@@ -145431,7 +145431,7 @@
           }
         ],
         "purpose": "counterfactual from first_seen; baseline 6h limit; ignores admission filters; never sent",
-        "last_bar_t": 1795776240,
+        "last_bar_t": 1795777140,
         "initial_risk": 27.84710082364836,
         "active_sl": 3654.6339591763517,
         "filled_ts": 1795770960,
@@ -145845,15 +145845,19 @@
       [
         1795776337.829914,
         0
+      ],
+      [
+        1795777247.721393,
+        0
       ]
     ]
   },
   "pa_report": {
-    "generated_at": 1795776338.091283,
+    "generated_at": 1795777247.990609,
     "week": {
       "label": "Tuần 21/11 - 27/11/2026",
       "start": 1795219200.0,
-      "end": 1795776338.091283,
+      "end": 1795777247.990609,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -145950,7 +145954,7 @@
     "month": {
       "label": "Tháng 11/2026",
       "start": 1793466000.0,
-      "end": 1795776338.091283,
+      "end": 1795777247.990609,
       "stats": {
         "issued": 0,
         "filled": 0,
@@ -146047,7 +146051,7 @@
     "all": {
       "label": "Từ khi bắt đầu sổ lệnh v2",
       "start": 0,
-      "end": 1795776338.091283,
+      "end": 1795777247.990609,
       "stats": {
         "issued": 9,
         "filled": 5,
